@@ -70,6 +70,9 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -110,6 +113,9 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -127,6 +133,9 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -135,17 +144,91 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="abstract_file_io.hpp" />
+    <ClInclude Include="abstract_result.hpp" />
+    <ClInclude Include="abstract_value_extractor.hpp" />
+    <ClInclude Include="bad_result.hpp" />
+    <ClInclude Include="binary_file_io.hpp" />
+    <ClInclude Include="cli_io.hpp" />
+    <ClInclude Include="cryptographer.hpp" />
+    <ClInclude Include="cryptographer_1.hpp" />
+    <ClInclude Include="cryptographer_2.hpp" />
+    <ClInclude Include="cryptographer_3.hpp" />
+    <ClInclude Include="cryptographer_4.hpp" />
+    <ClInclude Include="csv_file_io.hpp" />
+    <ClInclude Include="dot_env.hpp" />
+    <ClInclude Include="dot_env_value_extractor.hpp" />
+    <ClInclude Include="encoder.hpp" />
+    <ClInclude Include="erwin.hpp" />
+    <ClInclude Include="files.hpp" />
+    <ClInclude Include="file_ios.hpp" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="generator.hpp" />
+    <ClInclude Include="globals.hpp" />
+    <ClInclude Include="good_result.hpp" />
+    <ClInclude Include="interval.hpp" />
+    <ClInclude Include="json_file_io.hpp" />
+    <ClInclude Include="logger.hpp" />
+    <ClInclude Include="networks.hpp" />
+    <ClInclude Include="network_ping.hpp" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="placeholder_value_extractor.hpp" />
+    <ClInclude Include="qlogicae_core.hpp" />
+    <ClInclude Include="regular_expression.hpp" />
+    <ClInclude Include="rocksdb_database.hpp" />
+    <ClInclude Include="system_access.hpp" />
+    <ClInclude Include="text_file_io.hpp" />
+    <ClInclude Include="time.hpp" />
+    <ClInclude Include="timeout.hpp" />
+    <ClInclude Include="toml_file_io.hpp" />
+    <ClInclude Include="transformer.hpp" />
+    <ClInclude Include="validators.hpp" />
+    <ClInclude Include="windows_registry.hpp" />
+    <ClInclude Include="windows_registry_value_extractor.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="abstract_file_io.cpp" />
+    <ClCompile Include="abstract_result.cpp" />
+    <ClCompile Include="abstract_value_extractor.cpp" />
+    <ClCompile Include="bad_result.cpp" />
+    <ClCompile Include="binary_file_io.cpp" />
+    <ClCompile Include="cli_io.cpp" />
+    <ClCompile Include="cryptographer.cpp" />
+    <ClCompile Include="cryptographer_1.cpp" />
+    <ClCompile Include="cryptographer_2.cpp" />
+    <ClCompile Include="cryptographer_3.cpp" />
+    <ClCompile Include="cryptographer_4.cpp" />
+    <ClCompile Include="csv_file_io.cpp" />
+    <ClCompile Include="dot_env.cpp" />
+    <ClCompile Include="dot_env_value_extractor.cpp" />
+    <ClCompile Include="encoder.cpp" />
+    <ClCompile Include="file_ios.cpp" />
+    <ClCompile Include="generator.cpp" />
+    <ClCompile Include="globals.cpp" />
+    <ClCompile Include="good_result.cpp" />
+    <ClCompile Include="interval.cpp" />
+    <ClCompile Include="json_file_io.cpp" />
+    <ClCompile Include="logger.cpp" />
+    <ClCompile Include="network_ping.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="placeholder_value_extractor.cpp" />
     <ClCompile Include="qlogicae_core.cpp" />
+    <ClCompile Include="regular_expression.cpp" />
+    <ClCompile Include="rocksdb_database.cpp" />
+    <ClCompile Include="system_access.cpp" />
+    <ClCompile Include="text_file_io.cpp" />
+    <ClCompile Include="time.cpp" />
+    <ClCompile Include="timeout.cpp" />
+    <ClCompile Include="toml_file_io.cpp" />
+    <ClCompile Include="transformer.cpp" />
+    <ClCompile Include="validators.cpp" />
+    <ClCompile Include="windows_registry.cpp" />
+    <ClCompile Include="windows_registry_value_extractor.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

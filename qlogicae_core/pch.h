@@ -1,13 +1,89 @@
-// pch.h: This is a precompiled header file.
-// Files listed below are compiled only once, improving build performance for future builds.
-// This also affects IntelliSense performance, including code completion and many code browsing features.
-// However, files listed here are ALL re-compiled if any one of them is updated between builds.
-// Do not add files here that you will be updating frequently as this negates the performance advantage.
+#pragma once
 
-#ifndef PCH_H
-#define PCH_H
+#ifndef _WIN32_WINNT
+#define _WIN32_WINNT 0x0A00 
+#endif
 
-// add headers that you want to pre-compile here
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+
+#define WIN32_LEAN_AND_MEAN
+#include <boost/asio.hpp>
+#include <boost/asio/ip/icmp.hpp>
+#include <boost/asio/steady_timer.hpp>
+
+#define NOMINMAX
+
+#include <any>
+#include <map>
+#include <mutex>
+#include <ctime>
+#include <regex>
+#include <vector>
+#include <thread>
+#include <future>
+#include <string>
+#include <memory>
+#include <chrono>
+#include <limits>
+#include <format>
+#include <random>
+#include <variant>
+#include <sstream>
+#include <iomanip>
+#include <fstream>
+#include <cstdint>
+#include <cassert>
+#include <iostream>
+#include <optional>
+#include <windows.h>
+#include <algorithm>
+#include <shellapi.h>
+#include <filesystem>
+#include <type_traits>
+#include <string_view>
+#include <shared_mutex>
+#include <unordered_map>
+
+#define PCRE2_CODE_UNIT_WIDTH 8
+#include <pcre2.h>
+#include <argon2.h>
+#include <fmt/os.h>
+#include <sodium.h>
+#include <fast_io.h>
+#include <date/tz.h>
+#include <rapidcsv.h>
+#include <date/date.h>
+#include <fmt/format.h>
+#include <toml++/toml.h>
+#include <stduuid/uuid.h>
+#include <fast_io_device.h>
+#include <fast_io_legacy.h>
+#include <rapidjson/writer.h>
+#include <rapidjson/pointer.h>
+#include <rapidjson/document.h>
+#include <rapidjson/allocators.h>
+#include <rapidjson/prettywriter.h>
+#include <rapidjson/stringbuffer.h>
+#include <rapidjson/ostreamwrapper.h>
+
+#include <rocksdb/db.h>
+#include <rocksdb/slice.h>
+#include <rocksdb/table.h>
+#include <rocksdb/options.h>
+#include <rocksdb/iterator.h>
+#include <rocksdb/listener.h>
+#include <rocksdb/convenience.h>
+#include <rocksdb/write_batch.h>
+#include <rocksdb/filter_policy.h>
+#include <rocksdb/compaction_filter.h>
+#include <rocksdb/utilities/checkpoint.h>
+#include <rocksdb/utilities/backup_engine.h>
+#include <rocksdb/utilities/transaction_db.h>
+
+#include <absl/strings/str_split.h>
+
 #include "framework.h"
 
-#endif //PCH_H
+#include "globals.hpp"
