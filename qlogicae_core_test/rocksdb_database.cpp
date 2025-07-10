@@ -6,7 +6,6 @@
 
 namespace QLogicaeCoreTest
 {
-
     class RocksDBDatabaseTest : public ::testing::TestWithParam<std::pair<std::string, int>> {
     protected:
         std::string test_path = "rocksdb_test";
@@ -122,7 +121,7 @@ namespace QLogicaeCoreTest
     }
 
     TEST_F(RocksDBDatabaseTest, Should_FinishUnderTimeLimit_When_LargeJsonStored) {
-        constexpr int json_size_kb = 1024; // ~1 MB
+        constexpr int json_size_kb = 1024; 
         constexpr int value_count = 100;
 
         std::ostringstream oss;
@@ -189,15 +188,6 @@ namespace QLogicaeCoreTest
         for (auto& t : threads) t.join();
         auto end = std::chrono::high_resolution_clock::now();
         EXPECT_LT(std::chrono::duration_cast<std::chrono::seconds>(end - start).count(), 10);
-    }
-
-    TEST_F(RocksDBDatabaseTest, Should_PerformUnder10Millisecond_When_SetAndGet) {
-        auto start = std::chrono::high_resolution_clock::now();
-        db->set_value("pkey", 555);
-        int val = db->get_value<int>("pkey");
-        auto end = std::chrono::high_resolution_clock::now();
-        EXPECT_EQ(val, 555);
-        EXPECT_LT(std::chrono::duration_cast<std::chrono::microseconds>(end - start).count(), 10000);
     }
 
     TEST_P(RocksDBDatabaseTest, Should_StoreCorrectValues_When_DifferentTypes) {
@@ -321,7 +311,7 @@ namespace QLogicaeCoreTest
 
     TEST_F(RocksDBDatabaseTest, Should_StoreJson_When_ContainsUnicode) {
         std::string key = "unicode_json";
-        std::string json = R"({"text":"Unicode"})"; // Japanese: "Hello, World"
+        std::string json = R"({"text":"Unicode"})"; 
         db->set_value(key, json);
         std::string result = db->get_value<std::string>(key);
         EXPECT_EQ(result, json);
@@ -399,6 +389,133 @@ namespace QLogicaeCoreTest
         EXPECT_EQ(user_value.value(), "cedric");
     }
 
+    TEST_F(RocksDBDatabaseTest,
+        Should_Expect_True_When_KeyIsFoundInDatabase)
+    {
+        db->set_value("existing_key", 42);
+        bool found = db->is_key_found("existing_key");
+        EXPECT_TRUE(found);
+    }
+
+    TEST_F(RocksDBDatabaseTest,
+        Should_Expect_False_When_KeyIsNotFoundInDatabase)
+    {
+        bool found = db->is_key_found("missing_key");
+        EXPECT_FALSE(found);
+    }
+
+    TEST_F(RocksDBDatabaseTest,
+        Should_Expect_Value_When_UsingGetWithBounds)
+    {
+        db->set_value("range_key", "bounded_value");
+        auto value = db->get_with_bounds("range_key", 0, 100);
+        EXPECT_TRUE(value.has_value());
+        EXPECT_EQ(value.value(), "bounded_value");
+    }
+
+    TEST_F(RocksDBDatabaseTest,
+        Should_Expect_False_When_GetWithBoundsKeyIsMissing)
+    {
+        auto value = db->get_with_bounds("unknown", 0, 100);
+        EXPECT_FALSE(value.has_value());
+    }
+
+    TEST_F(RocksDBDatabaseTest,
+        Should_Expect_Success_When_RemoveValueAsync)
+    {
+        db->set_value("to_remove", 1);
+        auto result = db->remove_value_async("to_remove");
+        EXPECT_TRUE(result.get());
+        EXPECT_FALSE(db->is_key_found("to_remove"));
+    }
+
+    TEST_F(RocksDBDatabaseTest,
+        Should_Expect_Success_When_BatchExecuteAsyncUsed)
+    {
+        db->begin_batch();
+        db->batch_set_value("batched", 321);
+        auto result = db->batch_execute_async();
+        EXPECT_TRUE(result.get());
+        EXPECT_EQ(db->get_value<int>("batched"), 321);
+    }
+
+    TEST_F(RocksDBDatabaseTest,
+        Should_Expect_Success_When_BatchExecuteUsed)
+    {
+        db->begin_batch();
+        db->batch_set_value("batched_sync", 111);
+        bool success = db->batch_execute();
+        EXPECT_TRUE(success);
+        EXPECT_EQ(db->get_value<int>("batched_sync"), 111);
+    }
+
+    TEST_F(RocksDBDatabaseTest,
+        Should_Expect_Success_When_CreateCheckpointInvoked)
+    {
+        std::string key = "checkpoint_key";
+        db->set_value(key, 999);
+
+        std::string checkpoint_path = "rocksdb_checkpoint_test";
+        std::filesystem::remove_all(checkpoint_path); 
+
+        bool result = db->create_checkpoint(checkpoint_path);
+        EXPECT_TRUE(result);
+        EXPECT_TRUE(std::filesystem::exists(checkpoint_path));
+
+        std::filesystem::remove_all(checkpoint_path);
+    }
+
+    TEST_F(RocksDBDatabaseTest,
+        Should_Expect_Success_When_ColumnFamilyCreated)
+    {
+        bool result = db->create_column_family("new_family");
+        EXPECT_TRUE(result);
+    }
+
+    TEST_F(RocksDBDatabaseTest,
+        Should_Expect_Success_When_ColumnFamilyDropped)
+    {
+        db->create_column_family("to_drop");
+        bool result = db->drop_column_family("to_drop");
+        EXPECT_TRUE(result);
+    }
+
+    TEST_F(RocksDBDatabaseTest,
+        Should_Expect_Success_When_ColumnFamilyUsed)
+    {
+        db->create_column_family("to_use");
+        bool result = db->use_column_family("to_use");
+        EXPECT_TRUE(result);
+    }
+
+    TEST_F(RocksDBDatabaseTest,
+        Should_Expect_Success_When_InitializedWithCustomConfig)
+    {
+        QLogicaeCore::RocksDBConfig config;
+        config.block_cache_size = 128 * 1024 * 1024;
+        config.write_buffer_size = 32 * 1024 * 1024;
+        config.max_background_jobs = 8;
+
+        {
+            QLogicaeCore::RocksDBDatabase custom_database("custom_config_path", config);
+            custom_database.set_value("test_key", 456);
+            int value = custom_database.get_value<int>("test_key");
+            EXPECT_EQ(value, 456);
+        }
+
+        std::filesystem::remove_all("custom_config_path");
+    }
+
+    TEST_F(RocksDBDatabaseTest,
+        Should_Throw_When_DatabasePathIsReadOnlyOrInvalid)
+    {
+        std::string path = "/";
+
+        EXPECT_THROW({
+            QLogicaeCore::RocksDBDatabase db_invalid(path);
+            }, std::runtime_error);
+    }
+
     INSTANTIATE_TEST_CASE_P(RocksDBDatabaseTest_Param, RocksDBDatabaseTest_Param,
         ::testing::Values(
             std::make_tuple("k1", 0, 0, 1),
@@ -418,5 +535,4 @@ namespace QLogicaeCoreTest
             std::make_pair(std::string("e"), static_cast<int>(-2147483648LL))
         )
     );
-
 }

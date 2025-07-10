@@ -75,4 +75,3 @@ namespace QLogicaeCore
         return _metadata;
     }
 }
-

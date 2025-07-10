@@ -18,3 +18,4 @@ namespace QLogicaeCore
         Validators& operator = (const Validators&) = delete;
     };
 }
+

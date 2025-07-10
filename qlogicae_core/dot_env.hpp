@@ -22,3 +22,4 @@ namespace QLogicaeCore
 		DotEnv& operator = (const DotEnv&) = delete;
 	};
 }
+

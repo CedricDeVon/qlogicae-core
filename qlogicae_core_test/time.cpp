@@ -238,5 +238,4 @@ namespace QLogicaeCoreTest
             QLogicaeCore::TimeFormat::DateVerbose
         )
     );
-
 }

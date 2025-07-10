@@ -152,5 +152,4 @@ namespace QLogicaeCore
     constexpr bool EventDispatcher<EventTypes...>::is_event_type() {
         return (std::is_same_v<T, EventTypes> || ...);
     }
-
 }

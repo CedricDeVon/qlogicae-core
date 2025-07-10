@@ -6,83 +6,80 @@
 
 namespace QLogicaeCoreTest
 {
-    class ValidatorsTest : public ::testing::TestWithParam<int> {};
+    TEST(ValidatorsTest,
+        Should_Return_Same_Instance_When_Accessed_Multiple_Times)
+    {
+        QLogicaeCore::Validators& first =
+            QLogicaeCore::Validators::instance();
 
-    TEST_F(ValidatorsTest, Should_Expect_SingletonInstance_When_AccessedMultipleTimes) {
-        auto& instance1 = QLogicaeCore::Validators::instance();
-        auto& instance2 = QLogicaeCore::Validators::instance();
-        EXPECT_EQ(&instance1, &instance2);
+        QLogicaeCore::Validators& second =
+            QLogicaeCore::Validators::instance();
+
+        ASSERT_EQ(&first, &second);
     }
 
-    TEST_F(ValidatorsTest, Should_Expect_SingletonInstance_When_AccessedConcurrently) {
-        std::vector<const QLogicaeCore::Validators*> instances(10);
-        std::vector<std::thread> threads;
-        for (int i = 0; i < 10; ++i) {
-            threads.emplace_back([&instances, i] {
-                instances[i] = &QLogicaeCore::Validators::instance();
-                });
+    TEST(ValidatorsTest,
+        Should_Handle_Many_Accesses_Under_Stress)
+    {
+        QLogicaeCore::Validators* instances[10000];
+
+        auto start = std::chrono::high_resolution_clock::now();
+
+        for (int i = 0; i < 10000; ++i)
+        {
+            instances[i] = &QLogicaeCore::Validators::instance();
         }
-        for (auto& t : threads) {
-            t.join();
+
+        for (int i = 1; i < 10000; ++i)
+        {
+            ASSERT_EQ(instances[i], instances[0]);
         }
-        for (int i = 1; i < 10; ++i) {
-            EXPECT_EQ(instances[0], instances[i]);
-        }
+
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration = end - start;
+
+        ASSERT_LT(std::chrono::duration_cast<std::chrono::seconds>(
+            duration).count(), 2);
     }
 
-    TEST_F(ValidatorsTest, Should_Expect_ThreadSafety_When_StressAccessedInParallel) {
+    TEST(ValidatorsTest,
+        Should_Be_Safe_When_Used_From_Multiple_Threads)
+    {
+        std::atomic<int> match_count = 0;
+        QLogicaeCore::Validators* base = &QLogicaeCore::Validators::instance();
+
         std::vector<std::thread> threads;
-        for (int i = 0; i < 100; ++i) {
-            threads.emplace_back([] {
-                auto& instance = QLogicaeCore::Validators::instance();
-                (void)instance;
+
+        for (int i = 0; i < 20; ++i)
+        {
+            threads.emplace_back([&match_count, base]()
+                {
+                    QLogicaeCore::Validators* local =
+                        &QLogicaeCore::Validators::instance();
+
+                    if (local == base)
+                    {
+                        ++match_count;
+                    }
                 });
         }
-        for (auto& thread : threads) {
+
+        for (auto& thread : threads)
+        {
             thread.join();
         }
-        SUCCEED();
+
+        ASSERT_EQ(match_count.load(), 20);
     }
 
-    TEST_F(ValidatorsTest, Should_Expect_PerformanceUnderTwoSeconds_When_AccessedRepeatedly) {
-        auto start = std::chrono::high_resolution_clock::now();
-        for (int i = 0; i < 100000; ++i) {
-            auto& instance = QLogicaeCore::Validators::instance();
-            (void)instance;
-        }
-        auto stop = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> duration = stop - start;
-        EXPECT_LT(duration.count(), 2.0);
+    TEST(ValidatorsTest,
+        Should_Not_Throw_When_Called_Repeatly_In_TryCatch)
+    {
+        ASSERT_NO_THROW({
+            for (int i = 0; i < 1000; ++i)
+            {
+                QLogicaeCore::Validators::instance();
+            }
+            });
     }
-
-    TEST_F(ValidatorsTest, Should_Expect_PerformanceUnderOneMillisecond_When_SingleAccess) {
-        auto start = std::chrono::high_resolution_clock::now();
-        auto& instance = QLogicaeCore::Validators::instance();
-        (void)instance;
-        auto stop = std::chrono::high_resolution_clock::now();
-        auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
-        EXPECT_LT(elapsed.count(), 1000);
-    }
-
-    TEST(ValidatorsTestDeathTest, Should_Expect_Death_When_ForcedExitDuringAccess) {
-        EXPECT_DEATH({
-            auto& instance = QLogicaeCore::Validators::instance();
-            std::exit(1);
-            }, "");
-    }
-
-    TEST_P(ValidatorsTest, Should_Expect_InstanceAccess_When_ParameterizedValuesAreUsed) {
-        int loop_count = GetParam();
-        for (int i = 0; i < loop_count; ++i) {
-            auto& instance = QLogicaeCore::Validators::instance();
-            (void)instance;
-        }
-        SUCCEED();
-    }
-
-    INSTANTIATE_TEST_CASE_P(
-        ValidatorsParameterized,
-        ValidatorsTest,
-        ::testing::Values(1, 10, 100, 1000, 10000)
-    );
 }

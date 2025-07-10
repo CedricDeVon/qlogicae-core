@@ -6,7 +6,6 @@
 
 namespace QLogicaeCoreTest
 {
-
     class DummyFileIO : public QLogicaeCore::AbstractFileIO
     {
     public:
@@ -83,6 +82,26 @@ namespace QLogicaeCoreTest
         auto end = std::chrono::high_resolution_clock::now();
         auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
         EXPECT_LE(ms, 1);
+    }
+
+    TEST(AbstractFileIOTestThreading, Should_Expect_NoCrash_When_MultiThreadedSet)
+    {
+        DummyFileIO file("name", "initial");
+        std::vector<std::thread> thread_list;
+
+        for (int index = 0; index < 16; ++index)
+        {
+            thread_list.emplace_back([&file, index]() {
+                file.set_file_path("thread_" + std::to_string(index));
+                });
+        }
+
+        for (auto& thread : thread_list)
+        {
+            thread.join();
+        }
+
+        SUCCEED();
     }
 
     INSTANTIATE_TEST_CASE_P(

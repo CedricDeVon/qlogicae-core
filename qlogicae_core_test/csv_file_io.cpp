@@ -22,7 +22,6 @@ namespace QLogicaeCoreTest
             file.open();
         }
 
-
         void TearDown() override {
             file.close();
             std::remove(path.c_str());

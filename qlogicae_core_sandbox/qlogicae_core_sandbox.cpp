@@ -73,3 +73,62 @@ Re-evaluate if test suite is comprehensive and complete
 
 
 */
+
+
+
+/*
+
+
+
+Test Categories (Must include all)
+- Asynchronous behavior
+    - Use std::async, std::future, std::promise, etc.
+- Multithreading behavior
+    - Use std::thread, std::mutex, std::condition_variable, std::atomic.
+- Stress Testing
+    - Simulate high-load or concurrency with large iteration loops.
+- Exception Safety
+    - Test all paths where exceptions may be thrown or must be caught.
+- Edge Cases
+    - Include minimum, maximum, empty, null-equivalent, and invalid values.
+- Parameterized Tests
+    - Use INSTANTIATE_TEST_CASE_P for all applicable tests.
+	- Separate tests with empty aguments as a separate test case.
+- Performance Validation
+    - Each test attempt must complete within 2 seconds.
+
+GTest Structure Requirements
+- Use only C++20 standard features.
+- Use INSTANTIATE_TEST_CASE_P (legacy macro as required).
+- Test suite name: [ClassName][Test]
+- Test case name: [Should]_[Expect]_[When]
+- Use performant Gtest syntax and features
+
+Code Style Rules
+- Maximum line length: 80 characters
+- No comments
+- No use of using keyword
+- No namespaces (declared or anonymous)
+- No abbreviated names — variables must be fully descriptive
+- Use full names for variables, methods, functions, classes, etc.
+- Use C#-style brackets:
+for (...)
+{
+    // body
+}
+
+void FunctionName()
+{
+    // body
+}
+
+Completion Criteria
+After generating the test file:
+- Confirm full coverage of all functionality.
+- Validate all edge cases and exception paths are tested.
+- Ensure parameterized and stress tests are included.
+- Ensure every rule above is followed exactly.
+
+
+
+*/

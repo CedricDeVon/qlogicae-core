@@ -367,3 +367,4 @@ namespace QLogicaeCoreTest
         ::testing::Values(true, false)
     );
 }
+

@@ -32,3 +32,4 @@ namespace QLogicaeCore
         void start_thread();
     };
 }
+

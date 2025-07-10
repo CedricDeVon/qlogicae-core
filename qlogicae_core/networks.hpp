@@ -18,3 +18,4 @@ namespace QLogicaeCore
         Networks& operator = (const Networks&) = delete;
     };
 }
+

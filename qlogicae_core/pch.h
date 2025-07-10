@@ -53,7 +53,6 @@
 #include <unordered_set>
 #include <condition_variable>
 
-
 #define PCRE2_CODE_UNIT_WIDTH 8
 #include <pcre2.h>
 #include <argon2.h>

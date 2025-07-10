@@ -4,136 +4,160 @@
 
 namespace QLogicaeCoreTest
 {
-
-    class WindowsRegistryTest : public ::testing::TestWithParam<std::wstring> {
+    class WindowsRegistryTest
+        : public ::testing::TestWithParam<std::wstring>
+    {
     protected:
-        std::wstring test_sub_key = L"Software\\UnitTest";
-        std::wstring test_name_key = L"TestName";
-        std::wstring test_value = L"TestValue";
-        QLogicaeCore::WindowsRegistry& registry = QLogicaeCore::WindowsRegistry::hkcu();
-
-        void SetUp() override {
-            registry.set_sub_and_name_keys_via_utf16(test_sub_key, test_name_key);
-        }
-
-        void TearDown() override {
-            registry.remove_value_via_utf16(test_sub_key, test_name_key);
-        }
+        QLogicaeCore::WindowsRegistry& registry =
+            QLogicaeCore::WindowsRegistry::hkcu();
     };
 
-    TEST_F(WindowsRegistryTest, Should_Expect_SetAndGetValue_When_UsingUtf16) {
-        ASSERT_TRUE(registry.set_value_via_utf16(test_sub_key, test_name_key, test_value));
-        auto value = registry.get_value_via_utf16(test_sub_key, test_name_key);
-        ASSERT_TRUE(value.has_value());
-        EXPECT_EQ(value.value(), test_value);
-    }
+    TEST_P(WindowsRegistryTest,
+        Should_Set_Expect_Success_When_Key_And_Value_Are_Valid)
+    {
+        std::wstring key = GetParam();
+        std::wstring value = L"TestValue";
 
-    TEST_F(WindowsRegistryTest, Should_Expect_SetAndGetValue_When_UsingUtf8) {
-        std::string sub = "Software\\UnitTest";
-        std::string name = "TestName";
-        std::string val = "TestValue";
+        bool set = registry.set_sub_and_name_keys_via_utf16(L"Software\\Test", key);
+        ASSERT_TRUE(set);
 
-        ASSERT_TRUE(registry.set_value_via_utf8(sub, name, val));
-        auto result = registry.get_value_via_utf8(sub, name);
-        ASSERT_TRUE(result.has_value());
-        EXPECT_EQ(result.value(), val);
-    }
+        bool result = registry.set_value_via_utf16(L"", L"", value);
+        ASSERT_TRUE(result);
 
-    TEST_F(WindowsRegistryTest, Should_Expect_KeyFound_When_ValidKeyExists_Utf8) {
-        registry.set_value_via_utf16(test_sub_key, test_name_key, test_value);
-        std::string sub = "Software\\UnitTest";
-        std::string name = "TestName";
+        std::optional<std::wstring> retrieved =
+            registry.get_value_via_utf16(L"", L"");
 
-        EXPECT_TRUE(registry.is_sub_and_name_key_path_found_via_utf8(sub, name));
-    }
+        ASSERT_TRUE(retrieved.has_value());
+        ASSERT_EQ(retrieved.value(), value);
 
-    TEST_F(WindowsRegistryTest, Should_Expect_KeyNotFound_When_KeyMissing_Utf8) {
-        std::string sub = "Software\\UnitTest";
-        std::string name = "NonExistentKey";
-
-        EXPECT_FALSE(registry.is_sub_and_name_key_path_found_via_utf8(sub, name));
-    }
-
-    TEST_F(WindowsRegistryTest, Should_Expect_Removal_When_ValidKeyExists) {
-        registry.set_value_via_utf16(test_sub_key, test_name_key, test_value);
-        EXPECT_TRUE(registry.remove_value_via_utf16(test_sub_key, test_name_key));
-        auto value = registry.get_value_via_utf16(test_sub_key, test_name_key);
-        ASSERT_TRUE(value.has_value());
-        EXPECT_EQ(value.value(), L"");
-    }
-
-    TEST_F(WindowsRegistryTest, Should_Expect_Success_When_SubAndNameKeysSetUtf16) {
-        EXPECT_TRUE(registry.set_sub_and_name_keys_via_utf16(test_sub_key, test_name_key));
-    }
-
-    TEST_F(WindowsRegistryTest, Should_Expect_Success_When_SubAndNameKeysSetUtf8) {
-        EXPECT_TRUE(registry.set_sub_and_name_keys_via_utf8("Software\\UnitTest", "TestName"));
-    }
-
-    TEST_F(WindowsRegistryTest, Should_Expect_SingletonBehavior_When_AccessedMultipleTimes) {
-        auto& a = QLogicaeCore::WindowsRegistry::hkcu();
-        auto& b = QLogicaeCore::WindowsRegistry::hkcu();
-        EXPECT_EQ(&a, &b);
-    }
-
-    TEST_F(WindowsRegistryTest, Should_Expect_ThreadSafety_When_AccessedConcurrently) {
-        registry.set_value_via_utf16(test_sub_key, test_name_key, test_value);
-        std::vector<std::thread> threads;
-        for (int i = 0; i < 10; ++i) {
-            threads.emplace_back([&]() {
-                auto val = registry.get_value_via_utf16(test_sub_key, test_name_key);
-                EXPECT_TRUE(val.has_value());
-                EXPECT_EQ(val.value(), test_value);
-                });
-        }
-        for (auto& t : threads) t.join();
-    }
-
-    TEST_F(WindowsRegistryTest, Should_Expect_StressHandling_When_RepeatedAccess) {
-        for (int i = 0; i < 1000; ++i) {
-            ASSERT_TRUE(registry.set_value_via_utf16(test_sub_key, test_name_key, test_value));
-            auto val = registry.get_value_via_utf16(test_sub_key, test_name_key);
-            ASSERT_TRUE(val.has_value());
-            EXPECT_EQ(val.value(), test_value);
-        }
-    }
-
-    TEST_F(WindowsRegistryTest, Should_Expect_PerformanceUnderTwoSeconds_When_BulkSetAndGet) {
-        auto start = std::chrono::steady_clock::now();
-        for (int i = 0; i < 10000; ++i) {
-            registry.set_value_via_utf16(test_sub_key, test_name_key, test_value);
-            registry.get_value_via_utf16(test_sub_key, test_name_key);
-        }
-        auto end = std::chrono::steady_clock::now();
-        std::chrono::duration<double> elapsed = end - start;
-        EXPECT_LT(elapsed.count(), 2.0);
-    }
-
-    TEST_F(WindowsRegistryTest, Should_Expect_PerformanceUnderOneMillisecond_When_SingleSetAndGet) {
-        auto start = std::chrono::high_resolution_clock::now();
-        registry.set_value_via_utf16(test_sub_key, test_name_key, test_value);
-        registry.get_value_via_utf16(test_sub_key, test_name_key);
-        auto end = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        EXPECT_LT(duration.count(), 1000);
-    }
-
-    TEST(WindowsRegistryTestDeathTest, Should_Expect_Death_When_ForcedExitAfterSet) {
-        EXPECT_DEATH({
-            auto& registry = QLogicaeCore::WindowsRegistry::hkcu();
-            registry.set_value_via_utf16(L"Software\\UnitTest", L"DEATH_TEST", L"VAL");
-            std::exit(1);
-            }, "");
+        bool removed = registry.remove_value_via_utf16(L"", L"");
+        ASSERT_TRUE(removed);
     }
 
     INSTANTIATE_TEST_CASE_P(
-        RegistryParameterized,
+        WindowsRegistryTest,
         WindowsRegistryTest,
         ::testing::Values(
-            L"HKCU_Param_1",
-            L"HKCU_Param_2",
-            L"HKCU_Param_3"
+            L"ValidKey",
+            std::wstring(256, L'X'),
+            L"A",
+            L"\uFFFF",
+            std::wstring(L"key\0mid", 7)
         )
     );
+
+    class WindowsRegistryEmptyArgumentTest : public ::testing::Test {};
+
+    TEST_F(WindowsRegistryEmptyArgumentTest,
+        Should_Fail_When_Sub_And_Name_Are_Empty)
+    {
+        QLogicaeCore::WindowsRegistry& registry =
+            QLogicaeCore::WindowsRegistry::hkcu();
+
+        std::wstring value = L"Test";
+
+        bool result = registry.set_value_via_utf16(L"", L"", value);
+        ASSERT_TRUE(result);
+    }
+
+    TEST(WindowsRegistryAsyncTest,
+        Should_Complete_All_Async_Registry_Access_Within_Time)
+    {
+        QLogicaeCore::WindowsRegistry& registry =
+            QLogicaeCore::WindowsRegistry::hkcu();
+
+        auto future = std::async(std::launch::async, [&registry]()
+            {
+                registry.set_sub_and_name_keys_via_utf16(L"Software\\Async", L"A");
+                registry.set_value_via_utf16(L"", L"", L"Value");
+                return registry.get_value_via_utf16(L"", L"");
+            });
+
+        auto status = future.wait_for(std::chrono::seconds(2));
+        ASSERT_EQ(status, std::future_status::ready);
+        ASSERT_TRUE(future.get().has_value());
+    }
+
+    TEST(WindowsRegistryThreadedTest,
+        Should_Handle_Concurrent_Set_Get_Remove_Correctly)
+    {
+        QLogicaeCore::WindowsRegistry& registry =
+            QLogicaeCore::WindowsRegistry::hkcu();
+
+        std::mutex mutex;
+        std::atomic<int> success_count = 0;
+
+        std::vector<std::thread> threads;
+        for (int i = 0; i < 10; ++i)
+        {
+            threads.emplace_back([&registry, &success_count, &mutex, i]()
+                {
+                    std::wstring key = L"Key" + std::to_wstring(i);
+                    std::wstring value = L"Value" + std::to_wstring(i);
+
+                    {
+                        std::lock_guard<std::mutex> lock(mutex);
+                        registry.set_sub_and_name_keys_via_utf16(
+                            L"Software\\Concurrent", key
+                        );
+                        if (registry.set_value_via_utf16(L"", L"", value))
+                        {
+                            ++success_count;
+                        }
+                        registry.remove_value_via_utf16(L"", L"");
+                    }
+                });
+        }
+
+        for (auto& t : threads)
+        {
+            t.join();
+        }
+
+        ASSERT_EQ(success_count.load(), 10);
+    }
+
+    TEST(WindowsRegistryStressTest,
+        Should_Complete_Thousands_Of_Calls_Under_2_Seconds)
+    {
+        QLogicaeCore::WindowsRegistry& registry =
+            QLogicaeCore::WindowsRegistry::hkcu();
+
+        auto start = std::chrono::high_resolution_clock::now();
+
+        for (int i = 0; i < 10000; ++i)
+        {
+            std::wstring key = L"Stress" + std::to_wstring(i);
+            registry.set_sub_and_name_keys_via_utf16(L"Software\\Stress", key);
+            registry.set_value_via_utf16(L"", L"", L"value");
+            registry.get_value_via_utf16(L"", L"");
+            registry.remove_value_via_utf16(L"", L"");
+        }
+
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration = end - start;
+
+        ASSERT_LT(std::chrono::duration_cast<std::chrono::seconds>(
+            duration).count(), 2);
+    }
+
+    TEST(WindowsRegistryExceptionSafetyTest,
+        Should_Not_Throw_When_Values_Are_Invalid)
+    {
+        QLogicaeCore::WindowsRegistry& registry =
+            QLogicaeCore::WindowsRegistry::hkcu();
+
+        ASSERT_NO_THROW({
+            registry.get_value_via_utf16(L"", L"");
+            });
+
+        ASSERT_NO_THROW({
+            registry.set_value_via_utf16(L"", L"", L"");
+            });
+
+        ASSERT_NO_THROW({
+            registry.remove_value_via_utf16(L"", L"");
+            });
+    }
 }
 

@@ -154,3 +154,4 @@ namespace QLogicaeCoreTest
     INSTANTIATE_TEST_CASE_P(OutputSizes, OutputSizeParamTest,
         ::testing::Values(65, 128, 256, 512));
 }
+

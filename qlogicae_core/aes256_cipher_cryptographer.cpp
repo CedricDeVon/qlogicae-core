@@ -2,16 +2,16 @@
 
 #include "pch.h"
 
-#include "cryptographer_2.hpp"
+#include "aes256_cipher_cryptographer.hpp"
 
 namespace QLogicaeCore
 {
-	Cryptographer2::Cryptographer2() : Cryptographer()
+	AES256CipherCryptographer::AES256CipherCryptographer() : Cryptographer()
 	{
 
 	}
 
-	std::string Cryptographer2::reverse(
+	std::string AES256CipherCryptographer::reverse(
 		const std::string_view& va,
 		const std::string_view& vb,
 		const std::string_view& vc) const
@@ -22,7 +22,7 @@ namespace QLogicaeCore
 		);
 	}
 
-	std::string Cryptographer2::transform(
+	std::string AES256CipherCryptographer::transform(
 		const std::string_view& va,
 		const std::string_view& vb,
 		const std::string_view& vc) const
@@ -33,7 +33,7 @@ namespace QLogicaeCore
 		);
 	}
 
-	std::future<std::string> Cryptographer2::reverse_async(
+	std::future<std::string> AES256CipherCryptographer::reverse_async(
 		const std::string_view& va,
 		const std::string_view& vb,
 		const std::string_view& vc) const
@@ -52,7 +52,7 @@ namespace QLogicaeCore
 			});
 	}
 
-	std::future<std::string> Cryptographer2::transform_async(
+	std::future<std::string> AES256CipherCryptographer::transform_async(
 		const std::string_view& va,
 		const std::string_view& vb,
 		const std::string_view& vc) const
@@ -71,7 +71,7 @@ namespace QLogicaeCore
 			});
 	}
 
-	std::string Cryptographer2::transform(
+	std::string AES256CipherCryptographer::transform(
 		const std::string_view& va,
 		const unsigned char* vb,
 		const unsigned char* vc) const
@@ -112,7 +112,7 @@ namespace QLogicaeCore
 		}
 	}
 
-	std::string Cryptographer2::reverse(
+	std::string AES256CipherCryptographer::reverse(
 		const std::string_view& va,
 		const unsigned char* vb,
 		const unsigned char* vc) const
@@ -149,7 +149,7 @@ namespace QLogicaeCore
 		}
 	}
 
-	std::future<std::string> Cryptographer2::reverse_async(
+	std::future<std::string> AES256CipherCryptographer::reverse_async(
 		const std::string_view& va,
 		const unsigned char* vb,
 		const unsigned char* vc) const
@@ -167,7 +167,7 @@ namespace QLogicaeCore
 		});
 	}
 
-	std::future<std::string> Cryptographer2::transform_async(
+	std::future<std::string> AES256CipherCryptographer::transform_async(
 		const std::string_view& va,
 		const unsigned char* vb,
 		const unsigned char* vc) const

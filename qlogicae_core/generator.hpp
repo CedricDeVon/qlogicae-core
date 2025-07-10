@@ -34,3 +34,4 @@ namespace QLogicaeCore
         static std::mt19937& _random_m19937();
     };
 }
+

@@ -525,4 +525,30 @@ namespace QLogicaeCoreTest
         std::string value = file.get_string(path);
         EXPECT_EQ(value, "pending");
     }
+
+    TEST_F(JsonFileIOTest, Should_Expect_Content_When_ReadAsyncIsUsed)
+    {
+        QLogicaeCore::JsonFileIO io("test.json");
+        io.insert_string({ "key" }, "value");
+        auto future = io.read_async();
+        ASSERT_TRUE(future.get().find("value") != std::string::npos);
+    }
+
+    TEST_F(JsonFileIOTest, Should_WriteSuccessfully_When_UsingWriteAsync)
+    {
+        QLogicaeCore::JsonFileIO io("test.json");
+        std::string content = R"({"x":1})";
+        auto future = io.write_async(content);
+        ASSERT_TRUE(future.get());
+        ASSERT_EQ(io.read(), content);
+    }
+
+    TEST_F(JsonFileIOTest, Should_Expect_Success_When_UsingWrite)
+    {
+        QLogicaeCore::JsonFileIO io("test.json");
+        std::string content = R"({"direct":"write"})";
+        ASSERT_TRUE(io.write(content));
+        ASSERT_EQ(io.get_string({ "direct" }), "write");
+    }
 }
+

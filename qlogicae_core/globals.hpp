@@ -278,3 +278,4 @@ namespace QLogicaeCore
         .uint32_t_3 = 2
     };
 }
+

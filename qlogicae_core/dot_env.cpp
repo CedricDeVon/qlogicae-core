@@ -11,7 +11,7 @@ namespace QLogicaeCore
 	{
 		try
 		{
-			if (key == nullptr || value == nullptr)
+			if (key == nullptr || key[0] == L'\0' || value == nullptr)
 			{
 				return false;
 			}
@@ -28,7 +28,7 @@ namespace QLogicaeCore
 	{
 		try
 		{
-			if (key == nullptr)
+			if (key == nullptr || key[0] == L'\0')
 			{
 				return false;
 			}
@@ -45,7 +45,7 @@ namespace QLogicaeCore
 	{
 		try
 		{
-			if (key == nullptr)
+			if (key == nullptr || key[0] == L'\0')
 			{
 				return L"";
 			}

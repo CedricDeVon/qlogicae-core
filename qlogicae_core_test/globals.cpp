@@ -98,4 +98,3 @@ namespace QLogicaeCoreTest
         ConstantsTest,
         ::testing::Values(1, 10, 100));
 }
-

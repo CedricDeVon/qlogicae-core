@@ -6,7 +6,6 @@
 
 namespace QLogicaeCoreTest
 {
-
     class SystemAccessTest : public ::testing::TestWithParam<int>
     {
     protected:

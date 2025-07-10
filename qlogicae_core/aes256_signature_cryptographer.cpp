@@ -2,16 +2,16 @@
 
 #include "pch.h"
 
-#include "cryptographer_4.hpp"
+#include "aes256_signature_cryptographer.hpp"
 
 namespace QLogicaeCore
 {
-	Cryptographer4::Cryptographer4() : Cryptographer()
+	AES256SignatureCryptographer::AES256SignatureCryptographer() : Cryptographer()
 	{
 
 	}
 
-	std::string Cryptographer4::reverse(
+	std::string AES256SignatureCryptographer::reverse(
 		const std::string_view& va,
 		const std::string_view& vb) const
 	{
@@ -21,7 +21,7 @@ namespace QLogicaeCore
 		);
 	}
 
-	std::string Cryptographer4::transform(
+	std::string AES256SignatureCryptographer::transform(
 		const std::string_view& va,
 		const std::string_view& vb,
 		const std::string_view& vc) const
@@ -33,7 +33,7 @@ namespace QLogicaeCore
 		);
 	}
 
-	std::future<std::string> Cryptographer4::reverse_async(
+	std::future<std::string> AES256SignatureCryptographer::reverse_async(
 		const std::string_view& va,
 		const std::string_view& vb) const
 	{
@@ -51,7 +51,7 @@ namespace QLogicaeCore
 			});
 	}
 
-	std::future<std::string> Cryptographer4::transform_async(
+	std::future<std::string> AES256SignatureCryptographer::transform_async(
 		const std::string_view& va,
 		const std::string_view& vb,
 		const std::string_view& vc) const
@@ -70,7 +70,7 @@ namespace QLogicaeCore
 			});
 	}
 
-	std::string Cryptographer4::transform(
+	std::string AES256SignatureCryptographer::transform(
 		const std::string_view& va,
 		unsigned char* vb,
 		unsigned char* vc) const
@@ -103,7 +103,7 @@ namespace QLogicaeCore
 		}
 	}
 
-	std::string Cryptographer4::reverse(
+	std::string AES256SignatureCryptographer::reverse(
 		const std::string_view& va,
 		unsigned char* vb) const
 	{
@@ -135,7 +135,7 @@ namespace QLogicaeCore
 		}
 	}
 
-	std::future<std::string> Cryptographer4::reverse_async(
+	std::future<std::string> AES256SignatureCryptographer::reverse_async(
 		const std::string_view& va,
 		unsigned char* vb) const
 	{
@@ -152,7 +152,7 @@ namespace QLogicaeCore
 		});
 	}
 
-	std::future<std::string> Cryptographer4::transform_async(
+	std::future<std::string> AES256SignatureCryptographer::transform_async(
 		const std::string_view& va,
 		unsigned char* vb,
 		unsigned char* vc) const

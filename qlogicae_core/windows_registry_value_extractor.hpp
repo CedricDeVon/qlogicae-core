@@ -28,4 +28,3 @@ namespace QLogicaeCore
         const std::string _name_key;
     };
 }
-

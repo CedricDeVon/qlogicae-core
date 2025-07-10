@@ -4,131 +4,302 @@
 
 namespace QLogicaeCoreTest
 {
-
-    class WindowsRegistryValueExtractorTest : public ::testing::Test
+    class WindowsRegistryValueExtractorTest
+        : public ::testing::TestWithParam<std::string>
     {
     protected:
-        void SetUp() override
-        {
-            const std::wstring sub_key = L"Software\\ErwinTest";
-            const std::wstring name_key = L"SampleKey";
-            const std::wstring value = L"RegistryValue";
-
-            HKEY hkey;
-            RegCreateKeyExW(HKEY_CURRENT_USER, sub_key.c_str(), 0, nullptr, 0, KEY_SET_VALUE, nullptr, &hkey, nullptr);
-            RegSetValueExW(hkey, name_key.c_str(), 0, REG_SZ,
-                reinterpret_cast<const BYTE*>(value.c_str()),
-                static_cast<DWORD>((value.size() + 1) * sizeof(wchar_t)));
-            RegCloseKey(hkey);
-        }
-
-        void TearDown() override
-        {
-            const std::wstring sub_key = L"Software\\ErwinTest";
-            RegDeleteKeyW(HKEY_CURRENT_USER, sub_key.c_str());
-        }
+        QLogicaeCore::WindowsRegistry& registry =
+            QLogicaeCore::WindowsRegistry::hkcu();
     };
 
-    TEST_F(WindowsRegistryValueExtractorTest, Should_Expect_Value_When_ValidUtf8)
+    TEST_P(WindowsRegistryValueExtractorTest,
+        Should_Extract_Expect_Value_When_Key_Is_Valid)
     {
-        QLogicaeCore::WindowsRegistryValueExtractor extractor("Software\\ErwinTest", "SampleKey");
-        auto result = extractor.get_value();
-        EXPECT_TRUE(result.has_value());
-        EXPECT_EQ(result.value(), "RegistryValue");
-    }
+        std::string sub_key = "Software\\ExtractorTest";
+        std::string name_key = GetParam();
+        std::string value = "ValidExtractedValue";
 
-    TEST_F(WindowsRegistryValueExtractorTest, Should_Expect_Value_When_ValidUtf16)
-    {
-        QLogicaeCore::WindowsRegistryValueExtractor extractor(L"Software\\ErwinTest", L"SampleKey");
-        auto result = extractor.get_value();
-        EXPECT_TRUE(result.has_value());
-        EXPECT_EQ(result.value(), "RegistryValue");
-    }
+        bool set = registry.set_value_via_utf8(sub_key, name_key, value);
+        ASSERT_TRUE(set);
 
-    TEST_F(WindowsRegistryValueExtractorTest, Should_Expect_Empty_When_KeyMissing)
-    {
-        QLogicaeCore::WindowsRegistryValueExtractor extractor(L"Software\\ErwinTest", L"MissingKey");
-        auto result = extractor.get_value();
-        EXPECT_TRUE(result.has_value());
-        EXPECT_EQ(result.value(), "");
-    }
+        QLogicaeCore::WindowsRegistryValueExtractor extractor(
+            sub_key, name_key
+        );
 
-    TEST_F(WindowsRegistryValueExtractorTest, Should_Expect_Empty_When_SubKeyMissing)
-    {
-        QLogicaeCore::WindowsRegistryValueExtractor extractor(L"Software\\DoesNotExist", L"SampleKey");
-        auto result = extractor.get_value();
-        EXPECT_TRUE(result.has_value());
-        EXPECT_EQ(result.value(), "");
-    }
+        std::optional<std::string> result = extractor.get_value();
 
-    TEST_F(WindowsRegistryValueExtractorTest, Should_Expect_NoThrow_When_AsyncGet)
-    {
-        QLogicaeCore::WindowsRegistryValueExtractor extractor("Software\\ErwinTest", "SampleKey");
-        auto future = std::async(std::launch::async, [&]() { return extractor.get_value(); });
-        EXPECT_NO_THROW(future.get());
-    }
+        ASSERT_TRUE(result.has_value());
+        ASSERT_EQ(result.value(), value);
 
-    TEST_F(WindowsRegistryValueExtractorTest, Should_Expect_Correct_When_UsedMultithreaded)
-    {
-        QLogicaeCore::WindowsRegistryValueExtractor extractor("Software\\ErwinTest", "SampleKey");
-        std::vector<std::thread> threads;
-        std::atomic<int> match = 0;
-
-        for (int i = 0; i < 32; ++i)
-        {
-            threads.emplace_back([&]()
-                {
-                    if (extractor.get_value().value() == "RegistryValue") ++match;
-                });
-        }
-
-        for (auto& t : threads) t.join();
-        EXPECT_EQ(match.load(), 32);
-    }
-
-    TEST_F(WindowsRegistryValueExtractorTest, Should_Expect_ThousandCalls_When_Stressed)
-    {
-        QLogicaeCore::WindowsRegistryValueExtractor extractor("Software\\ErwinTest", "SampleKey");
-        auto start = std::chrono::steady_clock::now();
-        int count = 0;
-
-        while (std::chrono::steady_clock::now() - start < std::chrono::seconds(2))
-        {
-            extractor.get_value();
-            ++count;
-        }
-
-        EXPECT_GT(count, 1000);
-    }
-
-    class WindowsRegistryValueExtractorParameterizedTest : public ::testing::TestWithParam<std::tuple<std::string, std::string>> {};
-
-    TEST_P(WindowsRegistryValueExtractorParameterizedTest, Should_Expect_Empty_When_NonexistentKeyCombo)
-    {
-        const auto& [sub_key, name_key] = GetParam();
-        QLogicaeCore::WindowsRegistryValueExtractor extractor(sub_key, name_key);
-        auto result = extractor.get_value();
-        EXPECT_TRUE(result.has_value());
-        EXPECT_EQ(result.value(), "");
+        bool removed = registry.remove_value_via_utf8(sub_key, name_key);
+        ASSERT_TRUE(removed);
     }
 
     INSTANTIATE_TEST_CASE_P(
-        InvalidCombos,
-        WindowsRegistryValueExtractorParameterizedTest,
+        WindowsRegistryValueExtractorTest,
+        WindowsRegistryValueExtractorTest,
         ::testing::Values(
-            std::make_tuple("Software\\Invalid1", "Key1"),
-            std::make_tuple("Software\\Invalid2", "Key2"),
-            std::make_tuple("Software\\Invalid3", "Key3")
+            "BasicKey",
+            "G",
+            "\u00FF_key",
+            std::string(256, 'Z'),
+            std::string("name\0null", 9)
         )
     );
 
-    TEST_F(WindowsRegistryValueExtractorTest, Should_Expect_OneMillisecond_Execution_When_Queried)
+    TEST(WindowsRegistryValueExtractorEmptyTest,
+        Should_Not_Throw_When_Sub_And_Name_Are_Empty)
     {
-        QLogicaeCore::WindowsRegistryValueExtractor extractor("Software\\ErwinTest", "SampleKey");
-        auto start = std::chrono::steady_clock::now();
-        extractor.get_value();
-        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(
-            std::chrono::steady_clock::now() - start).count();
-        EXPECT_LT(duration, 1000);
+        QLogicaeCore::WindowsRegistryValueExtractor extractor(
+            "", ""
+        );
+
+        std::optional<std::string> value;
+        ASSERT_NO_THROW({
+            value = extractor.get_value();
+            });
+
+        ASSERT_TRUE(value.has_value());
+    }
+
+    TEST(WindowsRegistryValueExtractorKeyTest,
+        Should_Return_Correct_Key_When_Constructed)
+    {
+        std::string sub_key = "Software\\CorrectKey";
+        std::string name_key = "Name123";
+
+        QLogicaeCore::WindowsRegistryValueExtractor extractor(
+            sub_key, name_key
+        );
+
+        ASSERT_EQ(extractor.get_sub_key().value(), sub_key);
+        ASSERT_EQ(extractor.get_name_key().value(), name_key);
+    }
+
+    TEST(WindowsRegistryValueExtractorAsyncTest,
+        Should_Return_Value_Correctly_When_Called_Asynchronously)
+    {
+        std::string sub_key = "Software\\AsyncTest";
+        std::string name_key = "AsyncKey";
+        std::string value = "AsyncValue";
+
+        QLogicaeCore::WindowsRegistry& registry =
+            QLogicaeCore::WindowsRegistry::hkcu();
+
+        bool ok = registry.set_value_via_utf8(sub_key, name_key, value);
+        ASSERT_TRUE(ok);
+
+        QLogicaeCore::WindowsRegistryValueExtractor extractor(
+            sub_key, name_key
+        );
+
+        auto future = std::async(std::launch::async, [&extractor]()
+            {
+                return extractor.get_value();
+            });
+
+        auto status = future.wait_for(std::chrono::seconds(2));
+        ASSERT_EQ(status, std::future_status::ready);
+        ASSERT_EQ(future.get().value(), value);
+
+        registry.remove_value_via_utf8(sub_key, name_key);
+    }
+
+    TEST(WindowsRegistryValueExtractorThreadedTest,
+        Should_Allow_Concurrent_Extractions_Without_Errors)
+    {
+        QLogicaeCore::WindowsRegistry& registry =
+            QLogicaeCore::WindowsRegistry::hkcu();
+
+        std::string sub_key = "Software\\Threaded";
+        std::string name_key = "ThreadedKey";
+        std::string value = "ThreadedValue";
+
+        bool set = registry.set_value_via_utf8(sub_key, name_key, value);
+        ASSERT_TRUE(set);
+
+        std::atomic<int> success_count = 0;
+        std::vector<std::thread> threads;
+
+        for (int i = 0; i < 10; ++i)
+        {
+            threads.emplace_back([&sub_key, &name_key, &value, &success_count]()
+                {
+                    QLogicaeCore::WindowsRegistryValueExtractor extractor(
+                        sub_key, name_key
+                    );
+
+                    std::optional<std::string> result = extractor.get_value();
+                    if (result.has_value() && result.value() == value)
+                    {
+                        ++success_count;
+                    }
+                });
+        }
+
+        for (auto& thread : threads)
+        {
+            thread.join();
+        }
+
+        ASSERT_EQ(success_count.load(), 10);
+
+        registry.remove_value_via_utf8(sub_key, name_key);
+    }
+
+    TEST(WindowsRegistryValueExtractorStressTest,
+        Should_Handle_Many_Extractions_Under_2_Seconds)
+    {
+        QLogicaeCore::WindowsRegistry& registry =
+            QLogicaeCore::WindowsRegistry::hkcu();
+
+        std::string sub_key = "Software\\StressTest";
+        std::string name_key = "StressKey";
+        std::string value = "StressValue";
+
+        bool set = registry.set_value_via_utf8(sub_key, name_key, value);
+        ASSERT_TRUE(set);
+
+        auto start = std::chrono::high_resolution_clock::now();
+
+        for (int i = 0; i < 10000; ++i)
+        {
+            QLogicaeCore::WindowsRegistryValueExtractor extractor(
+                sub_key, name_key
+            );
+
+            std::optional<std::string> result = extractor.get_value();
+            ASSERT_TRUE(result.has_value());
+            ASSERT_EQ(result.value(), value);
+        }
+
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration = end - start;
+
+        ASSERT_LT(std::chrono::duration_cast<std::chrono::seconds>(
+            duration).count(), 2);
+
+        registry.remove_value_via_utf8(sub_key, name_key);
+    }
+
+    TEST(WindowsRegistryValueExtractorWideConstructorTest,
+        Should_Extract_UTF8_Encoded_Value_When_Constructed_With_Wide_Strings)
+    {
+        std::wstring sub_key = L"Software\\WideStringTest";
+        std::wstring name_key = L"WideNameKey";
+        std::wstring value = L"Unicode";
+
+        QLogicaeCore::WindowsRegistry& registry =
+            QLogicaeCore::WindowsRegistry::hkcu();
+
+        bool ok = registry.set_value_via_utf16(sub_key, name_key, value);
+        ASSERT_TRUE(ok);
+
+        QLogicaeCore::WindowsRegistryValueExtractor extractor(
+            sub_key, name_key
+        );
+
+        std::optional<std::string> result = extractor.get_value();
+
+        ASSERT_TRUE(result.has_value());
+
+        std::wstring decoded = QLogicaeCore::Encoder::instance()
+            .from_utf8_to_utf16(result.value());
+
+        ASSERT_EQ(decoded, value);
+
+        registry.remove_value_via_utf16(sub_key, name_key);
+    }
+
+    TEST(WindowsRegistryValueExtractorCorruptedDataTest,
+        Should_Return_Empty_When_Registry_Data_Is_Unreadable)
+    {
+        std::string sub_key = "Software\\NonExistentSubKey";
+        std::string name_key = "MissingKey";
+
+        QLogicaeCore::WindowsRegistryValueExtractor extractor(
+            sub_key, name_key
+        );
+
+        std::optional<std::string> result = extractor.get_value();
+
+        ASSERT_TRUE(result.has_value());
+        ASSERT_EQ(result.value(), "");
+    }
+
+    TEST(WindowsRegistryValueExtractorOwnershipTest,
+        Should_Return_Consistent_Value_When_Called_Repeatedly)
+    {
+        std::string sub_key = "Software\\OwnershipTest";
+        std::string name_key = "RapidKey";
+        std::string value = "RapidValue123";
+
+        QLogicaeCore::WindowsRegistry& registry =
+            QLogicaeCore::WindowsRegistry::hkcu();
+
+        bool set = registry.set_value_via_utf8(sub_key, name_key, value);
+        ASSERT_TRUE(set);
+
+        QLogicaeCore::WindowsRegistryValueExtractor extractor(
+            sub_key, name_key
+        );
+
+        for (int i = 0; i < 10000; ++i)
+        {
+            std::optional<std::string> result = extractor.get_value();
+            ASSERT_TRUE(result.has_value());
+            ASSERT_EQ(result.value(), value);
+        }
+
+        bool removed = registry.remove_value_via_utf8(sub_key, name_key);
+        ASSERT_TRUE(removed);
+    }
+
+    TEST(WindowsRegistryValueExtractorDestructiveTest,
+        Should_Return_Empty_When_Registry_Key_Is_Removed_Before_Extraction)
+    {
+        std::string sub_key = "Software\\DestructiveTest";
+        std::string name_key = "DestructKey";
+        std::string value = "ThisWillBeDeleted";
+
+        QLogicaeCore::WindowsRegistry& registry =
+            QLogicaeCore::WindowsRegistry::hkcu();
+
+        bool set = registry.set_value_via_utf8(sub_key, name_key, value);
+        ASSERT_TRUE(set);
+
+        QLogicaeCore::WindowsRegistryValueExtractor extractor(
+            sub_key, name_key
+        );
+
+        bool removed = registry.remove_value_via_utf8(sub_key, name_key);
+        ASSERT_TRUE(removed);
+
+        std::optional<std::string> result = extractor.get_value();
+        ASSERT_TRUE(result.has_value());
+        ASSERT_EQ(result.value(), "");
+    }
+
+    TEST(WindowsRegistryValueExtractorKeyConsistencyTest,
+        Should_Return_Same_Sub_And_Name_On_Repeated_Calls)
+    {
+        std::string sub_key = "Software\\KeyCheck";
+        std::string name_key = "ConsistentKey";
+
+        QLogicaeCore::WindowsRegistryValueExtractor extractor(
+            sub_key, name_key
+        );
+
+        for (int i = 0; i < 1000; ++i)
+        {
+            std::optional<std::string> sub = extractor.get_sub_key();
+            std::optional<std::string> name = extractor.get_name_key();
+
+            ASSERT_TRUE(sub.has_value());
+            ASSERT_TRUE(name.has_value());
+
+            ASSERT_EQ(sub.value(), sub_key);
+            ASSERT_EQ(name.value(), name_key);
+        }
     }
 }

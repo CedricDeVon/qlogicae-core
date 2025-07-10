@@ -328,5 +328,4 @@ namespace QLogicaeCoreTest
             std::to_string(std::numeric_limits<int>::min())
         )
     );
-
 }

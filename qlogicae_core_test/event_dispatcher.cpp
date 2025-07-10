@@ -6,7 +6,6 @@
 
 namespace QLogicaeCoreTest
 {
-
     struct EventAlpha
     {
         int value;

@@ -37,3 +37,4 @@ namespace QLogicaeCore
         std::optional<int64_t> _ping();
     };
 }
+

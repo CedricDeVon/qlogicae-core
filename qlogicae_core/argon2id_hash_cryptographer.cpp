@@ -2,24 +2,24 @@
 
 #include "pch.h"
 
-#include "cryptographer_3.hpp"
+#include "argon2id_hash_cryptographer.hpp"
 
 namespace QLogicaeCore
 {
-	Cryptographer3::Cryptographer3() :
+	Argon2idHashCryptographer::Argon2idHashCryptographer() :
 		Cryptographer()
 	{
 		_va = QLogicaeCore::default_cryptographer_3_properties;
 	}
 
-	Cryptographer3::Cryptographer3(
+	Argon2idHashCryptographer::Argon2idHashCryptographer(
 		const CryptographerProperties& va) :
 			Cryptographer()
 	{
 		_va = va;
 	}
 
-	std::string Cryptographer3::transform(
+	std::string Argon2idHashCryptographer::transform(
 		const std::string& va) const
 	{
 		try
@@ -50,7 +50,7 @@ namespace QLogicaeCore
 		}
 	}
 
-	std::future<std::string> Cryptographer3::transform_async(
+	std::future<std::string> Argon2idHashCryptographer::transform_async(
 		const std::string& va) const
 	{
 		return std::async(std::launch::async, [this, va]() -> std::string
@@ -66,7 +66,7 @@ namespace QLogicaeCore
 		});
 	}
 
-	bool Cryptographer3::reverse(
+	bool Argon2idHashCryptographer::reverse(
 		const std::string_view& va,
 		const std::string_view& vb) const
 	{
@@ -84,7 +84,7 @@ namespace QLogicaeCore
 		}
 	}
 	
-	std::future<bool> Cryptographer3::reverse_async(
+	std::future<bool> Argon2idHashCryptographer::reverse_async(
 		const std::string_view& va,
 		const std::string_view& vb) const
 	{

@@ -45,16 +45,16 @@
     <ClInclude Include="cryptographer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="cryptographer_1.hpp">
+    <ClInclude Include="xchacha20_poly1305_cipher_cryptographer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="cryptographer_2.hpp">
+    <ClInclude Include="aes256_cipher_cryptographer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="cryptographer_3.hpp">
+    <ClInclude Include="argon2id_hash_cryptographer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="cryptographer_4.hpp">
+    <ClInclude Include="aes256_signature_cryptographer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="csv_file_io.hpp">
@@ -173,16 +173,16 @@
     <ClCompile Include="cryptographer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cryptographer_1.cpp">
+    <ClCompile Include="xchacha20_poly1305_cipher_cryptographer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cryptographer_2.cpp">
+    <ClCompile Include="aes256_cipher_cryptographer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cryptographer_3.cpp">
+    <ClCompile Include="argon2id_hash_cryptographer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cryptographer_4.cpp">
+    <ClCompile Include="aes256_signature_cryptographer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="csv_file_io.cpp">

@@ -124,10 +124,10 @@
     <ClCompile Include="binary_file_io.cpp" />
     <ClCompile Include="cli_io.cpp" />
     <ClCompile Include="cryptographer.cpp" />
-    <ClCompile Include="cryptographer_1.cpp" />
-    <ClCompile Include="cryptographer_2.cpp" />
-    <ClCompile Include="cryptographer_3.cpp" />
-    <ClCompile Include="cryptographer_4.cpp" />
+    <ClCompile Include="xchacha20_poly1305_cipher_cryptographer.cpp" />
+    <ClCompile Include="aes256_cipher_cryptographer.cpp" />
+    <ClCompile Include="argon2id_hash_cryptographer.cpp" />
+    <ClCompile Include="aes256_signature_cryptographer.cpp" />
     <ClCompile Include="csv_file_io.cpp" />
     <ClCompile Include="dot_env.cpp" />
     <ClCompile Include="dot_env_value_extractor.cpp" />

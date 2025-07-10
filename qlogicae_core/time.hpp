@@ -34,3 +34,4 @@ namespace QLogicaeCore
         const char* _get_format_string(const TimeFormat&) const;
     };
 }
+

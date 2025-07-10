@@ -2,15 +2,15 @@
 
 #include "pch.h"
 
-#include "cryptographer_1.hpp"
+#include "xchacha20_poly1305_cipher_cryptographer.hpp"
 
 namespace QLogicaeCore
 {
-	Cryptographer1::Cryptographer1() : Cryptographer()
+	XChaCha20Poly1305CipherCryptographer::XChaCha20Poly1305CipherCryptographer() : Cryptographer()
 	{
 	}
 
-    std::string Cryptographer1::reverse(
+    std::string XChaCha20Poly1305CipherCryptographer::reverse(
         const std::string_view& va,
         const std::string_view& vb,
         const std::string_view& vc) const
@@ -21,7 +21,7 @@ namespace QLogicaeCore
         );
     }
 
-    std::string Cryptographer1::transform(
+    std::string XChaCha20Poly1305CipherCryptographer::transform(
         const std::string_view& va,
         const std::string_view& vb,
         const std::string_view& vc) const
@@ -32,7 +32,7 @@ namespace QLogicaeCore
         );
     }
 
-    std::future<std::string> Cryptographer1::reverse_async(
+    std::future<std::string> XChaCha20Poly1305CipherCryptographer::reverse_async(
         const std::string_view& va,
         const std::string_view& vb,
         const std::string_view& vc) const
@@ -51,7 +51,7 @@ namespace QLogicaeCore
         });
     }
 
-    std::future<std::string> Cryptographer1::transform_async(
+    std::future<std::string> XChaCha20Poly1305CipherCryptographer::transform_async(
         const std::string_view& va,
         const std::string_view& vb,
         const std::string_view& vc) const
@@ -70,7 +70,7 @@ namespace QLogicaeCore
         });
     }
 
-    std::string Cryptographer1::transform(
+    std::string XChaCha20Poly1305CipherCryptographer::transform(
         const std::string_view& va,
         const unsigned char* vb,
         const unsigned char* vc) const
@@ -107,7 +107,7 @@ namespace QLogicaeCore
         }
     }
 
-    std::string Cryptographer1::reverse(
+    std::string XChaCha20Poly1305CipherCryptographer::reverse(
         const std::string_view& va,
         const unsigned char* vb,
         const unsigned char* vc) const
@@ -149,7 +149,7 @@ namespace QLogicaeCore
         }
     }
 
-    std::future<std::string> Cryptographer1::reverse_async(
+    std::future<std::string> XChaCha20Poly1305CipherCryptographer::reverse_async(
         const std::string_view& va,
         const unsigned char* vb,
         const unsigned char* vc) const
@@ -167,7 +167,7 @@ namespace QLogicaeCore
         });
     }
 
-    std::future<std::string> Cryptographer1::transform_async(
+    std::future<std::string> XChaCha20Poly1305CipherCryptographer::transform_async(
         const std::string_view& va,
         const unsigned char* vb,
         const unsigned char* vc) const

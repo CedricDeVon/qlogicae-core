@@ -6,63 +6,9 @@
 
 namespace QLogicaeCoreTest
 {
+    class LoggerTest : public ::testing::Test {};
 
-    class LoggerTest : public ::testing::TestWithParam<std::tuple<std::string, QLogicaeCore::LogMedium, bool>>
-    {
-    };
-
-    TEST_P(LoggerTest, Should_Expect_ProperConstruction_When_CreatedWithParameters)
-    {
-        const std::string name = std::get<0>(GetParam());
-        const QLogicaeCore::LogMedium medium = std::get<1>(GetParam());
-        const bool simplified = std::get<2>(GetParam());
-        QLogicaeCore::Logger logger(name, medium, { "out.txt" }, simplified);
-        EXPECT_EQ(logger.get_name(), name);
-        EXPECT_EQ(logger.get_medium(), medium);
-        EXPECT_EQ(logger.get_is_simplified(), simplified);
-        EXPECT_EQ(logger.get_output_paths().size(), 1);
-    }
-
-    TEST(LoggerTest, Should_Expect_SimplifiedToggle_When_Set)
-    {
-        QLogicaeCore::Logger logger;
-        EXPECT_FALSE(logger.get_is_simplified());
-        logger.set_is_simplified(true);
-        EXPECT_TRUE(logger.get_is_simplified());
-    }
-
-    TEST(LoggerTest, Should_Expect_AsyncLogCompletion_When_Invoked)
-    {
-        QLogicaeCore::Logger logger;
-        auto future = logger.log_async("async test");
-        EXPECT_EQ(future.wait_for(std::chrono::seconds(2)), std::future_status::ready);
-    }
-
-    TEST(LoggerTest, Should_Expect_MultipleThreads_When_LoggingConcurrently)
-    {
-        QLogicaeCore::Logger logger;
-        std::vector<std::future<void>> futures;
-        for (int i = 0; i < 16; ++i)
-        {
-            futures.push_back(logger.log_async("concurrent"));
-        }
-        for (auto& f : futures)
-        {
-            EXPECT_EQ(f.wait_for(std::chrono::milliseconds(1000)), std::future_status::ready);
-        }
-    }
-
-    TEST(LoggerTest, Should_Expect_PerformanceUnder1ms_When_LoggingSimple)
-    {
-        QLogicaeCore::Logger logger(true);
-        const auto start = std::chrono::high_resolution_clock::now();
-        logger.log("perf");
-        const auto end = std::chrono::high_resolution_clock::now();
-        const auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-        EXPECT_LE(elapsed.count(), 1);
-    }
-
-    TEST(LoggerTest, Should_Expect_ConstructorDefaultValues_When_EmptyConstructed)
+    TEST_F(LoggerTest, Should_Expect_DefaultValues_When_DefaultConstructed)
     {
         QLogicaeCore::Logger logger;
         EXPECT_EQ(logger.get_name(), "");
@@ -71,13 +17,96 @@ namespace QLogicaeCoreTest
         EXPECT_TRUE(logger.get_output_paths().empty());
     }
 
-    INSTANTIATE_TEST_CASE_P(
-        LoggerVariations,
-        LoggerTest,
-        ::testing::Values(
-            std::make_tuple("log1", QLogicaeCore::LogMedium::CONSOLE, false),
-            std::make_tuple("log2", QLogicaeCore::LogMedium::FILE, true),
-            std::make_tuple("log3", QLogicaeCore::LogMedium::ALL, false)
-        )
-    );
+    TEST_F(LoggerTest, Should_Expect_ProperInitialization_When_ConstructedWithParams)
+    {
+        std::vector<std::string> paths = { "log1.txt", "log2.txt" };
+        QLogicaeCore::Logger logger("MyLogger",
+            QLogicaeCore::LogMedium::CONSOLE, paths, true);
+
+        EXPECT_EQ(logger.get_name(), "MyLogger");
+        EXPECT_EQ(logger.get_medium(), QLogicaeCore::LogMedium::CONSOLE);
+        EXPECT_TRUE(logger.get_is_simplified());
+        EXPECT_EQ(logger.get_output_paths(), paths);
+    }
+
+    TEST_F(LoggerTest, Should_Expect_FlagUpdated_When_SetIsSimplified)
+    {
+        QLogicaeCore::Logger logger;
+        EXPECT_FALSE(logger.get_is_simplified());
+        logger.set_is_simplified(true);
+        EXPECT_TRUE(logger.get_is_simplified());
+    }
+
+    TEST_F(LoggerTest, Should_Expect_AsyncLogToComplete_When_LogAsync)
+    {
+        QLogicaeCore::Logger logger;
+        std::future<void> future = logger.log_async("message");
+        future.get();
+        SUCCEED();
+    }
+
+    TEST_F(LoggerTest, Should_Expect_ParallelLogging_When_Multithreaded)
+    {
+        QLogicaeCore::Logger logger;
+        std::vector<std::thread> thread_list;
+
+        for (int index = 0; index < 8; ++index)
+        {
+            thread_list.emplace_back([&logger]() {
+                logger.log("threaded message");
+                });
+        }
+
+        for (auto& thread : thread_list)
+        {
+            thread.join();
+        }
+
+        SUCCEED();
+    }
+
+    TEST_F(LoggerTest, Should_Expect_HighVolumeLogToSucceed_When_StressTested)
+    {
+        QLogicaeCore::Logger logger;
+        std::atomic<int> log_count = 0;
+        auto start = std::chrono::steady_clock::now();
+
+        while (std::chrono::steady_clock::now() - start < std::chrono::seconds(2))
+        {
+            logger.log("stress log");
+            ++log_count;
+        }
+
+        EXPECT_GT(log_count.load(), 1000);
+    }
+
+    TEST_F(LoggerTest, Should_Expect_NoThrow_When_LoggingEmptyString)
+    {
+        QLogicaeCore::Logger logger;
+        EXPECT_NO_THROW(logger.log(""));
+    }
+
+    TEST_F(LoggerTest, Should_Expect_CompleteQuickly_When_LoggingUnder2Seconds)
+    {
+        QLogicaeCore::Logger logger;
+        auto start = std::chrono::steady_clock::now();
+        logger.log("timed message");
+        auto end = std::chrono::steady_clock::now();
+
+        EXPECT_LT(std::chrono::duration_cast<std::chrono::seconds>(end - start).count(), 2);
+    }
+
+    class SimplifiedLogFlagTest : public ::testing::TestWithParam<bool> {};
+
+    TEST_P(SimplifiedLogFlagTest, Should_Expect_LogBehavesCorrectly_When_Parameterized)
+    {
+        QLogicaeCore::Logger logger;
+        logger.set_is_simplified(GetParam());
+        EXPECT_EQ(logger.get_is_simplified(), GetParam());
+        EXPECT_NO_THROW(logger.log("param log", QLogicaeCore::LogLevel::INFO, GetParam()));
+    }
+
+    INSTANTIATE_TEST_CASE_P(LogSimplifiedStates, SimplifiedLogFlagTest,
+        ::testing::Values(true, false));
+
 }

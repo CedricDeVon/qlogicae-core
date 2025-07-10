@@ -36,4 +36,3 @@ namespace QLogicaeCore
         WindowsRegistry& operator = (const WindowsRegistry&) = delete;
     };
 }
-

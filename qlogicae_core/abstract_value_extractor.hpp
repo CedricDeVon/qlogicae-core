@@ -17,4 +17,3 @@ namespace QLogicaeCore
         virtual std::optional<std::string> get_value() const = 0;
     };
 }
-

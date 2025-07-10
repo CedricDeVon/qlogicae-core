@@ -164,3 +164,4 @@ namespace QLogicaeCore
         StringMemoryPoolDiagnostics _diagnostics;
     };
 }
+

@@ -33,4 +33,9 @@ namespace QLogicaeCore
             return "";
         }
     }
+
+    std::optional<std::wstring> DotEnvValueExtractor::get_key() const
+    {
+        return _key;
+    }
 }

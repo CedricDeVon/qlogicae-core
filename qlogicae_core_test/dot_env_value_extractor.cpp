@@ -6,103 +6,203 @@
 
 namespace QLogicaeCoreTest
 {
-    class DotEnvValueExtractorTest : public ::testing::Test
+    class DotEnvValueExtractorTest : public ::testing::TestWithParam<std::wstring>
     {
     protected:
-        void SetUp() override
-        {
-            SetEnvironmentVariableW(L"DOTENV_STRING", L"utf8-string");
-        }
-
-        void TearDown() override
-        {
-            SetEnvironmentVariableW(L"DOTENV_STRING", nullptr);
-        }
+        void SetUp() override {}
+        void TearDown() override {}
     };
 
-    TEST_F(DotEnvValueExtractorTest, Should_Expect_Value_When_ValidUtf8Key)
+    class DotEnvValueExtractorEmptyArgumentTest : public ::testing::Test
     {
-        QLogicaeCore::DotEnvValueExtractor extractor("DOTENV_STRING");
-        auto value = extractor.get_value();
-        EXPECT_TRUE(value.has_value());
-        EXPECT_EQ(value.value(), "utf8-string");
+    };
+
+    TEST_P(DotEnvValueExtractorTest, Should_Return_Correct_Value_When_Key_Is_Valid)
+    {
+        std::wstring key = GetParam();
+        std::wstring value = L"ExtractorTestValue";
+        QLogicaeCore::DotEnv::instance().set(key.c_str(), value.c_str());
+        QLogicaeCore::DotEnvValueExtractor extractor(key);
+        std::optional<std::string> result = extractor.get_value();
+        ASSERT_TRUE(result.has_value());
+        ASSERT_EQ(result.value(), QLogicaeCore::Encoder::instance().from_utf16_to_utf8(value));
+        QLogicaeCore::DotEnv::instance().remove(key.c_str());
     }
 
-    TEST_F(DotEnvValueExtractorTest, Should_Expect_Value_When_ValidUtf16Key)
+    TEST_P(DotEnvValueExtractorTest, Should_Work_Asynchronously_When_Value_Extracted)
     {
-        QLogicaeCore::DotEnvValueExtractor extractor(L"DOTENV_STRING");
-        auto value = extractor.get_value();
-        EXPECT_TRUE(value.has_value());
-        EXPECT_EQ(value.value(), "utf8-string");
+        std::wstring key = GetParam();
+        std::wstring value = L"AsyncExtract";
+        QLogicaeCore::DotEnv::instance().set(key.c_str(), value.c_str());
+        std::future<std::optional<std::string>> future = std::async(std::launch::async, [key]() {
+            QLogicaeCore::DotEnvValueExtractor extractor(key);
+            return extractor.get_value();
+            });
+        std::optional<std::string> result = future.get();
+        ASSERT_TRUE(result.has_value());
+        ASSERT_EQ(result.value(), QLogicaeCore::Encoder::instance().from_utf16_to_utf8(value));
+        QLogicaeCore::DotEnv::instance().remove(key.c_str());
     }
 
-    TEST_F(DotEnvValueExtractorTest, Should_Expect_Empty_When_KeyDoesNotExist)
+    TEST_P(DotEnvValueExtractorTest, Should_Handle_Concurrent_Extraction_When_Threaded)
     {
-        QLogicaeCore::DotEnvValueExtractor extractor("DOES_NOT_EXIST");
-        auto value = extractor.get_value();
-        EXPECT_TRUE(value.has_value());
-        EXPECT_EQ(value.value(), "");
-    }
+        std::wstring key = GetParam();
+        std::wstring value = L"ThreadedExtract";
+        QLogicaeCore::DotEnv::instance().set(key.c_str(), value.c_str());
+        QLogicaeCore::DotEnvValueExtractor extractor(key);
 
-    TEST_F(DotEnvValueExtractorTest, Should_Expect_NoThrow_When_CalledAsync)
-    {
-        QLogicaeCore::DotEnvValueExtractor extractor("DOTENV_STRING");
-        auto future = std::async(std::launch::async, [&]() { return extractor.get_value(); });
-        EXPECT_NO_THROW(future.get());
-    }
-
-    TEST_F(DotEnvValueExtractorTest, Should_Expect_Correct_When_UsedMultithreaded)
-    {
-        QLogicaeCore::DotEnvValueExtractor extractor("DOTENV_STRING");
+        std::mutex accessMutex;
+        std::condition_variable startCondition;
+        std::atomic<bool> ready(false);
+        std::mutex startMutex;
         std::vector<std::thread> threads;
-        std::atomic<int> success = 0;
-        for (int i = 0; i < 32; ++i)
+
+        for (int index = 0; index < 10; ++index)
         {
-            threads.emplace_back([&]()
+            threads.emplace_back([&]() {
+                std::unique_lock<std::mutex> lock(startMutex);
+                startCondition.wait(lock, [&] { return ready.load(); });
+                std::optional<std::string> result;
                 {
-                    if (extractor.get_value().value() == "utf8-string") ++success;
+                    std::lock_guard<std::mutex> guard(accessMutex);
+                    result = extractor.get_value();
+                }
+                ASSERT_TRUE(result.has_value());
+                ASSERT_EQ(result.value(), QLogicaeCore::Encoder::instance().from_utf16_to_utf8(value));
                 });
         }
-        for (auto& t : threads) t.join();
-        EXPECT_EQ(success.load(), 32);
-    }
 
-    TEST_F(DotEnvValueExtractorTest, Should_Expect_ThousandCalls_When_Stressed)
-    {
-        QLogicaeCore::DotEnvValueExtractor extractor("DOTENV_STRING");
-        auto start = std::chrono::steady_clock::now();
-        size_t count = 0;
-        while (std::chrono::steady_clock::now() - start < std::chrono::seconds(2))
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
         {
-            extractor.get_value();
-            ++count;
+            std::lock_guard<std::mutex> lock(startMutex);
+            ready.store(true);
         }
-        EXPECT_GT(count, 1000);
+        startCondition.notify_all();
+
+        for (std::thread& thread : threads)
+        {
+            thread.join();
+        }
+
+        QLogicaeCore::DotEnv::instance().remove(key.c_str());
     }
 
-    class DotEnvValueExtractorParameterizedTest : public ::testing::TestWithParam<std::string> {};
-
-    TEST_P(DotEnvValueExtractorParameterizedTest, Should_Expect_Empty_When_UnknownKeys)
+    TEST(DotEnvValueExtractorStressTest, Should_Perform_Within_Limit_When_Loaded)
     {
-        QLogicaeCore::DotEnvValueExtractor extractor(GetParam());
-        auto result = extractor.get_value();
-        EXPECT_TRUE(result.has_value());
-        EXPECT_EQ(result.value(), "");
+        auto start = std::chrono::high_resolution_clock::now();
+        for (int index = 0; index < 10000; ++index)
+        {
+            std::wstring key = L"ExtractorStressKey" + std::to_wstring(index);
+            std::wstring value = L"ExtractorStressValue" + std::to_wstring(index);
+            QLogicaeCore::DotEnv::instance().set(key.c_str(), value.c_str());
+            QLogicaeCore::DotEnvValueExtractor extractor(key);
+            std::optional<std::string> result = extractor.get_value();
+            ASSERT_TRUE(result.has_value());
+            ASSERT_EQ(result.value(), QLogicaeCore::Encoder::instance().from_utf16_to_utf8(value));
+            QLogicaeCore::DotEnv::instance().remove(key.c_str());
+        }
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::seconds>(end - start);
+        ASSERT_LT(duration.count(), 2);
+    }
+
+    TEST_F(DotEnvValueExtractorEmptyArgumentTest, Should_Return_Empty_When_Key_Is_Empty)
+    {
+        QLogicaeCore::DotEnvValueExtractor extractor(L"");
+        std::optional<std::string> result = extractor.get_value();
+        ASSERT_TRUE(result.has_value());
+        ASSERT_EQ(result.value(), "");
+    }
+
+    TEST(DotEnvValueExtractorTest,
+        Should_Handle_Empty_Result_When_Constructed_With_Invalid_UTF8)
+    {
+        std::string invalidUtf8 = "\xC3\x28"; 
+
+        QLogicaeCore::DotEnvValueExtractor extractor(invalidUtf8);
+        std::optional<std::string> value = extractor.get_value();
+
+        ASSERT_TRUE(value.has_value());
+        ASSERT_EQ(value.value(), "");
+    }
+
+    TEST(DotEnvValueExtractorTest,
+        Should_Return_Correct_Key_When_Using_Valid_Wide_Key)
+    {
+        std::wstring testKey = L"DUMMY_KEY";
+
+        QLogicaeCore::DotEnvValueExtractor extractor(testKey);
+        std::optional<std::wstring> key = extractor.get_key();
+
+        ASSERT_TRUE(key.has_value());
+        ASSERT_EQ(key.value(), testKey);
+    }
+
+    class DotEnvValueExtractorEdgeKeyTest
+        : public ::testing::TestWithParam<std::wstring>
+    {
+    };
+
+    TEST_P(DotEnvValueExtractorEdgeKeyTest,
+        Should_Set_Expect_Success_When_Using_Edge_Case_Keys)
+    {
+        std::wstring key = GetParam();
+        std::wstring value = L"TestEdgeValue";
+
+        bool setResult = QLogicaeCore::DotEnv::instance().set(
+            key.c_str(), value.c_str()
+        );
+
+        ASSERT_TRUE(setResult);
+
+        QLogicaeCore::DotEnvValueExtractor extractor(key);
+        std::optional<std::string> extracted = extractor.get_value();
+
+        ASSERT_TRUE(extracted.has_value());
+
+        std::wstring decoded = QLogicaeCore::Encoder::instance()
+            .from_utf8_to_utf16(extracted.value());
+
+        ASSERT_EQ(decoded, value);
+
+        QLogicaeCore::DotEnv::instance().remove(key.c_str());
     }
 
     INSTANTIATE_TEST_CASE_P(
-        DotEnvKeys,
-        DotEnvValueExtractorParameterizedTest,
-        ::testing::Values("UNSET_1", "UNSET_2", "UNSET_3", "UNSET_4", "UNSET_5")
+        DotEnvValueExtractorTest,
+        DotEnvValueExtractorEdgeKeyTest,
+        ::testing::Values(
+            std::wstring(L"\uFFFF"),
+            std::wstring(L"\U0001F600"),  
+            std::wstring(L"\U00024B62"),  
+            std::wstring(256, L'a'),      
+            std::wstring(L"HelloWorld")
+        )
     );
 
-    TEST_F(DotEnvValueExtractorTest, Should_Expect_Millisecond_Execution_When_CalledOnce)
+    TEST(DotEnvValueExtractorNegativeTest,
+        Should_Return_Empty_When_Key_Is_Not_Present)
     {
-        QLogicaeCore::DotEnvValueExtractor extractor("DOTENV_STRING");
-        auto start = std::chrono::steady_clock::now();
-        extractor.get_value();
-        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(
-            std::chrono::steady_clock::now() - start).count();
-        EXPECT_LT(duration, 1000);
+        std::wstring missingKey = L"NON_EXISTENT_ENV_VAR_1234";
+
+        QLogicaeCore::DotEnv::instance().remove(missingKey.c_str());
+
+        QLogicaeCore::DotEnvValueExtractor extractor(missingKey);
+        std::optional<std::string> value = extractor.get_value();
+
+        ASSERT_TRUE(value.has_value());
+        ASSERT_EQ(value.value(), "");
     }
+
+    INSTANTIATE_TEST_CASE_P(
+        DotEnvValueExtractorTestParameters,
+        DotEnvValueExtractorTest,
+        ::testing::Values(
+            L"EXTRACTOR_TEST_KEY",
+            std::wstring(1024, L'x'),
+            L"ENV_EXTRACT_WITH_SPACES",
+            std::wstring(L"null\0extract", 13),
+            std::wstring(L"long_extract_", 13) + std::wstring(1000, L'E')
+        )
+    );
 }

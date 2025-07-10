@@ -48,3 +48,4 @@ namespace QLogicaeCore
         void run();
     };
 }
+

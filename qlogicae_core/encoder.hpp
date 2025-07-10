@@ -34,4 +34,3 @@ namespace QLogicaeCore
         std::string _to_base64(const std::string_view&) const;
     };
 }
-

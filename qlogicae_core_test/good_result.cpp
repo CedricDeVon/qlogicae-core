@@ -98,3 +98,4 @@ namespace QLogicaeCoreTest
         ASSERT_LT(duration.count(), 2.0);
     }
 }
+

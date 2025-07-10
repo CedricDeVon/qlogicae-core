@@ -891,4 +891,19 @@ namespace QLogicaeCore {
             return update_object(path, value);
         });
     }
+
+    std::future<std::string> JsonFileIO::read_async()
+    {
+        return std::async(std::launch::async, [this]() {
+            return this->read();
+            });
+    }
+
+    std::future<bool> JsonFileIO::write_async(const std::string_view& content)
+    {
+        return std::async(std::launch::async, [this, content]() {
+            return this->write(content);
+            });
+    }
+
 }
