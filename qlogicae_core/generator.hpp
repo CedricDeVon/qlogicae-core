@@ -24,7 +24,7 @@ namespace QLogicaeCore
         static Generator& instance();
 
     protected:
-        Generator() = default;
+        Generator();
         ~Generator() = default;
         Generator(const Generator&) = delete;
         Generator(Generator&&) noexcept = delete;

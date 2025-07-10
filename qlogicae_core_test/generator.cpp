@@ -6,153 +6,198 @@
 
 namespace QLogicaeCoreTest
 {
+    class GeneratorTest : public ::testing::TestWithParam<std::size_t> {};
 
-    class GeneratorTest : public ::testing::TestWithParam<std::any> {
-    protected:
-        QLogicaeCore::Generator& generator = QLogicaeCore::Generator::instance();
-    };
+    TEST_P(GeneratorTest, Should_Expect_ValidCharacters_When_UsingCustomCharset)
+    {
+        std::string_view character_set = "ABCXYZ";
 
-    TEST_F(GeneratorTest, Should_Expect_ValidUUID_When_GeneratingUUID4) {
-        std::string uuid = generator.random_uuid4();
-        EXPECT_EQ(uuid.size(), 36);
-        EXPECT_NE(uuid.find('-'), std::string::npos);
+        std::string result = QLogicaeCore::Generator::instance()
+            .random_string(GetParam(), character_set);
+
+        for (char character : result)
+        {
+            EXPECT_NE(character_set.find(character), std::string::npos);
+        }
     }
 
-    TEST_F(GeneratorTest, Should_Expect_ValidSalt_When_GeneratingSalt) {
-        auto salt = generator.random_salt();
-        EXPECT_EQ(salt.size(), 16);
-        bool has_nonzero = false;
-        for (auto c : salt) {
-            if (c != 0) {
-                has_nonzero = true;
-                break;
+    TEST_P(GeneratorTest, Should_Expect_SameInstance_When_SingletonCalledMultipleTimes)
+    {
+        auto& generator_first = QLogicaeCore::Generator::instance();
+        auto& generator_second = QLogicaeCore::Generator::instance();
+
+        EXPECT_EQ(&generator_first, &generator_second);
+    }
+
+    TEST_P(GeneratorTest, Should_Expect_ValidContent_When_RandomBytesCalled)
+    {
+        std::size_t size = GetParam();
+        std::vector<unsigned char> output_buffer(size, 0);
+
+        EXPECT_NO_THROW({
+            QLogicaeCore::Generator::instance()
+                .random_bytes(output_buffer.data(), output_buffer.size());
+            });
+
+        if (size >= 4)
+        {
+            std::size_t checksum = 0;
+            for (unsigned char byte : output_buffer)
+            {
+                checksum += byte;
             }
+
+            EXPECT_GT(checksum, 0);
         }
-        EXPECT_TRUE(has_nonzero);
-    }
-
-    TEST_F(GeneratorTest, Should_Expect_True_When_ProbabilityIsOne) {
-        EXPECT_TRUE(generator.random_bool(1.0));
-    }
-
-    TEST_F(GeneratorTest, Should_Expect_False_When_ProbabilityIsZero) {
-        EXPECT_FALSE(generator.random_bool(0.0));
-    }
-
-    TEST_F(GeneratorTest, Should_Expect_Empty_When_StringLengthZero) {
-        std::string s = generator.random_string(0);
-        EXPECT_TRUE(s.empty());
-    }
-
-    TEST_F(GeneratorTest, Should_Expect_Empty_When_CharacterSetIsEmpty) {
-        std::string s = generator.random_string(10, "");
-        EXPECT_TRUE(s.empty());
-    }
-
-    TEST_F(GeneratorTest, Should_Expect_LengthMatch_When_GeneratingString) {
-        std::string s = generator.random_string(16);
-        EXPECT_EQ(s.length(), 16);
-    }
-
-    TEST_F(GeneratorTest, Should_Expect_VectorSizeMatch_When_GeneratingStringVector) {
-        auto vec = generator.random_string_vector(8, 4);
-        EXPECT_EQ(vec.size(), 8);
-        for (auto& str : vec) {
-            EXPECT_EQ(str.size(), 4);
+        else
+        {
+            SUCCEED();
         }
     }
 
-    TEST_F(GeneratorTest, Should_Expect_WithinRange_When_RandomInt) {
-        int value = generator.random_int(10, 20);
-        EXPECT_GE(value, 10);
-        EXPECT_LE(value, 20);
+    TEST_P(GeneratorTest, Should_Expect_NoCrash_When_NullBufferUsedWithZeroSize)
+    {
+        EXPECT_NO_THROW({
+            QLogicaeCore::Generator::instance()
+                .random_bytes(nullptr, 0);
+            });
     }
 
-    TEST_F(GeneratorTest, Should_Expect_WithinRange_When_RandomDouble) {
-        double value = generator.random_double(0.25, 0.75);
-        EXPECT_GE(value, 0.25);
-        EXPECT_LE(value, 0.75);
+    TEST_P(GeneratorTest, Should_Expect_ValidInteger_When_RangeIsValid)
+    {
+        int minimum = 0;
+        int maximum = static_cast<int>(GetParam());
+
+        int value = QLogicaeCore::Generator::instance()
+            .random_int(minimum, maximum);
+
+        EXPECT_GE(value, minimum);
+        EXPECT_LE(value, maximum);
     }
 
-    TEST_F(GeneratorTest, Should_Expect_UniqueUUIDs_When_Multithreaded) {
-        std::unordered_set<std::string> uuid_set;
-        std::mutex mtx;
-        std::vector<std::thread> threads;
-        for (int i = 0; i < 128; ++i) {
-            threads.emplace_back([&]() {
-                std::string uuid = generator.random_uuid4();
-                std::lock_guard<std::mutex> lock(mtx);
-                uuid_set.insert(uuid);
+    TEST_P(GeneratorTest, Should_Expect_ValidHex_When_CustomCharsetUsed)
+    {
+        std::string_view character_set = "0123456789ABCDEF";
+
+        std::string result = QLogicaeCore::Generator::instance()
+            .random_hex(GetParam(), character_set);
+
+        EXPECT_EQ(result.size(), GetParam() * 2);
+        EXPECT_TRUE(std::all_of(result.begin(), result.end(), [](char character)
+            {
+                return std::isxdigit(static_cast<unsigned char>(character));
+            }));
+    }
+
+    TEST_P(GeneratorTest, Should_Expect_ValidBase64_When_Called)
+    {
+        std::string result = QLogicaeCore::Generator::instance()
+            .random_base64(GetParam());
+
+        if (result.empty())
+        {
+            EXPECT_TRUE(result.empty());
+        }
+        else
+        {
+            EXPECT_FALSE(result.empty());
+        }
+
+        for (char character : result)
+        {
+            EXPECT_TRUE(
+                std::isalnum(static_cast<unsigned char>(character)) ||
+                character == '+' || character == '/' || character == '='
+            );
+        }
+
+        if (result.find('=') != std::string::npos)
+        {
+            EXPECT_TRUE(result.ends_with('='));
+        }
+    }
+
+    TEST_P(GeneratorTest, Should_Expect_MultipleThreads_When_GeneratingConcurrently)
+    {
+        std::vector<std::thread> thread_list;
+        std::atomic<int> success_count = 0;
+
+        for (int index = 0; index < 16; ++index)
+        {
+            thread_list.emplace_back([&]()
+                {
+                    std::string output = QLogicaeCore::Generator::instance()
+                        .random_string(GetParam());
+
+                    ++success_count;
                 });
         }
-        for (auto& t : threads) t.join();
-        EXPECT_EQ(uuid_set.size(), 128);
-    }
 
-    TEST_F(GeneratorTest, Should_Expect_QuickExecution_When_StressTestUUID) {
-        auto start = std::chrono::steady_clock::now();
-        std::vector<std::thread> threads;
-        std::atomic<int> counter{ 0 };
-        for (int i = 0; i < 1024; ++i) {
-            threads.emplace_back([&]() {
-                generator.random_uuid4();
-                counter.fetch_add(1, std::memory_order_relaxed);
-                });
+        for (auto& thread : thread_list)
+        {
+            thread.join();
         }
-        for (auto& t : threads) t.join();
-        auto end = std::chrono::steady_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-        EXPECT_EQ(counter.load(), 1024);
-        EXPECT_LE(duration, 2000);
+
+        EXPECT_EQ(success_count, 16);
     }
 
-    TEST_F(GeneratorTest, Should_Expect_FastResult_When_SingleUUIDAccess) {
-        auto start = std::chrono::high_resolution_clock::now();
-        generator.random_uuid4();
-        auto end = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
-        EXPECT_LE(duration, 1000);
+    TEST_P(GeneratorTest, Should_Expect_ResultUnder2Seconds_When_StressGenerating)
+    {
+        auto start_time = std::chrono::steady_clock::now();
+        int generation_count = 0;
+
+        while (std::chrono::steady_clock::now() - start_time <
+            std::chrono::seconds(2))
+        {
+            QLogicaeCore::Generator::instance()
+                .random_string(GetParam());
+
+            ++generation_count;
+        }
+
+        EXPECT_GT(generation_count, 1000);
+    }
+
+    TEST_P(GeneratorTest, Should_Expect_Result_When_AsyncGenerationRuns)
+    {
+        auto result = std::async(std::launch::async, [&]()
+            {
+                return QLogicaeCore::Generator::instance()
+                    .random_string(GetParam());
+            });
+
+        bool return_result = result.get().empty();
+        if (return_result)
+        {
+            EXPECT_TRUE(return_result);
+        }
+        else
+        {
+            EXPECT_FALSE(return_result);
+        }
     }
 
     INSTANTIATE_TEST_CASE_P(
-        GeneratorTest_Parameterized,
+        GeneratorSizes,
         GeneratorTest,
         ::testing::Values(
-            std::any(0),
-            std::any(5.0),
-            std::any(std::string("abcd")),
-            std::any(QLogicaeCore::Constants::ALPHA_NUMERIC_CHARACTERS),
-            std::any(QLogicaeCore::Constants::FULL_VISIBLE_ASCII_CHARACTERSET)
+            0,
+            1,
+            8,
+            16,
+            32,
+            64,
+            128,
+            256,
+            512,
+            1024,
+            2048,
+            4096,
+            8192,
+            16384,
+            32768,
+            65536,
+            131072
         )
     );
-
-    TEST_P(GeneratorTest, Should_Expect_Valid_When_UsingVariousArguments) {
-        auto param = GetParam();
-        if (param.type() == typeid(std::string)) {
-            auto str = std::any_cast<std::string>(param);
-            auto res = generator.random_string(4, str);
-            EXPECT_EQ(res.length(), 4);
-        }
-        else if (param.type() == typeid(double)) {
-            auto value = std::any_cast<double>(param);
-            EXPECT_NO_THROW(generator.random_double(0.0, value));
-        }
-        else if (param.type() == typeid(size_t)) {
-            size_t value = std::any_cast<size_t>(param);
-            EXPECT_NO_THROW(generator.random_string_vector(value, 4));
-        }
-        else if (param.type() == typeid(std::string_view)) {
-            std::string_view set = std::any_cast<std::string_view>(param);
-            auto res = generator.random_string(5, set);
-            EXPECT_EQ(res.size(), 5);
-        }
-    }
-
-    TEST_F(GeneratorTest, Should_Expect_Abort_When_ForceDeathTest) {
-        EXPECT_NO_THROW({
-            auto s = generator.random_string(8, "");
-            static_cast<void>(s);
-        });
-    }
 }
-

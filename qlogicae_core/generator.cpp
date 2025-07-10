@@ -6,6 +6,15 @@
 
 namespace QLogicaeCore
 {
+    Generator::Generator()
+    {
+        static const int status = sodium_init();
+        if (status < 0)
+        {
+            throw std::runtime_error("sodium_init failed");
+        }
+    }
+
     Generator& Generator::instance()
     {
         static Generator instance;
@@ -17,18 +26,26 @@ namespace QLogicaeCore
         const size_t& length,
         const std::string_view& character_set)
     {
-        return Encoder::instance().from_utf8_to_hex(
-            random_string(length, character_set)
-        );
+        if (character_set.empty() || length < 1)
+        {
+            return "";
+        }
+
+        const std::string raw = random_string(length, character_set);
+        return Encoder::instance().from_utf8_to_hex(raw);
     }
 
     std::string Generator::random_base64(
         const size_t& length,
         const std::string_view& character_set)
     {
-        return Encoder::instance().from_utf8_to_base64(
-            random_string(length, character_set)
-        );
+        if (character_set.size() < 64 || length < 1)
+        {
+            return "";
+        }
+
+        const std::string raw = random_string(length, character_set);
+        return Encoder::instance().from_utf8_to_base64(raw);
     }
 
     std::string Generator::random_uuid4() const
@@ -42,15 +59,18 @@ namespace QLogicaeCore
 
     std::array<unsigned char, 16> Generator::random_salt() const
     {
-        std::random_device va;
-        std::array<unsigned char, 16> vb{};
-        std::generate(vb.begin(), vb.end(), std::ref(va));
-
-        return vb;
+        std::array<unsigned char, 16> salt{};
+        randombytes_buf(salt.data(), salt.size());
+        return salt;
     }
 
     bool Generator::random_bool(const double& true_probability) const
     {
+        if (true_probability < 1)
+        {
+            return false;
+        }
+
         return std::bernoulli_distribution(
             true_probability)(_random_m19937());
     }
@@ -75,21 +95,22 @@ namespace QLogicaeCore
         const size_t& length,
         const std::string_view& character_set)
     {
-        if (character_set.empty() || length == 0)
+        if (character_set.empty() || length < 1)
         {
             return "";
         }
 
-        size_t index;
         std::string result;
         result.reserve(length);
 
-        for (index = 0; index < length; ++index)
+        std::mt19937& random_engine = _random_m19937();
+
+        std::uniform_int_distribution<std::size_t> distribution(
+            0, character_set.size() - 1);
+
+        for (std::size_t index = 0; index < length; ++index)
         {
-            result += character_set[
-                randombytes_uniform(
-                    static_cast<uint32_t>(character_set.size()))
-            ];
+            result += character_set[distribution(random_engine)];
         }
 
         return result;
@@ -98,6 +119,11 @@ namespace QLogicaeCore
     int Generator::random_int(
         const int& minimum, const int& maximum) const
     {
+        if (maximum < minimum)
+        {
+            throw std::invalid_argument("Invalid range");
+        }
+
         return std::uniform_int_distribution<int>(
             minimum, maximum)(_random_m19937());
     }
@@ -105,6 +131,11 @@ namespace QLogicaeCore
     double Generator::random_double(
         const double& minimum, const double& maximum) const
     {
+        if (maximum < minimum)
+        {
+            throw std::invalid_argument("Invalid range");
+        }
+
         return std::uniform_real_distribution<double>(
             minimum, maximum)(_random_m19937());
     }
@@ -112,6 +143,11 @@ namespace QLogicaeCore
     void Generator::random_bytes(
         unsigned char* buffer, size_t size) const
     {
+        if (buffer == nullptr && size > 0)
+        {
+            throw std::invalid_argument("Null buffer with non-zero size");
+        }
+
         randombytes_buf(buffer, size);
     }
 

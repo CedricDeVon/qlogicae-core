@@ -40,8 +40,8 @@ int main() {
 
 
 /*
-
 Write C++ Gtest test cases.
+
 Follow these additional requirements:
 - Use only C++20 features.
 - One file per tested class
@@ -65,5 +65,6 @@ Follow these code styling rules:
 - Make sure that loop, method opening and closing brackets must follow C# styling
 - Write your code in chat
 
+Re-evaluate if test suite is comprehensive and complete
 
 */
