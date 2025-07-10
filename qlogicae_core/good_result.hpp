@@ -15,11 +15,10 @@ namespace QLogicaeCore
             std::optional<MetaDataType> = std::nullopt
         );
 
-        GoodResult(GoodResult&&) noexcept = default;
-        GoodResult& operator=(GoodResult&&) noexcept = default;
-
         GoodResult(const GoodResult&) = delete;
+        GoodResult(GoodResult&&) noexcept = default;
         GoodResult& operator=(const GoodResult&) = delete;
+        GoodResult& operator=(GoodResult&&) noexcept = default;
     };
 
     template <typename ValueType, typename MetaDataType>
