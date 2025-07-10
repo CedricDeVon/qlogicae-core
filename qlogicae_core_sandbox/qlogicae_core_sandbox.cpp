@@ -43,7 +43,9 @@ int main() {
 
 Write C++ Gtest test cases.
 Follow these additional requirements:
+- Use only C++20 features.
 - One file per tested class
+- Use 'INSTANTIATE_TEST_CASE_P'
 - Comprehensive Asynchrnonous testing
 - Comprehensive Multithreading testing
 - Comprehensive Stress Tests
@@ -54,11 +56,11 @@ Follow these additional requirements:
 
 Follow these code styling rules:
 - Always follow 80 characters per line.
-- Use only C++20 features.
 - If tests exist, Test Suite Name Format: [ClassName][Test].
 - If tests exist, Test Name Format: [Should]_[Expect]_[When].
 - Avoid Comments at all times.
 - Avoid using declared namespaces.
+- Avoid using the 'using' c++ keyword.
 - Always use full names for variables. Make sure to use no abbreviations.
 - Make sure that loop, method opening and closing brackets must follow C# styling
 - Write your code in chat

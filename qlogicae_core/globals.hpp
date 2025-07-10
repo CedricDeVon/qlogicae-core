@@ -3,7 +3,7 @@
 #include "pch.h"
 
 namespace QLogicaeCore
-{
+{    
     struct Constants
     {
         static constexpr unsigned int DEFAULT_MILLISECONDS_PER_CALLBACK = 1000;
@@ -67,6 +67,31 @@ namespace QLogicaeCore
         static constexpr std::string_view LOG_LEVEL_CRITICAL = "CRITICAL";
         static constexpr std::string_view LOG_LEVEL_EXCEPTION = "EXCEPTION";
         static constexpr std::string_view LOG_LEVEL_HIGHLIGHTED_INFO = "INFO";
+
+        static constexpr std::string_view DEFAULT_HOST_ADDRESS = "1.1.1.1";
+    };
+
+    struct NetworkPingResponse
+    {
+        int64_t round_trip_time_in_milliseconds;
+    };
+
+    struct NetworkPingSettings
+    {
+        std::chrono::milliseconds milliseconds_per_callback
+        {
+            QLogicaeCore::Constants::DEFAULT_MILLISECONDS_PER_CALLBACK
+        };
+        std::string host_address
+        {
+            QLogicaeCore::Constants::DEFAULT_HOST_ADDRESS
+        };
+        bool is_listening
+        {
+            QLogicaeCore::Constants::DEFAULT_IS_LISTENING
+        };
+        std::string name;
+        std::function<void(const NetworkPingResponse&)> callback;
     };
 
     struct Json;

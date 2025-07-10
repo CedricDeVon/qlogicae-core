@@ -4,7 +4,6 @@
 
 namespace QLogicaeCore
 {
-
     template <typename... EventTypes>
     class EventDispatcher {
     public:
@@ -85,8 +84,6 @@ namespace QLogicaeCore
         }
         return *this;
     }
-
-    // -- EventDispatcher implementation --
 
     template <typename... EventTypes>
     EventDispatcher<EventTypes...>::EventDispatcher() = default;

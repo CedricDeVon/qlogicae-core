@@ -2,33 +2,11 @@
 
 #include "pch.h"
 
+#include "globals.hpp"
 #include "interval.hpp"
 
 namespace QLogicaeCore
 {
-    struct NetworkPingResponse
-    {
-        int64_t round_trip_time_in_milliseconds;
-    };
-
-    struct NetworkPingSettings
-    {
-        std::chrono::milliseconds milliseconds_per_callback
-        {
-            QLogicaeCore::Constants::DEFAULT_MILLISECONDS_PER_CALLBACK
-        };
-        std::string host_address
-        {
-            "1.1.1.1"
-        };
-        bool is_listening
-        {
-            QLogicaeCore::Constants::DEFAULT_IS_LISTENING
-        };
-        std::string name;
-        std::function<void(const NetworkPingResponse&)> callback;
-    };
-
     class NetworkPing
     {
     public:

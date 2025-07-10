@@ -23,11 +23,12 @@ namespace QLogicaeCore
 
     protected:
         std::jthread _thread;
-        std::function<void()> _func;
+        std::function<void()> _function;
         std::chrono::milliseconds _delay;
+        std::atomic<bool> _stop_flag{ false };
         std::atomic<bool> _is_cancelled{ false };
         std::atomic<bool> _execute_immediately{ false };
         
-        void run(std::stop_token);
+        void start_thread();
     };
 }
