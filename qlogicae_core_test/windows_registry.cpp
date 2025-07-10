@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "qlogicae_core.hpp"
+#include "windows_registry.hpp"
 
 namespace QLogicaeCoreTest
 {

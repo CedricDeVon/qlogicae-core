@@ -2,7 +2,8 @@
 
 #include "pch.h"
 
-#include "qlogicae_core.hpp"
+#include "generator.hpp"
+#include "cryptographer_1.hpp"
 
 namespace QLogicaeCoreTest
 {

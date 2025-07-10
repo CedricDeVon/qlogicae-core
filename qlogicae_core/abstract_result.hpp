@@ -7,6 +7,7 @@ namespace QLogicaeCore
     template <typename ValueType, typename MetaDataType = std::string>
     class AbstractResult
     {
+
     public:
         virtual ~AbstractResult() = default;
         AbstractResult(const AbstractResult&) = delete;

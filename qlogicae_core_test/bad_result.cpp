@@ -2,7 +2,7 @@
 
 #include "pch.h"
 
-#include "qlogicae_core.hpp"
+#include "bad_result.hpp"
 
 namespace QLogicaeCoreTest
 {

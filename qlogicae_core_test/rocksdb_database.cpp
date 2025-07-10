@@ -2,7 +2,7 @@
 
 #include "pch.h"
 
-#include "qlogicae_core.hpp"
+#include "rocksdb_database.hpp"
 
 namespace QLogicaeCoreTest
 {

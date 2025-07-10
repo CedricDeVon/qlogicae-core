@@ -2,7 +2,7 @@
 
 #include "pch.h"
 
-#include "qlogicae_core.hpp"
+#include "placeholder_value_extractor.hpp"
 
 namespace QLogicaeCoreTest
 {

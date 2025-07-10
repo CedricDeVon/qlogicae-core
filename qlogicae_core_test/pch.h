@@ -31,4 +31,5 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include <sodium.h>
 #include "gtest/gtest.h"

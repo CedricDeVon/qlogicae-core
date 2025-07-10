@@ -32,7 +32,7 @@ namespace QLogicaeCore
         static constexpr unsigned int NUMBER_BILLION = 1'000'000'000;
 
         static constexpr unsigned int UNIX_START_YEAR_OFFSET = 1'900;
-        static constexpr char TIME_FORMAT_ISO_8601[] = "%Y-%m-%d %H:%M:%S";
+        static constexpr char TIME_FORMAT_ISO_8601[] = "%Y-%m-%dT%H:%M:%S";
         static constexpr char TIME_FORMAT_FULL_TIMESTAMP[] = "%Y-%m-%d] [%H:%M:%S";
         static constexpr char TIME_FORMAT_HOUR_12[] = "%I:%M:%S %p";
         static constexpr char TIME_FORMAT_HOUR_24[] = "%H:%M:%S";

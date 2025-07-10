@@ -2,7 +2,7 @@
 
 #include "pch.h"
 
-#include "qlogicae_core.hpp"
+#include "event_dispatcher.hpp"
 
 namespace QLogicaeCoreTest
 {
