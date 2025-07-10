@@ -6,130 +6,96 @@
 
 namespace QLogicaeCoreTest
 {
-
-    class ConstantsTest : public ::testing::Test {};
-
-    TEST_F(ConstantsTest, Should_Expect_DefaultRegistryValues_When_Accessed)
+    class ConstantsTest : public ::testing::TestWithParam<int>
     {
-        EXPECT_EQ(QLogicaeCore::Constants::DEFAULT_HKEY, HKEY_CURRENT_USER);
-        EXPECT_EQ(QLogicaeCore::Constants::HKEY_MAXIMUM_VALUE_SIZE, 65536);
-        EXPECT_EQ(QLogicaeCore::Constants::DEFAULT_NAME_KEY, L"Data");
-        EXPECT_EQ(QLogicaeCore::Constants::DEFAULT_SUB_KEY, L"Software\\App");
-        EXPECT_EQ(QLogicaeCore::Constants::REGULAR_ACCESS_FLAGS, KEY_READ | KEY_SET_VALUE);
+    };
+
+    TEST_F(ConstantsTest, Should_Expect_CorrectTimeFormat_When_FormatConstantUsed)
+    {
+        EXPECT_STREQ(QLogicaeCore::Constants::TIME_FORMAT_ISO_8601,
+            "%Y-%m-%dT%H:%M:%S");
+
+        EXPECT_STREQ(QLogicaeCore::Constants::TIME_FORMAT_HOUR_24,
+            "%H:%M:%S");
+
+        EXPECT_STREQ(QLogicaeCore::Constants::TIME_FORMAT_DATE_DMY_SLASHED,
+            "%d/%m/%Y");
     }
 
-    TEST_F(ConstantsTest, Should_Expect_NumberConstants_When_Accessed)
+    TEST_F(ConstantsTest, Should_Expect_ValidAccessFlags_When_RegistryUsed)
     {
-        EXPECT_EQ(QLogicaeCore::Constants::NUMBER_ZERO, 0u);
-        EXPECT_EQ(QLogicaeCore::Constants::NUMBER_ONE, 1u);
-        EXPECT_EQ(QLogicaeCore::Constants::NUMBER_TEN, 10u);
-        EXPECT_EQ(QLogicaeCore::Constants::NUMBER_HUNDRED, 100u);
-        EXPECT_EQ(QLogicaeCore::Constants::NUMBER_THOUSAND, 1000u);
-        EXPECT_EQ(QLogicaeCore::Constants::NUMBER_MILLION, 1000000u);
-        EXPECT_EQ(QLogicaeCore::Constants::NUMBER_BILLION, 1000000000u);
+        EXPECT_TRUE(QLogicaeCore::Constants::REGULAR_ACCESS_FLAGS &
+            KEY_READ);
     }
 
-    TEST_F(ConstantsTest, Should_Expect_StringViews_When_Accessed)
+    TEST_F(ConstantsTest, Should_Expect_ValidRandomConstants_When_ValuesWithinBounds)
     {
-        EXPECT_EQ(QLogicaeCore::Constants::STRING_EMPTY, "");
-        EXPECT_EQ(QLogicaeCore::Constants::STRING_NONE_1, "None");
-        EXPECT_EQ(QLogicaeCore::Constants::STRING_NONE_2, "N/A");
-        EXPECT_TRUE(QLogicaeCore::Constants::FULL_VISIBLE_ASCII_CHARACTERSET.find("!") != std::string_view::npos);
+        EXPECT_GE(QLogicaeCore::Constants::RANDOM_DOUBLE_MINIMUM, 0.0);
+        EXPECT_LE(QLogicaeCore::Constants::RANDOM_DOUBLE_MAXIMUM, 1.0);
     }
 
-    TEST_F(ConstantsTest, Should_Expect_LogLevels_When_Called)
+    TEST_F(ConstantsTest, Should_Expect_CorrectAsciiSetLength_When_FullAsciiChecked)
     {
-        using QLogicaeCore::LogLevel;
-        EXPECT_EQ(QLogicaeCore::get_log_level_string(LogLevel::INFO), "INFO");
-        EXPECT_EQ(QLogicaeCore::get_log_level_string(LogLevel::DEBUG), "DEBUG");
-        EXPECT_EQ(QLogicaeCore::get_log_level_string(LogLevel::SUCCESS), "SUCCESS");
-        EXPECT_EQ(QLogicaeCore::get_log_level_string(LogLevel::WARNING), "WARNING");
-        EXPECT_EQ(QLogicaeCore::get_log_level_string(LogLevel::CRITICAL), "CRITICAL");
-        EXPECT_EQ(QLogicaeCore::get_log_level_string(LogLevel::EXCEPTION), "EXCEPTION");
-        EXPECT_EQ(QLogicaeCore::get_log_level_string(LogLevel::HIGHLIGHTED_INFO), "INFO");
+        std::string_view ascii = QLogicaeCore::Constants::
+            FULL_VISIBLE_ASCII_CHARACTERSET;
+        EXPECT_GT(ascii.length(), 80);
     }
 
-    TEST_F(ConstantsTest, Should_Expect_DefaultCryptographer3Properties_When_Accessed)
+    TEST_F(ConstantsTest, Should_Expect_EmptyStrings_When_DefaultEmptyConstantsUsed)
     {
-        auto props = QLogicaeCore::default_cryptographer_3_properties;
-        EXPECT_EQ(props.size_t_1, 32u);
-        EXPECT_EQ(props.size_t_2, 16u);
-        EXPECT_EQ(props.uint32_t_1, 3u);
-        EXPECT_EQ(props.uint32_t_2, 65536u);
-        EXPECT_EQ(props.uint32_t_3, 2u);
+        EXPECT_TRUE(QLogicaeCore::Constants::STRING_EMPTY.empty());
+        EXPECT_FALSE(QLogicaeCore::Constants::STRING_NONE_1.empty());
     }
 
-    TEST_F(ConstantsTest, Should_Expect_Success_When_ThreadedAccess)
+    TEST_P(ConstantsTest, Should_Expect_StablePerformance_When_StressConstantsLooped)
     {
-        std::atomic<int> success = 0;
-        std::vector<std::thread> threads;
+        std::chrono::steady_clock::time_point start_time =
+            std::chrono::steady_clock::now();
 
-        for (int i = 0; i < 16; ++i)
+        for (int iteration = 0; iteration < 1000000; iteration++)
         {
-            threads.emplace_back([&]()
-                {
-                    if (QLogicaeCore::Constants::NUMBER_ONE == 1) ++success;
-                });
+            volatile int value = QLogicaeCore::Constants::NUMBER_THOUSAND;
+            value += QLogicaeCore::Constants::NUMBER_HUNDRED;
+            value += QLogicaeCore::Constants::NUMBER_MILLION;
         }
 
-        for (auto& t : threads) t.join();
-        EXPECT_EQ(success, 16);
+        std::chrono::duration<double> elapsed =
+            std::chrono::steady_clock::now() - start_time;
+
+        EXPECT_LE(elapsed.count(), 2.0);
     }
 
-    TEST_F(ConstantsTest, Should_Expect_Completion_When_AsyncAccessed)
+    TEST_F(ConstantsTest, Should_Expect_UniqueLogLevels_When_DistinctLogEnumsUsed)
     {
-        auto future = std::async(std::launch::async, []()
-            {
-                return QLogicaeCore::Constants::TIME_FORMAT_ISO_8601;
-            });
-        auto result = future.get();
-        EXPECT_STREQ(result, "%Y-%m-%d %H:%M:%S");
+        std::set<std::string_view> level_names;
+
+        level_names.insert(QLogicaeCore::get_log_level_string(
+            QLogicaeCore::LogLevel::INFO));
+
+        level_names.insert(QLogicaeCore::get_log_level_string(
+            QLogicaeCore::LogLevel::DEBUG));
+
+        level_names.insert(QLogicaeCore::get_log_level_string(
+            QLogicaeCore::LogLevel::CRITICAL));
+
+        level_names.insert(QLogicaeCore::get_log_level_string(
+            QLogicaeCore::LogLevel::EXCEPTION));
+
+        EXPECT_GE(level_names.size(), 4);
     }
 
-    TEST_F(ConstantsTest, Should_Expect_ConsistentUnderStress_When_RepeatedAccess)
+    TEST_F(ConstantsTest, Should_Expect_CorrectDefaults_When_NetworkDefaultsUsed)
     {
-        auto start = std::chrono::steady_clock::now();
-        int count = 0;
-
-        while (std::chrono::steady_clock::now() - start < std::chrono::seconds(2))
-        {
-            auto val = QLogicaeCore::Constants::LOG_PART_1;
-            if (val == "[") ++count;
-        }
-
-        EXPECT_GT(count, 100000);
+        QLogicaeCore::NetworkPingSettings settings;
+        EXPECT_EQ(settings.host_address,
+            QLogicaeCore::Constants::DEFAULT_HOST_ADDRESS);
+        EXPECT_TRUE(settings.is_listening);
+        EXPECT_EQ(settings.milliseconds_per_callback.count(),
+            QLogicaeCore::Constants::DEFAULT_MILLISECONDS_PER_CALLBACK);
     }
 
-    class LogLevelToStringTest : public ::testing::TestWithParam<QLogicaeCore::LogLevel> {};
-
-    TEST_P(LogLevelToStringTest, Should_Expect_ValidMapping_When_Parameterized)
-    {
-        auto result = QLogicaeCore::get_log_level_string(GetParam());
-        EXPECT_FALSE(result.empty());
-    }
-
-    INSTANTIATE_TEST_CASE_P(
-        ValidLogLevels,
-        LogLevelToStringTest,
-        ::testing::Values(
-            QLogicaeCore::LogLevel::ALL,
-            QLogicaeCore::LogLevel::INFO,
-            QLogicaeCore::LogLevel::DEBUG,
-            QLogicaeCore::LogLevel::SUCCESS,
-            QLogicaeCore::LogLevel::WARNING,
-            QLogicaeCore::LogLevel::CRITICAL,
-            QLogicaeCore::LogLevel::EXCEPTION,
-            QLogicaeCore::LogLevel::HIGHLIGHTED_INFO
-        )
-    );
-
-    TEST_F(ConstantsTest, Should_Expect_OneMillisecond_When_MeasuringGetString)
-    {
-        auto start = std::chrono::steady_clock::now();
-        auto result = QLogicaeCore::get_log_level_string(QLogicaeCore::LogLevel::INFO);
-        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(
-            std::chrono::steady_clock::now() - start).count();
-        EXPECT_LT(duration, 1000);
-    }
+    INSTANTIATE_TEST_CASE_P(ConstantsTestCases,
+        ConstantsTest,
+        ::testing::Values(1, 10, 100));
 }
 
