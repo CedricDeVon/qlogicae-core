@@ -20,6 +20,8 @@
 #include <mutex>
 #include <ctime>
 #include <regex>
+#include <queue>
+#include <tuple>
 #include <vector>
 #include <thread>
 #include <future>
@@ -35,16 +37,22 @@
 #include <fstream>
 #include <cstdint>
 #include <cassert>
+#include <cstddef>
 #include <iostream>
+#include <typeindex>
 #include <optional>
 #include <windows.h>
 #include <algorithm>
+#include <functional>
 #include <shellapi.h>
 #include <filesystem>
 #include <type_traits>
 #include <string_view>
 #include <shared_mutex>
 #include <unordered_map>
+#include <unordered_set>
+#include <condition_variable>
+
 
 #define PCRE2_CODE_UNIT_WIDTH 8
 #include <pcre2.h>

@@ -36,3 +36,5 @@
 #include "timeout.hpp"
 #include "interval.hpp"
 #include "network_ping.hpp"
+#include "string_memory_pool.hpp"
+#include "event_dispatcher.hpp"

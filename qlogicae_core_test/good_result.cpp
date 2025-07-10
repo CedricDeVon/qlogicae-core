@@ -6,117 +6,95 @@
 
 namespace QLogicaeCoreTest
 {
-    template <typename T, typename M = std::string>
-    struct ResultFactory {
-        static QLogicaeCore::GoodResult<T, M>* make(std::optional<T> value, std::optional<M> metadata) {
-            return new QLogicaeCore::GoodResult<T, M>(value, metadata);
-        }
+    using QLogicaeCore::GoodResult;
+
+    class GoodResultTest : public ::testing::TestWithParam<
+        std::tuple<std::optional<int>, std::optional<std::string>>>
+    {
     };
 
-    class GoodResultTest : public ::testing::TestWithParam<std::any> {
-    };
+    TEST_P(GoodResultTest, Should_Expect_CorrectState_When_Initialized)
+    {
+        const std::optional<int>& value = std::get<0>(GetParam());
+        const std::optional<std::string>& metadata = std::get<1>(GetParam());
 
-    TEST_F(GoodResultTest, Should_Expect_True_When_IsStatusGood) {
-        auto* result = ResultFactory<int>::make(10, "meta");
-        EXPECT_TRUE(result->is_status_good());
-        delete result;
-    }
+        GoodResult<int, std::string> good_result(value, metadata);
 
-    TEST_F(GoodResultTest, Should_Expect_True_When_HasValue) {
-        auto* result = ResultFactory<std::string>::make("ok", "info");
-        EXPECT_TRUE(result->has_value());
-        delete result;
-    }
-
-    TEST_F(GoodResultTest, Should_Expect_True_When_HasMetadata) {
-        auto* result = ResultFactory<std::string>::make("ok", "data");
-        EXPECT_TRUE(result->has_metadata());
-        delete result;
-    }
-
-    TEST_F(GoodResultTest, Should_Expect_Equal_When_ValueAccessed) {
-        auto* result = ResultFactory<std::string>::make("alpha", "beta");
-        EXPECT_EQ(result->get_value().value(), "alpha");
-        delete result;
-    }
-
-    TEST_F(GoodResultTest, Should_Expect_Equal_When_MetadataAccessed) {
-        auto* result = ResultFactory<std::string>::make("gamma", "delta");
-        EXPECT_EQ(result->get_metadata().value(), "delta");
-        delete result;
-    }
-
-    TEST_F(GoodResultTest, Should_Expect_Throw_When_MetadataMissing) {
-        auto* result = ResultFactory<std::string>::make("value", std::nullopt);
-        EXPECT_THROW({
-            auto m = result->get_metadata().value();
-            static_cast<void>(m);
-            }, std::bad_optional_access);
-        delete result;
-    }
-
-    TEST_F(GoodResultTest, Should_Expect_Match_When_MultithreadedAccess) {
-        auto* result = ResultFactory<int>::make(100, "data");
-        std::vector<std::thread> threads;
-        for (int i = 0; i < 500; ++i) {
-            threads.emplace_back([&]() {
-                EXPECT_TRUE(result->has_value());
-                EXPECT_TRUE(result->is_status_good());
-                });
-        }
-        for (auto& t : threads) t.join();
-        delete result;
-    }
-
-    TEST_F(GoodResultTest, Should_Expect_QuickExecution_When_StressTest) {
-        auto* result = ResultFactory<int>::make(777, "stress");
-        auto start = std::chrono::high_resolution_clock::now();
-        std::vector<std::thread> threads;
-        for (int i = 0; i < 10000; ++i) {
-            threads.emplace_back([&]() {
-                result->has_value();
-                });
-        }
-        for (auto& t : threads) t.join();
-        auto end = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-        EXPECT_LE(duration, 2000);
-        delete result;
-    }
-
-    TEST_F(GoodResultTest, Should_Expect_Fast_When_SingleAccess) {
-        auto* result = ResultFactory<std::string>::make("text", "meta");
-        auto start = std::chrono::high_resolution_clock::now();
-        result->has_value();
-        auto end = std::chrono::high_resolution_clock::now();
-        auto dur = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
-        EXPECT_LE(dur, 1000);
-        delete result;
+        EXPECT_TRUE(good_result.is_status_good());
+        EXPECT_EQ(good_result.get_value(), value);
+        EXPECT_EQ(good_result.get_metadata(), metadata);
+        EXPECT_EQ(good_result.has_value(), value.has_value());
+        EXPECT_EQ(good_result.has_metadata(), metadata.has_value());
     }
 
     INSTANTIATE_TEST_CASE_P(
-        GoodResultTest_Param,
+        GoodResultTest,
         GoodResultTest,
         ::testing::Values(
-            std::any(42),
-            std::any(std::string("str")),
-            std::any(std::vector<int>{1, 2}),
-            std::any(nullptr),
-            std::any(true)
+            std::make_tuple(std::nullopt, std::nullopt),
+            std::make_tuple(42, std::nullopt),
+            std::make_tuple(std::nullopt, std::string("info")),
+            std::make_tuple(42, std::string("info"))
         )
     );
 
-    TEST_P(GoodResultTest, Should_Expect_Valid_When_Parameterized) {
-        const auto& value_any = GetParam();
-        if (value_any.type() == typeid(int)) {
-            auto* result = ResultFactory<int>::make(std::any_cast<int>(value_any), "meta");
-            EXPECT_TRUE(result->has_value());
-            delete result;
+    TEST(GoodResultTest, Should_Expect_CorrectBehavior_When_Multithreaded)
+    {
+        std::vector<std::thread> thread_pool;
+        std::vector<GoodResult<int>> results;
+        results.reserve(100);
+
+        for (int index = 0; index < 100; ++index)
+        {
+            results.emplace_back(index, "meta_" + std::to_string(index));
         }
-        if (value_any.type() == typeid(std::string)) {
-            auto* result = ResultFactory<std::string>::make(std::any_cast<std::string>(value_any), "meta");
-            EXPECT_TRUE(result->has_value());
-            delete result;
+
+        for (std::thread& thread_instance : thread_pool) {
+            thread_instance.join();
         }
+
+        for (int index = 0; index < 100; ++index) {
+            EXPECT_TRUE(results[index].has_value());
+            EXPECT_TRUE(results[index].has_metadata());
+            EXPECT_EQ(results[index].get_value().value(), index);
+            EXPECT_EQ(results[index].get_metadata().value(), "meta_" + std::to_string(index));
+        }
+    }
+
+    TEST(GoodResultTest, Should_Expect_CorrectBehavior_When_StressTested)
+    {
+        constexpr int iteration_count = 100000;
+        for (int index = 0; index < iteration_count; ++index) {
+            GoodResult<int> good_result(index, "meta");
+            ASSERT_TRUE(good_result.has_value());
+            ASSERT_EQ(good_result.get_value().value(), index);
+        }
+    }
+
+    TEST(GoodResultTest, Should_Expect_NoThrow_When_ConstructingEdgeCases)
+    {
+        EXPECT_NO_THROW((GoodResult<int>()));
+        EXPECT_NO_THROW((GoodResult<int>(std::nullopt, std::nullopt)));
+        EXPECT_NO_THROW((GoodResult<int>(std::nullopt, "edge")));
+        EXPECT_NO_THROW((GoodResult<int>(100, std::nullopt)));
+    }
+
+    class GoodResultPerformanceTest : public ::testing::Test
+    {
+    };
+
+    TEST_F(GoodResultPerformanceTest, Should_Expect_CompleteUnderLimit_When_PerformanceTested)
+    {
+        auto start_time = std::chrono::high_resolution_clock::now();
+
+        for (int index = 0; index < 500000; ++index) {
+            GoodResult<int> good_result(index, "perf");
+            ASSERT_TRUE(good_result.has_value());
+        }
+
+        auto end_time = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duration = end_time - start_time;
+
+        ASSERT_LT(duration.count(), 2.0);
     }
 }

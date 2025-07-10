@@ -116,6 +116,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <DebugInformationFormat>None</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -136,6 +137,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <DebugInformationFormat>None</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -160,6 +162,7 @@
     <ClInclude Include="dot_env_value_extractor.hpp" />
     <ClInclude Include="encoder.hpp" />
     <ClInclude Include="erwin.hpp" />
+    <ClInclude Include="event_dispatcher.hpp" />
     <ClInclude Include="files.hpp" />
     <ClInclude Include="file_ios.hpp" />
     <ClInclude Include="framework.h" />
@@ -176,6 +179,7 @@
     <ClInclude Include="qlogicae_core.hpp" />
     <ClInclude Include="regular_expression.hpp" />
     <ClInclude Include="rocksdb_database.hpp" />
+    <ClInclude Include="string_memory_pool.hpp" />
     <ClInclude Include="system_access.hpp" />
     <ClInclude Include="text_file_io.hpp" />
     <ClInclude Include="time.hpp" />
@@ -202,6 +206,7 @@
     <ClCompile Include="dot_env.cpp" />
     <ClCompile Include="dot_env_value_extractor.cpp" />
     <ClCompile Include="encoder.cpp" />
+    <ClCompile Include="event_dispatcher.cpp" />
     <ClCompile Include="file_ios.cpp" />
     <ClCompile Include="generator.cpp" />
     <ClCompile Include="globals.cpp" />
@@ -220,6 +225,7 @@
     <ClCompile Include="qlogicae_core.cpp" />
     <ClCompile Include="regular_expression.cpp" />
     <ClCompile Include="rocksdb_database.cpp" />
+    <ClCompile Include="string_memory_pool.cpp" />
     <ClCompile Include="system_access.cpp" />
     <ClCompile Include="text_file_io.cpp" />
     <ClCompile Include="time.cpp" />

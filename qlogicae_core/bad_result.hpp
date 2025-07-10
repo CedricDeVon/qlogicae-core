@@ -14,6 +14,12 @@ namespace QLogicaeCore
             std::optional<ValueType> = std::nullopt,
             std::optional<MetaDataType> = std::nullopt
         );
+
+        BadResult(BadResult&&) noexcept = default;
+        BadResult& operator=(BadResult&&) noexcept = default;
+
+        BadResult(const BadResult&) = delete;
+        BadResult& operator=(const BadResult&) = delete;
     };
 
     template <typename ValueType, typename MetaDataType>

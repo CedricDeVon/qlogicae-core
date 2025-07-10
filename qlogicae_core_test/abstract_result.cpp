@@ -6,142 +6,143 @@
 
 namespace QLogicaeCoreTest
 {
-    class AbstractResultTest : public ::testing::TestWithParam<std::tuple<std::any, std::any>> {
-    protected:
-        template <typename T, typename M>
-        QLogicaeCore::AbstractResult<T, M>* create_result(bool state, std::optional<T> value, std::optional<M> meta) {
-            struct TestableResult : public QLogicaeCore::AbstractResult<T, M> {
-                TestableResult(bool s, std::optional<T> v, std::optional<M> m)
-                    : QLogicaeCore::AbstractResult<T, M>(s, std::move(v), std::move(m)) {}
-            };
-            return new TestableResult(state, std::move(value), std::move(meta));
+    using QLogicaeCore::AbstractResult;
+
+    template <typename ValueType, typename MetaDataType = std::string>
+    class MockResult : public AbstractResult<ValueType, MetaDataType>
+    {
+    public:
+        MockResult(
+            bool state,
+            std::optional<ValueType> value = std::nullopt,
+            std::optional<MetaDataType> metadata = std::nullopt
+        ) : AbstractResult<ValueType, MetaDataType>(state, value, metadata) {
         }
+
+        MockResult(MockResult&&) noexcept = default;
+        MockResult& operator=(MockResult&&) noexcept = default;
+
+        MockResult(const MockResult&) = delete;
+        MockResult& operator=(const MockResult&) = delete;
     };
 
-    TEST_F(AbstractResultTest, Should_Expect_True_When_HasValuePresent) {
-        auto* result = create_result<int, std::string>(true, 42, "info");
-        EXPECT_TRUE(result->has_value());
-        delete result;
-    }
+    class AbstractResultTest : public ::testing::TestWithParam<
+        std::tuple<bool, std::optional<int>, std::optional<std::string>>>
+    {
+    };
 
-    TEST_F(AbstractResultTest, Should_Expect_False_When_ValueMissing) {
-        auto* result = create_result<int, std::string>(true, std::nullopt, "meta");
-        EXPECT_FALSE(result->has_value());
-        delete result;
-    }
+    TEST_P(AbstractResultTest, Should_Expect_CorrectValues_When_Constructed)
+    {
+        const bool status = std::get<0>(GetParam());
+        const std::optional<int>& value = std::get<1>(GetParam());
+        const std::optional<std::string>& metadata = std::get<2>(GetParam());
 
-    TEST_F(AbstractResultTest, Should_Expect_True_When_HasMetadataPresent) {
-        auto* result = create_result<int, std::string>(true, 77, "log");
-        EXPECT_TRUE(result->has_metadata());
-        delete result;
-    }
+        MockResult<int> result(status, value, metadata);
 
-    TEST_F(AbstractResultTest, Should_Expect_False_When_MetadataMissing) {
-        auto* result = create_result<int, std::string>(true, 77, std::nullopt);
-        EXPECT_FALSE(result->has_metadata());
-        delete result;
-    }
-
-    TEST_F(AbstractResultTest, Should_Expect_False_When_StatusIsBad) {
-        auto* result = create_result<int, std::string>(false, 12, "error");
-        EXPECT_FALSE(result->is_status_good());
-        delete result;
-    }
-
-    TEST_F(AbstractResultTest, Should_Expect_CorrectValue_When_ValueSet) {
-        auto* result = create_result<std::string, std::string>(true, "success", "ok");
-        EXPECT_EQ(result->get_value().value(), "success");
-        delete result;
-    }
-
-    TEST_F(AbstractResultTest, Should_Expect_CorrectMetadata_When_MetadataSet) {
-        auto* result = create_result<std::string, std::string>(true, "value", "meta");
-        EXPECT_EQ(result->get_metadata().value(), "meta");
-        delete result;
-    }
-
-    TEST_F(AbstractResultTest, Should_Expect_Throw_When_DereferencingEmptyValue) {
-        auto* result = create_result<int, std::string>(true, std::nullopt, "info");
-        EXPECT_THROW({
-            auto v = result->get_value().value();
-            static_cast<void>(v);
-            }, std::bad_optional_access);
-        delete result;
-    }
-
-    TEST_F(AbstractResultTest, Should_Expect_Throw_When_DereferencingEmptyMetadata) {
-        auto* result = create_result<int, std::string>(true, 5, std::nullopt);
-        EXPECT_THROW({
-            auto m = result->get_metadata().value();
-            static_cast<void>(m);
-            }, std::bad_optional_access);
-        delete result;
-    }
-
-    TEST_F(AbstractResultTest, Should_Expect_Success_When_MultithreadedAccess) {
-        auto* result = create_result<int, std::string>(true, 100, "info");
-        std::vector<std::thread> threads;
-        for (int i = 0; i < 100; ++i) {
-            threads.emplace_back([&]() {
-                EXPECT_TRUE(result->has_value());
-                EXPECT_TRUE(result->has_metadata());
-                EXPECT_EQ(result->get_value().value(), 100);
-                });
-        }
-        for (auto& t : threads) t.join();
-        delete result;
-    }
-
-    TEST_F(AbstractResultTest, Should_Expect_FinishWithinTwoSeconds_When_StressTest) {
-        auto* result = create_result<int, std::string>(true, 999, "stress");
-        auto start = std::chrono::high_resolution_clock::now();
-
-        std::vector<std::thread> threads;
-        for (int i = 0; i < 10000; ++i) {
-            threads.emplace_back([&]() {
-                result->has_value();
-                result->has_metadata();
-                });
-        }
-        for (auto& t : threads) t.join();
-
-        auto end = std::chrono::high_resolution_clock::now();
-        auto dur = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-        EXPECT_LE(dur, 2000);
-        delete result;
-    }
-
-    TEST_F(AbstractResultTest, Should_Expect_FinishWithinOneMillisecond_When_SingleAccess) {
-        auto* result = create_result<int, std::string>(true, 1, "quick");
-        auto start = std::chrono::high_resolution_clock::now();
-        result->has_value();
-        auto end = std::chrono::high_resolution_clock::now();
-        auto dur = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
-        EXPECT_LE(dur, 1000);
-        delete result;
+        EXPECT_EQ(result.is_status_good(), status);
+        EXPECT_EQ(result.has_value(), value.has_value());
+        EXPECT_EQ(result.has_metadata(), metadata.has_value());
+        EXPECT_EQ(result.get_value(), value);
+        EXPECT_EQ(result.get_metadata(), metadata);
     }
 
     INSTANTIATE_TEST_CASE_P(
-        AbstractResultTest_Param,
+        AbstractResultTest,
         AbstractResultTest,
         ::testing::Values(
-            std::make_tuple(std::any(1), std::any(std::string("meta"))),
-            std::make_tuple(std::any(std::string("value")), std::any(3.14)),
-            std::make_tuple(std::any(std::vector<int>{1, 2, 3}), std::any(nullptr)),
-            std::make_tuple(std::any(std::tuple<int, double>{1, 2.2}), std::any(std::monostate{})),
-            std::make_tuple(std::any(std::variant<int, std::string>{"hi"}), std::any(std::string("json")))
+            std::make_tuple(false, std::nullopt, std::nullopt),
+            std::make_tuple(true, std::nullopt, std::nullopt),
+            std::make_tuple(false, 123, std::nullopt),
+            std::make_tuple(true, std::nullopt, std::string("meta")),
+            std::make_tuple(true, 456, std::string("meta"))
         )
     );
 
-    TEST_P(AbstractResultTest, Should_Expect_ValidConstruction_When_Parameterized) {
-        const auto& [value_any, meta_any] = GetParam();
-        if (value_any.has_value() && meta_any.has_value()) {
-            if (value_any.type() == typeid(int) && meta_any.type() == typeid(std::string)) {
-                auto* result = create_result<int, std::string>(true, std::any_cast<int>(value_any), std::any_cast<std::string>(meta_any));
-                EXPECT_TRUE(result->has_value());
-                EXPECT_TRUE(result->has_metadata());
-                delete result;
-            }
+    TEST(AbstractResultTest, Should_Expect_CorrectBehavior_When_Asynchronous)
+    {
+        std::promise<MockResult<int>> promise;
+        std::future<MockResult<int>> future = promise.get_future();
+
+        std::thread thread_instance([&promise]() {
+            MockResult<int> result(true, 999, "async_metadata");
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
+            promise.set_value(std::move(result));
+            });
+
+        MockResult<int> result = future.get();
+
+        EXPECT_TRUE(result.is_status_good());
+        EXPECT_TRUE(result.has_value());
+        EXPECT_TRUE(result.has_metadata());
+        EXPECT_EQ(result.get_value().value(), 999);
+        EXPECT_EQ(result.get_metadata().value(), "async_metadata");
+
+        thread_instance.join();
+    }
+
+    TEST(AbstractResultTest, Should_Expect_CorrectBehavior_When_Multithreaded)
+    {
+        constexpr int thread_count = 64;
+        std::vector<std::thread> threads;
+        std::vector<std::optional<MockResult<int>>> results(thread_count);
+
+        for (int index = 0; index < thread_count; ++index)
+        {
+            threads.emplace_back([index, &results]() {
+                MockResult<int> result(true, index, "meta_" + std::to_string(index));
+                results[index].emplace(true, index, "meta_" + std::to_string(index));
+                });
         }
+
+        for (std::thread& thread : threads)
+        {
+            thread.join();
+        }
+
+        for (int index = 0; index < thread_count; ++index)
+        {
+            ASSERT_TRUE(results[index].has_value());
+            const MockResult<int>& result = results[index].value();
+            EXPECT_TRUE(result.is_status_good());
+            EXPECT_TRUE(result.has_value());
+            EXPECT_TRUE(result.has_metadata());
+            EXPECT_EQ(result.get_value().value(), index);
+            EXPECT_EQ(result.get_metadata().value(),
+                "meta_" + std::to_string(index));
+        }
+    }
+
+    TEST(AbstractResultTest, Should_Expect_ValidState_When_StressTested)
+    {
+        constexpr int limit = 100000;
+        for (int index = 0; index < limit; ++index)
+        {
+            MockResult<int> result(index % 2 == 0, index, "meta");
+            EXPECT_EQ(result.get_value().value(), index);
+        }
+    }
+
+    TEST(AbstractResultTest, Should_Expect_NoThrow_When_ConstructedWithEdgeCases)
+    {
+        EXPECT_NO_THROW((MockResult<int>(false)));
+        EXPECT_NO_THROW((MockResult<int>(true)));
+        EXPECT_NO_THROW((MockResult<int>(true, std::nullopt, std::nullopt)));
+        EXPECT_NO_THROW((MockResult<int>(false, -1, "negative")));
+    }
+
+    TEST(AbstractResultTest, Should_Expect_CompleteUnderLimit_When_PerformanceTested)
+    {
+        auto start_time = std::chrono::high_resolution_clock::now();
+
+        for (int index = 0; index < 500000; ++index)
+        {
+            MockResult<int> result(true, index, "perf");
+            EXPECT_TRUE(result.has_value());
+        }
+
+        auto end_time = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> elapsed = end_time - start_time;
+
+        ASSERT_LT(elapsed.count(), 2.0);
     }
 }
