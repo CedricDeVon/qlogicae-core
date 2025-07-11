@@ -124,6 +124,7 @@
     <ClCompile Include="binary_file_io.cpp" />
     <ClCompile Include="cli_io.cpp" />
     <ClCompile Include="cryptographer.cpp" />
+    <ClCompile Include="thread_pool.cpp" />
     <ClCompile Include="xchacha20_poly1305_cipher_cryptographer.cpp" />
     <ClCompile Include="aes256_cipher_cryptographer.cpp" />
     <ClCompile Include="argon2id_hash_cryptographer.cpp" />

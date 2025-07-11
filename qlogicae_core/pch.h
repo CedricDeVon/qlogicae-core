@@ -31,13 +31,15 @@
 #include <limits>
 #include <format>
 #include <random>
-#include <variant>
+#include <cctype>
 #include <sstream>
+#include <variant>
 #include <iomanip>
 #include <fstream>
 #include <cstdint>
 #include <cassert>
 #include <cstddef>
+#include <iterator>
 #include <iostream>
 #include <typeindex>
 #include <optional>
@@ -51,6 +53,7 @@
 #include <shared_mutex>
 #include <unordered_map>
 #include <unordered_set>
+#include <memory_resource>
 #include <condition_variable>
 
 #define PCRE2_CODE_UNIT_WIDTH 8
@@ -61,8 +64,11 @@
 #include <fast_io.h>
 #include <date/tz.h>
 #include <rapidcsv.h>
+#include <fmt/core.h>
+#include <utf8proc.h> 
 #include <date/date.h>
 #include <fmt/format.h>
+#include <fmt/compile.h>
 #include <toml++/toml.h>
 #include <stduuid/uuid.h>
 #include <fast_io_device.h>
@@ -74,6 +80,7 @@
 #include <rapidjson/prettywriter.h>
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/ostreamwrapper.h>
+#include <concurrentqueue/concurrentqueue.h>
 
 #include <rocksdb/db.h>
 #include <rocksdb/slice.h>

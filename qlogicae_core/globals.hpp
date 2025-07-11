@@ -277,5 +277,41 @@ namespace QLogicaeCore
         .uint32_t_2 = 1 << 16,
         .uint32_t_3 = 2
     };
+
+    enum class TaskPriority
+    {
+        High = 0,
+        Normal = 1,
+        Low = 2
+    };
+
+    struct SmallTaskObject
+    {
+        SmallTaskObject() = default;
+
+        template <typename Callable>
+        SmallTaskObject(Callable&& callable)
+        {
+            function_wrapper = [callable =
+                std::forward<Callable>(callable)]() mutable
+                {
+                    callable();
+                };
+        }
+
+        void operator()() const
+        {
+            function_wrapper();
+        }
+
+        std::function<void()> function_wrapper;
+    };
+
+    struct WorkerQueue
+    {
+        std::map<TaskPriority, std::queue<SmallTaskObject>> priority_queues;
+        std::mutex queue_mutex;
+        std::condition_variable wake_signal;
+    };
 }
 

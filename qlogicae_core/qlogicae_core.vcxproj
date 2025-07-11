@@ -117,6 +117,7 @@
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <DebugInformationFormat>None</DebugInformationFormat>
+      <UseUnicodeForAssemblerListing>true</UseUnicodeForAssemblerListing>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -138,6 +139,7 @@
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <DebugInformationFormat>None</DebugInformationFormat>
+      <UseUnicodeForAssemblerListing>true</UseUnicodeForAssemblerListing>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -153,6 +155,8 @@
     <ClInclude Include="binary_file_io.hpp" />
     <ClInclude Include="cli_io.hpp" />
     <ClInclude Include="cryptographer.hpp" />
+    <ClInclude Include="string_builder.hpp" />
+    <ClInclude Include="thread_pool.hpp" />
     <ClInclude Include="xchacha20_poly1305_cipher_cryptographer.hpp" />
     <ClInclude Include="aes256_cipher_cryptographer.hpp" />
     <ClInclude Include="argon2id_hash_cryptographer.hpp" />
@@ -161,7 +165,6 @@
     <ClInclude Include="dot_env.hpp" />
     <ClInclude Include="dot_env_value_extractor.hpp" />
     <ClInclude Include="encoder.hpp" />
-    <ClInclude Include="erwin.hpp" />
     <ClInclude Include="event_dispatcher.hpp" />
     <ClInclude Include="files.hpp" />
     <ClInclude Include="file_ios.hpp" />
@@ -198,6 +201,11 @@
     <ClCompile Include="binary_file_io.cpp" />
     <ClCompile Include="cli_io.cpp" />
     <ClCompile Include="cryptographer.cpp" />
+    <ClCompile Include="string_builder.cpp">
+      <UseUnicodeForAssemblerListing Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</UseUnicodeForAssemblerListing>
+      <UseUnicodeForAssemblerListing Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</UseUnicodeForAssemblerListing>
+    </ClCompile>
+    <ClCompile Include="thread_pool.cpp" />
     <ClCompile Include="xchacha20_poly1305_cipher_cryptographer.cpp" />
     <ClCompile Include="aes256_cipher_cryptographer.cpp" />
     <ClCompile Include="argon2id_hash_cryptographer.cpp" />
