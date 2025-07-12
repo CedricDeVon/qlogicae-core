@@ -313,5 +313,31 @@ namespace QLogicaeCore
         std::mutex queue_mutex;
         std::condition_variable wake_signal;
     };
+
+    struct JsonWebTokenTransformInput
+    {
+        std::string issuer;
+        std::string data;
+        std::string public_key;
+        std::string private_key;
+        std::chrono::seconds lifetime;
+        std::map<std::string, std::string> claims;
+    };
+
+    struct JsonWebTokenReverseInput
+    {
+        std::string token;
+        std::string issuer;
+        std::string public_key;
+    };
+
+    struct JsonWebTokenReverseResult
+    {
+        bool is_successful = false;
+        std::string message;
+        std::string subject;
+        std::map<std::string, std::string> headers;
+        std::map<std::string, std::string> payloads;
+    };
 }
 

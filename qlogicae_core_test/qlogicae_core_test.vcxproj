@@ -121,9 +121,12 @@
     <ClCompile Include="abstract_file_io.cpp" />
     <ClCompile Include="abstract_result.cpp" />
     <ClCompile Include="bad_result.cpp" />
+    <ClCompile Include="bcrypt_hash_cryptographer.cpp" />
     <ClCompile Include="binary_file_io.cpp" />
     <ClCompile Include="cli_io.cpp" />
     <ClCompile Include="cryptographer.cpp" />
+    <ClCompile Include="jsonwebtoken_cryptographer.cpp" />
+    <ClCompile Include="string_builder.cpp" />
     <ClCompile Include="thread_pool.cpp" />
     <ClCompile Include="xchacha20_poly1305_cipher_cryptographer.cpp" />
     <ClCompile Include="aes256_cipher_cryptographer.cpp" />

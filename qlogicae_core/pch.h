@@ -98,6 +98,20 @@
 
 #include <absl/strings/str_split.h>
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4244)
+#endif
+
+#include <jwt-cpp/jwt.h>
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+
+#define HASH_LEN 32
+#define SALT_LEN crypto_pwhash_SALTBYTES
+
 #include "framework.h"
 
 #include "globals.hpp"

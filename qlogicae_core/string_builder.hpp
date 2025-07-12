@@ -6,96 +6,57 @@
 
 namespace QLogicaeCore
 {
-    inline std::pmr::monotonic_buffer_resource default_string_pool;
+    inline thread_local std::array<std::byte, 4096> default_pool_buffer;
+    inline thread_local std::pmr::monotonic_buffer_resource
+        default_fallback_pool{
+            default_pool_buffer.data(),
+            default_pool_buffer.size(),
+            std::pmr::get_default_resource()
+    };
 
     class StringBuilder
     {
     public:
-        explicit StringBuilder(std::pmr::memory_resource* resource = &default_string_pool,
-            ThreadPool* thread_pool = nullptr);
+        StringBuilder(
+            std::pmr::memory_resource* memory_resource_reference =
+                &default_fallback_pool,
+            ThreadPool* thread_pool_reference = nullptr);
 
-        template <typename... argument_types>
-        static std::string format_string(fmt::format_string<argument_types...> fmt_str,
-            argument_types&&... args)
-        {
-            return fmt::format(fmt_str, std::forward<argument_types>(args)...);
-        }
-
-        StringBuilder& append(const std::string_view& text);
-        StringBuilder& append(const std::wstring_view& text);
-        StringBuilder& append(const std::u8string_view& text);
-
-        StringBuilder& prepend(const std::string_view& text);
-        StringBuilder& prepend(const std::wstring_view& text);
-        StringBuilder& prepend(const std::u8string_view& text);
-
-        StringBuilder& insert(const std::size_t& position, const std::string_view& text);
-        StringBuilder& insert(const std::size_t& position, const std::wstring_view& text);
-        StringBuilder& insert(const std::size_t& position, const std::u8string_view& text);
-
-        template <typename... argument_types>
-        StringBuilder& append_formatted(const std::string_view& fmt_str,
-            argument_types&&... args);
-
-        template <typename... argument_types>
-        StringBuilder& prepend_formatted(const std::string_view& fmt_str,
-            argument_types&&... args);
-
-        template <typename... argument_types>
-        StringBuilder& insert_formatted(const std::size_t& position,
-            const std::string_view& fmt_str,
-            argument_types&&... args);
-
-        StringBuilder& clear();
         bool is_empty() const;
-        std::size_t get_size() const;
-        StringBuilder& reserve_capacity(const std::size_t& capacity);
-
-        StringBuilder& trim();
+        StringBuilder& clear();
+        std::string take_string();
         StringBuilder& left_trim();
         StringBuilder& right_trim();
-
-        template <typename text_range>
-        StringBuilder& append_multiple(const text_range& items);
-
-        template <typename text_range>
-        StringBuilder& append_formatted_multiple(const std::string_view& fmt_str,
-            const text_range& items);
-
-        template <typename text_range>
-        StringBuilder& join(const std::string_view& delimiter,
-            const text_range& items);
-
-        template <typename text_range>
-        StringBuilder& join_formatted(const std::string_view& delimiter,
-            const text_range& items,
-            const std::string_view& fmt_str);
-
-        template <typename text_range>
-        StringBuilder& join_formatted_indexed(const std::string_view& delimiter,
-            const text_range& items,
-            const std::string_view& fmt_str);
-
-        template <typename text_range>
-        void enqueue_batch(const text_range& items);
-
-        const std::pmr::string& to_string() const;
-        std::pmr::string&& take_string();
-
-        std::future<std::pmr::string> async_to_string() const;
-        std::future<std::pmr::string> async_take_string();
-        std::future<void> async_append(const std::string_view& text);
-
-        template <typename... argument_types>
-        std::future<void> async_append_formatted(const std::string_view& fmt_str,
-            argument_types&&... args);
+        std::size_t get_size() const;
+        StringBuilder& shrink_to_fit();
+        std::pmr::string take_pmr_string();
+        StringBuilder& left_and_right_trim();
+        const std::string& to_string() const;
+        const std::pmr::string& to_pmr_string() const;
+        StringBuilder& append(const std::string_view& text);
+        StringBuilder& prepend(const std::string_view& text);
+        StringBuilder& reserve_capacity(const std::size_t& value);
+        StringBuilder& insert(
+            const std::string_view& text, const std::size_t& position);
 
         std::future<void> async_clear();
+        std::future<std::string> async_take_string();
+        std::future<std::string> async_to_string() const;
+        std::future<std::pmr::string> async_take_pmr_string();
+        std::future<std::pmr::string> async_to_pmr_string() const;
+        std::future<void> async_append(const std::string_view& text);
+        std::future<void> async_prepend(const std::string_view& text);
+        std::future<void> async_insert(
+            const std::string_view& text, const std::size_t& position);
 
     protected:
-        std::pmr::string _character_buffer;
-        std::pmr::memory_resource* _memory_resource;
-        mutable std::shared_mutex _mutex;
-        ThreadPool* _thread_pool;
+        std::deque<char> character_buffer_deque;
+        mutable std::shared_mutex character_buffer_mutex;
+        std::pmr::memory_resource* memory_resource_pointer;
+        StringBuilder& _utf8_trim(bool trim_left, bool trim_right);
+        ThreadPool* thread_pool_pointer;
+        std::pmr::string _flatten(
+            std::pmr::memory_resource* memory_resource_reference = nullptr
+        ) const;
     };
 }

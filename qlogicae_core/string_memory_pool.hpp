@@ -4,7 +4,6 @@
 
 namespace QLogicaeCore
 {
-
     enum class CaseSensitivity {
         SENSITIVE,
         INSENSITIVE

@@ -152,9 +152,11 @@
     <ClInclude Include="abstract_result.hpp" />
     <ClInclude Include="abstract_value_extractor.hpp" />
     <ClInclude Include="bad_result.hpp" />
+    <ClInclude Include="bcrypt_hash_cryptographer.hpp" />
     <ClInclude Include="binary_file_io.hpp" />
     <ClInclude Include="cli_io.hpp" />
     <ClInclude Include="cryptographer.hpp" />
+    <ClInclude Include="jsonwebtoken_cryptographer.hpp" />
     <ClInclude Include="string_builder.hpp" />
     <ClInclude Include="thread_pool.hpp" />
     <ClInclude Include="xchacha20_poly1305_cipher_cryptographer.hpp" />
@@ -198,9 +200,11 @@
     <ClCompile Include="abstract_result.cpp" />
     <ClCompile Include="abstract_value_extractor.cpp" />
     <ClCompile Include="bad_result.cpp" />
+    <ClCompile Include="bcrypt_hash_cryptographer.cpp" />
     <ClCompile Include="binary_file_io.cpp" />
     <ClCompile Include="cli_io.cpp" />
     <ClCompile Include="cryptographer.cpp" />
+    <ClCompile Include="jsonwebtoken_cryptographer.cpp" />
     <ClCompile Include="string_builder.cpp">
       <UseUnicodeForAssemblerListing Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</UseUnicodeForAssemblerListing>
       <UseUnicodeForAssemblerListing Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</UseUnicodeForAssemblerListing>
