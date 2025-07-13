@@ -125,7 +125,9 @@
     <ClCompile Include="binary_file_io.cpp" />
     <ClCompile Include="cli_io.cpp" />
     <ClCompile Include="cryptographer.cpp" />
+    <ClCompile Include="file_uri_io.cpp" />
     <ClCompile Include="jsonwebtoken_cryptographer.cpp" />
+    <ClCompile Include="sqlite.cpp" />
     <ClCompile Include="string_builder.cpp" />
     <ClCompile Include="thread_pool.cpp" />
     <ClCompile Include="xchacha20_poly1305_cipher_cryptographer.cpp" />
@@ -164,6 +166,7 @@
     <ClCompile Include="validators.cpp" />
     <ClCompile Include="windows_registry.cpp" />
     <ClCompile Include="windows_registry_value_extractor.cpp" />
+    <ClCompile Include="xml_file_io.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\qlogicae_core\qlogicae_core.vcxproj">

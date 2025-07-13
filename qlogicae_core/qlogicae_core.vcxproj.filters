@@ -153,6 +153,18 @@
     <ClInclude Include="jsonwebtoken_cryptographer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="sqlite.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="excel_file_io.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="file_uri_io.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="xml_file_io.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="qlogicae_core.cpp">
@@ -282,6 +294,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="bcrypt_hash_cryptographer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sqlite.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="file_uri_io.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xml_file_io.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

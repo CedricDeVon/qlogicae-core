@@ -38,6 +38,7 @@ namespace QLogicaeCore
 		RegularExpression& operator = (const RegularExpression&) = delete;
 		RegularExpression& operator = (RegularExpression&&) noexcept = default;
 
-		bool _do_match(const std::string& subject, pcre2_code* code) const;
+		bool _do_match(
+			const std::string& subject, pcre2_code* get_error_code) const;
 	};
 }

@@ -155,13 +155,13 @@ namespace QLogicaeCore
 
     bool RegularExpression::_do_match(
         const std::string& subject,
-        pcre2_code* code) const
+        pcre2_code* get_error_code) const
     {
         pcre2_match_data* match_data =
-            pcre2_match_data_create_from_pattern(code, nullptr);
+            pcre2_match_data_create_from_pattern(get_error_code, nullptr);
 
         int result = pcre2_match(
-            code,
+            get_error_code,
             (PCRE2_SPTR)subject.c_str(),
             subject.length(),
             0,

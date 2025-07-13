@@ -42,3 +42,6 @@
 #include "string_memory_pool.hpp"
 #include "string_builder.hpp"
 #include "thread_pool.hpp"
+#include "sqlite.hpp"
+#include "file_uri_io.hpp"
+#include "xml_file_io.hpp"

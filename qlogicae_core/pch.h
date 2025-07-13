@@ -61,11 +61,13 @@
 #include <argon2.h>
 #include <fmt/os.h>
 #include <sodium.h>
+#include <sqlite3.h>
 #include <fast_io.h>
 #include <date/tz.h>
 #include <rapidcsv.h>
 #include <fmt/core.h>
 #include <utf8proc.h> 
+#include <pugixml.hpp>
 #include <date/date.h>
 #include <fmt/format.h>
 #include <fmt/compile.h>
@@ -73,12 +75,14 @@
 #include <stduuid/uuid.h>
 #include <fast_io_device.h>
 #include <fast_io_legacy.h>
+#include <libxml/xmlschemas.h>
 #include <rapidjson/writer.h>
 #include <rapidjson/pointer.h>
 #include <rapidjson/document.h>
 #include <rapidjson/allocators.h>
 #include <rapidjson/prettywriter.h>
 #include <rapidjson/stringbuffer.h>
+#include <absl/strings/str_split.h>
 #include <rapidjson/ostreamwrapper.h>
 #include <concurrentqueue/concurrentqueue.h>
 
@@ -95,8 +99,6 @@
 #include <rocksdb/utilities/checkpoint.h>
 #include <rocksdb/utilities/backup_engine.h>
 #include <rocksdb/utilities/transaction_db.h>
-
-#include <absl/strings/str_split.h>
 
 #ifdef _MSC_VER
 #pragma warning(push)

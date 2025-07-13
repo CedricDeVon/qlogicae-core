@@ -339,5 +339,28 @@ namespace QLogicaeCore
         std::map<std::string, std::string> headers;
         std::map<std::string, std::string> payloads;
     };
+
+    struct VectorStringHash
+    {
+        std::size_t operator()(const std::vector<std::string>& vec) const noexcept
+        {
+            std::size_t seed = 0;
+            std::hash<std::string> string_hasher;
+            for (const auto& s : vec)
+            {
+                seed ^= string_hasher(s) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+            }
+            return seed;
+        }
+    };
+
+    struct VectorStringEqual
+    {
+        bool operator()(const std::vector<std::string>& lhs,
+            const std::vector<std::string>& rhs) const noexcept
+        {
+            return lhs == rhs;
+        }
+    };
 }
 

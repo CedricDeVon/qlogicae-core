@@ -11,8 +11,8 @@ namespace QLogicaeCore
     public:
         AbstractFileIO() = default;
         virtual ~AbstractFileIO() = default;
-        AbstractFileIO(const std::string_view& file_path);
         AbstractFileIO(const AbstractFileIO&) = delete;
+        AbstractFileIO(const std::string_view& file_path);
         AbstractFileIO(AbstractFileIO&&) noexcept = default;
         AbstractFileIO& operator = (const AbstractFileIO&) = delete;
         AbstractFileIO& operator = (AbstractFileIO&&) noexcept = default;
