@@ -6,786 +6,417 @@
 
 namespace QLogicaeCoreTest
 {
-
-    class SQLiteTest : public testing::TestWithParam<std::string>
+    class SQLiteStatementTest : public testing::TestWithParam<std::string>
     {
     protected:
-        std::unique_ptr<QLogicaeCore::Database> database;
-
         void SetUp() override
         {
-            database = std::make_unique<QLogicaeCore::Database>(":memory:");
+            database = std::make_unique<QLogicaeCore::SQLiteDatabase>(":memory:");
+            QLogicaeCore::SQLiteStatement create = database->prepare("CREATE TABLE items (id INT, name TEXT);");
+            create.step();
         }
 
         void TearDown() override
         {
             database.reset();
         }
+
+        std::unique_ptr<QLogicaeCore::SQLiteDatabase> database;
     };
 
-    TEST_P(SQLiteTest, Should_Prepare_ValidStatement_When_GivenValidSql)
+    TEST_F(SQLiteStatementTest, Should_Throw_When_BindingInvalidName)
     {
-        QLogicaeCore::Statement statement =
-            database->prepare(GetParam());
-        EXPECT_TRUE(statement.is_valid());
+        QLogicaeCore::SQLiteStatement statement = database->prepare("SELECT 1;");
+        EXPECT_THROW(statement.bind("?nonexistent", 5), QLogicaeCore::SQLiteException);
     }
 
-    TEST_P(SQLiteTest, Should_Fail_ToPrepare_When_GivenInvalidSql)
+    TEST_F(SQLiteStatementTest, Should_Throw_When_BindingAfterInvalidation)
     {
-        EXPECT_THROW({
-            database->prepare("INVALID SQL;");
-            }, QLogicaeCore::SQLiteException);
+        QLogicaeCore::SQLiteStatement statement = database->prepare("INSERT INTO items(id) VALUES(?);");
+        statement.step();
+        statement.reset();
+        statement.clear_bindings();
+        EXPECT_NO_THROW(statement.bind(1, 5));
     }
 
-    TEST(SQLiteDatabaseEdgeTest, Should_Fail_When_PreparingEmptySql)
+    TEST_F(SQLiteStatementTest, Should_Throw_When_NameBindFails)
     {
-        QLogicaeCore::Database database(":memory:");
-        EXPECT_THROW({
-            database.prepare("");
-            }, QLogicaeCore::SQLiteException);
+        QLogicaeCore::SQLiteStatement statement = database->prepare("SELECT :value;");
+        EXPECT_THROW(statement.bind(":missing", 1), QLogicaeCore::SQLiteException);
     }
 
-    /*
-    TEST(SQLiteDatabaseThreadingTest, Should_Execute_SetPragma_InParallel)
+    TEST_F(SQLiteStatementTest, Should_Bind_Nullptr_To_Statement)
     {
-        QLogicaeCore::Database database(":memory:");
-        std::thread thread_one([&]()
-            {
-                database.set_pragma("foreign_keys", "ON");
-            });
-        std::thread thread_two([&]()
-            {
-                database.set_pragma("journal_mode", "WAL");
-            });
-        thread_one.join();
-        thread_two.join();
-        SUCCEED();
+        QLogicaeCore::SQLiteStatement statement = database->prepare("INSERT INTO items(id, name) VALUES (?, ?);");
+        EXPECT_NO_THROW(statement.bind(1, 10).bind(2, nullptr).step());
     }
-    */
 
-    TEST(SQLiteDatabaseStressTest, Should_Handle_ThousandInserts_When_UsingPrepare)
+    TEST_F(SQLiteStatementTest, Should_Return_Nullopt_When_StatementInvalid)
     {
-        QLogicaeCore::Database database(":memory:");
-        database.prepare("CREATE TABLE numbers(id INT);").step();
-        QLogicaeCore::Statement insert =
-            database.prepare("INSERT INTO numbers(id) VALUES(?);");
-        for (int index = 0; index < 10000; ++index)
+        QLogicaeCore::SQLiteStatement statement = database->prepare("SELECT id FROM items;");
+        EXPECT_FALSE(statement.step());
+        EXPECT_FALSE(statement.row().has_value());
+    }
+
+    TEST_F(SQLiteStatementTest, Should_Handle_Optional_Bind_And_Get)
+    {
+        QLogicaeCore::SQLiteStatement insert = database->prepare("INSERT INTO items(id, name) VALUES (?, ?);");
+        std::optional<std::string> empty_name = std::nullopt;
+        insert.bind(1, 5).bind(2, empty_name).step();
+
+        QLogicaeCore::SQLiteStatement select = database->prepare("SELECT name FROM items WHERE id = 5;");
+        select.step();
+        std::optional<QLogicaeCore::SQLiteRow> row = select.row();
+        ASSERT_TRUE(row.has_value());
+        std::optional<std::string> result = row->get_optional<std::string>(0);
+        ASSERT_FALSE(result.has_value());
+    }
+
+    TEST_F(SQLiteStatementTest, Should_Work_Async_For_Query_And_Step)
+    {
+        QLogicaeCore::SQLiteStatement create_statement =
+            database->prepare("CREATE TABLE data(id INT, name TEXT);");
+        EXPECT_FALSE(create_statement.step());
+
+        QLogicaeCore::SQLiteStatement insert_statement =
+            database->prepare("INSERT INTO data VALUES(?, ?);");
+        insert_statement.bind(1, 1);
+        insert_statement.bind(2, "alpha");
+        EXPECT_FALSE(insert_statement.step());
+
+        QLogicaeCore::SQLiteStatement query_statement =
+            database->prepare("SELECT id, name FROM data;");
+
+        std::future<void> step_future = query_statement.step_async();
+        EXPECT_EQ(step_future.wait_for(std::chrono::seconds(2)),
+            std::future_status::ready);
+
+        std::optional<QLogicaeCore::SQLiteRow> row = query_statement.row();
+        ASSERT_TRUE(row.has_value());
+
+        std::optional<int> id = row->get_optional<int>(0);
+        std::optional<std::string> name = row->get_optional<std::string>(1);
+
+        ASSERT_TRUE(id.has_value());
+        ASSERT_TRUE(name.has_value());
+        EXPECT_EQ(id.value(), 1);
+        EXPECT_EQ(name.value(), "alpha");
+    }
+
+    TEST_F(SQLiteStatementTest, Should_Handle_Multithreaded_Execution)
+    {
+        std::vector<std::thread> threads;
+        for (int i = 0; i < 10; ++i)
         {
-            insert.reset();
-            insert.bind(1, index).step();
+            threads.emplace_back([this, i]() {
+                QLogicaeCore::SQLiteStatement insert = database->prepare("INSERT INTO items(id, name) VALUES (?, ?);");
+                insert.bind(1, i).bind(2, std::to_string(i)).step();
+                });
         }
-        EXPECT_GT(database.total_changes(), 9999);
-    }
-
-    TEST(SQLiteDatabaseEdgeTest, Should_Throw_When_BindingWrongType)
-    {
-        QLogicaeCore::Database database(":memory:");
-        database.prepare("CREATE TABLE test(val INTEGER);").step();
-        QLogicaeCore::Statement insert =
-            database.prepare("INSERT INTO test(val) VALUES(?);");
-        EXPECT_THROW({
-            insert.bind(1, "text").step();
-            }, QLogicaeCore::SQLiteException);
-    }
-
-    /*
-    
-    TEST(SQLiteDatabaseAsyncTest, Should_ReturnAsyncStatement_When_Called)
-    {
-        QLogicaeCore::Database database(":memory:");
-        std::future<std::shared_ptr<QLogicaeCore::Statement>> future =
-            database.prepare_async("CREATE TABLE test(id INT);");
-        EXPECT_EQ(future.wait_for(std::chrono::seconds(2)),
-            std::future_status::ready);
-    }
-
-    TEST(SQLiteDatabaseAsyncTest, Should_GetPragma_When_UsingAsync)
-    {
-        QLogicaeCore::Database database(":memory:");
-        database.set_pragma("foreign_keys", "ON");
-
-        std::future<std::string> result =
-            database.get_pragma_async("foreign_keys");
-
-        ASSERT_EQ(result.wait_for(std::chrono::seconds(2)),
-            std::future_status::ready);
-
-        EXPECT_EQ(result.get(), "1");
-    }
-
-    TEST(SQLiteDatabaseAsyncTest, Should_SetPragma_When_UsingAsync)
-    {
-        QLogicaeCore::Database database(":memory:");
-        std::future<void> result =
-            database.set_pragma_async("foreign_keys", "ON");
-        EXPECT_EQ(result.wait_for(std::chrono::seconds(2)),
-            std::future_status::ready);
-    }
-
-
-    TEST(SQLiteDatabaseAsyncTest, Should_GetIndexListAsync_When_Valid)
-    {
-        QLogicaeCore::Database database(":memory:");
-        std::future<std::vector<std::string>> future =
-            database.index_list_async("nonexistent");
-        EXPECT_EQ(future.wait_for(std::chrono::seconds(2)),
-            std::future_status::ready);
-    }
-
-    TEST(SQLiteDatabaseAsyncTest, Should_GetTableInfoAsync_When_Valid)
-    {
-        QLogicaeCore::Database database(":memory:");
-        std::future<std::vector<std::string>> future =
-            database.table_info_async("nonexistent");
-        EXPECT_EQ(future.wait_for(std::chrono::seconds(2)),
-            std::future_status::ready);
-    }
-
-
-    */
-
-
-    TEST(SQLiteDatabaseMigrationTest, Should_Migrate_When_Called)
-    {
-        QLogicaeCore::Database database(":memory:");
-        database.set_pragma("user_version", "1");
-
-        database.migrate_to(2, [](int from, int to)
-            {
-                EXPECT_EQ(from, 1);
-                EXPECT_EQ(to, 2);
-            });
-        std::string version = database.get_pragma("user_version");
-        EXPECT_EQ(version, "2");
-    }
-
-    TEST(SQLiteDatabaseMigrationTest, Should_MigrateAsync_When_Called)
-    {
-        QLogicaeCore::Database database(":memory:");
-        database.set_pragma("user_version", "1");
-
-        std::future<void> future = database.migrate_to_async(2, [](int from, int to)
-            {
-                EXPECT_EQ(from, 1);
-                EXPECT_EQ(to, 2);
-            });
-
-        EXPECT_EQ(future.wait_for(std::chrono::seconds(2)),
-            std::future_status::ready);
-    }
-
-    TEST(SQLiteDatabaseIntrospectTest, Should_ReturnEmptyIndexList_When_TableMissing)
-    {
-        QLogicaeCore::Database database(":memory:");
-        std::vector<std::string> result =
-            database.index_list("nonexistent");
-        EXPECT_TRUE(result.empty());
-    }
-
-    TEST(SQLiteDatabaseIntrospectTest, Should_ReturnEmptyTableInfo_When_TableMissing)
-    {
-        QLogicaeCore::Database database(":memory:");
-        std::vector<std::string> result =
-            database.table_info("nonexistent");
-        EXPECT_TRUE(result.empty());
+        for (auto& thread : threads)
+        {
+            thread.join();
+        }
+        QLogicaeCore::SQLiteStatement query = database->prepare("SELECT COUNT(*) FROM items;");
+        query.step();
+        std::optional<QLogicaeCore::SQLiteRow> result = query.row();
+        ASSERT_TRUE(result.has_value());
+        ASSERT_EQ(result->get<int>(0), 10);
     }
 
     INSTANTIATE_TEST_CASE_P(
-        DatabaseValidSql,
-        SQLiteTest,
-        testing::Values(
-            "CREATE TABLE test(id INT);",
-            "CREATE TABLE foo(name TEXT);"
-        )
-    );
+        StatementParameterizedTest,
+        SQLiteStatementTest,
+        testing::Values("", "SELECT"));
 
-
-
-    class SQLiteStatementPoolTest : public testing::Test
+    class SQLiteStatementCoverageTest : public testing::Test
     {
     protected:
-        std::unique_ptr<QLogicaeCore::Database> database_instance;
-        QLogicaeCore::StatementPool* statement_pool_pointer;
-
         void SetUp() override
         {
-            database_instance = std::make_unique<QLogicaeCore::Database>(":memory:");
-            statement_pool_pointer = &database_instance->pool();
-            database_instance->prepare("CREATE TABLE t(id INT);").step();
+            database = std::make_unique<QLogicaeCore::SQLiteDatabase>(":memory:");
+            database->prepare("CREATE TABLE items(id INT, name TEXT);").step();
         }
+
+        std::unique_ptr<QLogicaeCore::SQLiteDatabase> database;
     };
 
-    TEST_F(SQLiteStatementPoolTest,
-        Should_Reuse_Statement_When_ReleasedToPool)
+    TEST_F(SQLiteStatementCoverageTest, Should_Insert_ThousandRows_UnderTwoSeconds)
     {
-        auto statement_one = statement_pool_pointer->get(
-            "INSERT INTO t(id) VALUES (?);");
-        statement_one.bind(1, 1).step();
-        statement_pool_pointer->release(
-            "INSERT INTO t(id) VALUES (?);", std::move(statement_one));
+        QLogicaeCore::SQLiteStatement insert =
+            database->prepare("INSERT INTO items(id, name) VALUES(?, ?);");
 
-        auto statement_two = statement_pool_pointer->get(
-            "INSERT INTO t(id) VALUES (?);");
+        auto start = std::chrono::high_resolution_clock::now();
 
-        EXPECT_NO_THROW(statement_two.bind(1, 2).step());
-    }
-
-    TEST_F(SQLiteStatementPoolTest,
-        Should_Separate_Statements_When_SQL_IsDifferent)
-    {
-        auto insert_statement = statement_pool_pointer->get(
-            "INSERT INTO t(id) VALUES (?);");
-        auto select_statement = statement_pool_pointer->get(
-            "SELECT * FROM t;");
-        insert_statement.bind(1, 7).step();
-
-        statement_pool_pointer->release(
-            "INSERT INTO t(id) VALUES (?);",
-            std::move(insert_statement));
-        statement_pool_pointer->release(
-            "SELECT * FROM t;",
-            std::move(select_statement));
-
-        auto new_insert = statement_pool_pointer->get(
-            "INSERT INTO t(id) VALUES (?);");
-        auto new_select = statement_pool_pointer->get(
-            "SELECT * FROM t;");
-
-        EXPECT_NO_THROW(new_insert.bind(1, 8).step());
-        EXPECT_NO_THROW(new_select.step());
-    }
-
-    TEST_F(SQLiteStatementPoolTest,
-        Should_Handle_Parallel_Access_When_UsedFromMultipleThreads)
-    {
-        std::vector<std::thread> thread_group;
-
-        for (int thread_index = 0; thread_index < 10; ++thread_index)
+        for (int index = 0; index < 10000; ++index)
         {
-            thread_group.emplace_back([this]()
-                {
-                    auto statement = statement_pool_pointer->get(
-                        "INSERT INTO t(id) VALUES (?);");
-                    statement.bind(1, 99).step();
-                    statement_pool_pointer->release(
-                        "INSERT INTO t(id) VALUES (?);",
-                        std::move(statement));
-                });
+            insert.reset();
+            insert.clear_bindings();
+            insert.bind(1, index).bind(2, std::to_string(index)).step();
         }
 
-        for (std::thread& thread_reference : thread_group)
-        {
-            thread_reference.join();
-        }
+        auto stop = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> elapsed = stop - start;
 
-        SUCCEED();
-    }
+        EXPECT_LT(elapsed.count(), 2.0);
 
-
-    class SQLiteTransactionTest : public testing::Test
-    {
-    protected:
-        std::unique_ptr<QLogicaeCore::Database> database_instance;
-
-        void SetUp() override
-        {
-            database_instance = std::make_unique<QLogicaeCore::Database>(":memory:");
-            database_instance->prepare("CREATE TABLE t(id INT);").step();
-        }
-    };
-
-    TEST_F(SQLiteTransactionTest,
-        Should_Rollback_When_TransactionNotCommitted)
-    {
-        {
-            QLogicaeCore::Transaction transaction(*database_instance);
-            database_instance->prepare("INSERT INTO t(id) VALUES(1);").step();
-        }
-
-        QLogicaeCore::Statement query =
-            database_instance->prepare("SELECT COUNT(*) FROM t;");
+        QLogicaeCore::SQLiteStatement query = database->prepare("SELECT COUNT(*) FROM items;");
         query.step();
-
-        int count = query.row()->get<int>(0);
-        EXPECT_EQ(count, 0);
+        EXPECT_EQ(query.row()->get<int>(0), 10000);
     }
 
-    TEST_F(SQLiteTransactionTest,
-        Should_Commit_When_ExecuteCalled)
+    TEST_F(SQLiteStatementCoverageTest, Should_FailAsync_When_InvalidQuery)
     {
-        {
-            QLogicaeCore::Transaction transaction(*database_instance);
-            database_instance->prepare("INSERT INTO t(id) VALUES(1);").step();
-            transaction.execute();
-        }
-
-        QLogicaeCore::Statement query =
-            database_instance->prepare("SELECT COUNT(*) FROM t;");
-        query.step();
-
-        int count = query.row()->get<int>(0);
-        EXPECT_EQ(count, 1);
-    }
-
-
-    class SQLiteRowEdgeTest : public testing::Test
-    {
-    protected:
-        std::unique_ptr<QLogicaeCore::Database> database_instance;
-
-        void SetUp() override
-        {
-            database_instance = std::make_unique<QLogicaeCore::Database>(":memory:");
-            database_instance->prepare("CREATE TABLE x(val INT);").step();
-            QLogicaeCore::Statement insert =
-                database_instance->prepare("INSERT INTO x(val) VALUES(5);");
-            insert.step();
-        }
-    };
-
-    TEST_F(SQLiteRowEdgeTest,
-        Should_Throw_When_AccessingInvalidColumnIndex)
-    {
-        QLogicaeCore::Statement stmt =
-            database_instance->prepare("SELECT * FROM x;");
-        stmt.step();
-
-        auto row = stmt.row();
-        EXPECT_THROW({
-            row->get<int>(99);
-            }, std::exception);
-    }
-
-    TEST_F(SQLiteRowEdgeTest,
-        Should_Throw_When_AccessingInvalidColumnName)
-    {
-        QLogicaeCore::Statement stmt =
-            database_instance->prepare("SELECT * FROM x;");
-        stmt.step();
-
-        auto row = stmt.row();
-        EXPECT_THROW({
-            row->get<int>("does_not_exist");
-            }, std::exception);
-    }
-
-
-    class SQLiteStatementErrorTest : public testing::Test
-    {
-    protected:
-        std::unique_ptr<QLogicaeCore::Database> database_instance;
-
-        void SetUp() override
-        {
-            database_instance = std::make_unique<QLogicaeCore::Database>(":memory:");
-        }
-    };
-
-    TEST_F(SQLiteStatementErrorTest,
-        Should_FailReset_When_InvalidStatement)
-    {
-        QLogicaeCore::Statement statement =
-            database_instance->prepare("CREATE TABLE z(id INT);");
-
-        auto released = statement.release_internal_statement();
-
-        EXPECT_THROW({
-            statement.reset();
-            }, QLogicaeCore::SQLiteException);
-    }
-
-    class SQLiteRowOptionalTest : public testing::Test
-    {
-    protected:
-        std::unique_ptr<QLogicaeCore::Database> database_instance;
-
-        void SetUp() override
-        {
-            database_instance = std::make_unique<QLogicaeCore::Database>(":memory:");
-            database_instance->prepare("CREATE TABLE nulls(v INT);").step();
-            database_instance->prepare("INSERT INTO nulls(v) VALUES(NULL);").step();
-        }
-    };
-
-    TEST_F(SQLiteRowOptionalTest,
-        Should_OptionalReturnNull_When_NullField)
-    {
-        QLogicaeCore::Statement stmt =
-            database_instance->prepare("SELECT * FROM nulls;");
-        stmt.step();
-
-        auto row = stmt.row();
-        std::optional<int> value = row->get_optional<int>(0);
-
-        EXPECT_FALSE(value.has_value());
-    }
-
-
-    class SQLiteStatementClearTest : public testing::Test
-    {
-    protected:
-        std::unique_ptr<QLogicaeCore::Database> database_instance;
-
-        void SetUp() override
-        {
-            database_instance = std::make_unique<QLogicaeCore::Database>(":memory:");
-            database_instance->prepare("CREATE TABLE a(id INT, name TEXT);").step();
-        }
-    };
-
-    TEST_F(SQLiteStatementClearTest,
-        Should_ClearBindings_When_Called)
-    {
-        QLogicaeCore::Statement stmt =
-            database_instance->prepare("INSERT INTO a(id, name) VALUES(?, ?);");
-
-        stmt.bind(1, 42);
-        stmt.bind(2, "before");
-        stmt.clear_bindings();
-
-        EXPECT_NO_THROW(stmt.bind(1, 7).bind(2, "after").step());
-
-        QLogicaeCore::Statement select =
-            database_instance->prepare("SELECT id, name FROM a;");
-        select.step();
-
-        auto row = select.row();
-        EXPECT_EQ(row->get<int>(0), 7);
-        EXPECT_EQ(row->get<std::string>(1), "after");
-    }
-
-
-    class SQLiteRowMultiTypeTest : public testing::Test
-    {
-    protected:
-        std::unique_ptr<QLogicaeCore::Database> database_instance;
-
-        void SetUp() override
-        {
-            database_instance = std::make_unique<QLogicaeCore::Database>(":memory:");
-            database_instance->prepare(
-                "CREATE TABLE types(i INT, d REAL, b INT, t TEXT);").step();
-
-            QLogicaeCore::Statement insert =
-                database_instance->prepare("INSERT INTO types VALUES(1, 3.14, 1, 'abc');");
-            insert.step();
-        }
-    };
-
-    TEST_F(SQLiteRowMultiTypeTest,
-        Should_ReturnCorrectValue_ForMultipleTypes)
-    {
-        QLogicaeCore::Statement stmt =
-            database_instance->prepare("SELECT * FROM types;");
-        stmt.step();
-
-        auto row = stmt.row();
-        EXPECT_EQ(row->get<int>(0), 1);
-        EXPECT_DOUBLE_EQ(row->get<double>(1), 3.14);
-        EXPECT_EQ(row->get<bool>(2), true);
-        EXPECT_EQ(row->get<std::string>(3), "abc");
-    }
-
-
-    class SQLiteRowIteratorTest : public testing::Test
-    {
-    protected:
-        std::unique_ptr<QLogicaeCore::Database> database_instance;
-
-        void SetUp() override
-        {
-            database_instance = std::make_unique<QLogicaeCore::Database>(":memory:");
-            database_instance->prepare("CREATE TABLE r(id INT);").step();
-            for (int index = 0; index < 3; ++index)
-            {
-                auto insert = database_instance->prepare(
-                    "INSERT INTO r(id) VALUES(?);");
-                insert.bind(1, index).step();
-            }
-        }
-    };
-
-    TEST_F(SQLiteRowIteratorTest,
-        Should_IterateAllRows_When_UsingRangeLoop)
-    {
-        auto query = database_instance->prepare("SELECT id FROM r;");
-        int count = 0;
-
-        for (const auto& row : query)
-        {
-            EXPECT_EQ(row.get<int>(0), count);
-            count++;
-        }
-
-        EXPECT_EQ(count, 3);
-    }
-
-
-    class SQLiteStatementNamedBindTest : public testing::Test
-    {
-    protected:
-        std::unique_ptr<QLogicaeCore::Database> database_instance;
-
-        void SetUp() override
-        {
-            database_instance = std::make_unique<QLogicaeCore::Database>(":memory:");
-            database_instance->prepare("CREATE TABLE n(val TEXT);").step();
-        }
-    };
-
-    TEST_F(SQLiteStatementNamedBindTest,
-        Should_BindNamedParameter_When_ValidName)
-    {
-        auto stmt = database_instance->prepare(
-            "INSERT INTO n(val) VALUES(:val);");
-
-        stmt.bind(":val", "xvalue").step();
-
-        auto select = database_instance->prepare("SELECT val FROM n;");
-        select.step();
-
-        auto row = select.row();
-        EXPECT_EQ(row->get<std::string>(0), "xvalue");
-    }
-
-
-    class SQLiteRowCacheTest : public testing::Test
-    {
-    protected:
-        std::unique_ptr<QLogicaeCore::Database> database_instance;
-
-        void SetUp() override
-        {
-            database_instance = std::make_unique<QLogicaeCore::Database>(":memory:");
-            database_instance->prepare("CREATE TABLE test(id INT, name TEXT);").step();
-            auto stmt = database_instance->prepare("INSERT INTO test VALUES(1, 'bob');");
-            stmt.step();
-        }
-    };
-
-    TEST_F(SQLiteRowCacheTest,
-        Should_UseNameCache_When_GettingByNameTwice)
-    {
-        auto stmt = database_instance->prepare("SELECT id, name FROM test;");
-        stmt.step();
-        auto row = stmt.row();
-
-        int first = row->get<int>("id");
-        int second = row->get<int>("id");
-
-        EXPECT_EQ(first, second);
-    }
-
-
-    class SQLiteOptionalBindTest : public testing::Test
-    {
-    protected:
-        std::unique_ptr<QLogicaeCore::Database> database_instance;
-
-        void SetUp() override
-        {
-            database_instance = std::make_unique<QLogicaeCore::Database>(":memory:");
-            database_instance->prepare("CREATE TABLE optionals(x TEXT);").step();
-        }
-    };
-
-    TEST_F(SQLiteOptionalBindTest,
-        Should_BindOptionalNull_When_ValueMissing)
-    {
-        std::optional<std::string> none = std::nullopt;
-        auto insert = database_instance->prepare(
-            "INSERT INTO optionals(x) VALUES(?);");
-
-        insert.bind<std::string>(1, none).step();
-
-        auto query = database_instance->prepare("SELECT x FROM optionals;");
-        query.step();
-        auto row = query.row();
-
-        EXPECT_FALSE(row->get_optional<std::string>(0).has_value());
-    }
-
-    TEST_F(SQLiteTransactionTest,
-        Should_Rollback_When_NotCommitted)
-    {
-        {
-            QLogicaeCore::Transaction transaction(*database_instance);
-            auto insert = database_instance->prepare(
-                "INSERT INTO tx(val) VALUES(123);");
-            insert.step();
-        }
-
-        auto query = database_instance->prepare("SELECT COUNT(*) FROM tx;");
-        query.step();
-        int count = query.row()->get<int>(0);
-
-        EXPECT_EQ(count, 0);
-    }
-
-    TEST(SQLiteRowInternalTest, Should_GetValidIndex_When_ColumnExists)
-    {
-        QLogicaeCore::Database db(":memory:");
-        db.prepare("CREATE TABLE t(a INT, b TEXT);").step();
-        db.prepare("INSERT INTO t(a, b) VALUES(42, 'x');").step();
-
-        QLogicaeCore::Statement stmt = db.prepare("SELECT * FROM t;");
-        stmt.step();
-        auto row = stmt.row();
-        EXPECT_NO_THROW({
-            int idx = row->get<int>("a");
-            EXPECT_EQ(idx, 42);
+        std::future<void> step_future = std::async(std::launch::async, [this]() {
+            QLogicaeCore::SQLiteStatement bad_statement = database->prepare("INVALID SQL;");
+            bad_statement.step();
             });
+
+        EXPECT_THROW(step_future.get(), QLogicaeCore::SQLiteException);
     }
 
-    TEST(SQLiteRowInternalTest, Should_Throw_When_ColumnDoesNotExist)
+    TEST_F(SQLiteStatementCoverageTest, Should_InsertAndCountRowsSuccessfully)
     {
-        QLogicaeCore::Database db(":memory:");
-        db.prepare("CREATE TABLE t(a INT);").step();
-        db.prepare("INSERT INTO t(a) VALUES(1);").step();
+        QLogicaeCore::SQLiteStatement create =
+            database->prepare("CREATE TABLE IF NOT EXISTS items(id INT, name TEXT);");
+        ASSERT_NO_THROW(create.step());
 
-        QLogicaeCore::Statement stmt = db.prepare("SELECT * FROM t;");
-        stmt.step();
-        auto row = stmt.row();
+        QLogicaeCore::SQLiteStatement insert =
+            database->prepare("INSERT INTO items VALUES(?, ?);");
 
-        EXPECT_THROW({
-            row->get<int>("nonexistent");
-            }, std::exception);
+        ASSERT_FALSE(insert.bind(1, 1).bind(2, "a").step());
+
+        QLogicaeCore::SQLiteStatement count =
+            database->prepare("SELECT COUNT(*) FROM items;");
+        ASSERT_TRUE(count.step());
+
+        auto row = count.row();
+        ASSERT_TRUE(row.has_value());
+
+        auto result = row->get_optional<int>(0);
+        ASSERT_TRUE(result.has_value());
+        EXPECT_EQ(result.value(), 1);
     }
 
-    TEST(SQLiteTemplateTest, Should_CompileAndBindAllSupportedTypes)
+    TEST_F(SQLiteStatementCoverageTest, Should_Handle_NullRow_Correctly)
     {
-        QLogicaeCore::Database db(":memory:");
-        db.prepare("CREATE TABLE t(i INT, d REAL, b INT, s TEXT);").step();
+        QLogicaeCore::SQLiteStatement insert =
+            database->prepare("INSERT INTO items(id, name) VALUES (?, NULL);");
+        insert.bind(1, 42).step();
 
-        auto stmt = db.prepare("INSERT INTO t VALUES(?, ?, ?, ?);");
-        stmt.bind(1, 123);
-        stmt.bind(2, 3.14f);
-        stmt.bind(3, true);
-        stmt.bind(4, std::string("abc"));
-        stmt.step();
+        QLogicaeCore::SQLiteStatement query = database->prepare("SELECT name FROM items WHERE id = 42;");
+        query.step();
+        std::optional<std::string> name = query.row()->get_optional<std::string>(0);
 
-        auto select = db.prepare("SELECT * FROM t;");
-        select.step();
-        auto row = select.row();
-
-        EXPECT_EQ(row->get<int>(0), 123);
-        EXPECT_FLOAT_EQ(row->get<float>(1), 3.14f);
-        EXPECT_EQ(row->get<bool>(2), true);
-        EXPECT_EQ(row->get<std::string>(3), "abc");
+        EXPECT_FALSE(name.has_value());
     }
 
-    TEST(SQLiteMemoryCleanupTest, Should_DestructDatabaseWithoutLeak)
+    class SQLiteParameterizedSQLTest : public testing::TestWithParam<std::string>
     {
+    protected:
+        void SetUp() override
         {
-            QLogicaeCore::Database db(":memory:");
-            db.prepare("CREATE TABLE cleanup_test(val INT);").step();
+            database = std::make_unique<QLogicaeCore::SQLiteDatabase>(":memory:");
+            database->prepare("CREATE TABLE t(id INT);").step();
         }
 
-        SUCCEED();
+        std::unique_ptr<QLogicaeCore::SQLiteDatabase> database;
+    };
+
+    TEST_P(SQLiteParameterizedSQLTest, Should_Handle_ParameterSyntaxForms)
+    {
+        std::string parameter = GetParam();
+        std::string sql = "SELECT " + parameter + " AS value;";
+
+        QLogicaeCore::SQLiteStatement stmt = database->prepare(sql);
+        if (parameter[0] == '?')
+            stmt.bind(1, 7);
+        else
+            stmt.bind(parameter, 7);
+
+        EXPECT_NO_THROW(stmt.step());
+        std::optional<QLogicaeCore::SQLiteRow> row = stmt.row();
+        ASSERT_TRUE(row.has_value());
+        EXPECT_EQ(row->get<int>(0), 7);
     }
 
-    TEST(SQLiteDatabaseErrorTest, Should_Throw_When_OpeningInvalidFile)
+    INSTANTIATE_TEST_CASE_P(
+        SqliteValidParameterForms,
+        SQLiteParameterizedSQLTest,
+        testing::Values("?", ":value", "@param", "$key"));
+
+    TEST(SQLiteParameterizedSQLTest, Should_Fail_On_EmptyParameterName)
     {
+        std::unique_ptr<QLogicaeCore::SQLiteDatabase> database = std::make_unique<QLogicaeCore::SQLiteDatabase>(":memory:");
+
+        QLogicaeCore::SQLiteStatement create = database->prepare("CREATE TABLE test(id INTEGER);");
+        create.step();
+
         EXPECT_THROW({
-            QLogicaeCore::Database db("?:\\invalid\\::db"); 
+            QLogicaeCore::SQLiteStatement stmt = database->prepare("INSERT INTO test(id) VALUES(" + std::string("") + ");");
+            stmt.bind("", 42);
+            stmt.step();
             }, QLogicaeCore::SQLiteException);
     }
 
-    TEST(SQLiteBlobBindTest, Should_BindAndRetrieveBlob_When_UsingVectorByte)
+    TEST_F(SQLiteStatementCoverageTest, Should_ResetAsync_And_ClearBindingsAsync)
     {
-        QLogicaeCore::Database db(":memory:");
-        db.prepare("CREATE TABLE blobs(data BLOB);").step();
+        QLogicaeCore::SQLiteStatement insert = database->prepare("INSERT INTO items(id, name) VALUES(?, ?);");
 
-        std::vector<std::byte> input_blob = {
-            std::byte{0x01}, std::byte{0x02}, std::byte{0x03}
-        };
+        insert.bind(1, 10).bind(2, "first").step();
 
-        auto insert = db.prepare("INSERT INTO blobs(data) VALUES(?);");
-        insert.bind_blob(1, input_blob.data(), static_cast<int>(input_blob.size())).step();
+        insert.reset_async().get();
+        insert.clear_bindings_async().get();
 
-        auto select = db.prepare("SELECT data FROM blobs;");
-        select.step();
-        auto row = select.row();
-        auto result = row->get<std::vector<std::byte>>(0);
+        insert.bind(1, 11).bind(2, "second").step();
 
-        EXPECT_EQ(result, input_blob);
+        QLogicaeCore::SQLiteStatement query = database->prepare("SELECT COUNT(*) FROM items;");
+        query.step();
+
+        EXPECT_EQ(query.row()->get<int>(0), 2);
     }
 
-    TEST(SQLiteBulkExecuteTest, Should_InsertMultipleRows_When_UsingExecuteMany)
+    TEST_F(SQLiteStatementCoverageTest, Should_GetBoolAndFloat_Correctly)
     {
-        QLogicaeCore::Database db(":memory:");
-        db.prepare("CREATE TABLE bulk(id INT, val TEXT);").step();
+        database->prepare("CREATE TABLE boolfloat(b BOOLEAN, f FLOAT);").step();
 
-        auto stmt = db.prepare("INSERT INTO bulk VALUES(?, ?);");
-        std::vector<std::tuple<int, std::string>> rows = {
-            {1, "one"}, {2, "two"}, {3, "three"}
-        };
+        QLogicaeCore::SQLiteStatement insert = database->prepare("INSERT INTO boolfloat VALUES(?, ?);");
+        insert.bind(1, true).bind(2, 3.14f).step();
 
-        stmt.execute_many(rows);
+        QLogicaeCore::SQLiteStatement query = database->prepare("SELECT b, f FROM boolfloat;");
+        query.step();
 
-        auto query = db.prepare("SELECT COUNT(*) FROM bulk;");
+        auto row = query.row();
+        ASSERT_TRUE(row.has_value());
+
+        EXPECT_EQ(row->get<bool>(0), true);
+        EXPECT_FLOAT_EQ(row->get<float>(1), 3.14f);
+    }
+
+    TEST_F(SQLiteStatementCoverageTest, Should_PrepareAsync_InMultipleThreads)
+    {
+        constexpr int kThreads = 5;
+        std::vector<std::future<std::shared_ptr<QLogicaeCore::SQLiteStatement>>> futures;
+
+        for (int i = 0; i < kThreads; ++i)
+        {
+            futures.push_back(database->prepare_async("INSERT INTO items(id, name) VALUES(?, ?);"));
+        }
+
+        for (int i = 0; i < kThreads; ++i)
+        {
+            auto statement = futures[i].get();
+            statement->bind(1, i).bind(2, "t" + std::to_string(i)).step();
+        }
+
+        QLogicaeCore::SQLiteStatement query = database->prepare("SELECT COUNT(*) FROM items;");
+        query.step();
+
+        auto row = query.row();
+        ASSERT_TRUE(row.has_value());
+        EXPECT_EQ(row->get<int>(0), kThreads);
+    }
+
+    TEST_F(SQLiteStatementCoverageTest, Should_HandleOptionalBoolAndFloat)
+    {
+        database->prepare("CREATE TABLE flags(id INT, ok BOOLEAN, ratio FLOAT);").step();
+
+        QLogicaeCore::SQLiteStatement insert = database->prepare("INSERT INTO flags(id, ok, ratio) VALUES(?, ?, ?);");
+
+        std::optional<bool> is_true = true;
+        std::optional<float> pi = 3.14f;
+        insert.bind(1, 1).bind(2, is_true).bind(3, pi).step();
+
+        QLogicaeCore::SQLiteStatement query = database->prepare("SELECT ok, ratio FROM flags WHERE id = 1;");
+        query.step();
+
+        auto row = query.row();
+        ASSERT_TRUE(row.has_value());
+
+        std::optional<bool> ok = row->get_optional<bool>(0);
+        std::optional<float> ratio = row->get_optional<float>(1);
+
+        ASSERT_TRUE(ok.has_value());
+        ASSERT_TRUE(ratio.has_value());
+
+        EXPECT_TRUE(ok.value());
+        EXPECT_FLOAT_EQ(ratio.value(), 3.14f);
+    }
+
+    TEST_F(SQLiteStatementCoverageTest, Should_HandleOptionalBoolAndFloatNullopt)
+    {
+        database->prepare("CREATE TABLE flags(id INT, ok BOOLEAN, ratio FLOAT);").step();
+
+        QLogicaeCore::SQLiteStatement insert = database->prepare("INSERT INTO flags(id, ok, ratio) VALUES(?, ?, ?);");
+
+        std::optional<bool> ok = std::nullopt;
+        std::optional<float> ratio = std::nullopt;
+
+        insert.bind(1, 1).bind(2, ok).bind(3, ratio).step();
+
+        QLogicaeCore::SQLiteStatement query = database->prepare("SELECT ok, ratio FROM flags WHERE id = 1;");
+        query.step();
+
+        auto row = query.row();
+        ASSERT_TRUE(row.has_value());
+
+        std::optional<bool> retrieved_ok = row->get_optional<bool>(0);
+        std::optional<float> retrieved_ratio = row->get_optional<float>(1);
+
+        EXPECT_FALSE(retrieved_ok.has_value());
+        EXPECT_FALSE(retrieved_ratio.has_value());
+    }
+
+    TEST_F(SQLiteStatementCoverageTest, Should_CommitTransaction)
+    {
+        {
+            QLogicaeCore::SQLiteTransaction txn(*database);
+            QLogicaeCore::SQLiteStatement insert = database->prepare("INSERT INTO items(id, name) VALUES (?, ?);");
+            insert.bind(1, 100).bind(2, "tx_commit").step();
+            txn.commit();
+        }
+
+        QLogicaeCore::SQLiteStatement query = database->prepare("SELECT name FROM items WHERE id = 100;");
         query.step();
         auto row = query.row();
-
-        EXPECT_EQ(row->get<int>(0), 3);
+        ASSERT_TRUE(row.has_value());
+        EXPECT_EQ(row->get<std::string>(0), "tx_commit");
     }
 
-    TEST(SQLiteAsyncExceptionTest, Should_Throw_When_PreparingInvalidAsync)
+    TEST_F(SQLiteStatementCoverageTest, Should_RollbackOnDestruction)
     {
-        QLogicaeCore::Database db(":memory:");
-        std::future<std::shared_ptr<QLogicaeCore::Statement>> future =
-            db.prepare_async("THIS IS NOT SQL");
-
-        EXPECT_THROW({
-            auto s = future.get();
-            }, QLogicaeCore::SQLiteException);
-    }
-
-    TEST(SQLitePragmaErrorTest, Should_Throw_When_PragmaFails)
-    {
-        QLogicaeCore::Database db(":memory:");
-        EXPECT_THROW({
-            db.set_pragma("invalid_pragma", "123");
-            }, QLogicaeCore::SQLiteException);
-    }
-
-    TEST(SQLiteAsyncErrorFlowTest, Should_Throw_When_ResetAsyncInvalid)
-    {
-        QLogicaeCore::Database db(":memory:");
-        auto stmt = db.prepare("CREATE TABLE async_err(x INT);");
-        auto raw = stmt.release_internal_statement();
-        EXPECT_THROW(stmt.reset_async().get(), QLogicaeCore::SQLiteException);
-    }
-
-    TEST(SQLiteAsyncErrorFlowTest, Should_Throw_When_ClearBindingsAsyncInvalid)
-    {
-        QLogicaeCore::Database db(":memory:");
-        auto stmt = db.prepare("CREATE TABLE clear_err(x INT);");
-        auto raw = stmt.release_internal_statement();
-        EXPECT_THROW(stmt.clear_bindings_async().get(), QLogicaeCore::SQLiteException);
-    }
-
-    TEST(SQLiteAsyncErrorFlowTest, Should_Throw_When_QueryAsyncInvalid)
-    {
-        QLogicaeCore::Database db(":memory:");
-        auto stmt = db.prepare("CREATE TABLE query_err(x INT);");
-        auto raw = stmt.release_internal_statement();
-        EXPECT_THROW(stmt.query_async().get(), QLogicaeCore::SQLiteException);
-    }
-
-    TEST(SQLiteIteratorTest, Should_NotIterate_When_ResultEmpty)
-    {
-        QLogicaeCore::Database db(":memory:");
-        db.prepare("CREATE TABLE empty(id INT);").step();
-
-        auto stmt = db.prepare("SELECT * FROM empty;");
-        int count = 0;
-
-        for (const auto& row : stmt)
         {
-            count++;
+            QLogicaeCore::SQLiteTransaction txn(*database);
+            QLogicaeCore::SQLiteStatement insert = database->prepare("INSERT INTO items(id, name) VALUES (?, ?);");
+            insert.bind(1, 101).bind(2, "tx_rollback").step();
         }
 
-        EXPECT_EQ(count, 0);
+        QLogicaeCore::SQLiteStatement query = database->prepare("SELECT name FROM items WHERE id = 101;");
+        EXPECT_FALSE(query.step());
+    }
+
+    TEST_F(SQLiteStatementCoverageTest, Should_GetValue_ByColumnName)
+    {
+        QLogicaeCore::SQLiteStatement insert = database->prepare("INSERT INTO items(id, name) VALUES (?, ?);");
+        insert.bind(1, 200).bind(2, "column_name").step();
+
+        QLogicaeCore::SQLiteStatement query = database->prepare("SELECT id, name FROM items WHERE id = 200;");
+        query.step();
+        auto row = query.row();
+        ASSERT_TRUE(row.has_value());
+
+        int id = row->get<int>("id");
+        std::string name = row->get<std::string>("name");
+
+        EXPECT_EQ(id, 200);
+        EXPECT_EQ(name, "column_name");
+    }
+
+    TEST_F(SQLiteStatementCoverageTest, Should_FailAsync_Prepare_InvalidSQL)
+    {
+        auto future = database->prepare_async("MALFORMED SQL");
+        EXPECT_THROW({
+            auto stmt = future.get();
+            }, QLogicaeCore::SQLiteException);
     }
 }

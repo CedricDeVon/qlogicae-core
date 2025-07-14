@@ -165,6 +165,9 @@
     <ClInclude Include="xml_file_io.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gmail_mailer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="qlogicae_core.cpp">
@@ -303,6 +306,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="xml_file_io.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gmail_mailer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

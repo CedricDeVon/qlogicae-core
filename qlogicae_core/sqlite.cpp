@@ -6,760 +6,563 @@
 
 namespace QLogicaeCore
 {
-    SQLiteException::SQLiteException(
-        const std::string& message,
-        int errcode,
-        int extended
-    ) : std::runtime_error(message),
-        _error_code(errcode),
-        _extended_code(extended)
+    SQLiteException::SQLiteException(const std::string& message,
+        const int error_code,
+        const int extended_code)
+        : std::runtime_error(message),
+        error_code(error_code),
+        extended_code(extended_code)
     {
     }
 
     int SQLiteException::get_error_code() const noexcept
     {
-        return _error_code;
+        return error_code;
     }
 
     int SQLiteException::get_extended_code() const noexcept
     {
-        return _extended_code;
+        return extended_code;
     }
 
-    
-    StatementPool::StatementPool(std::shared_ptr<SQLiteBackend> db)
-        : _database(db)
+    SQLiteBackend::SQLiteBackend(sqlite3* raw_database)
+        : database_handle(raw_database)
     {
     }
 
-    Statement StatementPool::get(const std::string_view& sql)
+    SQLiteBackend::~SQLiteBackend()
     {
-        std::lock_guard<std::mutex> lock(_mutex);
-        auto it = _cache.find(std::string(sql));
-        if (it != _cache.end() && !it->second.empty())
+        sqlite3_close(database_handle);
+    }
+
+    SQLiteStatementData::SQLiteStatementData(sqlite3_stmt* raw_statement)
+        : statement_handle(raw_statement)
+    {
+    }
+
+    SQLiteStatementData::~SQLiteStatementData()
+    {
+        sqlite3_finalize(statement_handle);
+    }
+
+    sqlite3_stmt* SQLiteStatementData::get() const noexcept
+    {
+        return statement_handle;
+    }
+
+    SQLiteDatabase::SQLiteDatabase(const std::string& file_path)
+    {
+        sqlite3* raw_handle = nullptr;
+        int result = sqlite3_open(file_path.c_str(), &raw_handle);
+        if (result != SQLITE_OK)
         {
-            auto stmt = std::move(it->second.front());
-            it->second.pop();
-            return Statement(_database, sql);
+            throw SQLiteException("failed to open database", result, result);
         }
-        return Statement(_database, sql);
+        backend = std::make_shared<SQLiteBackend>(raw_handle);
     }
 
-    std::unique_ptr<SQLiteStatement> Statement::release_internal_statement()
+    SQLiteDatabase::~SQLiteDatabase() = default;
+
+    SQLiteStatement SQLiteDatabase::prepare(const std::string_view& sql_text)
     {
-        _is_valid = false;
-        return std::move(_statement);
+        return SQLiteStatement(backend, sql_text);
     }
 
-    void StatementPool::release(
-        const std::string& sql,
-        Statement stmt
-    )
+    std::future<std::shared_ptr<SQLiteStatement>> SQLiteDatabase::prepare_async(
+        const std::string_view& sql_text)
     {
-        std::lock_guard<std::mutex> lock(_mutex);
-        _cache[sql].push(stmt.release_internal_statement());
-    }
-
-    RowIterator::RowIterator(Statement* statement, bool is_end)
-        : _statement(statement), _is_end(is_end || !statement || !statement->is_valid())
-    {
-        if (!_is_end && !_statement->step())
-        {
-            _is_end = true;
-        }
-    }
-
-    RowIterator& RowIterator::operator++()
-    {
-        if (!_statement || !_statement->step())
-        {
-            _is_end = true;
-        }
-        return *this;
-    }
-
-    Row RowIterator::operator*() const
-    {
-        return *(_statement->row());
-    }
-
-    bool RowIterator::operator!=(const RowIterator& other) const
-    {
-        return _is_end != other._is_end || _statement != other._statement;
-    }
-
-    std::future<void> Statement::step_async()
-    {
-        return std::async(std::launch::async, [this]() -> void
-            {
-                step();
-            });
-    }
-    
-    bool Statement::is_valid() const
-    {
-        return _is_valid;
-    }
-
-    std::future<void> Statement::reset_async()
-    {
-        return std::async(std::launch::async, [this]() -> void
-            {
-                reset();
+        return std::async(std::launch::async, [this, sql_text]() {
+            return std::make_shared<SQLiteStatement>(backend, sql_text);
             });
     }
 
-    std::future<void> Statement::clear_bindings_async()
+    int64_t SQLiteDatabase::last_insert_rowid() const
     {
-        return std::async(std::launch::async, [this]() -> void
-            {
-                clear_bindings();
-            });
+        return sqlite3_last_insert_rowid(backend->database_handle);
     }
 
-    void Statement::invalidate()
+    void SQLiteDatabase::enable_foreign_keys()
     {
-        _is_valid = false;
+        SQLiteStatement pragma_statement = prepare("PRAGMA foreign_keys = ON;");
+        pragma_statement.step();
     }
 
-    bool Statement::step()
+    SQLiteStatement::SQLiteStatement(std::shared_ptr<SQLiteBackend> backend_instance,
+        const std::string_view& sql_text)
+        : backend(backend_instance)
     {
-        if (!_statement)
+        sqlite3_stmt* raw_statement = nullptr;
+        int result = sqlite3_prepare_v2(backend->database_handle,
+            sql_text.data(),
+            static_cast<int>(sql_text.size()),
+            &raw_statement, nullptr);
+        if (result != SQLITE_OK)
         {
-            return false;
+            throw SQLiteException("failed to prepare statement",
+                result, sqlite3_extended_errcode(backend->database_handle));
         }
+        statement = std::make_unique<SQLiteStatementData>(raw_statement);
+    }
 
-        int result = sqlite3_step(
-            reinterpret_cast<sqlite3_stmt*>(_statement.get())
-        );
+    SQLiteStatement::~SQLiteStatement() = default;
 
+    SQLiteStatement::SQLiteStatement(SQLiteStatement&& other) noexcept = default;
+    SQLiteStatement& SQLiteStatement::operator=(SQLiteStatement&& other) noexcept = default;
+
+    bool SQLiteStatement::step()
+    {
+        int result = sqlite3_step(statement->get());
         if (result == SQLITE_ROW)
         {
-            _is_valid = true;
             return true;
         }
-
         if (result == SQLITE_DONE)
         {
-            _is_valid = false;
             return false;
         }
-
-        throw SQLiteException("step() failed", result, result);
+        throw SQLiteException("step() failed",
+            result, sqlite3_extended_errcode(backend->database_handle));
     }
 
-    void Statement::reset()
+    void SQLiteStatement::reset()
     {
-        if (_statement)
-        {
-            int result = sqlite3_reset(
-                reinterpret_cast<sqlite3_stmt*>(_statement.get())
-            );
-
-            if (result != SQLITE_OK)
-            {
-                throw SQLiteException("reset() failed", result, result);
-            }
-
-            _is_valid = false;
-        }
-    }
-
-    void Statement::clear_bindings()
-    {
-        if (_statement)
-        {
-            int result = sqlite3_clear_bindings(
-                reinterpret_cast<sqlite3_stmt*>(_statement.get())
-            );
-
-            if (result != SQLITE_OK)
-            {
-                throw SQLiteException("clear_bindings() failed", result, result);
-            }
-        }
-    }
-
-    std::optional<Row> Statement::row()
-    {
-        if (!_is_valid || !_statement)
-        {
-            return std::nullopt;
-        }
-
-        return Row(std::make_unique<SQLiteStatement>(*(_statement.get())));
-    }
-
-    std::vector<Row> Statement::query()
-    {
-        std::vector<Row> result;
-
-        while (step())
-        {
-            if (auto r = row())
-            {
-                result.push_back(std::move(*r));
-            }
-        }
-
-        reset();
-        return result;
-    }
-
-
-    Statement& Statement::bind(int index, int value)
-    {
-        int result = sqlite3_bind_int(
-            reinterpret_cast<sqlite3_stmt*>(_statement.get()), index, value
-        );
-
+        int result = sqlite3_reset(statement->get());
         if (result != SQLITE_OK)
         {
-            throw SQLiteException("bind(int) failed", result, result);
+            throw SQLiteException("reset() failed",
+                result, sqlite3_extended_errcode(backend->database_handle));
         }
-
-        return *this;
     }
 
-    Statement& Statement::bind(int index, int64_t value)
+    void SQLiteStatement::clear_bindings()
     {
-        int result = sqlite3_bind_int64(
-            reinterpret_cast<sqlite3_stmt*>(_statement.get()), index, value
-        );
+        
 
+        int result = sqlite3_clear_bindings(statement->get());
         if (result != SQLITE_OK)
         {
-            throw SQLiteException("bind(int64_t) failed", result, result);
+            throw SQLiteException("clear_bindings() failed",
+                result, sqlite3_extended_errcode(backend->database_handle));
         }
-
-        return *this;
     }
 
-    Statement& Statement::bind(int index, double value)
+    bool SQLiteStatement::is_valid() const
     {
-        int result = sqlite3_bind_double(
-            reinterpret_cast<sqlite3_stmt*>(_statement.get()), index, value
-        );
+        return statement != nullptr;
+    }
 
-        if (result != SQLITE_OK)
+    int SQLiteStatement::resolve_named_index(const std::string_view& name)
+    {
+        std::string key(name);
+        auto it = parameter_name_to_index.find(key);
+        if (it != parameter_name_to_index.end())
         {
-            throw SQLiteException("bind(double) failed", result, result);
+            return it->second;
         }
-
-        return *this;
+        int index = sqlite3_bind_parameter_index(statement->get(), name.data());
+        if (index == 0)
+        {
+            throw SQLiteException("invalid parameter name", -1, -1);
+        }
+        parameter_name_to_index[key] = index;
+        return index;
     }
 
-    Statement& Statement::bind(int index, float value)
-    {
-        return bind(index, static_cast<double>(value));
-    }
-
-    Statement& Statement::bind(int index, bool value)
+    SQLiteStatement& SQLiteStatement::bind(int index, bool value)
     {
         return bind(index, static_cast<int>(value));
     }
 
-    Statement& Statement::bind(int index, const std::string& value)
+    SQLiteStatement& SQLiteStatement::bind(int index, const std::string& value)
     {
-        int result = sqlite3_bind_text(
-            reinterpret_cast<sqlite3_stmt*>(_statement.get()), index,
-            value.c_str(), static_cast<int>(value.size()), SQLITE_TRANSIENT
-        );
-
+        int result = sqlite3_bind_text(statement->get(), index,
+            value.c_str(), static_cast<int>(value.size()),
+            SQLITE_TRANSIENT);
         if (result != SQLITE_OK)
         {
-            throw SQLiteException("bind(string) failed", result, result);
+            throw SQLiteException("bind(string) failed",
+                result, sqlite3_extended_errcode(backend->database_handle));
         }
-
         return *this;
     }
 
-    Statement& Statement::bind(int index, const char* value)
+    SQLiteStatement& SQLiteStatement::bind(int index, const char* value)
     {
-        int result = sqlite3_bind_text(
-            reinterpret_cast<sqlite3_stmt*>(_statement.get()), index,
-            value, -1, SQLITE_TRANSIENT
-        );
-
+        int result = sqlite3_bind_text(statement->get(), index,
+            value, -1, SQLITE_TRANSIENT);
         if (result != SQLITE_OK)
         {
-            throw SQLiteException("bind(char*) failed", result, result);
+            throw SQLiteException("bind(char*) failed",
+                result, sqlite3_extended_errcode(backend->database_handle));
         }
-
         return *this;
     }
 
-    RowIterator Statement::begin()
+    SQLiteStatement& SQLiteStatement::bind(int index, std::nullptr_t)
     {
-        return RowIterator(this);
-    }
-
-    RowIterator Statement::end()
-    {
-        return RowIterator(this, true);
-    }
-
-    Statement& Statement::bind(int index, std::nullptr_t)
-    {
-        int result = sqlite3_bind_null(
-            reinterpret_cast<sqlite3_stmt*>(_statement.get()), index
-        );
-
+        int result = sqlite3_bind_null(statement->get(), index);
         if (result != SQLITE_OK)
         {
-            throw SQLiteException("bind(null) failed", result, result);
+            throw SQLiteException("bind(null) failed",
+                result, sqlite3_extended_errcode(backend->database_handle));
         }
-
         return *this;
     }
 
-    Statement& Statement::bind_blob(int index, const void* data, int size)
+    int SQLiteRow::get_column_count() const
     {
-        int result = sqlite3_bind_blob(
-            reinterpret_cast<sqlite3_stmt*>(_statement.get()), index,
-            data, size, SQLITE_TRANSIENT
-        );
-
-        if (result != SQLITE_OK)
-        {
-            throw SQLiteException("bind_blob failed", result, result);
-        }
-
-        return *this;
+        return sqlite3_column_count(statement);
     }
 
-    int Statement::resolve_named_index(const std::string_view& name)
+    std::string_view SQLiteRow::get_column_name(int column_index) const
     {
-        auto it = _parameter_name_cache.find(std::string(name));
-        if (it != _parameter_name_cache.end())
-        {
-            return it->second;
-        }
-
-        int index = sqlite3_bind_parameter_index(
-            reinterpret_cast<sqlite3_stmt*>(_statement.get()), name.data()
-        );
-
-        if (index == 0)
-        {
-            throw SQLiteException("Invalid bind parameter name: " + std::string(name), -1, -1);
-        }
-
-        _parameter_name_cache[std::string(name)] = index;
-        return index;
-    }
-
-    Statement& Statement::bind(const std::string_view& name, int value)
-    {
-        return bind(resolve_named_index(name), value);
-    }
-
-    Statement& Statement::bind(const std::string_view& name, int64_t value)
-    {
-        return bind(resolve_named_index(name), value);
-    }
-
-    Statement& Statement::bind(const std::string_view& name, double value)
-    {
-        return bind(resolve_named_index(name), value);
-    }
-
-    Statement& Statement::bind(const std::string_view& name, float value)
-    {
-        return bind(resolve_named_index(name), value);
-    }
-
-    Statement& Statement::bind(const std::string_view& name, bool value)
-    {
-        return bind(resolve_named_index(name), value);
-    }
-
-    Statement& Statement::bind(
-        const std::string_view& name,
-        const std::string& value
-    )
-    {
-        return bind(resolve_named_index(name), value);
-    }
-
-    Statement& Statement::bind(const std::string_view& name, const char* value)
-    {
-        return bind(resolve_named_index(name), value);
-    }
-
-    Statement& Statement::bind(const std::string_view& name, std::nullptr_t)
-    {
-        return bind(resolve_named_index(name), nullptr);
-    }
-
-    Statement& Statement::bind_blob(
-        const std::string_view& name,
-        const void* data,
-        int size
-    )
-    {
-        return bind_blob(resolve_named_index(name), data, size);
-    }
-
-    std::future<std::vector<Row>> Statement::query_async()
-    {
-        return std::async(std::launch::async, [this]()
-            {
-                std::vector<Row> result;
-
-                while (step())
-                {
-                    if (auto r = row())
-                    {
-                        result.push_back(std::move(*r));
-                    }
-                }
-
-                reset();
-                return result;
-            });
-    }
-
-    Statement::Statement(
-        std::shared_ptr<SQLiteBackend> db,
-        const std::string_view& sql
-    ) : _statement(nullptr), _is_valid(false)
-    {
-        sqlite3_stmt* raw_stmt = nullptr;
-
-        int result = sqlite3_prepare_v2(
-            db->handler,
-            sql.data(),
-            static_cast<int>(sql.size()),
-            &raw_stmt,
-            nullptr
-        );
-
-        if (result != SQLITE_OK)
-        {
-            throw SQLiteException("Failed to prepare statement", result, result);
-        }
-
-        _statement = std::make_unique<SQLiteStatement>(raw_stmt);
-    }
-
-    int Row::get_index(const std::string_view& name) const
-    {
-        auto it = name_to_index_cache_.find(std::string(name));
-        if (it != name_to_index_cache_.end())
-        {
-            return it->second;
-        }
-
-        int column_count = get_column_count();
-        for (int i = 0; i < column_count; ++i)
-        {
-            std::string_view column_name = get_column_name(i);
-            if (column_name == name)
-            {
-                name_to_index_cache_[std::string(name)] = i;
-                return i;
-            }
-        }
-
-        throw std::out_of_range("Column name not found: " + std::string(name));
-    }
-
-    Row::Row(std::unique_ptr<SQLiteStatement> stmt)
-        : _statement(std::move(stmt))
-    {
-    }
-
-    int Row::get_column_count() const
-    {
-        return sqlite3_column_count(
-            reinterpret_cast<sqlite3_stmt*>(_statement.get())
-        );
-    }
-
-    std::string_view Row::get_column_name(int index) const
-    {
-        const char* name = sqlite3_column_name(
-            reinterpret_cast<sqlite3_stmt*>(_statement.get()), index
-        );
+        const char* name = sqlite3_column_name(statement, column_index);
         return name ? std::string_view(name) : std::string_view();
     }
 
-    bool Row::is_valid() const
+    int SQLiteRow::get_index(const std::string_view& column_name) const
     {
-        return _statement != nullptr;
-    }
-
-    std::vector<std::string> Row::get_column_types() const
-    {
-        std::vector<std::string> types;
+        auto it = column_name_to_index.find(std::string(column_name));
+        if (it != column_name_to_index.end())
+        {
+            return it->second;
+        }
         int count = get_column_count();
-
         for (int i = 0; i < count; ++i)
         {
-            int type = sqlite3_column_type(
-                reinterpret_cast<sqlite3_stmt*>(_statement.get()), i
-            );
-
-            switch (type)
+            if (get_column_name(i) == column_name)
             {
-            case SQLITE_INTEGER:
-                types.emplace_back("INTEGER");
-                break;
-            case SQLITE_FLOAT:
-                types.emplace_back("FLOAT");
-                break;
-            case SQLITE_TEXT:
-                types.emplace_back("TEXT");
-                break;
-            case SQLITE_BLOB:
-                types.emplace_back("BLOB");
-                break;
-            case SQLITE_NULL:
-                types.emplace_back("NULL");
-                break;
-            default:
-                types.emplace_back("UNKNOWN");
-                break;
+                column_name_to_index[std::string(column_name)] = i;
+                return i;
             }
         }
-
-        return types;
+        throw SQLiteException("column name not found", -1, -1);
     }
 
-    Database::Database(const std::string& filename)
+    SQLiteStatement& SQLiteStatement::bind(int index, int value)
     {
-        sqlite3* handle = nullptr;
-        int result = sqlite3_open(filename.c_str(), &handle);
+        int result = sqlite3_bind_int(statement->get(), index, value);
         if (result != SQLITE_OK)
         {
-            throw SQLiteException("Failed to open database", result, result);
+            throw SQLiteException("bind(int) failed", result, sqlite3_extended_errcode(backend->database_handle));
         }
-        _database = std::make_shared<SQLiteBackend>(handle);
-
+        return *this;
     }
 
-    Database::~Database()
+    SQLiteStatement& SQLiteStatement::bind(int index, int64_t value)
     {
-        sqlite3_close(reinterpret_cast<sqlite3*>(_database.get()));
-    }
-
-    void Database::configure_threading()
-    {
-        sqlite3_config(SQLITE_CONFIG_SERIALIZED);
-    }
-
-    Statement Database::prepare(const std::string_view& sql)
-    {
-        return Statement(_database, sql);
-    }
-
-    std::future<std::shared_ptr<Statement>> Database::prepare_async(
-        const std::string_view& sql
-    )
-    {
-        return std::async(std::launch::async, [this, sql]()
-            {
-                return std::make_shared<Statement>(_database, sql);
-            });
-    }
-
-    void Database::enable_foreign_keys()
-    {
-        prepare("PRAGMA foreign_keys = ON;").step();
-    }
-
-    int64_t Database::last_insert_rowid() const
-    {
-        return sqlite3_last_insert_rowid(reinterpret_cast<sqlite3*>(_database.get()));
-    }
-
-    int Database::changes() const
-    {
-        return sqlite3_changes(reinterpret_cast<sqlite3*>(_database.get()));
-    }
-
-    int Database::total_changes() const
-    {
-        return sqlite3_total_changes(reinterpret_cast<sqlite3*>(_database.get()));
-    }
-
-    std::string Database::get_pragma(const std::string_view& name) const
-    {
-        sqlite3_stmt* stmt;
-        std::string query = "PRAGMA " + std::string(name);
-        sqlite3_prepare_v2(reinterpret_cast<sqlite3*>(_database.get()), query.c_str(), -1, &stmt, nullptr);
-        if (sqlite3_step(stmt) != SQLITE_ROW)
+        int result = sqlite3_bind_int64(statement->get(), index, value);
+        if (result != SQLITE_OK)
         {
-            sqlite3_finalize(stmt);
-            throw SQLiteException("PRAGMA failed", -1, -1);
+            throw SQLiteException("bind(int64_t) failed", result, sqlite3_extended_errcode(backend->database_handle));
         }
-        const char* result = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
-        std::string value = result ? result : "";
-        sqlite3_finalize(stmt);
-        return value;
+        return *this;
     }
 
-    void Database::set_pragma(
-        const std::string_view& name,
-        const std::string_view& value
-    )
+    SQLiteStatement& SQLiteStatement::bind(int index, double value)
     {
-        std::string query = "PRAGMA " + std::string(name) + " = " + std::string(value);
-        prepare(query).step();
-    }
-
-    std::future<std::string> Database::get_pragma_async(const std::string_view& name) const
-    {
-        return std::async(std::launch::async, [this, name]() -> std::string
-            {
-                return get_pragma(name);
-            });
-    }
-
-    std::future<void> Database::set_pragma_async(
-        const std::string_view& name,
-        const std::string_view& value
-    )
-    {
-        return std::async(std::launch::async, [this, name, value]() -> void
-            {
-                set_pragma(name, value);
-            });
-    }
-
-    StatementPool& Database::pool()
-    {
-        return *_statement_pool;
-    }
-
-    std::vector<std::string> Database::table_info(
-        const std::string& table_name
-    ) const
-    {
-        std::string query = "PRAGMA table_info(" + table_name + ");";
-        Statement stmt = Statement(_database, query);
-
-        std::vector<std::string> columns;
-
-        while (stmt.step())
+        int result = sqlite3_bind_double(statement->get(), index, value);
+        if (result != SQLITE_OK)
         {
-            if (auto row = stmt.row())
-            {
-                columns.push_back(row->get<std::string>(1)); // name column
-            }
+            throw SQLiteException("bind(double) failed", result, sqlite3_extended_errcode(backend->database_handle));
         }
-
-        stmt.reset();
-        return columns;
+        return *this;
     }
 
-    std::future<std::vector<std::string>> Database::table_info_async(
-        const std::string& table_name
-    ) const
+    SQLiteStatement& SQLiteStatement::bind(int index, float value)
     {
-        return std::async(std::launch::async, [this, table_name]()
-            {
-                return table_info(table_name);
-            });
+        return bind(index, static_cast<double>(value));
     }
 
-    std::vector<std::string> Database::index_list(
-        const std::string& table_name
-    ) const
+    SQLiteStatement& SQLiteStatement::bind(const std::string_view& name, int value)
     {
-        std::string query = "PRAGMA index_list(" + table_name + ");";
-        Statement stmt = Statement(_database, query);
+        return bind(resolve_named_index(name), value);
+    }
 
-        std::vector<std::string> indexes;
+    SQLiteStatement& SQLiteStatement::bind(const std::string_view& name, int64_t value)
+    {
+        return bind(resolve_named_index(name), value);
+    }
 
-        while (stmt.step())
+    SQLiteStatement& SQLiteStatement::bind(const std::string_view& name, double value)
+    {
+        return bind(resolve_named_index(name), value);
+    }
+
+    SQLiteStatement& SQLiteStatement::bind(const std::string_view& name, float value)
+    {
+        return bind(resolve_named_index(name), static_cast<double>(value));
+    }
+
+    SQLiteStatement& SQLiteStatement::bind(const std::string_view& name, bool value)
+    {
+        return bind(resolve_named_index(name), static_cast<int>(value));
+    }
+
+    SQLiteStatement& SQLiteStatement::bind(const std::string_view& name, const std::string& value)
+    {
+        int result = sqlite3_bind_text(statement->get(), resolve_named_index(name), value.c_str(), static_cast<int>(value.size()), SQLITE_TRANSIENT);
+        if (result != SQLITE_OK)
         {
-            if (auto row = stmt.row())
-            {
-                indexes.push_back(row->get<std::string>(1)); // name column
-            }
+            throw SQLiteException("bind(std::string) failed", result, sqlite3_extended_errcode(backend->database_handle));
         }
-
-        stmt.reset();
-        return indexes;
+        return *this;
     }
 
-    std::future<std::vector<std::string>> Database::index_list_async(
-        const std::string& table_name
-    ) const
+    SQLiteStatement& SQLiteStatement::bind(const std::string_view& name, const char* value)
     {
-        return std::async(std::launch::async, [this, table_name]()
-            {
-                return index_list(table_name);
-            });
-    }
-
-    void Database::migrate_to(
-        int target_version,
-        const std::function<void(int from, int to)>& upgrader
-    )
-    {
-        Statement version_stmt = prepare(
-            "PRAGMA user_version;"
-        );
-
-        int current_version = 0;
-        if (version_stmt.step())
+        int result = sqlite3_bind_text(statement->get(), resolve_named_index(name), value, -1, SQLITE_TRANSIENT);
+        if (result != SQLITE_OK)
         {
-            current_version = version_stmt.row()->get<int>(0);
+            throw SQLiteException("bind(const char*) failed", result, sqlite3_extended_errcode(backend->database_handle));
         }
+        return *this;
+    }
 
-        if (current_version >= target_version)
+    SQLiteStatement& SQLiteStatement::bind(const std::string_view& name, std::nullptr_t)
+    {
+        int result = sqlite3_bind_null(statement->get(), resolve_named_index(name));
+        if (result != SQLITE_OK)
         {
-            return;
+            throw SQLiteException("bind(null) failed", result, sqlite3_extended_errcode(backend->database_handle));
         }
-
-        Transaction tx(*this);
-        upgrader(current_version, target_version);
-        prepare(
-            "PRAGMA user_version = " + std::to_string(target_version)
-        ).step();
-        tx.execute();
+        return *this;
     }
 
-    std::future<void> Database::migrate_to_async(
-        int target_version,
-        const std::function<void(int from, int to)>& upgrader
-    )
+    SQLiteTransaction::SQLiteTransaction(SQLiteDatabase& database_instance)
+        : database(database_instance), committed(false)
     {
-        return std::async(std::launch::async, [this, target_version, upgrader]()
-            {
-                migrate_to(target_version, upgrader);
-            });
+        SQLiteStatement begin_statement = database.prepare("BEGIN;");
+        begin_statement.step();
     }
 
-    Transaction::Transaction(Database& database)
-        : _database(database), _is_committed(false)
+    SQLiteTransaction::~SQLiteTransaction()
     {
-        _database.prepare("BEGIN IMMEDIATE;").step();
-    }
-
-    Transaction::~Transaction()
-    {
-        if (!_is_committed)
+        if (!committed)
         {
             try
             {
-                _database.prepare("ROLLBACK;").step();
+                SQLiteStatement rollback_statement = database.prepare("ROLLBACK;");
+                rollback_statement.step();
             }
-            catch (...)
-            {
-            }
+            catch (...) {}
         }
     }
 
-    void Transaction::execute()
+    void SQLiteTransaction::commit()
     {
-        if (!_is_committed)
+        if (!committed)
         {
-            _database.prepare("COMMIT;").step();
-            _is_committed = true;
+            SQLiteStatement commit_statement = database.prepare("COMMIT;");
+            commit_statement.step();
+            committed = true;
         }
     }
+
+    std::vector<SQLiteRow> SQLiteStatement::query()
+    {
+        std::vector<SQLiteRow> results;
+        while (step())
+        {
+            if (auto r = row())
+            {
+                results.push_back(*r);
+            }
+        }
+        reset();
+        return results;
+    }
+
+    std::future<void> SQLiteStatement::step_async()
+    {
+        return std::async(std::launch::async, [this]() {
+            step();
+            });
+    }
+
+    std::future<void> SQLiteStatement::reset_async()
+    {
+        return std::async(std::launch::async, [this]() {
+            reset();
+            });
+    }
+
+    std::future<void> SQLiteStatement::clear_bindings_async()
+    {
+        return std::async(std::launch::async, [this]() {
+            clear_bindings();
+            });
+    }
+
+    std::future<std::vector<SQLiteRow>> SQLiteStatement::query_async()
+    {
+        return std::async(std::launch::async, [this]() {
+            return query();
+            });
+    }
+
+    SQLiteRow::SQLiteRow(sqlite3_stmt* raw_statement)
+        : statement(raw_statement)
+    {
+    }
+
+    std::optional<SQLiteRow> SQLiteStatement::row()
+    {
+        if (!statement || sqlite3_data_count(statement->get()) == 0)
+        {
+            return std::nullopt;
+        }
+        return SQLiteRow(statement->get());
+    }
+
+    template<>
+    int SQLiteRow::get<int>(int column_index) const
+    {
+        if (sqlite3_column_type(statement, column_index) == SQLITE_NULL)
+        {
+            throw SQLiteException("column is null", -1, -1);
+        }
+        return sqlite3_column_int(statement, column_index);
+    }
+
+    template<>
+    double SQLiteRow::get<double>(int column_index) const
+    {
+        if (sqlite3_column_type(statement, column_index) == SQLITE_NULL)
+        {
+            throw SQLiteException("column is null", -1, -1);
+        }
+        return sqlite3_column_double(statement, column_index);
+    }
+
+    template<>
+    float SQLiteRow::get<float>(int column_index) const
+    {
+        return static_cast<float>(get<double>(column_index));
+    }
+
+    template<>
+    bool SQLiteRow::get<bool>(int column_index) const
+    {
+        return get<int>(column_index) != 0;
+    }
+
+    template<>
+    std::string SQLiteRow::get<std::string>(int column_index) const
+    {
+        const char* text = reinterpret_cast<const char*>(
+            sqlite3_column_text(statement, column_index));
+        return text ? std::string(text) : std::string();
+    }
+
+    template<>
+    QLogicaeCore::SQLiteStatement& QLogicaeCore::SQLiteStatement::bind<std::string>(
+        int index, const std::optional<std::string>& value)
+    {
+        if (value.has_value())
+        {
+            return bind(index, *value);
+        }
+        return bind(index, nullptr);
+    }
+
+    template<>
+    QLogicaeCore::SQLiteStatement& QLogicaeCore::SQLiteStatement::bind<std::string>(
+        const std::string_view& name, const std::optional<std::string>& value)
+    {
+        if (value.has_value())
+        {
+            return bind(name, *value);
+        }
+        return bind(name, nullptr);
+    }
+
+    template<>
+    std::optional<std::string> QLogicaeCore::SQLiteRow::get_optional<std::string>(
+        int column_index) const
+    {
+        if (sqlite3_column_type(statement, column_index) == SQLITE_NULL)
+        {
+            return std::nullopt;
+        }
+        return get<std::string>(column_index);
+    }
+
+    template<>
+    std::optional<int> QLogicaeCore::SQLiteRow::get_optional<int>(
+        int column_index) const
+    {
+        if (sqlite3_column_type(statement, column_index) == SQLITE_NULL)
+        {
+            return std::nullopt;
+        }
+        return get<int>(column_index);
+    }
+
+    template<>
+    QLogicaeCore::SQLiteStatement& QLogicaeCore::SQLiteStatement::bind<int>(
+        int index, const std::optional<int>& value)
+    {
+        if (value.has_value())
+        {
+            return bind(index, *value);
+        }
+        return bind(index, nullptr);
+    }
+
+    template<>
+    QLogicaeCore::SQLiteStatement& QLogicaeCore::SQLiteStatement::bind<int>(
+        const std::string_view& name, const std::optional<int>& value)
+    {
+        if (value.has_value())
+        {
+            return bind(name, *value);
+        }
+        return bind(name, nullptr);
+    }
+
+    template<>
+    QLogicaeCore::SQLiteStatement& QLogicaeCore::SQLiteStatement::bind<bool>(
+        int index, const std::optional<bool>& value) {
+        if (value.has_value()) return bind(index, *value);
+        return bind(index, nullptr);
+    }
+
+    template<>
+    std::optional<bool> QLogicaeCore::SQLiteRow::get_optional<bool>(
+        int column_index) const {
+        if (sqlite3_column_type(statement, column_index) == SQLITE_NULL)
+            return std::nullopt;
+        return get<bool>(column_index);
+    }
+
+    template<>
+    QLogicaeCore::SQLiteStatement& QLogicaeCore::SQLiteStatement::bind<float>(
+        int index, const std::optional<float>& value) {
+        if (value.has_value()) return bind(index, *value);
+        return bind(index, nullptr);
+    }
+
+    template<>
+    std::optional<float> QLogicaeCore::SQLiteRow::get_optional<float>(
+        int column_index) const
+    {
+        if (sqlite3_column_type(statement, column_index) == SQLITE_NULL)
+            return std::nullopt;
+        return get<float>(column_index);
+    }
+    
+    template<>
+    int SQLiteRow::get<int>(const std::string_view& column_name) const
+    {
+        return get<int>(get_index(column_name));
+    }
+
+    template<>
+    std::string SQLiteRow::get<std::string>(
+        const std::string_view& column_name) const
+    {
+        return get<std::string>(get_index(column_name));
+    }
+
 }

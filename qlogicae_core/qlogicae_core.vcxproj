@@ -73,6 +73,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -118,12 +121,20 @@
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <DebugInformationFormat>None</DebugInformationFormat>
       <UseUnicodeForAssemblerListing>true</UseUnicodeForAssemblerListing>
+      <AdditionalModuleDependencies>
+      </AdditionalModuleDependencies>
     </ClCompile>
     <Link>
       <SubSystem>
       </SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalDependencies>mimalloc.lib</AdditionalDependencies>
+      <AdditionalOptions>/INCLUDE:mi_redirect
+ %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalLibraryDirectories>C:\vcpkg\installed\x64-windows-static\lib</AdditionalLibraryDirectories>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -140,12 +151,20 @@
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <DebugInformationFormat>None</DebugInformationFormat>
       <UseUnicodeForAssemblerListing>true</UseUnicodeForAssemblerListing>
+      <AdditionalModuleDependencies>
+      </AdditionalModuleDependencies>
     </ClCompile>
     <Link>
       <SubSystem>
       </SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalDependencies>mimalloc.lib</AdditionalDependencies>
+      <AdditionalOptions>/INCLUDE:mi_redirect
+ %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalLibraryDirectories>C:\vcpkg\installed\x64-windows-static\lib</AdditionalLibraryDirectories>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="abstract_file_io.hpp" />
@@ -158,6 +177,7 @@
     <ClInclude Include="cryptographer.hpp" />
     <ClInclude Include="excel_file_io.hpp" />
     <ClInclude Include="file_uri_io.hpp" />
+    <ClInclude Include="gmail_mailer.hpp" />
     <ClInclude Include="jsonwebtoken_cryptographer.hpp" />
     <ClInclude Include="sqlite.hpp" />
     <ClInclude Include="string_builder.hpp" />
@@ -209,6 +229,7 @@
     <ClCompile Include="cli_io.cpp" />
     <ClCompile Include="cryptographer.cpp" />
     <ClCompile Include="file_uri_io.cpp" />
+    <ClCompile Include="gmail_mailer.cpp" />
     <ClCompile Include="jsonwebtoken_cryptographer.cpp" />
     <ClCompile Include="sqlite.cpp" />
     <ClCompile Include="string_builder.cpp">

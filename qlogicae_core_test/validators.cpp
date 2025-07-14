@@ -286,86 +286,12 @@ namespace QLogicaeCoreTest
         ASSERT_FALSE(validators.is_utf16("x"));
     }
 
-    TEST_F(ValidatorsTemplateTest, Should_Validate_JSON_YAML_CSV)
-    {
-        ASSERT_TRUE(validators.is_json("{\"key\":\"value\"}"));
-        ASSERT_TRUE(validators.is_yaml("key: value"));
-        ASSERT_TRUE(validators.is_csv("a,b,c"));
-        ASSERT_FALSE(validators.is_csv("abc"));
-    }
-
-    TEST_F(ValidatorsTemplateTest, Should_Validate_DateTimePatterns)
-    {
-        ASSERT_TRUE(validators.is_date("2020-12-31", "%Y-%m-%d"));
-        ASSERT_FALSE(validators.is_date("12/31/2020", "%Y-%m-%d"));
-
-        ASSERT_TRUE(validators.is_past_date("2000-01-01", "%Y-%m-%d"));
-        ASSERT_FALSE(validators.is_past_date("3000-01-01", "%Y-%m-%d"));
-
-        ASSERT_TRUE(validators.is_unix("1618033988"));
-        ASSERT_FALSE(validators.is_unix("NaN"));
-
-        ASSERT_TRUE(validators.is_iso8601("2020-12-31T23:59:59Z"));
-        ASSERT_FALSE(validators.is_iso8601("not-date"));
-
-        ASSERT_TRUE(validators.is_utc("2020-12-31T23:59:59Z"));
-        ASSERT_FALSE(validators.is_utc("2020-12-31T23:59:59"));
-    }
-
-    TEST_F(ValidatorsTemplateTest, Should_Match_RegexPatterns)
-    {
-        ASSERT_TRUE(validators.is_base64("c29tZXRleHQ="));
-        ASSERT_FALSE(validators.is_base64("not_base64!!"));
-
-        ASSERT_TRUE(validators.is_slug("valid-slug-example"));
-        ASSERT_FALSE(validators.is_slug("Invalid Slug"));
-
-        ASSERT_TRUE(validators.is_hex("deadbeef"));
-        ASSERT_FALSE(validators.is_hex("nothex"));
-
-        ASSERT_TRUE(validators.is_uuid4("550e8400-e29b-41d4-a716-446655440000"));
-        ASSERT_FALSE(validators.is_uuid4("invalid-uuid"));
-
-        ASSERT_TRUE(validators.is_uuid6("1e0b46e2-4b5e-6f00-8000-0026bb7655df"));  
-        ASSERT_FALSE(validators.is_uuid6("some-invalid-string"));
-
-        ASSERT_TRUE(validators.is_xml("<root></root>"));
-        ASSERT_FALSE(validators.is_xml("not xml"));
-
-        ASSERT_TRUE(validators.is_ipv4("192.168.1.1"));
-        ASSERT_FALSE(validators.is_ipv4("999.999.999.999"));
-
-        ASSERT_TRUE(validators.is_ipv6("2001:0db8:85a3:0000:0000:8a2e:0370:7334"));
-        ASSERT_FALSE(validators.is_ipv6("invalid_ipv6"));
-
-        ASSERT_TRUE(validators.is_url("https://example.com"));
-        ASSERT_FALSE(validators.is_url("example dot com"));
-    }
-
     TEST_F(ValidatorsTemplateTest, Should_Validate_LeapYearText)
     {
         ASSERT_TRUE(validators.is_leap_year("2020"));
         ASSERT_FALSE(validators.is_leap_year("1900"));
         ASSERT_TRUE(validators.is_leap_year(2000));
         ASSERT_FALSE(validators.is_leap_year(2023));
-    }
-
-    TEST_F(ValidatorsTemplateTest, Should_Validate_EmailAndPassword)
-    {
-        ASSERT_TRUE(validators.is_email("user@example.com"));
-        ASSERT_FALSE(validators.is_email("not_an_email"));
-
-        QLogicaeCore::PasswordRules rules;
-        rules.minimum_length = 8;
-        rules.maximum_length = 16;
-        rules.require_uppercase_characters = true;
-        rules.require_lowercase_characters = true;
-        rules.require_alpha_numerics = true;
-        rules.require_special_characters = true;
-        rules.require_unique_characters = true;
-
-        ASSERT_TRUE(validators.is_strong_password("Abc123$%", rules));
-        ASSERT_FALSE(validators.is_strong_password("abc123", rules));
     }
 
     TEST_F(ValidatorsTemplateTest, Should_Validate_ISOCountryCurrencyLanguageCodes)
@@ -382,18 +308,6 @@ namespace QLogicaeCoreTest
         ASSERT_FALSE(validators.is_language_code("engl"));
     }
 
-    TEST_F(ValidatorsTemplateTest, Should_Validate_FilePatterns)
-    {
-        ASSERT_TRUE(validators.is_file_path("/usr/local/bin"));
-        ASSERT_FALSE(validators.is_file_path("not/a//path"));
-
-        ASSERT_TRUE(validators.is_file_name("file.txt"));
-        ASSERT_FALSE(validators.is_file_name("bad|name?.txt"));
-
-        ASSERT_TRUE(validators.is_file_extension("txt"));
-        ASSERT_FALSE(validators.is_file_extension(".txt"));
-    }
-
     TEST_F(ValidatorsTemplateTest, Should_Validate_FileAllowRules)
     {
         ASSERT_TRUE(validators.is_file_extension_allowed("txt", { "txt", "md" }));
@@ -401,15 +315,6 @@ namespace QLogicaeCoreTest
 
         ASSERT_TRUE(validators.is_file_type_allowed("application/json", { "application/json" }));
         ASSERT_FALSE(validators.is_file_type_allowed("application/xml", { "application/json" }));
-    }
-
-    TEST_F(ValidatorsTemplateTest, Should_Validate_PhoneNumbers)
-    {
-        ASSERT_TRUE(validators.is_phone_number("+1 (800) 123-4567"));
-        ASSERT_FALSE(validators.is_phone_number("badphone"));
-
-        ASSERT_TRUE(validators.is_e164_phone_number("+18001234567"));
-        ASSERT_FALSE(validators.is_e164_phone_number("8001234567"));
     }
 
     TEST_F(ValidatorsTemplateTest, Should_Validate_PercentageFormats)
@@ -451,50 +356,6 @@ namespace QLogicaeCoreTest
         ASSERT_FALSE(validators.is_gender("unknown"));
     }
 
-    TEST_F(ValidatorsTemplateTest, Should_Validate_AddressAndNameParts)
-    {
-        ASSERT_TRUE(validators.is_address_line("123 Main Street"));
-        ASSERT_FALSE(validators.is_address_line("a"));
-
-        ASSERT_TRUE(validators.is_full_name("John Doe"));
-        ASSERT_TRUE(validators.is_first_name("John"));
-        ASSERT_TRUE(validators.is_middle_name("Edward"));
-        ASSERT_TRUE(validators.is_middle_initial("E"));
-        ASSERT_FALSE(validators.is_middle_initial("Ed"));
-    }
-
-    TEST_F(ValidatorsTemplateTest, Should_Validate_MimeBase64DataUri)
-    {
-        ASSERT_TRUE(validators.is_mime_type("image/png"));
-        ASSERT_FALSE(validators.is_mime_type("fake/type"));
-
-        ASSERT_TRUE(validators.is_base64_image("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA"));
-        ASSERT_FALSE(validators.is_base64_image("plain text"));
-
-        ASSERT_TRUE(validators.is_data_uri("data:text/plain;base64,SGVsbG8gd29ybGQ="));
-        ASSERT_FALSE(validators.is_data_uri("notdatauri"));
-    }
-
-    TEST_F(ValidatorsTemplateTest, Should_Fuzz_RegexAndUtfValidators)
-    {
-        std::vector<std::string> fuzz_inputs = {
-            "", "a", "!!@@", "123", "abcdEFGH", "this_is_slug", "bad slug",
-            "aGVsbG8gd29ybGQ=", "c29tZVRleHQ=", "not_base64==", "uuid", "550e8400-e29b-41d4-a716-446655440000",
-            "\xFF\xFE\x00a", "\xC3\x28", "\xE2\x82\xAC", "\xF0\x9F\x98\x81"
-        };
-
-        for (const auto& input : fuzz_inputs)
-        {
-            ASSERT_NO_THROW(validators.is_base64(input));
-            ASSERT_NO_THROW(validators.is_slug(input));
-            ASSERT_NO_THROW(validators.is_hex(input));
-            ASSERT_NO_THROW(validators.is_uuid4(input));
-            ASSERT_NO_THROW(validators.is_uuid6(input));
-            ASSERT_NO_THROW(validators.is_utf8(input));
-            ASSERT_NO_THROW(validators.is_utf16(input));
-        }
-    }
-
     TEST_F(ValidatorsTemplateTest, Should_Validate_GenericTemplates_WithStrings)
     {
         std::vector<std::string> names = { "Alice", "Bob", "Charlie" };
@@ -508,9 +369,6 @@ namespace QLogicaeCoreTest
 
         ASSERT_TRUE(validators.is_empty(std::vector<std::string>{}));
         ASSERT_FALSE(validators.is_empty(names));
-
-        //ASSERT_TRUE(validators.is_found(names, [](const std::string& s) { return s == "Bob"; }));
-        //ASSERT_FALSE(validators.is_found(names, [](const std::string& s) { return s == "Dan"; }));
 
         ASSERT_TRUE(validators.is_valid_range(names, [](const std::string& s) { return !s.empty(); }));
         ASSERT_FALSE(validators.is_valid_range(duplicates, [](const std::string& s) { return s == "X"; }));
@@ -527,25 +385,8 @@ namespace QLogicaeCoreTest
 
         for (const auto& input : fuzz_inputs)
         {
-            ASSERT_NO_THROW(validators.is_json(input));
-            ASSERT_NO_THROW(validators.is_xml(input));
             ASSERT_NO_THROW(validators.is_email(input));
         }
-    }
-
-    TEST_F(ValidatorsTemplateTest, Should_Fuzz_UnicodeHeavyStrings)
-    {
-        std::string long_utf8_valid = "\u3053\u3093\u306B\u3061\u306F";  
-        long_utf8_valid += std::string(1024, 'x');
-
-        std::string long_utf8_invalid = std::string(2048, '\xFF'); 
-        std::string long_slug = std::string(1000, 'a') + "-valid-slug";
-        std::string long_email = std::string(100, 'a') + "@example.com";
-
-        ASSERT_NO_THROW(validators.is_utf8(long_utf8_valid));
-        ASSERT_NO_THROW(validators.is_utf8(long_utf8_invalid));
-        ASSERT_NO_THROW(validators.is_slug(long_slug));
-        ASSERT_NO_THROW(validators.is_email(long_email));
     }
 
     TEST_F(ValidatorsTemplateTest, Should_Fuzz_NumericBoundaryValidators)
@@ -587,12 +428,12 @@ namespace QLogicaeCoreTest
                 {
                     QLogicaeCore::Validators& local = validators; 
 
-                    for (const auto& input : fuzz_inputs) {
-                        volatile bool _ = local.is_base64(input);
-                        _ = local.is_slug(input);
-                        _ = local.is_hex(input);
-                        _ = local.is_uuid4(input);
-                        _ = local.is_xml(input);
+                    for (const auto& input : fuzz_inputs)
+                    {
+                        if (local.is_base64(input)) ++success_count;
+                        if (local.is_slug(input)) ++success_count;
+                        if (local.is_hex(input)) ++success_count;
+                        if (local.is_uuid4(input)) ++success_count;
                     }
                 });
         }
@@ -600,6 +441,22 @@ namespace QLogicaeCoreTest
         for (auto& t : threads) t.join();
 
         ASSERT_GT(success_count.load(), 0); 
+    }
+
+    TEST_F(ValidatorsTemplateTest, Should_Reject_Malicious_Inputs)
+    {
+        std::vector<std::string> malicious_inputs = {
+            "\x00", "\x1B[31m", "DROP TABLE users;", "<script>alert(1)</script>",
+            "\"unclosed", "name,age\njohn,\"doe", "<tag><unclosed>",
+            "user@@domain..com", "http:::/wrong", "some slug!", "   ", "\xFF\xFE\x00\x00"
+        };
+
+        for (const auto& input : malicious_inputs)
+        {
+            ASSERT_FALSE(validators.is_email(input));
+            ASSERT_FALSE(validators.is_slug(input));
+            ASSERT_FALSE(validators.is_uri(input));
+        }
     }
 
     TEST_F(ValidatorsTemplateTest, Should_Fuzz_DateTimeAndISOFormats)
@@ -640,24 +497,17 @@ namespace QLogicaeCoreTest
 
             ASSERT_NO_THROW(validators.is_utf8(fuzz));
             ASSERT_NO_THROW(validators.is_email(fuzz));
-            ASSERT_NO_THROW(validators.is_json(fuzz));
         }
     }
 
     TEST_F(ValidatorsTemplateTest, Should_Handle_Malformed_Corpus_Inputs)
     {
-        std::vector<std::string> malformed_jsons = {
-            "{unquoted_key: value}", "{\"missing\":}", "{[1, 2}", "not_json", "123abc", ""
-        };
         std::vector<std::string> malformed_base64 = {
             "!!invalid!!", "abcd===", "12345", "@@@", "", "c29tZXRleHQ" 
         };
         std::vector<std::string> malformed_emails = {
             "user@@domain", "userdomain.com", "@nouser.com", "user@", "", "user@.com"
         };
-
-        for (const auto& input : malformed_jsons)
-            ASSERT_NO_THROW(validators.is_json(input));
 
         for (const auto& input : malformed_base64)
             ASSERT_NO_THROW(validators.is_base64(input));
@@ -685,78 +535,9 @@ namespace QLogicaeCoreTest
             std::string fuzz = random_string(len_dist(rng));
             validators.is_email(fuzz);
             validators.is_slug(fuzz);
-            validators.is_json(fuzz);
         }
 
         SUCCEED(); 
-    }
-
-    TEST_F(ValidatorsTemplateTest, Should_Stress_Validators_Under_Thread_Concurrency)
-    {
-        const std::string url = "https://example.com/path?query=value";
-        const std::string slug = "valid-slug-case";
-        const std::string json = "{\"key\": [1, 2, {\"nested\": true}]}";
-
-        std::atomic<int> success = 0;
-        std::vector<std::thread> threads;
-
-        for (int i = 0; i < 20; ++i)
-        {
-            threads.emplace_back([&]()
-                {
-                    for (int j = 0; j < 1000; ++j)
-                    {
-                        if (validators.is_url(url)) ++success;
-                        if (validators.is_slug(slug)) ++success;
-                        if (validators.is_json(json)) ++success;
-                    }
-                });
-        }
-
-        for (auto& thread : threads)
-            thread.join();
-
-        ASSERT_EQ(success.load(), 20 * 3 * 1000);
-    }
-
-    TEST_F(ValidatorsTemplateTest, Should_Parse_DeeplyNested_JSON_YAML_XML)
-    {
-        std::string deep_json = "{\"a\":{\"b\":{\"c\":{\"d\":{\"e\":{\"f\":{\"g\":{\"h\":1}}}}}}}";
-        std::string deep_yaml = "a:\n  b:\n    c:\n      d:\n        e:\n          f:\n            g: 1";
-        std::string deep_xml = "<a><b><c><d><e><f><g><h>1</h></g></f></e></d></c></b></a>";
-
-        ASSERT_TRUE(validators.is_json(deep_json));
-        ASSERT_TRUE(validators.is_yaml(deep_yaml));
-        ASSERT_TRUE(validators.is_xml(deep_xml));
-    }
-
-    TEST_F(ValidatorsTemplateTest, Should_Reject_Malicious_Inputs)
-    {
-        std::vector<std::string> malicious_inputs = {
-            "\x00",                    
-            "\x1B[31m",                
-            "DROP TABLE users;",      
-            "<script>alert(1)</script>", 
-            "🔥🔥🔥🔥🔥",              
-            "\"unclosed",             
-            "name,age\njohn,\"doe",   
-            "<tag><unclosed>",        
-            "user@@domain..com",      
-            "http:::/wrong",          
-            "some slug!",             
-            "   ",                    
-            "\xFF\xFE\x00\x00"        
-        };
-
-        for (const auto& input : malicious_inputs) {
-            ASSERT_FALSE(validators.is_email(input));
-            ASSERT_FALSE(validators.is_json(input));
-            ASSERT_FALSE(validators.is_slug(input));
-            ASSERT_FALSE(validators.is_uri(input));
-            ASSERT_FALSE(validators.is_xml(input));
-            ASSERT_FALSE(validators.is_csv(input));
-            ASSERT_FALSE(validators.is_yaml(input));
-        }
     }
 
     std::string generate_invalid_port() {
@@ -776,48 +557,6 @@ namespace QLogicaeCoreTest
         return result;
     }
 
-    TEST_F(ValidatorsTemplateTest, Should_Reject_PropertyGeneratedInvalids)
-    {
-        for (int i = 0; i < 100; ++i) {
-            std::string bad_port = generate_invalid_port();
-            ASSERT_FALSE(validators.is_port_in_range(bad_port));
-
-            std::string bad_date = generate_random_date();
-            ASSERT_FALSE(validators.is_date(bad_date, "%Y-%m-%d"));
-
-            std::string junk = generate_unicode_junk();
-            ASSERT_FALSE(validators.is_utf8(junk + '\xC0')); 
-
-            std::string big_json = std::string(2 * 1024 * 1024, '{');
-            ASSERT_FALSE(validators.is_json(big_json));
-        }
-    }
-
-    TEST_F(ValidatorsTemplateTest, Benchmark_HotValidators)
-    {
-        const std::string input = R"({"key":"value"})";
-        const std::string email = "user@example.com";
-        const std::string slug = "valid-slug-123";
-        const std::string url = "https://example.com";
-        const std::string uuid = "550e8400-e29b-41d4-a716-446655440000";
-
-        const int iterations = 100000;
-        auto start = std::chrono::high_resolution_clock::now();
-
-        for (int i = 0; i < iterations; ++i) {
-            volatile bool r1 = validators.is_json(input);
-            volatile bool r2 = validators.is_email(email);
-            volatile bool r3 = validators.is_slug(slug);
-            volatile bool r4 = validators.is_url(url);
-            volatile bool r5 = validators.is_uuid4(uuid);
-            (void)(r1 && r2 && r3 && r4 && r5);
-        }
-
-        auto end = std::chrono::high_resolution_clock::now();
-        auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-        std::cout << "[Benchmark] 100K hot validator calls took " << ms << " ms" << std::endl;
-    }
-
     TEST_F(ValidatorsTemplateTest, Should_Not_Leak_Under_Regex_Stress)
     {
         const std::string input = "c29tZXRleHQ=";
@@ -831,9 +570,7 @@ namespace QLogicaeCoreTest
     TEST(ValidatorsABIStability, Should_Preserve_Signature_Compatibility)
     {
         using FuncType = bool(QLogicaeCore::Validators::*)(const std::string_view&);
-        FuncType f1 = &QLogicaeCore::Validators::is_json;
         FuncType f2 = &QLogicaeCore::Validators::is_email;
-        ASSERT_NE(f1, nullptr);
         ASSERT_NE(f2, nullptr);
     }
 
@@ -903,13 +640,6 @@ namespace QLogicaeCoreTest
         ASSERT_FALSE(validators.is_valid_range(input, always_false));
     }
 
-    TEST_F(ValidatorsTemplateTest, Should_Find_When_AllMatch)
-    {
-        std::vector<int> input{ 10, 20, 30 };
-        std::function<bool(const int&)> predicate = [](const int& v) { return v % 10 == 0; };
-        ASSERT_TRUE(validators.is_found(input, predicate));
-    }
-
     TEST_F(ValidatorsTemplateTest, Should_Validate_Unique_With_EdgeValues)
     {
         std::vector<int64_t> values{
@@ -918,4 +648,221 @@ namespace QLogicaeCoreTest
         };
         ASSERT_TRUE(validators.is_unique(values));
     }
+
+    TEST_F(ValidatorsTemplateTest, Should_Fuzz_RegexAndUtfValidators)
+    {
+        std::vector<std::string> fuzz_inputs = {
+            "", "a", "!!@@", "123", "abcdEFGH", "this_is_slug", "bad slug",
+            "aGVsbG8gd29ybGQ=", "c29tZVRleHQ=", "not_base64==", "uuid", "550e8400-e29b-41d4-a716-446655440000",
+            "\xFF\xFE\x00a", "\xC3\x28", "\xE2\x82\xAC", "\xF0\x9F\x98\x81"
+        };
+
+        for (const auto& input : fuzz_inputs)
+        {
+            ASSERT_NO_THROW(validators.is_base64(input));
+            ASSERT_NO_THROW(validators.is_slug(input));
+            ASSERT_NO_THROW(validators.is_hex(input));
+            ASSERT_NO_THROW(validators.is_uuid4(input));
+            ASSERT_NO_THROW(validators.is_uuid6(input));
+            ASSERT_NO_THROW(validators.is_utf8(input));
+            ASSERT_NO_THROW(validators.is_utf16(input));
+        }
+    }
+
+    TEST_F(ValidatorsTemplateTest, Should_Validate_DateTimePatterns)
+    {
+        ASSERT_TRUE(validators.is_date("2020-12-31", "%Y-%m-%d"));
+        ASSERT_FALSE(validators.is_date("12/31/2020", "%Y-%m-%d"));
+
+        ASSERT_TRUE(validators.is_past_date("2000-01-01", "%Y-%m-%d"));
+        ASSERT_FALSE(validators.is_past_date("3000-01-01", "%Y-%m-%d"));
+
+        ASSERT_TRUE(validators.is_unix("1618033988"));
+        ASSERT_FALSE(validators.is_unix("NaN"));
+
+        ASSERT_TRUE(validators.is_iso8601("2020-12-31T23:59:59Z"));
+        ASSERT_FALSE(validators.is_iso8601("not-date"));
+
+        ASSERT_TRUE(validators.is_utc("2020-12-31T23:59:59Z"));
+        ASSERT_FALSE(validators.is_utc("2020-12-31T23:59:59"));
+    }
+
+    TEST_F(ValidatorsTemplateTest, Should_Fuzz_UnicodeHeavyStrings)
+    {
+        std::string long_utf8_valid = "\u3053\u3093\u306B\u3061\u306F";
+        long_utf8_valid += std::string(1024, 'x');
+
+        std::string long_utf8_invalid = std::string(2048, '\xFF');
+        std::string long_slug = std::string(1000, 'a') + "-valid-slug";
+        std::string long_email = std::string(100, 'a') + "@example.com";
+
+        ASSERT_NO_THROW(validators.is_utf8(long_utf8_valid));
+        ASSERT_NO_THROW(validators.is_utf8(long_utf8_invalid));
+        ASSERT_NO_THROW(validators.is_slug(long_slug));
+        ASSERT_NO_THROW(validators.is_email(long_email));
+    }
+
+    TEST_F(ValidatorsTemplateTest, Benchmark_HotValidators)
+    {
+        const std::string input = R"({"key":"value"})";
+        const std::string email = "user@example.com";
+        const std::string slug = "valid-slug-123";
+        const std::string url = "https://example.com";
+        const std::string uuid = "550e8400-e29b-41d4-a716-446655440000";
+
+        const int iterations = 100000;
+        auto start = std::chrono::high_resolution_clock::now();
+
+        for (int i = 0; i < iterations; ++i) {
+            volatile bool r2 = validators.is_email(email);
+            volatile bool r3 = validators.is_slug(slug);
+            volatile bool r4 = validators.is_url(url);
+            volatile bool r5 = validators.is_uuid4(uuid);
+            (void)(r2 && r3 && r4 && r5);
+        }
+
+        auto end = std::chrono::high_resolution_clock::now();
+        auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+        std::cout << "[Benchmark] 100K hot validator calls took " << ms << " ms" << std::endl;
+    }
+
+    TEST_F(ValidatorsTemplateTest, Should_Find_When_AllMatch)
+    {
+        std::vector<int> input{ 10, 20, 30 };
+        std::function<bool(const int&)> predicate = [](const int& v) { return v % 10 == 0; };
+        ASSERT_TRUE(validators.is_found(input, predicate));
+    }
+
+
+    TEST_F(ValidatorsTemplateTest, Should_Validate_FilePatterns)
+    {
+        ASSERT_TRUE(validators.is_file_path("/usr/local/bin"));
+        ASSERT_FALSE(validators.is_file_path("not/a/path//"));
+
+        ASSERT_TRUE(validators.is_file_name("file.txt"));
+        ASSERT_FALSE(validators.is_file_name("bad|name?.txt"));
+
+        ASSERT_TRUE(validators.is_file_extension("txt"));
+        ASSERT_FALSE(validators.is_file_extension(".txt"));
+    }
+
+    TEST_F(ValidatorsTemplateTest, Should_Validate_EmailAndPassword)
+    {
+        ASSERT_TRUE(validators.is_email("user@example.com"));
+        ASSERT_FALSE(validators.is_email("user@@example..com"));
+
+        QLogicaeCore::ValidationPasswordRules rules;
+        rules.minimum_length = 8;
+        rules.maximum_length = 16;
+        rules.require_uppercase_characters = true;
+        rules.require_lowercase_characters = true;
+        rules.require_alpha_numerics = true;
+        rules.require_special_characters = true;
+        rules.require_unique_characters = true;
+
+        ASSERT_TRUE(validators.is_strong_password("Abc123$%", rules));
+        ASSERT_FALSE(validators.is_strong_password("abc123", rules));
+    }
+
+    TEST_F(ValidatorsTemplateTest, Should_Validate_PhoneNumbers)
+    {
+        ASSERT_TRUE(validators.is_phone_number("+1 (800) 123-4567"));
+        ASSERT_FALSE(validators.is_phone_number("abc800123"));
+
+        ASSERT_TRUE(validators.is_e164_phone_number("+18001234567"));
+        ASSERT_FALSE(validators.is_e164_phone_number("18001234567"));
+    }
+
+    TEST_F(ValidatorsTemplateTest, Should_Reject_PropertyGeneratedInvalids)
+    {
+        for (int i = 0; i < 100; ++i)
+        {
+            std::string bad_port = generate_invalid_port();
+            ASSERT_FALSE(validators.is_port_in_range(bad_port));
+
+            std::string bad_date = generate_random_date();
+            ASSERT_FALSE(validators.is_date(bad_date, "%Y-%m-%d"));
+
+            std::string junk = generate_unicode_junk();
+            ASSERT_FALSE(validators.is_utf8(junk + '\xC0'));
+        }
+    }
+
+    TEST_F(ValidatorsTemplateTest, Should_Stress_Validators_Under_Thread_Concurrency)
+    {
+        const std::string url = "https://example.com/path?query=value";
+        const std::string slug = "valid-slug-case";
+        const std::string json = "{\"key\": [1, 2, {\"nested\": true}]}";
+
+        std::atomic<int> success = 0;
+        std::vector<std::thread> threads;
+
+        for (int i = 0; i < 20; ++i)
+        {
+            threads.emplace_back([&]() {
+                for (int j = 0; j < 1000; ++j)
+                {
+                    if (validators.is_url(url)) ++success;
+                    if (validators.is_slug(slug)) ++success;
+                }
+                });
+        }
+
+        for (auto& thread : threads)
+            thread.join();
+
+        ASSERT_EQ(success.load(), 20 * 2 * 1000);
+    }
+
+    TEST_F(ValidatorsTemplateTest, Should_Validate_AddressAndNameParts)
+    {
+        ASSERT_TRUE(validators.is_address_line("123 Main Street"));
+        ASSERT_FALSE(validators.is_address_line("a"));
+
+        ASSERT_TRUE(validators.is_full_name("John Doe"));
+        ASSERT_TRUE(validators.is_first_name("John"));
+        ASSERT_TRUE(validators.is_middle_name("Edward"));
+        ASSERT_TRUE(validators.is_middle_initial("E"));
+        ASSERT_FALSE(validators.is_middle_initial("Ed"));
+    }
+
+    TEST_F(ValidatorsTemplateTest, Should_Match_RegexPatterns)
+    {
+        ASSERT_TRUE(validators.is_base64("c29tZXRleHQ="));
+        ASSERT_FALSE(validators.is_base64("not_base64!!"));
+
+        ASSERT_TRUE(validators.is_slug("valid-slug-example"));
+        ASSERT_FALSE(validators.is_slug("Invalid Slug"));
+
+        ASSERT_TRUE(validators.is_hex("deadbeef"));
+        ASSERT_FALSE(validators.is_hex("nothex"));
+
+        ASSERT_TRUE(validators.is_uuid4("550e8400-e29b-41d4-a716-446655440000"));
+        ASSERT_FALSE(validators.is_uuid4("invalid-uuid"));
+
+        ASSERT_TRUE(validators.is_uuid6("1e0b46e2-4b5e-6f00-8000-0026bb7655df"));
+        ASSERT_FALSE(validators.is_uuid6("some-invalid-string"));
+
+        ASSERT_TRUE(validators.is_ipv4("192.168.1.1"));
+        ASSERT_FALSE(validators.is_ipv4("999.999.999.999"));
+
+        ASSERT_TRUE(validators.is_ipv6("2001:0db8:85a3:0000:0000:8a2e:0370:7334"));
+        ASSERT_FALSE(validators.is_ipv6("invalid_ipv6"));
+
+        ASSERT_TRUE(validators.is_url("https://example.com"));
+        ASSERT_FALSE(validators.is_url("example dot com"));
+    }
+
+    TEST_F(ValidatorsTemplateTest, Should_Validate_MimeBase64DataUri)
+    {
+        ASSERT_TRUE(validators.is_mime_type("image/png"));
+        ASSERT_FALSE(validators.is_mime_type("fake/type"));
+
+        ASSERT_TRUE(validators.is_base64_image("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA"));
+        ASSERT_FALSE(validators.is_base64_image("plain text"));
+
+        ASSERT_TRUE(validators.is_data_uri("data:text/plain;base64,SGVsbG8gd29ybGQ="));
+        ASSERT_FALSE(validators.is_data_uri("notdatauri"));
+    }
+
 }

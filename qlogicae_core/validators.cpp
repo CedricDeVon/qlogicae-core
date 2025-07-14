@@ -8,80 +8,19 @@ namespace QLogicaeCore
 {
     Validators::Validators()
     {
-        RegularExpression::instance().add_pattern(
-            "base64", "^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$");
-
-        RegularExpression::instance().add_pattern(
-            "slug", "^[a-z0-9]+(?:-[a-z0-9]+)*$");
-
-        RegularExpression::instance().add_pattern(
-            "hex", "^(0x)?[0-9a-fA-F]+$");
-
-        RegularExpression::instance().add_pattern(
-            "uuid4",
-            "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[89abAB]"
-            "[a-fA-F0-9]{3}-[a-fA-F0-9]{12}$");
-
-        RegularExpression::instance().add_pattern(
-            "uuid6",
-            "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-6[a-fA-F0-9]{3}-[89abAB]"
-            "[a-fA-F0-9]{3}-[a-fA-F0-9]{12}$");
-
-        RegularExpression::instance().add_pattern(
-            "xml", "^<\\?xml.*\\?>.*");
-
-        RegularExpression::instance().add_pattern(
-            "ipv4", "^(\\d{1,3}\\.){3}\\d{1,3}$");
-
-        RegularExpression::instance().add_pattern(
-            "ipv6", "^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$");
-
-        RegularExpression::instance().add_pattern(
-            "url", "^(http|https)://[a-zA-Z0-9.-]+(:\\d+)?(/.*)?$");
-
-        RegularExpression::instance().add_pattern(
-            "uri", "^[a-zA-Z][a-zA-Z0-9+.-]*:.*$");
-
-        RegularExpression::instance().add_pattern(
-            "mac_address",
-            "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$");
-
-        RegularExpression::instance().add_pattern(
-            "hostname",
-            R"(^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$)"
-        );
-
-        RegularExpression::instance().add_pattern(
-            "domain", "^([a-zA-Z0-9]+(-[a-zA-Z0-9]+)*\\.)+[a-zA-Z]{2,}$");
-
-        RegularExpression::instance().add_pattern("hex_color",
-            "^#(?:[0-9a-fA-F]{3}){1,2}$");
-
-        RegularExpression::instance().add_pattern("rgb_color",
-            "^rgb\\((\\s*\\d{1,3}\\s*,){2}\\s*\\d{1,3}\\s*\\)$");
-
-        RegularExpression::instance().add_pattern("rgba_color",
-            "^rgba\\((\\s*\\d{1,3}\\s*,){3}\\s*(0|1|0?\\.\\d+)\\s*\\)$");
-
-        RegularExpression::instance().add_pattern("file_path", R"(^([a-zA-Z]:)?(\\[\w.-]+)+\\?$)");
-
-        RegularExpression::instance().add_pattern("file_name", R"(^[\w,\s-]+\.[A-Za-z]{1,6}$)");
         
-        RegularExpression::instance().add_pattern("file_extension", R"(^\.[a-zA-Z0-9]+$)");
-        
-        RegularExpression::instance().add_pattern("mime_type", R"(^[a-zA-Z0-9!#$&^_.+-]+/[a-zA-Z0-9!#$&^_.+-]+$)");
-        
-        RegularExpression::instance().add_pattern("base64_image", R"(^data:image\/(png|jpeg|jpg|gif);base64,[a-zA-Z0-9+/=]+$)");
-        
-        RegularExpression::instance().add_pattern("data_uri", R"(^data:.+/.+;base64,[a-zA-Z0-9+/=]+$)");
-    
-        RegularExpression::instance().add_pattern("email", R"(^[\w.%+-]+@[\w.-]+\.[a-zA-Z]{2,}$)");
-        
-        RegularExpression::instance().add_pattern("phone_number", R"(^\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$)");
-        
-        RegularExpression::instance().add_pattern("e164_phone", R"(^\+\d{1,15}$)");
-        
-        RegularExpression::instance().add_pattern("full_name", R"(^[a-zA-Z]+([ '-][a-zA-Z]+)*$)");
+    }
+
+    static bool match_std_regex(const std::string_view& input, const std::string_view& pattern)
+    {
+        try
+        {
+            return std::regex_match(input.begin(), input.end(), std::regex(pattern.data()));
+        }
+        catch (const std::regex_error&)
+        {
+            return false;
+        }
     }
 
     bool Validators::is_not_empty(const std::string_view& value)
@@ -208,12 +147,6 @@ namespace QLogicaeCore
         return true;
     }
 
-    bool Validators::is_base64(const std::string_view& value)
-    {
-        return RegularExpression::instance().match_named(
-            "base64", std::string(value));
-    }
-
     bool Validators::is_utf8(const std::string_view& value)
     {
         return std::string(value).find('\xC0') == std::string::npos;
@@ -228,99 +161,6 @@ namespace QLogicaeCore
         unsigned char byte1 = static_cast<unsigned char>(value[0]);
         unsigned char byte2 = static_cast<unsigned char>(value[1]);
         return (byte1 == 0xFF && byte2 == 0xFE) || (byte1 == 0xFE && byte2 == 0xFF);
-    }
-
-    bool Validators::is_slug(const std::string_view& value)
-    {
-        return RegularExpression::instance().match_named(
-            "slug", std::string(value));
-    }
-
-    bool Validators::is_hex(const std::string_view& value)
-    {
-        return RegularExpression::instance().match_named(
-            "hex", std::string(value));
-    }
-
-    bool Validators::is_uuid4(const std::string_view& value)
-    {
-        return RegularExpression::instance().match_named(
-            "uuid4", std::string(value));
-    }
-
-    bool Validators::is_uuid6(const std::string_view& value)
-    {
-        return RegularExpression::instance().match_named(
-            "uuid6", std::string(value));
-    }
-
-    bool Validators::is_json(const std::string_view& value)
-    {
-        std::string trimmed(value);
-        trimmed.erase(0, trimmed.find_first_not_of(" \t\n\r"));
-        if (trimmed.empty())
-        {
-            return false;
-        }
-        return trimmed.front() == '{' || trimmed.front() == '[';
-    }
-
-    bool Validators::is_xml(const std::string_view& value)
-    {
-        return RegularExpression::instance().match_named(
-            "xml", std::string(value));
-    }
-
-    bool Validators::is_yaml(const std::string_view& value)
-    {
-        return value.find(":") != std::string_view::npos;
-    }
-
-    bool Validators::is_csv(const std::string_view& value)
-    {
-        return value.find(",") != std::string_view::npos;
-    }
-
-    bool Validators::is_ipv4(const std::string_view& value)
-    {
-        return RegularExpression::instance().match_named(
-            "ipv4", std::string(value));
-    }
-
-    bool Validators::is_ipv6(const std::string_view& value)
-    {
-        return RegularExpression::instance().match_named(
-            "ipv6", std::string(value));
-    }
-
-    bool Validators::is_url(const std::string_view& value)
-    {
-        return RegularExpression::instance().match_named(
-            "url", std::string(value));
-    }
-
-    bool Validators::is_uri(const std::string_view& value)
-    {
-        return RegularExpression::instance().match_named(
-            "uri", std::string(value));
-    }
-
-    bool Validators::is_mac_address(const std::string_view& value)
-    {
-        return RegularExpression::instance().match_named(
-            "mac_address", std::string(value));
-    }
-
-    bool Validators::is_hostname(const std::string_view& value)
-    {
-        return RegularExpression::instance().match_named(
-            "hostname", std::string(value));
-    }
-
-    bool Validators::is_domain(const std::string_view& value)
-    {
-        return RegularExpression::instance().match_named(
-            "domain", std::string(value));
     }
 
     bool Validators::is_time(const std::string_view& value, const std::string_view& format)
@@ -401,11 +241,6 @@ namespace QLogicaeCore
             return false;
         }
         return timestamp >= 0;
-    }
-
-    bool Validators::is_iso8601(const std::string_view& value)
-    {
-        return RegularExpression::instance().match_named("iso8601", std::string(value));
     }
 
     bool Validators::is_utc(const std::string_view& value)
@@ -628,11 +463,6 @@ namespace QLogicaeCore
                 });
     }
 
-    bool Validators::is_hex_color(const std::string_view& value)
-    {
-        return RegularExpression::instance().match_named("hex_color", std::string(value));
-    }
-
     bool Validators::is_rgb_color(const uint8_t& red, const uint8_t& green, const uint8_t& blue)
     {
         return red <= 255 && green <= 255 && blue <= 255;
@@ -643,29 +473,101 @@ namespace QLogicaeCore
         return red <= 255 && green <= 255 && blue <= 255 && alpha <= 255;
     }
 
+    bool Validators::is_iso8601(const std::string_view& value)
+    {
+        return match_std_regex(value, R"(^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})?$)");
+    }
+
+    bool Validators::is_hex_color(const std::string_view& value)
+    {
+        return match_std_regex(value, R"(^#(?:[0-9a-fA-F]{3}){1,2}$)");
+    }
+
+    bool Validators::is_base64(const std::string_view& value)
+    {
+        return match_std_regex(value, R"(^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$)");
+    }
+
+    bool Validators::is_slug(const std::string_view& value)
+    {
+        return match_std_regex(value, R"(^[a-z0-9]+(?:-[a-z0-9]+)*$)");
+    }
+
+    bool Validators::is_hex(const std::string_view& value)
+    {
+        return match_std_regex(value, R"(^(0x)?[0-9a-fA-F]+$)");
+    }
+
+    bool Validators::is_uuid4(const std::string_view& value)
+    {
+        return match_std_regex(value, R"(^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[89abAB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$)");
+    }
+
+    bool Validators::is_uuid6(const std::string_view& value)
+    {
+        return match_std_regex(value, R"(^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-6[a-fA-F0-9]{3}-[89abAB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$)");
+    }
+
+    bool Validators::is_ipv4(const std::string_view& value)
+    {
+        return match_std_regex(value, R"(^((25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)\.){3}(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)$)");
+    }
+
+    bool Validators::is_ipv6(const std::string_view& value)
+    {
+        return match_std_regex(value, R"(^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$)");
+    }
+
+    bool Validators::is_url(const std::string_view& value)
+    {
+        return match_std_regex(value, R"(^https?:\/\/(?:www\.)?[a-zA-Z0-9.-]+(?:\:\d+)?(?:\/\S*)?$)");
+    }
+
+    bool Validators::is_uri(const std::string_view& value)
+    {
+        return match_std_regex(value,
+            R"(^[a-zA-Z][a-zA-Z0-9+.-]*:\/\/[^\s\/?#]+(?:[\/?#][^\s]*)?$)");
+    }
+
+    bool Validators::is_mac_address(const std::string_view& value)
+    {
+        return match_std_regex(value, R"(^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$)");
+    }
+
+    bool Validators::is_hostname(const std::string_view& value)
+    {
+        return match_std_regex(value, R"(^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$)");
+    }
+
+    bool Validators::is_domain(const std::string_view& value)
+    {
+        return match_std_regex(value, R"(^([a-zA-Z0-9]+(-[a-zA-Z0-9]+)*\.)+[a-zA-Z]{2,}$)");
+    }
+
     bool Validators::is_rgb_color(const std::string_view& value)
     {
-        return RegularExpression::instance().match_named("rgb_color", std::string(value));
+        return match_std_regex(value, R"(^rgb\((\s*\d{1,3}\s*,){2}\s*\d{1,3}\s*\)$)");
     }
 
     bool Validators::is_rgba_color(const std::string_view& value)
     {
-        return RegularExpression::instance().match_named("rgba_color", std::string(value));
+        return match_std_regex(value, R"(^rgba\((\s*\d{1,3}\s*,){3}\s*(0|1|0?\.\d+)\s*\)$)");
     }
 
     bool Validators::is_file_path(const std::string_view& value)
     {
-        return RegularExpression::instance().match_named("file_path", std::string(value));
+        return match_std_regex(value,
+            R"(^(([a-zA-Z]:\\|\/)?([\w\-. ]+([\/\\][\w\-. ]+)*))$)");
     }
 
     bool Validators::is_file_name(const std::string_view& value)
     {
-        return RegularExpression::instance().match_named("file_name", std::string(value));
+        return match_std_regex(value, R"(^[\w,\s-]+\.[A-Za-z]{1,6}$)");
     }
 
     bool Validators::is_file_extension(const std::string_view& value)
     {
-        return RegularExpression::instance().match_named("file_extension", std::string(value));
+        return match_std_regex(value, R"(^[a-zA-Z0-9]+$)");
     }
 
     bool Validators::is_file_extension_allowed(const std::string_view& value, const std::set<std::string>& allowed_extensions)
@@ -675,17 +577,43 @@ namespace QLogicaeCore
 
     bool Validators::is_mime_type(const std::string_view& value)
     {
-        return RegularExpression::instance().match_named("mime_type", std::string(value));
+        return match_std_regex(value,
+            R"(^(application|audio|font|example|image|message|model|multipart|text|video|x-[a-z0-9]+)\/[a-zA-Z0-9!#$&^_.+-]+$)");
     }
 
     bool Validators::is_base64_image(const std::string_view& value)
     {
-        return RegularExpression::instance().match_named("base64_image", std::string(value));
+        return match_std_regex(value, R"(^data:image\/(png|jpeg|jpg|gif);base64,([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$)");
     }
 
     bool Validators::is_data_uri(const std::string_view& value)
     {
-        return RegularExpression::instance().match_named("data_uri", std::string(value));
+        return match_std_regex(value, R"(^data:[a-zA-Z0-9!#$&^_.+-]+\/[a-zA-Z0-9!#$&^_.+-]+;base64,([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$)");
+    }
+
+    bool Validators::is_phone_number(const std::string_view& value)
+    {
+        return match_std_regex(value, R"(^\+?(\d{1,3})?\s?(\(\d{3}\)|\d{3})[-.\s]?\d{3}[-.\s]?\d{4}$)");
+    }
+
+    bool Validators::is_e164_phone_number(const std::string_view& value)
+    {
+        return match_std_regex(value, R"(^\+\d{1,15}$)");
+    }
+
+    bool Validators::is_country_calling_code(const std::string_view& value)
+    {
+        return match_std_regex(value, R"(^\+\d{1,3}$)");
+    }
+
+    bool Validators::is_full_name(const std::string_view& value)
+    {
+        return match_std_regex(value, R"(^[a-zA-Z]+([ '-][a-zA-Z]+)*$)");
+    }
+
+    bool Validators::is_email(const std::string_view& value)
+    {
+        return match_std_regex(value, R"(^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$)");
     }
 
     bool Validators::is_file_size_allowed(const std::size_t& value, const std::size_t& maximum_size)
@@ -726,29 +654,9 @@ namespace QLogicaeCore
             lower_case == "nonbinary" || lower_case == "other";
     }
 
-    bool Validators::is_phone_number(const std::string_view& value)
-    {
-        return RegularExpression::instance().match_named("phone_number", std::string(value));
-    }
-
-    bool Validators::is_e164_phone_number(const std::string_view& value)
-    {
-        return RegularExpression::instance().match_named("e164_phone", std::string(value));
-    }
-
-    bool Validators::is_country_calling_code(const std::string_view& value)
-    {
-        return RegularExpression::instance().match_named("country_calling_code", std::string(value));
-    }
-
     bool Validators::is_address_line(const std::string_view& value)
     {
         return value.size() >= 5 && value.size() <= 128;
-    }
-
-    bool Validators::is_full_name(const std::string_view& value)
-    {
-        return RegularExpression::instance().match_named("full_name", std::string(value));
     }
 
     bool Validators::is_first_name(const std::string_view& value)
@@ -781,12 +689,7 @@ namespace QLogicaeCore
         return age < 13;
     }
 
-    bool Validators::is_email(const std::string_view& value)
-    {
-        return RegularExpression::instance().match_named("email", std::string(value));
-    }
-
-    bool Validators::is_strong_password(const std::string_view& value, const PasswordRules& rules)
+    bool Validators::is_strong_password(const std::string_view& value, const ValidationPasswordRules& rules)
     {
         if (value.size() < rules.minimum_length || value.size() > rules.maximum_length)
         {

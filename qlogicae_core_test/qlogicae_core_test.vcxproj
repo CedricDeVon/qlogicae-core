@@ -126,6 +126,7 @@
     <ClCompile Include="cli_io.cpp" />
     <ClCompile Include="cryptographer.cpp" />
     <ClCompile Include="file_uri_io.cpp" />
+    <ClCompile Include="gmail_mailer.cpp" />
     <ClCompile Include="jsonwebtoken_cryptographer.cpp" />
     <ClCompile Include="sqlite.cpp" />
     <ClCompile Include="string_builder.cpp" />

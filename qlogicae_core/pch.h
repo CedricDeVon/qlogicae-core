@@ -67,6 +67,7 @@
 #include <rapidcsv.h>
 #include <fmt/core.h>
 #include <utf8proc.h> 
+#include <curl/curl.h>
 #include <pugixml.hpp>
 #include <date/date.h>
 #include <fmt/format.h>

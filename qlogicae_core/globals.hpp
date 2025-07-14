@@ -362,5 +362,38 @@ namespace QLogicaeCore
             return lhs == rhs;
         }
     };
+
+    struct ValidationPasswordRules
+    {
+        std::size_t minimum_length = 8;
+        std::size_t maximum_length = 128;
+        bool require_alpha_numerics = true;
+        bool require_unique_characters = false;
+        bool require_special_characters = true;
+        bool require_uppercase_characters = true;
+        bool require_lowercase_characters = true;
+    };
+
+    struct SQLiteBackend
+    {
+    public:
+        explicit SQLiteBackend(sqlite3* raw_database);
+        ~SQLiteBackend();
+
+        sqlite3* database_handle;
+    };
+
+    struct SQLiteStatementData
+    {
+    public:
+        explicit SQLiteStatementData(sqlite3_stmt* raw_statement);
+        ~SQLiteStatementData();
+
+        sqlite3_stmt* get() const noexcept;
+
+    protected:
+        sqlite3_stmt* statement_handle;
+    };
+
 }
 

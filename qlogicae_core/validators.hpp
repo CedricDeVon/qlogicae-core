@@ -6,18 +6,7 @@
 #include "regular_expression.hpp"
 
 namespace QLogicaeCore
-{
-    struct PasswordRules
-    {
-        std::size_t minimum_length = 8;
-        std::size_t maximum_length = 128;
-        bool require_alpha_numerics = true;
-        bool require_unique_characters = false;
-        bool require_special_characters = true;
-        bool require_uppercase_characters = true;
-        bool require_lowercase_characters = true;
-    };
-
+{    
     class Validators
     {
     public:
@@ -36,10 +25,6 @@ namespace QLogicaeCore
         bool is_hex(const std::string_view& value);
         bool is_uuid4(const std::string_view& value);
         bool is_uuid6(const std::string_view& value);
-        bool is_json(const std::string_view& value);
-        bool is_xml(const std::string_view& value);
-        bool is_yaml(const std::string_view& value);
-        bool is_csv(const std::string_view& value);
         bool is_ipv4(const std::string_view& value);
         bool is_ipv6(const std::string_view& value);
         bool is_url(const std::string_view& value);
@@ -113,7 +98,7 @@ namespace QLogicaeCore
         bool is_juvenile(const uint8_t& age);
         bool is_child(const uint8_t& age);
         bool is_email(const std::string_view& value);
-        bool is_strong_password(const std::string_view& value, const PasswordRules& rules);
+        bool is_strong_password(const std::string_view& value, const ValidationPasswordRules& rules);
         bool is_character_repeated(const std::string_view& value, const std::size_t& threshold);
         bool is_blacklisted_word_found(const std::string_view& value, const std::vector<std::string>& blacklist);
         template<std::ranges::input_range Range, typename Predicate>
