@@ -183,7 +183,7 @@ namespace QLogicaeCoreTest
     TEST_F(AES256CipherCryptographerTest,
         Should_Expect_Empty_When_CiphertextTooShort)
     {
-        std::string too_short = QLogicaeCore::Encoder::instance()
+        std::string too_short = QLogicaeCore::Encoder::get_instance()
             .from_bytes_to_base64(
                 reinterpret_cast<const unsigned char*>("X"), 1);
         EXPECT_EQ(crypto.reverse(too_short, key, nonce), "");

@@ -11,7 +11,7 @@ namespace QLogicaeCore
 		bool set(const wchar_t*, const wchar_t*);
 		std::optional<std::wstring> get(const wchar_t*);
 		
-		static DotEnv& instance();
+		static DotEnv& get_instance();
 
 	protected:
 		DotEnv();

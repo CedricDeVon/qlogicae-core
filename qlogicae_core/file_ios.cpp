@@ -6,18 +6,18 @@
 
 namespace QLogicaeCore
 {
-	FileIOs& FileIOs::instance()
+	FileIOs& FileIOs::get_instance()
 	{
 		static FileIOs singleton;
 
 		return singleton;
 	}
 
-	void FileIOs::set_file(std::shared_ptr<AbstractFileIO> instance)
+	void FileIOs::set_file(std::shared_ptr<AbstractFileIO> get_instance)
 	{
 		try
 		{
-			_instances[instance->get_name()] = std::move(instance);
+			_instances[get_instance->get_name()] = std::move(get_instance);
 		}
 		catch (...)
 		{
@@ -32,11 +32,11 @@ namespace QLogicaeCore
 		{
 			unsigned int index;
 			size_t size = instances.size();
-			std::shared_ptr<AbstractFileIO> instance;
+			std::shared_ptr<AbstractFileIO> get_instance;
 			for (index = 0; index < size; ++index)
 			{
-				instance = instances[index];
-				_instances[instance->get_name()] = std::move(instance);
+				get_instance = instances[index];
+				_instances[get_instance->get_name()] = std::move(get_instance);
 			}
 		}
 		catch (...)

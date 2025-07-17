@@ -21,26 +21,26 @@ namespace QLogicaeCoreTest
     {
         const wchar_t* key = L"";
         const wchar_t* value = L"value";
-        bool result = QLogicaeCore::DotEnv::instance().set(key, value);
+        bool result = QLogicaeCore::DotEnv::get_instance().set(key, value);
         ASSERT_FALSE(result);
     }
 
     TEST_F(DotEnvEmptyArgumentTest, Should_Return_False_When_Set_Key_And_Value_Are_Empty)
     {
-        bool result = QLogicaeCore::DotEnv::instance().set(L"", L"");
+        bool result = QLogicaeCore::DotEnv::get_instance().set(L"", L"");
         ASSERT_FALSE(result);
     }
 
     TEST_F(DotEnvEmptyArgumentTest, Should_Return_False_When_Remove_Key_Is_Empty)
     {
-        bool result = QLogicaeCore::DotEnv::instance().remove(L"");
+        bool result = QLogicaeCore::DotEnv::get_instance().remove(L"");
         ASSERT_FALSE(result);
     }
 
     TEST_F(DotEnvEmptyArgumentTest, Should_Return_Empty_When_Get_Key_Is_Empty)
     {
         std::optional<std::wstring> result =
-            QLogicaeCore::DotEnv::instance().get(L"");
+            QLogicaeCore::DotEnv::get_instance().get(L"");
         ASSERT_TRUE(result.has_value());
         ASSERT_EQ(result.value(), L"");
     }
@@ -49,22 +49,22 @@ namespace QLogicaeCoreTest
     {
         std::wstring key = GetParam();
         std::wstring value = L"TestValue";
-        bool result = QLogicaeCore::DotEnv::instance().set(key.c_str(), value.c_str());
+        bool result = QLogicaeCore::DotEnv::get_instance().set(key.c_str(), value.c_str());
         ASSERT_TRUE(result);
         std::optional<std::wstring> retrieved =
-            QLogicaeCore::DotEnv::instance().get(key.c_str());
+            QLogicaeCore::DotEnv::get_instance().get(key.c_str());
         ASSERT_TRUE(retrieved.has_value());
         ASSERT_EQ(retrieved.value(), value);
-        QLogicaeCore::DotEnv::instance().remove(key.c_str());
+        QLogicaeCore::DotEnv::get_instance().remove(key.c_str());
     }
 
     TEST_P(DotEnvTest, Should_Remove_Expect_Success_When_Key_Is_Valid)
     {
         std::wstring key = GetParam();
-        QLogicaeCore::DotEnv::instance().set(key.c_str(), L"ToRemove");
-        bool result = QLogicaeCore::DotEnv::instance().remove(key.c_str());
+        QLogicaeCore::DotEnv::get_instance().set(key.c_str(), L"ToRemove");
+        bool result = QLogicaeCore::DotEnv::get_instance().remove(key.c_str());
         ASSERT_TRUE(result);
-        std::optional<std::wstring> value = QLogicaeCore::DotEnv::instance().get(key.c_str());
+        std::optional<std::wstring> value = QLogicaeCore::DotEnv::get_instance().get(key.c_str());
         ASSERT_TRUE(value.has_value());
         ASSERT_EQ(value.value(), L"");
     }
@@ -76,11 +76,11 @@ namespace QLogicaeCoreTest
         {
             std::wstring key = L"StressKey" + std::to_wstring(index);
             std::wstring value = L"StressValue" + std::to_wstring(index);
-            QLogicaeCore::DotEnv::instance().set(key.c_str(), value.c_str());
-            std::optional<std::wstring> retrieved = QLogicaeCore::DotEnv::instance().get(key.c_str());
+            QLogicaeCore::DotEnv::get_instance().set(key.c_str(), value.c_str());
+            std::optional<std::wstring> retrieved = QLogicaeCore::DotEnv::get_instance().get(key.c_str());
             ASSERT_TRUE(retrieved.has_value());
             ASSERT_EQ(retrieved.value(), value);
-            QLogicaeCore::DotEnv::instance().remove(key.c_str());
+            QLogicaeCore::DotEnv::get_instance().remove(key.c_str());
         }
         auto end = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::seconds>(end - start);
@@ -89,19 +89,19 @@ namespace QLogicaeCoreTest
 
     TEST(DotEnvExceptionTest, Should_Return_False_When_Set_Null)
     {
-        bool result = QLogicaeCore::DotEnv::instance().set(nullptr, nullptr);
+        bool result = QLogicaeCore::DotEnv::get_instance().set(nullptr, nullptr);
         ASSERT_FALSE(result);
     }
 
     TEST(DotEnvExceptionTest, Should_Return_False_When_Remove_Null)
     {
-        bool result = QLogicaeCore::DotEnv::instance().remove(nullptr);
+        bool result = QLogicaeCore::DotEnv::get_instance().remove(nullptr);
         ASSERT_FALSE(result);
     }
 
     TEST(DotEnvExceptionTest, Should_Return_Empty_When_Get_Null)
     {
-        std::optional<std::wstring> result = QLogicaeCore::DotEnv::instance().get(nullptr);
+        std::optional<std::wstring> result = QLogicaeCore::DotEnv::get_instance().get(nullptr);
         ASSERT_TRUE(result.has_value());
         ASSERT_EQ(result.value(), L"");
     }
@@ -110,21 +110,21 @@ namespace QLogicaeCoreTest
     {
         std::wstring key = GetParam();
         std::wstring value = L"AsyncValue";
-        QLogicaeCore::DotEnv::instance().set(key.c_str(), value.c_str());
+        QLogicaeCore::DotEnv::get_instance().set(key.c_str(), value.c_str());
         std::future<std::optional<std::wstring>> futureValue = std::async(std::launch::async, [key]() {
-            return QLogicaeCore::DotEnv::instance().get(key.c_str());
+            return QLogicaeCore::DotEnv::get_instance().get(key.c_str());
             });
         std::optional<std::wstring> result = futureValue.get();
         ASSERT_TRUE(result.has_value());
         ASSERT_EQ(result.value(), value);
-        QLogicaeCore::DotEnv::instance().remove(key.c_str());
+        QLogicaeCore::DotEnv::get_instance().remove(key.c_str());
     }
 
     TEST_P(DotEnvTest, Should_Be_Thread_Safe_When_Accessed_Concurrently)
     {
         std::wstring key = GetParam();
         std::wstring value = L"ThreadedValue";
-        QLogicaeCore::DotEnv::instance().set(key.c_str(), value.c_str());
+        QLogicaeCore::DotEnv::get_instance().set(key.c_str(), value.c_str());
         std::mutex accessMutex;
         std::atomic<bool> ready(false);
         std::condition_variable startCondition;
@@ -138,7 +138,7 @@ namespace QLogicaeCoreTest
                 std::optional<std::wstring> result;
                 {
                     std::lock_guard<std::mutex> guard(accessMutex);
-                    result = QLogicaeCore::DotEnv::instance().get(key.c_str());
+                    result = QLogicaeCore::DotEnv::get_instance().get(key.c_str());
                 }
                 ASSERT_TRUE(result.has_value());
                 ASSERT_EQ(result.value(), value);
@@ -154,7 +154,7 @@ namespace QLogicaeCoreTest
         {
             thread.join();
         }
-        QLogicaeCore::DotEnv::instance().remove(key.c_str());
+        QLogicaeCore::DotEnv::get_instance().remove(key.c_str());
     }
 
     TEST(DotEnvRaceConditionTest, Should_Handle_Concurrent_Set_And_Remove)
@@ -167,13 +167,13 @@ namespace QLogicaeCoreTest
             threads.emplace_back([&]() {
                 while (running.load())
                 {
-                    QLogicaeCore::DotEnv::instance().set(key.c_str(), L"VALUE");
+                    QLogicaeCore::DotEnv::get_instance().set(key.c_str(), L"VALUE");
                 }
                 });
             threads.emplace_back([&]() {
                 while (running.load())
                 {
-                    QLogicaeCore::DotEnv::instance().remove(key.c_str());
+                    QLogicaeCore::DotEnv::get_instance().remove(key.c_str());
                 }
                 });
         }
@@ -183,7 +183,7 @@ namespace QLogicaeCoreTest
         {
             thread.join();
         }
-        QLogicaeCore::DotEnv::instance().remove(key.c_str());
+        QLogicaeCore::DotEnv::get_instance().remove(key.c_str());
     }
 
     TEST(DotEnvSingletonTest, Should_Return_Same_Instance_When_Called_Multiple_Times)
@@ -194,7 +194,7 @@ namespace QLogicaeCoreTest
         for (int i = 0; i < 50; ++i)
         {
             threads.emplace_back([&]() {
-                void* address = static_cast<void*>(&QLogicaeCore::DotEnv::instance());
+                void* address = static_cast<void*>(&QLogicaeCore::DotEnv::get_instance());
                 std::lock_guard<std::mutex> lock(addressMutex);
                 instanceAddresses.insert(address);
                 });

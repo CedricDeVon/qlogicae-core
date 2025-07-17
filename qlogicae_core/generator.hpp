@@ -21,7 +21,7 @@ namespace QLogicaeCore
         int random_int(const int& = std::numeric_limits<int>::min(), const int& = std::numeric_limits<int>::max()) const;
         double random_double(const double& = Constants::RANDOM_DOUBLE_MINIMUM, const double& = Constants::RANDOM_DOUBLE_MAXIMUM) const;
 
-        static Generator& instance();
+        static Generator& get_instance();
 
     protected:
         Generator();

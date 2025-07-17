@@ -12,7 +12,7 @@ namespace QLogicaeCoreTest
     {
         std::string_view character_set = "ABCXYZ";
 
-        std::string result = QLogicaeCore::Generator::instance()
+        std::string result = QLogicaeCore::Generator::get_instance()
             .random_string(GetParam(), character_set);
 
         for (char character : result)
@@ -23,8 +23,8 @@ namespace QLogicaeCoreTest
 
     TEST_P(GeneratorTest, Should_Expect_SameInstance_When_SingletonCalledMultipleTimes)
     {
-        auto& generator_first = QLogicaeCore::Generator::instance();
-        auto& generator_second = QLogicaeCore::Generator::instance();
+        auto& generator_first = QLogicaeCore::Generator::get_instance();
+        auto& generator_second = QLogicaeCore::Generator::get_instance();
 
         EXPECT_EQ(&generator_first, &generator_second);
     }
@@ -35,7 +35,7 @@ namespace QLogicaeCoreTest
         std::vector<unsigned char> output_buffer(size, 0);
 
         EXPECT_NO_THROW({
-            QLogicaeCore::Generator::instance()
+            QLogicaeCore::Generator::get_instance()
                 .random_bytes(output_buffer.data(), output_buffer.size());
             });
 
@@ -58,7 +58,7 @@ namespace QLogicaeCoreTest
     TEST_P(GeneratorTest, Should_Expect_NoCrash_When_NullBufferUsedWithZeroSize)
     {
         EXPECT_NO_THROW({
-            QLogicaeCore::Generator::instance()
+            QLogicaeCore::Generator::get_instance()
                 .random_bytes(nullptr, 0);
             });
     }
@@ -68,7 +68,7 @@ namespace QLogicaeCoreTest
         int minimum = 0;
         int maximum = static_cast<int>(GetParam());
 
-        int value = QLogicaeCore::Generator::instance()
+        int value = QLogicaeCore::Generator::get_instance()
             .random_int(minimum, maximum);
 
         EXPECT_GE(value, minimum);
@@ -79,7 +79,7 @@ namespace QLogicaeCoreTest
     {
         std::string_view character_set = "0123456789ABCDEF";
 
-        std::string result = QLogicaeCore::Generator::instance()
+        std::string result = QLogicaeCore::Generator::get_instance()
             .random_hex(GetParam(), character_set);
 
         EXPECT_EQ(result.size(), GetParam() * 2);
@@ -91,7 +91,7 @@ namespace QLogicaeCoreTest
 
     TEST_P(GeneratorTest, Should_Expect_ValidBase64_When_Called)
     {
-        std::string result = QLogicaeCore::Generator::instance()
+        std::string result = QLogicaeCore::Generator::get_instance()
             .random_base64(GetParam());
 
         if (result.empty())
@@ -126,7 +126,7 @@ namespace QLogicaeCoreTest
         {
             thread_list.emplace_back([&]()
                 {
-                    std::string output = QLogicaeCore::Generator::instance()
+                    std::string output = QLogicaeCore::Generator::get_instance()
                         .random_string(GetParam());
 
                     ++success_count;
@@ -149,7 +149,7 @@ namespace QLogicaeCoreTest
         while (std::chrono::steady_clock::now() - start_time <
             std::chrono::seconds(2))
         {
-            QLogicaeCore::Generator::instance()
+            QLogicaeCore::Generator::get_instance()
                 .random_string(GetParam());
 
             ++generation_count;
@@ -162,7 +162,7 @@ namespace QLogicaeCoreTest
     {
         auto result = std::async(std::launch::async, [&]()
             {
-                return QLogicaeCore::Generator::instance()
+                return QLogicaeCore::Generator::get_instance()
                     .random_string(GetParam());
             });
 

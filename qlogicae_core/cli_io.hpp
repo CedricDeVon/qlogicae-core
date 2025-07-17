@@ -26,7 +26,7 @@ namespace QLogicaeCore
 		std::future<void> print_with_new_line_async(const std::string_view& text = "");
 		std::future<void> builtin_print_with_new_line_async(const std::string_view& text = "");
 
-		static CliIO& instance();
+		static CliIO& get_instance();
 
     protected:
 		bool _is_scan_enabled;

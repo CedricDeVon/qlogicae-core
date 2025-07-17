@@ -15,11 +15,11 @@ namespace QLogicaeCore
         }
     }
 
-    Generator& Generator::instance()
+    Generator& Generator::get_instance()
     {
-        static Generator instance;
+        static Generator get_instance;
 
-        return instance;
+        return get_instance;
     }
     
     std::string Generator::random_hex(
@@ -32,7 +32,7 @@ namespace QLogicaeCore
         }
 
         const std::string raw = random_string(length, character_set);
-        return Encoder::instance().from_utf8_to_hex(raw);
+        return Encoder::get_instance().from_utf8_to_hex(raw);
     }
 
     std::string Generator::random_base64(
@@ -45,7 +45,7 @@ namespace QLogicaeCore
         }
 
         const std::string raw = random_string(length, character_set);
-        return Encoder::instance().from_utf8_to_base64(raw);
+        return Encoder::get_instance().from_utf8_to_base64(raw);
     }
 
     std::string Generator::random_uuid4() const

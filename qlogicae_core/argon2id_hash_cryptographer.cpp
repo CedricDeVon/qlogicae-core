@@ -33,7 +33,7 @@ namespace QLogicaeCore
 				_va.uint32_t_3,
 				va.data(),
 				va.size(),
-				QLogicaeCore::Generator::instance().random_salt().data(),
+				QLogicaeCore::Generator::get_instance().random_salt().data(),
 				_va.size_t_2,
 				_va.size_t_1,
 				vb.data(), vb.size());

@@ -114,7 +114,7 @@ namespace QLogicaeCore
         template<typename Type>
         bool is_found(const std::vector<Type>& values, std::function<bool(const Type&)> predicate);
        
-        static Validators& instance();
+        static Validators& get_instance();
 
     protected:
         Validators();

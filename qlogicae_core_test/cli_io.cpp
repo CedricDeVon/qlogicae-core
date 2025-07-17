@@ -11,14 +11,14 @@ namespace QLogicaeCoreTest
 
     TEST_F(CliIOTest, Should_Expect_DefaultEnabled_When_Initialized)
     {
-        QLogicaeCore::CliIO& cli = QLogicaeCore::CliIO::instance();
+        QLogicaeCore::CliIO& cli = QLogicaeCore::CliIO::get_instance();
         EXPECT_TRUE(cli.is_scan_enabled());
         EXPECT_TRUE(cli.is_print_enabled());
     }
 
     TEST_F(CliIOTest, Should_Expect_CorrectState_When_SetFlags)
     {
-        QLogicaeCore::CliIO& cli = QLogicaeCore::CliIO::instance();
+        QLogicaeCore::CliIO& cli = QLogicaeCore::CliIO::get_instance();
         cli.set_scan_enabled(false);
         cli.set_print_enabled(false);
         EXPECT_FALSE(cli.is_scan_enabled());
@@ -31,7 +31,7 @@ namespace QLogicaeCoreTest
 
     TEST_F(CliIOTest, Should_Expect_Output_When_Print)
     {
-        QLogicaeCore::CliIO& cli = QLogicaeCore::CliIO::instance();
+        QLogicaeCore::CliIO& cli = QLogicaeCore::CliIO::get_instance();
         testing::internal::CaptureStdout();
         cli.print("A");
         std::string output = testing::internal::GetCapturedStdout();
@@ -40,7 +40,7 @@ namespace QLogicaeCoreTest
 
     TEST_F(CliIOTest, Should_Expect_CorrectBehavior_When_PrintEmptyString)
     {
-        QLogicaeCore::CliIO& cli = QLogicaeCore::CliIO::instance();
+        QLogicaeCore::CliIO& cli = QLogicaeCore::CliIO::get_instance();
         testing::internal::CaptureStdout();
         cli.print("");
         std::string output = testing::internal::GetCapturedStdout();
@@ -49,7 +49,7 @@ namespace QLogicaeCoreTest
 
     TEST_F(CliIOTest, Should_Expect_CorrectBehavior_When_PrintLargeString)
     {
-        QLogicaeCore::CliIO& cli = QLogicaeCore::CliIO::instance();
+        QLogicaeCore::CliIO& cli = QLogicaeCore::CliIO::get_instance();
         std::string large_text(100000, 'X');
         testing::internal::CaptureStdout();
         cli.print(large_text);
@@ -59,7 +59,7 @@ namespace QLogicaeCoreTest
 
     TEST_F(CliIOTest, Should_Expect_FutureResult_When_ScanAsyncWithInputRedirect)
     {
-        QLogicaeCore::CliIO& cli = QLogicaeCore::CliIO::instance();
+        QLogicaeCore::CliIO& cli = QLogicaeCore::CliIO::get_instance();
         std::istringstream input("inputtest");
         std::cin.rdbuf(input.rdbuf());
         std::future<std::string> result = cli.scan_async();
@@ -68,7 +68,7 @@ namespace QLogicaeCoreTest
 
     TEST_F(CliIOTest, Should_Expect_Output_When_PrintWithNewLine)
     {
-        QLogicaeCore::CliIO& cli = QLogicaeCore::CliIO::instance();
+        QLogicaeCore::CliIO& cli = QLogicaeCore::CliIO::get_instance();
         testing::internal::CaptureStdout();
         cli.print_with_new_line("B");
         std::string output = testing::internal::GetCapturedStdout();
@@ -77,7 +77,7 @@ namespace QLogicaeCoreTest
 
     TEST_F(CliIOTest, Should_Expect_Output_When_BuiltinPrint)
     {
-        QLogicaeCore::CliIO& cli = QLogicaeCore::CliIO::instance();
+        QLogicaeCore::CliIO& cli = QLogicaeCore::CliIO::get_instance();
         testing::internal::CaptureStdout();
         cli.builtin_print("C");
         std::string output = testing::internal::GetCapturedStdout();
@@ -86,7 +86,7 @@ namespace QLogicaeCoreTest
 
     TEST_F(CliIOTest, Should_Expect_Output_When_BuiltinPrintWithNewLine)
     {
-        QLogicaeCore::CliIO& cli = QLogicaeCore::CliIO::instance();
+        QLogicaeCore::CliIO& cli = QLogicaeCore::CliIO::get_instance();
         testing::internal::CaptureStdout();
         cli.builtin_print_with_new_line("D");
         std::string output = testing::internal::GetCapturedStdout();
@@ -95,7 +95,7 @@ namespace QLogicaeCoreTest
 
     TEST_F(CliIOTest, Should_Expect_EmptyString_When_ScanFallbackTriggered)
     {
-        QLogicaeCore::CliIO& cli = QLogicaeCore::CliIO::instance();
+        QLogicaeCore::CliIO& cli = QLogicaeCore::CliIO::get_instance();
         std::istringstream input_stream;
         std::cin.rdbuf(input_stream.rdbuf());
         std::string result = cli.scan();
@@ -104,7 +104,7 @@ namespace QLogicaeCoreTest
 
     TEST_F(CliIOTest, Should_Expect_ParallelExecution_When_UsingThreads)
     {
-        QLogicaeCore::CliIO& cli = QLogicaeCore::CliIO::instance();
+        QLogicaeCore::CliIO& cli = QLogicaeCore::CliIO::get_instance();
         std::vector<std::thread> thread_list;
 
         for (int index = 0; index < 8; ++index)
@@ -124,7 +124,7 @@ namespace QLogicaeCoreTest
 
     TEST_F(CliIOTest, Should_Expect_StressExecution_When_HighLoad)
     {
-        QLogicaeCore::CliIO& cli = QLogicaeCore::CliIO::instance();
+        QLogicaeCore::CliIO& cli = QLogicaeCore::CliIO::get_instance();
         auto begin = std::chrono::steady_clock::now();
         std::atomic<int> operation_count(0);
 
@@ -139,7 +139,7 @@ namespace QLogicaeCoreTest
 
     TEST_F(CliIOTest, Should_Expect_AsyncToComplete_When_PrintAsync)
     {
-        QLogicaeCore::CliIO& cli = QLogicaeCore::CliIO::instance();
+        QLogicaeCore::CliIO& cli = QLogicaeCore::CliIO::get_instance();
         std::future<void> result = cli.print_async("G");
         result.get();
         SUCCEED();
@@ -147,7 +147,7 @@ namespace QLogicaeCoreTest
 
     TEST_F(CliIOTest, Should_Expect_UnderTwoSeconds_When_AllOperations)
     {
-        QLogicaeCore::CliIO& cli = QLogicaeCore::CliIO::instance();
+        QLogicaeCore::CliIO& cli = QLogicaeCore::CliIO::get_instance();
         auto start = std::chrono::steady_clock::now();
 
         cli.print("H");
@@ -168,7 +168,7 @@ namespace QLogicaeCoreTest
 
     TEST_P(ScanFlagParameterizedTest, Should_Expect_CorrectScanFlag_When_Set)
     {
-        QLogicaeCore::CliIO& cli = QLogicaeCore::CliIO::instance();
+        QLogicaeCore::CliIO& cli = QLogicaeCore::CliIO::get_instance();
         cli.set_scan_enabled(GetParam());
         EXPECT_EQ(cli.is_scan_enabled(), GetParam());
     }
@@ -180,7 +180,7 @@ namespace QLogicaeCoreTest
 
     TEST_P(PrintFlagParameterizedTest, Should_Expect_CorrectPrintFlag_When_Set)
     {
-        QLogicaeCore::CliIO& cli = QLogicaeCore::CliIO::instance();
+        QLogicaeCore::CliIO& cli = QLogicaeCore::CliIO::get_instance();
         cli.set_print_enabled(GetParam());
         EXPECT_EQ(cli.is_print_enabled(), GetParam());
     }

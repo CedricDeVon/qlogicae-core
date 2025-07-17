@@ -203,7 +203,7 @@ namespace QLogicaeCoreTest
 
         ASSERT_TRUE(result.has_value());
 
-        std::wstring decoded = QLogicaeCore::Encoder::instance()
+        std::wstring decoded = QLogicaeCore::Encoder::get_instance()
             .from_utf8_to_utf16(result.value());
 
         ASSERT_EQ(decoded, value);

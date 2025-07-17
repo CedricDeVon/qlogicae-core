@@ -16,7 +16,7 @@ namespace QLogicaeCore
         std::string to_log_format(const std::string_view& = "", const LogLevel& = LogLevel::INFO, const size_t& = 256) const;
         std::string to_log_level_color_format(const std::string_view & = "", const LogLevel & = LogLevel::INFO, const size_t & = 256) const;
         
-        static Transformer& instance();
+        static Transformer& get_instance();
 
     protected:
         Transformer() = default;

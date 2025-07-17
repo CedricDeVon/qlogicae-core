@@ -24,7 +24,7 @@ namespace QLogicaeCore
 			const std::string&
 		);
 
-		static RegularExpression& instance();
+		static RegularExpression& get_instance();
 
 	protected:
 		mutable std::shared_mutex _mutex;

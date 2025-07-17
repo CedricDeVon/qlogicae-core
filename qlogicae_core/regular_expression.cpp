@@ -6,7 +6,7 @@
 
 namespace QLogicaeCore
 {
-    RegularExpression& RegularExpression::instance()
+    RegularExpression& RegularExpression::get_instance()
     {
         static RegularExpression singleton;
         return singleton;

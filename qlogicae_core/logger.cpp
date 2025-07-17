@@ -69,15 +69,15 @@ namespace QLogicaeCore
 		{
 			std::scoped_lock lock(_mutex);
 
-			CliIO::instance().print(
+			CliIO::get_instance().print(
 				(is_simplified) ?
 				message :
-				Transformer::instance()
+				Transformer::get_instance()
 					.to_log_format(message, log_level));
 		}
 		catch (...)
 		{
-			CliIO::instance().builtin_print(message);
+			CliIO::get_instance().builtin_print(message);
 		}
 	}
 

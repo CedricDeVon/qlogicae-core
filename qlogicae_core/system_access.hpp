@@ -11,7 +11,7 @@ namespace QLogicaeCore
         std::string get_executable_dir() const;
         void restart_with_admin_access() const;
 
-        static SystemAccess& instance();
+        static SystemAccess& get_instance();
 
     protected:
         SystemAccess() = default;

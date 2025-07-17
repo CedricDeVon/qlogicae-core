@@ -102,7 +102,7 @@ namespace QLogicaeCore
 				vc, vb
 			);
 
-			return QLogicaeCore::Encoder::instance().from_bytes_to_base64(
+			return QLogicaeCore::Encoder::get_instance().from_bytes_to_base64(
 				vh, vg
 			);
 		}
@@ -127,7 +127,7 @@ namespace QLogicaeCore
 			}
 
 			std::vector<unsigned char> vf =
-				QLogicaeCore::Encoder::instance().from_base64_to_bytes(va);
+				QLogicaeCore::Encoder::get_instance().from_base64_to_bytes(va);
 			unsigned long long vh, vi = vf.size();
 			std::vector<unsigned char> vg(vi);
 			unsigned char* vj = vg.data();

@@ -98,7 +98,7 @@ namespace QLogicaeCore
                 return "";
             }
 
-            return QLogicaeCore::Encoder::instance()
+            return QLogicaeCore::Encoder::get_instance()
                 .from_bytes_to_base64(vf, ve);
         }
         catch (...)
@@ -124,7 +124,7 @@ namespace QLogicaeCore
 
             unsigned long long ve = 0;
             std::vector<unsigned char> vd =
-                QLogicaeCore::Encoder::instance().from_base64_to_bytes(va);
+                QLogicaeCore::Encoder::get_instance().from_base64_to_bytes(va);
             size_t vf = vd.size();
             std::vector<unsigned char> decrypted(
                 vf - crypto_aead_xchacha20poly1305_ietf_ABYTES

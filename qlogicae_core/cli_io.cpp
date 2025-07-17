@@ -197,7 +197,7 @@ namespace QLogicaeCore
 		return result;
 	}
 
-	CliIO& CliIO::instance()
+	CliIO& CliIO::get_instance()
 	{
 		static CliIO singleton;
 

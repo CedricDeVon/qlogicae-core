@@ -20,7 +20,7 @@ namespace QLogicaeCore
         std::string from_bytes_to_base64(const unsigned char*, const size_t&) const;
         std::vector<unsigned char> from_base64_to_bytes(const std::string_view&) const;
 
-        static Encoder& instance();
+        static Encoder& get_instance();
 
     protected:
         Encoder();

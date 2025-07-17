@@ -14,7 +14,7 @@ namespace QLogicaeCore
         }
     }
 
-    Encoder& Encoder::instance()
+    Encoder& Encoder::get_instance()
     {
         static Encoder singleton;
 

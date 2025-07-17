@@ -75,7 +75,7 @@ namespace QLogicaeCore
 		}
 	}
 
-	DotEnv& DotEnv::instance()
+	DotEnv& DotEnv::get_instance()
 	{
 		static DotEnv singleton;
 

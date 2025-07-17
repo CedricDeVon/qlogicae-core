@@ -20,7 +20,7 @@ namespace QLogicaeCore
         int minute(const TimeZone& = TimeZone::Local) const;
         std::string now(const TimeFormat&, const TimeZone& = TimeZone::Local) const;
 
-        static Time& instance();
+        static Time& get_instance();
 
     protected:
         Time() = default;

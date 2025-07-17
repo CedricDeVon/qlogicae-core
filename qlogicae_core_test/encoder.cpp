@@ -12,61 +12,61 @@ namespace QLogicaeCoreTest
     TEST_P(EncoderTest, Should_Expect_HexRoundTrip_When_ConvertingUtf8)
     {
         const std::string& original_text = GetParam();
-        std::string hex = QLogicaeCore::Encoder::instance().from_utf8_to_hex(original_text);
-        std::string utf8 = QLogicaeCore::Encoder::instance().from_hex_to_utf8(hex);
+        std::string hex = QLogicaeCore::Encoder::get_instance().from_utf8_to_hex(original_text);
+        std::string utf8 = QLogicaeCore::Encoder::get_instance().from_hex_to_utf8(hex);
         EXPECT_EQ(original_text, utf8);
     }
 
     TEST_P(EncoderTest, Should_Expect_Base64RoundTrip_When_ConvertingUtf8)
     {
         const std::string& original_text = GetParam();
-        std::string base64 = QLogicaeCore::Encoder::instance().from_utf8_to_base64(original_text);
-        std::string utf8 = QLogicaeCore::Encoder::instance().from_base64_to_utf8(base64);
+        std::string base64 = QLogicaeCore::Encoder::get_instance().from_utf8_to_base64(original_text);
+        std::string utf8 = QLogicaeCore::Encoder::get_instance().from_base64_to_utf8(base64);
         EXPECT_EQ(original_text, utf8);
     }
 
     TEST_P(EncoderTest, Should_Expect_HexBase64RoundTrip_When_ConvertingHex)
     {
         const std::string& original_text = GetParam();
-        std::string hex = QLogicaeCore::Encoder::instance().from_utf8_to_hex(original_text);
-        std::string base64 = QLogicaeCore::Encoder::instance().from_hex_to_base64(hex);
-        std::string hex_back = QLogicaeCore::Encoder::instance().from_base64_to_hex(base64);
+        std::string hex = QLogicaeCore::Encoder::get_instance().from_utf8_to_hex(original_text);
+        std::string base64 = QLogicaeCore::Encoder::get_instance().from_hex_to_base64(hex);
+        std::string hex_back = QLogicaeCore::Encoder::get_instance().from_base64_to_hex(base64);
         EXPECT_EQ(hex, hex_back);
     }
 
     TEST_P(EncoderTest, Should_Expect_Utf16RoundTrip_When_ConvertingText)
     {
         const std::string& original_text = GetParam();
-        std::wstring utf16 = QLogicaeCore::Encoder::instance().from_utf8_to_utf16(original_text);
-        std::string utf8 = QLogicaeCore::Encoder::instance().from_utf16_to_utf8(utf16);
+        std::wstring utf16 = QLogicaeCore::Encoder::get_instance().from_utf8_to_utf16(original_text);
+        std::string utf8 = QLogicaeCore::Encoder::get_instance().from_utf16_to_utf8(utf16);
         EXPECT_EQ(original_text, utf8);
     }
 
     TEST_P(EncoderTest, Should_Expect_BinaryRoundTrip_When_ConvertingHex)
     {
         const std::string& original_text = GetParam();
-        std::string hex = QLogicaeCore::Encoder::instance().from_utf8_to_hex(original_text);
-        std::vector<unsigned char> bytes = QLogicaeCore::Encoder::instance().from_hex_to_bytes(hex);
-        std::string roundtrip = QLogicaeCore::Encoder::instance().from_bytes_to_hex(bytes.data(), bytes.size());
+        std::string hex = QLogicaeCore::Encoder::get_instance().from_utf8_to_hex(original_text);
+        std::vector<unsigned char> bytes = QLogicaeCore::Encoder::get_instance().from_hex_to_bytes(hex);
+        std::string roundtrip = QLogicaeCore::Encoder::get_instance().from_bytes_to_hex(bytes.data(), bytes.size());
         EXPECT_EQ(hex, roundtrip);
     }
 
     TEST_P(EncoderTest, Should_Expect_BinaryRoundTrip_When_ConvertingBase64)
     {
         const std::string& original_text = GetParam();
-        std::string base64 = QLogicaeCore::Encoder::instance().from_utf8_to_base64(original_text);
-        std::vector<unsigned char> bytes = QLogicaeCore::Encoder::instance().from_base64_to_bytes(base64);
-        std::string roundtrip = QLogicaeCore::Encoder::instance().from_bytes_to_base64(bytes.data(), bytes.size());
+        std::string base64 = QLogicaeCore::Encoder::get_instance().from_utf8_to_base64(original_text);
+        std::vector<unsigned char> bytes = QLogicaeCore::Encoder::get_instance().from_base64_to_bytes(base64);
+        std::string roundtrip = QLogicaeCore::Encoder::get_instance().from_bytes_to_base64(bytes.data(), bytes.size());
         EXPECT_EQ(base64, roundtrip);
     }
 
     TEST_P(EncoderTest, Should_Expect_NoThrow_When_ConvertingEmptyText)
     {
         EXPECT_NO_THROW({
-            QLogicaeCore::Encoder::instance().from_utf8_to_hex("");
-            QLogicaeCore::Encoder::instance().from_hex_to_utf8("");
-            QLogicaeCore::Encoder::instance().from_utf8_to_base64("");
-            QLogicaeCore::Encoder::instance().from_base64_to_utf8("");
+            QLogicaeCore::Encoder::get_instance().from_utf8_to_hex("");
+            QLogicaeCore::Encoder::get_instance().from_hex_to_utf8("");
+            QLogicaeCore::Encoder::get_instance().from_utf8_to_base64("");
+            QLogicaeCore::Encoder::get_instance().from_base64_to_utf8("");
             });
     }
 
@@ -74,7 +74,7 @@ namespace QLogicaeCoreTest
     {
         const std::string& input = GetParam();
         std::future<std::string> task = std::async(std::launch::async, [&]() {
-            return QLogicaeCore::Encoder::instance().from_utf8_to_base64(input);
+            return QLogicaeCore::Encoder::get_instance().from_utf8_to_base64(input);
             });
 
         bool result = task.get().empty();
@@ -98,7 +98,7 @@ namespace QLogicaeCoreTest
         for (int index = 0; index < thread_count; ++index)
         {
             threads.emplace_back([&]() {
-                std::string result = QLogicaeCore::Encoder::instance().from_utf8_to_base64(input);
+                std::string result = QLogicaeCore::Encoder::get_instance().from_utf8_to_base64(input);
                 success_count++;
             });
         }
@@ -119,9 +119,9 @@ namespace QLogicaeCoreTest
 
         for (int index = 0; index < 1000; ++index)
         {
-            std::string base64 = QLogicaeCore::Encoder::instance()
+            std::string base64 = QLogicaeCore::Encoder::get_instance()
                 .from_utf8_to_base64(original_text);
-            std::string back = QLogicaeCore::Encoder::instance()
+            std::string back = QLogicaeCore::Encoder::get_instance()
                 .from_base64_to_utf8(base64);
             EXPECT_EQ(original_text, back);
         }

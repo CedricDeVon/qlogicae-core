@@ -10,13 +10,13 @@ namespace QLogicaeCoreTest
     class ValidatorsTest : public ::testing::TestWithParam<std::string>
     {
     protected:
-        QLogicaeCore::Validators& validators = QLogicaeCore::Validators::instance();
+        QLogicaeCore::Validators& validators = QLogicaeCore::Validators::get_instance();
     };
 
     class ValidatorsTemplateTest : public ::testing::Test
     {
     protected:
-        QLogicaeCore::Validators& validators = QLogicaeCore::Validators::instance();
+        QLogicaeCore::Validators& validators = QLogicaeCore::Validators::get_instance();
     };
 
     INSTANTIATE_TEST_CASE_P(
@@ -181,7 +181,7 @@ namespace QLogicaeCoreTest
         auto start = std::chrono::high_resolution_clock::now();
         for (int index = 0; index < 100000; ++index)
         {
-            volatile bool result = QLogicaeCore::Validators::instance().is_even(index);
+            volatile bool result = QLogicaeCore::Validators::get_instance().is_even(index);
             (void)result;
         }
         auto end = std::chrono::high_resolution_clock::now();
@@ -191,13 +191,13 @@ namespace QLogicaeCoreTest
 
     TEST(ValidatorsTestFixed, Should_Validate_EdgeCases)
     {
-        ASSERT_TRUE(QLogicaeCore::Validators::instance().is_even(0));
-        ASSERT_FALSE(QLogicaeCore::Validators::instance().is_even(-1));
-        ASSERT_TRUE(QLogicaeCore::Validators::instance().is_even(2));
-        ASSERT_FALSE(QLogicaeCore::Validators::instance().is_even(3));
-        ASSERT_TRUE(QLogicaeCore::Validators::instance().is_even(
+        ASSERT_TRUE(QLogicaeCore::Validators::get_instance().is_even(0));
+        ASSERT_FALSE(QLogicaeCore::Validators::get_instance().is_even(-1));
+        ASSERT_TRUE(QLogicaeCore::Validators::get_instance().is_even(2));
+        ASSERT_FALSE(QLogicaeCore::Validators::get_instance().is_even(3));
+        ASSERT_TRUE(QLogicaeCore::Validators::get_instance().is_even(
             std::numeric_limits<int64_t>::min()));
-        ASSERT_FALSE(QLogicaeCore::Validators::instance().is_even(
+        ASSERT_FALSE(QLogicaeCore::Validators::get_instance().is_even(
             std::numeric_limits<int64_t>::max()));
     }
 
@@ -205,10 +205,10 @@ namespace QLogicaeCoreTest
         Should_Return_Same_Instance_When_Accessed_Multiple_Times)
     {
         QLogicaeCore::Validators& first =
-            QLogicaeCore::Validators::instance();
+            QLogicaeCore::Validators::get_instance();
 
         QLogicaeCore::Validators& second =
-            QLogicaeCore::Validators::instance();
+            QLogicaeCore::Validators::get_instance();
 
         ASSERT_EQ(&first, &second);
     }
@@ -222,7 +222,7 @@ namespace QLogicaeCoreTest
 
         for (int i = 0; i < 10000; ++i)
         {
-            instances[i] = &QLogicaeCore::Validators::instance();
+            instances[i] = &QLogicaeCore::Validators::get_instance();
         }
 
         for (int i = 1; i < 10000; ++i)
@@ -241,7 +241,7 @@ namespace QLogicaeCoreTest
         Should_Be_Safe_When_Used_From_Multiple_Threads)
     {
         std::atomic<int> match_count = 0;
-        QLogicaeCore::Validators* base = &QLogicaeCore::Validators::instance();
+        QLogicaeCore::Validators* base = &QLogicaeCore::Validators::get_instance();
 
         std::vector<std::thread> threads;
 
@@ -250,7 +250,7 @@ namespace QLogicaeCoreTest
             threads.emplace_back([&match_count, base]()
                 {
                     QLogicaeCore::Validators* local =
-                        &QLogicaeCore::Validators::instance();
+                        &QLogicaeCore::Validators::get_instance();
 
                     if (local == base)
                     {
@@ -273,7 +273,7 @@ namespace QLogicaeCoreTest
         ASSERT_NO_THROW({
             for (int i = 0; i < 1000; ++i)
             {
-                QLogicaeCore::Validators::instance();
+                QLogicaeCore::Validators::get_instance();
             }
             });
     }

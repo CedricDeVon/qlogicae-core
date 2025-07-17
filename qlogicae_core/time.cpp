@@ -4,8 +4,9 @@
 
 #include "time.hpp"
 
-namespace QLogicaeCore {
-    Time& Time::instance()
+namespace QLogicaeCore
+{
+    Time& Time::get_instance()
     {
         static Time singleton;
 

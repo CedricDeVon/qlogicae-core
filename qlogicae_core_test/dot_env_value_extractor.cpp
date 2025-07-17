@@ -21,34 +21,34 @@ namespace QLogicaeCoreTest
     {
         std::wstring key = GetParam();
         std::wstring value = L"ExtractorTestValue";
-        QLogicaeCore::DotEnv::instance().set(key.c_str(), value.c_str());
+        QLogicaeCore::DotEnv::get_instance().set(key.c_str(), value.c_str());
         QLogicaeCore::DotEnvValueExtractor extractor(key);
         std::optional<std::string> result = extractor.get_value();
         ASSERT_TRUE(result.has_value());
-        ASSERT_EQ(result.value(), QLogicaeCore::Encoder::instance().from_utf16_to_utf8(value));
-        QLogicaeCore::DotEnv::instance().remove(key.c_str());
+        ASSERT_EQ(result.value(), QLogicaeCore::Encoder::get_instance().from_utf16_to_utf8(value));
+        QLogicaeCore::DotEnv::get_instance().remove(key.c_str());
     }
 
     TEST_P(DotEnvValueExtractorTest, Should_Work_Asynchronously_When_Value_Extracted)
     {
         std::wstring key = GetParam();
         std::wstring value = L"AsyncExtract";
-        QLogicaeCore::DotEnv::instance().set(key.c_str(), value.c_str());
+        QLogicaeCore::DotEnv::get_instance().set(key.c_str(), value.c_str());
         std::future<std::optional<std::string>> future = std::async(std::launch::async, [key]() {
             QLogicaeCore::DotEnvValueExtractor extractor(key);
             return extractor.get_value();
             });
         std::optional<std::string> result = future.get();
         ASSERT_TRUE(result.has_value());
-        ASSERT_EQ(result.value(), QLogicaeCore::Encoder::instance().from_utf16_to_utf8(value));
-        QLogicaeCore::DotEnv::instance().remove(key.c_str());
+        ASSERT_EQ(result.value(), QLogicaeCore::Encoder::get_instance().from_utf16_to_utf8(value));
+        QLogicaeCore::DotEnv::get_instance().remove(key.c_str());
     }
 
     TEST_P(DotEnvValueExtractorTest, Should_Handle_Concurrent_Extraction_When_Threaded)
     {
         std::wstring key = GetParam();
         std::wstring value = L"ThreadedExtract";
-        QLogicaeCore::DotEnv::instance().set(key.c_str(), value.c_str());
+        QLogicaeCore::DotEnv::get_instance().set(key.c_str(), value.c_str());
         QLogicaeCore::DotEnvValueExtractor extractor(key);
 
         std::mutex accessMutex;
@@ -68,7 +68,7 @@ namespace QLogicaeCoreTest
                     result = extractor.get_value();
                 }
                 ASSERT_TRUE(result.has_value());
-                ASSERT_EQ(result.value(), QLogicaeCore::Encoder::instance().from_utf16_to_utf8(value));
+                ASSERT_EQ(result.value(), QLogicaeCore::Encoder::get_instance().from_utf16_to_utf8(value));
                 });
         }
 
@@ -84,7 +84,7 @@ namespace QLogicaeCoreTest
             thread.join();
         }
 
-        QLogicaeCore::DotEnv::instance().remove(key.c_str());
+        QLogicaeCore::DotEnv::get_instance().remove(key.c_str());
     }
 
     TEST(DotEnvValueExtractorStressTest, Should_Perform_Within_Limit_When_Loaded)
@@ -94,12 +94,12 @@ namespace QLogicaeCoreTest
         {
             std::wstring key = L"ExtractorStressKey" + std::to_wstring(index);
             std::wstring value = L"ExtractorStressValue" + std::to_wstring(index);
-            QLogicaeCore::DotEnv::instance().set(key.c_str(), value.c_str());
+            QLogicaeCore::DotEnv::get_instance().set(key.c_str(), value.c_str());
             QLogicaeCore::DotEnvValueExtractor extractor(key);
             std::optional<std::string> result = extractor.get_value();
             ASSERT_TRUE(result.has_value());
-            ASSERT_EQ(result.value(), QLogicaeCore::Encoder::instance().from_utf16_to_utf8(value));
-            QLogicaeCore::DotEnv::instance().remove(key.c_str());
+            ASSERT_EQ(result.value(), QLogicaeCore::Encoder::get_instance().from_utf16_to_utf8(value));
+            QLogicaeCore::DotEnv::get_instance().remove(key.c_str());
         }
         auto end = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::seconds>(end - start);
@@ -149,7 +149,7 @@ namespace QLogicaeCoreTest
         std::wstring key = GetParam();
         std::wstring value = L"TestEdgeValue";
 
-        bool setResult = QLogicaeCore::DotEnv::instance().set(
+        bool setResult = QLogicaeCore::DotEnv::get_instance().set(
             key.c_str(), value.c_str()
         );
 
@@ -160,12 +160,12 @@ namespace QLogicaeCoreTest
 
         ASSERT_TRUE(extracted.has_value());
 
-        std::wstring decoded = QLogicaeCore::Encoder::instance()
+        std::wstring decoded = QLogicaeCore::Encoder::get_instance()
             .from_utf8_to_utf16(extracted.value());
 
         ASSERT_EQ(decoded, value);
 
-        QLogicaeCore::DotEnv::instance().remove(key.c_str());
+        QLogicaeCore::DotEnv::get_instance().remove(key.c_str());
     }
 
     INSTANTIATE_TEST_CASE_P(
@@ -185,7 +185,7 @@ namespace QLogicaeCoreTest
     {
         std::wstring missingKey = L"NON_EXISTENT_ENV_VAR_1234";
 
-        QLogicaeCore::DotEnv::instance().remove(missingKey.c_str());
+        QLogicaeCore::DotEnv::get_instance().remove(missingKey.c_str());
 
         QLogicaeCore::DotEnvValueExtractor extractor(missingKey);
         std::optional<std::string> value = extractor.get_value();

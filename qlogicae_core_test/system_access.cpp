@@ -13,7 +13,7 @@ namespace QLogicaeCoreTest
 
         void SetUp() override
         {
-            access = &QLogicaeCore::SystemAccess::instance();
+            access = &QLogicaeCore::SystemAccess::get_instance();
         }
     };
 
@@ -37,14 +37,14 @@ namespace QLogicaeCoreTest
     TEST(SystemAccessDeathTest, Should_Expect_Termination_When_Restarted)
     {
         ASSERT_DEATH({
-            QLogicaeCore::SystemAccess::instance().restart_with_admin_access();
+            QLogicaeCore::SystemAccess::get_instance().restart_with_admin_access();
             }, "");
     }
 
     TEST(SystemAccessTest, Should_Expect_TrueOrFalse_When_HasAdminAccess)
     {
         EXPECT_NO_THROW({
-            auto result = QLogicaeCore::SystemAccess::instance().has_admin_access();
+            auto result = QLogicaeCore::SystemAccess::get_instance().has_admin_access();
             EXPECT_TRUE(result == true || result == false);
             });
     }
@@ -52,7 +52,7 @@ namespace QLogicaeCoreTest
     TEST(SystemAccessTest, Should_Expect_Performance_When_HasAdminAccess)
     {
         auto start = std::chrono::high_resolution_clock::now();
-        QLogicaeCore::SystemAccess::instance().has_admin_access();
+        QLogicaeCore::SystemAccess::get_instance().has_admin_access();
         auto end = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
         EXPECT_LE(duration, 2000);
@@ -61,7 +61,7 @@ namespace QLogicaeCoreTest
     TEST(SystemAccessTest, Should_Expect_PerformanceFast_When_HasAdminAccess)
     {
         auto start = std::chrono::high_resolution_clock::now();
-        QLogicaeCore::SystemAccess::instance().has_admin_access();
+        QLogicaeCore::SystemAccess::get_instance().has_admin_access();
         auto end = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
         EXPECT_LE(duration, 1);

@@ -7,7 +7,7 @@ namespace QLogicaeCore
     class Networks
     {
     public:
-        static Networks& instance();
+        static Networks& get_instance();
 
     protected:
         Networks() = default;

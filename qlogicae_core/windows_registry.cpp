@@ -51,8 +51,8 @@ bool QLogicaeCore::WindowsRegistry::set_sub_and_name_keys_via_utf8(
     const std::string_view name_key)
 {
     return set_sub_and_name_keys_via_utf16(
-        QLogicaeCore::Encoder::instance().from_utf8_to_utf16(sub_key),
-        QLogicaeCore::Encoder::instance().from_utf8_to_utf16(name_key)
+        QLogicaeCore::Encoder::get_instance().from_utf8_to_utf16(sub_key),
+        QLogicaeCore::Encoder::get_instance().from_utf8_to_utf16(name_key)
     );
 }
 
@@ -107,10 +107,10 @@ std::optional<std::string> QLogicaeCore::WindowsRegistry::get_value_via_utf8(
     std::string_view sub_key,
     std::string_view name_key) const
 {
-    return QLogicaeCore::Encoder::instance().from_utf16_to_utf8(
+    return QLogicaeCore::Encoder::get_instance().from_utf16_to_utf8(
         get_value_via_utf16(
-            QLogicaeCore::Encoder::instance().from_utf8_to_utf16(sub_key),
-            QLogicaeCore::Encoder::instance().from_utf8_to_utf16(name_key)
+            QLogicaeCore::Encoder::get_instance().from_utf8_to_utf16(sub_key),
+            QLogicaeCore::Encoder::get_instance().from_utf8_to_utf16(name_key)
         ).value()
     );
 }
@@ -145,9 +145,9 @@ bool QLogicaeCore::WindowsRegistry::set_value_via_utf8(
     const std::string_view value) const
 {
     return set_value_via_utf16(
-        QLogicaeCore::Encoder::instance().from_utf8_to_utf16(sub_key),
-        QLogicaeCore::Encoder::instance().from_utf8_to_utf16(name_key),
-        QLogicaeCore::Encoder::instance().from_utf8_to_utf16(value)
+        QLogicaeCore::Encoder::get_instance().from_utf8_to_utf16(sub_key),
+        QLogicaeCore::Encoder::get_instance().from_utf8_to_utf16(name_key),
+        QLogicaeCore::Encoder::get_instance().from_utf8_to_utf16(value)
     );
 }
 
@@ -163,8 +163,8 @@ bool QLogicaeCore::WindowsRegistry::is_sub_and_name_key_path_found_via_utf8(
     std::string_view name_key) const
 {
     return !(get_value_via_utf16(
-        QLogicaeCore::Encoder::instance().from_utf8_to_utf16(sub_key),
-        QLogicaeCore::Encoder::instance().from_utf8_to_utf16(name_key)
+        QLogicaeCore::Encoder::get_instance().from_utf8_to_utf16(sub_key),
+        QLogicaeCore::Encoder::get_instance().from_utf8_to_utf16(name_key)
     ).value().empty());
 }
 
@@ -193,8 +193,8 @@ bool QLogicaeCore::WindowsRegistry::remove_value_via_utf8(
     std::string_view name_key) const
 {
     return remove_value_via_utf16(
-        QLogicaeCore::Encoder::instance().from_utf8_to_utf16(sub_key),
-        QLogicaeCore::Encoder::instance().from_utf8_to_utf16(name_key)
+        QLogicaeCore::Encoder::get_instance().from_utf8_to_utf16(sub_key),
+        QLogicaeCore::Encoder::get_instance().from_utf8_to_utf16(name_key)
     );
 }
 

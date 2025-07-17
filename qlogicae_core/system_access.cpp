@@ -68,10 +68,10 @@ namespace QLogicaeCore
         ExitProcess(0);
     }
 
-    QLogicaeCore::SystemAccess& QLogicaeCore::SystemAccess::instance()
+    QLogicaeCore::SystemAccess& QLogicaeCore::SystemAccess::get_instance()
     {
-        static SystemAccess instance;
-        return instance;
+        static SystemAccess get_instance;
+        return get_instance;
     }
 }
 

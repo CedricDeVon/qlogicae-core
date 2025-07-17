@@ -16,8 +16,8 @@ namespace QLogicaeCoreTest
 
         void SetUp() override
         {
-            QLogicaeCore::Generator::instance().random_bytes(key, sizeof(key));
-            QLogicaeCore::Generator::instance().random_bytes(nonce, sizeof(nonce));
+            QLogicaeCore::Generator::get_instance().random_bytes(key, sizeof(key));
+            QLogicaeCore::Generator::get_instance().random_bytes(nonce, sizeof(nonce));
         }
     };
 
@@ -177,7 +177,7 @@ namespace QLogicaeCoreTest
         Should_Expect_Empty_When_EncryptedDataTooShort)
     {
         std::string input = "a";
-        std::string short_input = QLogicaeCore::Encoder::instance()
+        std::string short_input = QLogicaeCore::Encoder::get_instance()
             .from_bytes_to_base64(reinterpret_cast<const unsigned char*>(
                 input.data()), input.size());
         EXPECT_EQ(crypto.reverse(short_input, key, nonce), "");

@@ -13,7 +13,7 @@ namespace QLogicaeCore
         template <typename Type> Type& get_file(const std::string&);
         void set_file(const std::vector<std::shared_ptr<AbstractFileIO>>&);
 
-        static FileIOs& instance();
+        static FileIOs& get_instance();
 
     protected:
         FileIOs() = default;

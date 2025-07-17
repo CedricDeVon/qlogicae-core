@@ -741,7 +741,7 @@ namespace QLogicaeCore
             });
     }
 
-    Validators& Validators::instance()
+    Validators& Validators::get_instance()
     {
         static Validators singleton_instance;
         return singleton_instance;
