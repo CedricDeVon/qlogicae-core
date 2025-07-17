@@ -9,6 +9,8 @@
 #endif
 
 #define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#include <shellapi.h>
 #include <boost/asio.hpp>
 #include <boost/asio/ip/icmp.hpp>
 #include <boost/asio/steady_timer.hpp>
@@ -43,10 +45,8 @@
 #include <iostream>
 #include <typeindex>
 #include <optional>
-#include <windows.h>
 #include <algorithm>
 #include <functional>
-#include <shellapi.h>
 #include <filesystem>
 #include <type_traits>
 #include <string_view>

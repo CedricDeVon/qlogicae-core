@@ -228,6 +228,7 @@ namespace QLogicaeCoreTest
             QLogicaeCore::TimeFormat::UNIX,
             QLogicaeCore::TimeFormat::ISO8601,
             QLogicaeCore::TimeFormat::FULL_TIMESTAMP,
+            QLogicaeCore::TimeFormat::FULL_DASHED_TIMESTAMP,
             QLogicaeCore::TimeFormat::HOUR_12,
             QLogicaeCore::TimeFormat::HOUR_24,
             QLogicaeCore::TimeFormat::MILLISECOND_MICROSECOND_NANOSECOND,
