@@ -39,35 +39,39 @@ namespace QLogicaeCore
             {
                 return Constants::TIME_FORMAT_ISO_8601;
             }
-            case TimeFormat::FullTimestamp:
+            case TimeFormat::FULL_TIMESTAMP:
             {
                 return Constants::TIME_FORMAT_FULL_TIMESTAMP;
             }
-            case TimeFormat::Hour12:
+            case TimeFormat::FULL_DASHED_TIMESTAMP:
+            {
+                return Constants::TIME_FORMAT_FULL_DASHED_TIMESTAMP;
+            }
+            case TimeFormat::HOUR_12:
             {
                 return Constants::TIME_FORMAT_HOUR_12;
             }
-            case TimeFormat::Hour24:
+            case TimeFormat::HOUR_24:
             {
                 return Constants::TIME_FORMAT_HOUR_24;
             }
-            case TimeFormat::DateDashed:
+            case TimeFormat::DATE_DASHED:
             {
                 return Constants::TIME_FORMAT_DATE_DASHED;
             }
-            case TimeFormat::DateMDYSlashed:
+            case TimeFormat::DATE_MDY_SLASHED:
             {
                 return Constants::TIME_FORMAT_DATE_MDY_SLASHED;
             }
-            case TimeFormat::DateDMYSlashed:
+            case TimeFormat::DATE_DMY_SLASHED:
             {
                 return Constants::TIME_FORMAT_DATE_DMY_SLASHED;
             }
-            case TimeFormat::DateDMYSpaced:
+            case TimeFormat::DATE_DMY_SPACED:
             {
                 return Constants::TIME_FORMAT_DATE_DMY_SPACED;
             }
-            case TimeFormat::DateVerbose:
+            case TimeFormat::DATE_VERBOSE:
             {
                 return Constants::TIME_FORMAT_DATE_VERBOSE;
             }
@@ -90,7 +94,7 @@ namespace QLogicaeCore
         
         switch (format)
         {
-            case TimeFormat::Unix:
+            case TimeFormat::UNIX:
             {
                 return std::to_string(
                     std::chrono::duration_cast<std::chrono::seconds>(
@@ -104,7 +108,7 @@ namespace QLogicaeCore
                 break;
             }
 
-            case TimeFormat::FullTimestamp:
+            case TimeFormat::FULL_TIMESTAMP:
             {
                 oss << std::put_time(&tm, _get_format_string(format))
                     << Constants::TIME_FORMAT_PART_4
@@ -127,19 +131,46 @@ namespace QLogicaeCore
                             duration).count() % Constants::NUMBER_THOUSAND);
                 break;
             }
-            case TimeFormat::Hour12:
+
+            case TimeFormat::FULL_DASHED_TIMESTAMP:
+            {
+                oss << std::put_time(&tm, _get_format_string(format))
+                    << "-"
+                    << std::setw(
+                        Constants::TIME_FORMAT_MIL_MIC_NAN_STREAM_SIZE)
+                    << static_cast<int>(
+                        std::chrono::duration_cast<std::chrono::milliseconds>(
+                            duration).count() % Constants::NUMBER_THOUSAND)
+                    << "-"
+                    << std::setw(
+                        Constants::TIME_FORMAT_MIL_MIC_NAN_STREAM_SIZE)
+                    << static_cast<int>(
+                        std::chrono::duration_cast<std::chrono::microseconds>(
+                            duration).count() % Constants::NUMBER_THOUSAND)
+                    << "-"
+                    << std::setw(
+                        Constants::TIME_FORMAT_MIL_MIC_NAN_STREAM_SIZE)
+                    << static_cast<int>(
+                        std::chrono::duration_cast<std::chrono::nanoseconds>(
+                            duration).count() % Constants::NUMBER_THOUSAND);
+                break;
+            }
+
+            case TimeFormat::HOUR_12:
             {
                 oss << std::put_time(&tm, _get_format_string(format));
 
                 break;
             }
-            case TimeFormat::Hour24:
+
+            case TimeFormat::HOUR_24:
             {
                 oss << std::put_time(&tm, _get_format_string(format));
             
                 break;
             }
-            case TimeFormat::MillisMicrosNanos:
+
+            case TimeFormat::MILLISECOND_MICROSECOND_NANOSECOND:
             {
                 oss << Constants::TIME_FORMAT_PART_1
                     << std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -152,41 +183,47 @@ namespace QLogicaeCore
                         duration).count();
                 return oss.str();
             }
-            case TimeFormat::DateDashed:
+
+            case TimeFormat::DATE_DASHED:
             {
                 oss << std::put_time(
                     &tm, _get_format_string(format));
 
                 break;
             }
-            case TimeFormat::DateMDYSlashed:
+
+            case TimeFormat::DATE_MDY_SLASHED:
             {
                 oss << std::put_time(
                     &tm, _get_format_string(format));
 
                 break;
             }
-            case TimeFormat::DateDMYSlashed:
+
+            case TimeFormat::DATE_DMY_SLASHED:
             {
                 oss << std::put_time(
                     &tm, _get_format_string(format));
 
                 break;
             }
-            case TimeFormat::DateDMYSpaced:
+
+            case TimeFormat::DATE_DMY_SPACED:
             {
                 oss << std::put_time(
                     &tm, _get_format_string(format));
 
                 break;
             }
-            case TimeFormat::DateVerbose:
+
+            case TimeFormat::DATE_VERBOSE:
             {
                 oss << std::put_time(
                     &tm, _get_format_string(format));
 
                 break;
             }
+
             default:
             {
                 return Constants::TIME_FORMAT_INVALID;

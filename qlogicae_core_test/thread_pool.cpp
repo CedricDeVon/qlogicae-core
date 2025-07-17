@@ -179,13 +179,13 @@ namespace QLogicaeCoreTest
             {
                 std::lock_guard<std::mutex> lock(result_mutex);
                 execution_order.push_back(2);
-            }, QLogicaeCore::TaskPriority::Low);
+            }, QLogicaeCore::TaskPriority::LOW);
 
         thread_pool.enqueue([&]()
             {
                 std::lock_guard<std::mutex> lock(result_mutex);
                 execution_order.push_back(1);
-            }, QLogicaeCore::TaskPriority::High);
+            }, QLogicaeCore::TaskPriority::HIGH);
 
         while (execution_order.size() < 2)
         {
@@ -441,17 +441,17 @@ namespace QLogicaeCoreTest
         thread_pool.enqueue([&]() {
             std::lock_guard<std::mutex> lock(order_mutex);
             execution_order.push_back(1);
-            }, QLogicaeCore::TaskPriority::Low);
+            }, QLogicaeCore::TaskPriority::LOW);
 
         thread_pool.enqueue([&]() {
             std::lock_guard<std::mutex> lock(order_mutex);
             execution_order.push_back(2);
-            }, QLogicaeCore::TaskPriority::Normal);
+            }, QLogicaeCore::TaskPriority::MEDIUM);
 
         thread_pool.enqueue([&]() {
             std::lock_guard<std::mutex> lock(order_mutex);
             execution_order.push_back(3);
-            }, QLogicaeCore::TaskPriority::High);
+            }, QLogicaeCore::TaskPriority::HIGH);
 
         std::this_thread::sleep_for(std::chrono::milliseconds(200));
 
@@ -487,17 +487,17 @@ namespace QLogicaeCoreTest
             std::this_thread::sleep_for(std::chrono::milliseconds(50));
             std::lock_guard<std::mutex> lock(order_mutex);
             order.push_back(1);
-            }, QLogicaeCore::TaskPriority::High);
+            }, QLogicaeCore::TaskPriority::HIGH);
 
         thread_pool.enqueue([&]() {
             std::lock_guard<std::mutex> lock(order_mutex);
             order.push_back(2);
-            }, QLogicaeCore::TaskPriority::Low);
+            }, QLogicaeCore::TaskPriority::LOW);
 
         thread_pool.enqueue([&]() {
             std::lock_guard<std::mutex> lock(order_mutex);
             order.push_back(3);
-            }, QLogicaeCore::TaskPriority::High);
+            }, QLogicaeCore::TaskPriority::HIGH);
 
         std::this_thread::sleep_for(std::chrono::milliseconds(200));
 

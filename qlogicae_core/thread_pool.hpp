@@ -21,10 +21,10 @@ namespace QLogicaeCore
 
         template <typename Callable>
         bool enqueue(Callable&& task, const TaskPriority& priority =
-            TaskPriority::Normal);
+            TaskPriority::MEDIUM);
         template <typename Callable>
         std::optional<std::future<void>> enqueue_task(Callable&& task,
-            const TaskPriority& priority = TaskPriority::Normal);
+            const TaskPriority& priority = TaskPriority::MEDIUM);
         std::size_t worker_count() const;
         std::size_t total_pending_tasks() const;
         static std::size_t current_worker_index();

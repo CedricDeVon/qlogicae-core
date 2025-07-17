@@ -12,12 +12,12 @@ namespace QLogicaeCoreTest
     {
         auto& time = QLogicaeCore::Time::get_instance();
 
-        EXPECT_GE(time.year(QLogicaeCore::TimeZone::Local), 1970);
-        EXPECT_GE(time.month(QLogicaeCore::TimeZone::Local), 1);
-        EXPECT_GE(time.day(QLogicaeCore::TimeZone::Local), 1);
-        EXPECT_GE(time.hour(QLogicaeCore::TimeZone::Local), 0);
-        EXPECT_GE(time.minute(QLogicaeCore::TimeZone::Local), 0);
-        EXPECT_GE(time.second(QLogicaeCore::TimeZone::Local), 0);
+        EXPECT_GE(time.year(QLogicaeCore::TimeZone::LOCAL), 1970);
+        EXPECT_GE(time.month(QLogicaeCore::TimeZone::LOCAL), 1);
+        EXPECT_GE(time.day(QLogicaeCore::TimeZone::LOCAL), 1);
+        EXPECT_GE(time.hour(QLogicaeCore::TimeZone::LOCAL), 0);
+        EXPECT_GE(time.minute(QLogicaeCore::TimeZone::LOCAL), 0);
+        EXPECT_GE(time.second(QLogicaeCore::TimeZone::LOCAL), 0);
     }
 
     TEST_F(TimeTest, Should_Expect_ValidComponents_When_UTCTimeZone)
@@ -45,7 +45,7 @@ namespace QLogicaeCoreTest
     {
         auto& time = QLogicaeCore::Time::get_instance();
         auto output = time.now(QLogicaeCore::TimeFormat::ISO8601,
-            QLogicaeCore::TimeZone::Local);
+            QLogicaeCore::TimeZone::LOCAL);
 
         EXPECT_FALSE(output.empty());
     }
@@ -53,8 +53,8 @@ namespace QLogicaeCoreTest
     TEST_F(TimeTest, Should_Expect_EpochTime_When_UsingUnixFormat)
     {
         auto& time = QLogicaeCore::Time::get_instance();
-        auto output = time.now(QLogicaeCore::TimeFormat::Unix,
-            QLogicaeCore::TimeZone::Local);
+        auto output = time.now(QLogicaeCore::TimeFormat::UNIX,
+            QLogicaeCore::TimeZone::LOCAL);
 
         auto value = std::stoll(output);
         EXPECT_GT(value, 1000000000);
@@ -63,18 +63,18 @@ namespace QLogicaeCoreTest
     TEST_F(TimeTest, Should_Expect_DifferentZones_When_ComparingUTCAndLocal)
     {
         auto& time = QLogicaeCore::Time::get_instance();
-        auto utc = time.now(QLogicaeCore::TimeFormat::Hour24,
+        auto utc = time.now(QLogicaeCore::TimeFormat::HOUR_24,
             QLogicaeCore::TimeZone::UTC);
-        auto local = time.now(QLogicaeCore::TimeFormat::Hour24,
-            QLogicaeCore::TimeZone::Local);
+        auto local = time.now(QLogicaeCore::TimeFormat::HOUR_24,
+            QLogicaeCore::TimeZone::LOCAL);
 
         EXPECT_STRNE(utc.c_str(), local.c_str());
     }
 
-    TEST_F(TimeTest, Should_Expect_ValidFormat_When_MillisMicrosNanos)
+    TEST_F(TimeTest, Should_Expect_ValidFormat_When_MILLIS_MICROS_NANOS)
     {
         auto& time = QLogicaeCore::Time::get_instance();
-        auto result = time.now(QLogicaeCore::TimeFormat::MillisMicrosNanos);
+        auto result = time.now(QLogicaeCore::TimeFormat::MILLISECOND_MICROSECOND_NANOSECOND);
 
         EXPECT_NE(result.find("ms:"), std::string::npos);
         EXPECT_NE(result.find("us:"), std::string::npos);
@@ -101,7 +101,7 @@ namespace QLogicaeCoreTest
         {
             threads.emplace_back([&]() {
                 if (!QLogicaeCore::Time::get_instance()
-                    .now(QLogicaeCore::TimeFormat::Hour12)
+                    .now(QLogicaeCore::TimeFormat::HOUR_12)
                     .empty())
                 {
                     ++count;
@@ -126,7 +126,7 @@ namespace QLogicaeCoreTest
             std::chrono::seconds(2))
         {
             QLogicaeCore::Time::get_instance()
-                .now(QLogicaeCore::TimeFormat::DateDashed);
+                .now(QLogicaeCore::TimeFormat::DATE_DASHED);
             ++access_count;
         }
 
@@ -208,7 +208,7 @@ namespace QLogicaeCoreTest
         AllZones,
         TimeZoneTest,
         ::testing::Values(
-            QLogicaeCore::TimeZone::Local,
+            QLogicaeCore::TimeZone::LOCAL,
             QLogicaeCore::TimeZone::UTC
         )
     );
@@ -225,17 +225,17 @@ namespace QLogicaeCoreTest
         ValidFormats,
         TimeFormatTest,
         ::testing::Values(
-            QLogicaeCore::TimeFormat::Unix,
+            QLogicaeCore::TimeFormat::UNIX,
             QLogicaeCore::TimeFormat::ISO8601,
-            QLogicaeCore::TimeFormat::FullTimestamp,
-            QLogicaeCore::TimeFormat::Hour12,
-            QLogicaeCore::TimeFormat::Hour24,
-            QLogicaeCore::TimeFormat::MillisMicrosNanos,
-            QLogicaeCore::TimeFormat::DateDashed,
-            QLogicaeCore::TimeFormat::DateMDYSlashed,
-            QLogicaeCore::TimeFormat::DateDMYSlashed,
-            QLogicaeCore::TimeFormat::DateDMYSpaced,
-            QLogicaeCore::TimeFormat::DateVerbose
+            QLogicaeCore::TimeFormat::FULL_TIMESTAMP,
+            QLogicaeCore::TimeFormat::HOUR_12,
+            QLogicaeCore::TimeFormat::HOUR_24,
+            QLogicaeCore::TimeFormat::MILLISECOND_MICROSECOND_NANOSECOND,
+            QLogicaeCore::TimeFormat::DATE_DASHED,
+            QLogicaeCore::TimeFormat::DATE_MDY_SLASHED,
+            QLogicaeCore::TimeFormat::DATE_DMY_SLASHED,
+            QLogicaeCore::TimeFormat::DATE_DMY_SPACED,
+            QLogicaeCore::TimeFormat::DATE_VERBOSE
         )
     );
 }

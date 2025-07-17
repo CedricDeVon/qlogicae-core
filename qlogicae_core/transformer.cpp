@@ -70,7 +70,7 @@ namespace QLogicaeCore
             "{}{}{}{}{}{}{}{}\033[0m",
             color_type(level),
             Constants::LOG_PART_1,
-            Time::get_instance().now(TimeFormat::FullTimestamp),
+            Time::get_instance().now(TimeFormat::FULL_TIMESTAMP),
             Constants::LOG_PART_2,
             get_log_level_string(level),
             Constants::LOG_PART_3,

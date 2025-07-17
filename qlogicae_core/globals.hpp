@@ -34,6 +34,7 @@ namespace QLogicaeCore
         static constexpr unsigned int UNIX_START_YEAR_OFFSET = 1'900;
         static constexpr char TIME_FORMAT_ISO_8601[] = "%Y-%m-%dT%H:%M:%S";
         static constexpr char TIME_FORMAT_FULL_TIMESTAMP[] = "%Y-%m-%d] [%H:%M:%S";
+        static constexpr char TIME_FORMAT_FULL_DASHED_TIMESTAMP[] = "%Y-%m-%d-%H-%M-%S";
         static constexpr char TIME_FORMAT_HOUR_12[] = "%I:%M:%S %p";
         static constexpr char TIME_FORMAT_HOUR_24[] = "%H:%M:%S";
         static constexpr char TIME_FORMAT_DATE_DASHED[] = "%Y-%m-%d";
@@ -202,23 +203,24 @@ namespace QLogicaeCore
 
     enum class TimeFormat
     {
-        Unix,
+        UNIX,
         ISO8601,
-        FullTimestamp,
-        Hour12,
-        Hour24,
-        MillisMicrosNanos,
-        DateDashed,
-        DateMDYSlashed,
-        DateDMYSlashed,
-        DateDMYSpaced,
-        DateVerbose
+        FULL_TIMESTAMP,
+        FULL_DASHED_TIMESTAMP,
+        HOUR_12,
+        HOUR_24,
+        MILLISECOND_MICROSECOND_NANOSECOND,
+        DATE_DASHED,
+        DATE_MDY_SLASHED,
+        DATE_DMY_SLASHED,
+        DATE_DMY_SPACED,
+        DATE_VERBOSE
     };
 
     enum class TimeZone
     {
         UTC,
-        Local
+        LOCAL
     };
 
     enum class LogMedium
@@ -280,9 +282,9 @@ namespace QLogicaeCore
 
     enum class TaskPriority
     {
-        High = 0,
-        Normal = 1,
-        Low = 2
+        HIGH = 0,
+        MEDIUM = 1,
+        LOW = 2
     };
 
     struct SmallTaskObject
