@@ -173,12 +173,14 @@
     <ClInclude Include="bad_result.hpp" />
     <ClInclude Include="bcrypt_hash_cryptographer.hpp" />
     <ClInclude Include="binary_file_io.hpp" />
+    <ClInclude Include="groq_cloud_api.hpp" />
     <ClInclude Include="cli_io.hpp" />
     <ClInclude Include="cryptographer.hpp" />
     <ClInclude Include="excel_file_io.hpp" />
     <ClInclude Include="file_uri_io.hpp" />
     <ClInclude Include="gmail_mailer.hpp" />
     <ClInclude Include="jsonwebtoken_cryptographer.hpp" />
+    <ClInclude Include="sha256_hash_cryptographer.hpp" />
     <ClInclude Include="sqlite.hpp" />
     <ClInclude Include="string_builder.hpp" />
     <ClInclude Include="thread_pool.hpp" />
@@ -231,6 +233,7 @@
     <ClCompile Include="file_uri_io.cpp" />
     <ClCompile Include="gmail_mailer.cpp" />
     <ClCompile Include="jsonwebtoken_cryptographer.cpp" />
+    <ClCompile Include="sha256_hash_cryptographer.cpp" />
     <ClCompile Include="sqlite.cpp" />
     <ClCompile Include="string_builder.cpp">
       <UseUnicodeForAssemblerListing Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</UseUnicodeForAssemblerListing>

@@ -64,6 +64,7 @@
 #include <sqlite3.h>
 #include <fast_io.h>
 #include <date/tz.h>
+#include <cpr/cpr.h>
 #include <rapidcsv.h>
 #include <fmt/core.h>
 #include <utf8proc.h> 
@@ -76,6 +77,7 @@
 #include <stduuid/uuid.h>
 #include <fast_io_device.h>
 #include <fast_io_legacy.h>
+#include <nlohmann/json.hpp>
 #include <libxml/xmlschemas.h>
 #include <rapidjson/writer.h>
 #include <rapidjson/pointer.h>

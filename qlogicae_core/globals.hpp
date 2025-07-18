@@ -70,6 +70,38 @@ namespace QLogicaeCore
         static constexpr std::string_view LOG_LEVEL_HIGHLIGHTED_INFO = "INFO";
 
         static constexpr std::string_view DEFAULT_HOST_ADDRESS = "1.1.1.1";
+
+        static constexpr double SECONDS_OVER_NANOSECONDS = 1'000'000'000.0;
+        static constexpr double SECONDS_OVER_MICROSECONDS = 1'000'000.0;
+        static constexpr double SECONDS_OVER_MILLISECONDS = 1'000.0;
+        static constexpr double SECONDS_PER_MINUTE = 60.0;
+        static constexpr double SECONDS_PER_HOUR = 3'600.0;
+        static constexpr double SECONDS_PER_DAY = 86'400.0;
+        static constexpr double SECONDS_PER_WEEK = 604'800.0;
+        static constexpr double SECONDS_PER_MONTH = 2'629'746.0;
+        static constexpr double SECONDS_PER_YEAR = 31'557'600.0;
+
+        static constexpr std::string_view TIME_SCALE_UNIT_FULL_NAME_NANOSECONDS = "Nanosecond(s)";
+        static constexpr std::string_view TIME_SCALE_UNIT_FULL_NAME_MICROSECONDS = "Microsecond(s)";
+        static constexpr std::string_view TIME_SCALE_UNIT_FULL_NAME_MILLISECONDS = "Millisecond(s)";
+        static constexpr std::string_view TIME_SCALE_UNIT_FULL_NAME_SECONDS = "Second(s)";
+        static constexpr std::string_view TIME_SCALE_UNIT_FULL_NAME_MINUTES = "Minute(s)";
+        static constexpr std::string_view TIME_SCALE_UNIT_FULL_NAME_HOURS = "Hour(s)";
+        static constexpr std::string_view TIME_SCALE_UNIT_FULL_NAME_DAYS = "Day(s)";
+        static constexpr std::string_view TIME_SCALE_UNIT_FULL_NAME_WEEKS = "Week(s)";
+        static constexpr std::string_view TIME_SCALE_UNIT_FULL_NAME_MONTHS = "Month(s)";
+        static constexpr std::string_view TIME_SCALE_UNIT_FULL_NAME_YEARS = "Year(s)";
+        
+        static constexpr std::string_view TIME_SCALE_UNIT_ABBREVIATION_NANOSECONDS = "ns";
+        static constexpr std::string_view TIME_SCALE_UNIT_ABBREVIATION_MICROSECONDS = "us";
+        static constexpr std::string_view TIME_SCALE_UNIT_ABBREVIATION_MILLISECONDS = "ms";
+        static constexpr std::string_view TIME_SCALE_UNIT_ABBREVIATION_SECONDS = "s";
+        static constexpr std::string_view TIME_SCALE_UNIT_ABBREVIATION_MINUTES = "min";
+        static constexpr std::string_view TIME_SCALE_UNIT_ABBREVIATION_HOURS = "h";
+        static constexpr std::string_view TIME_SCALE_UNIT_ABBREVIATION_DAYS = "d";
+        static constexpr std::string_view TIME_SCALE_UNIT_ABBREVIATION_WEEKS = "wk";
+        static constexpr std::string_view TIME_SCALE_UNIT_ABBREVIATION_MONTHS = "mo";
+        static constexpr std::string_view TIME_SCALE_UNIT_ABBREVIATION_YEARS = "yr";
     };
 
     struct NetworkPingResponse
@@ -97,7 +129,7 @@ namespace QLogicaeCore
 
     struct Json;
 
-    enum class JsonValueType
+    enum class JsonValueType : uint8_t
     {
         NONE,
         NUMBER,
@@ -186,7 +218,7 @@ namespace QLogicaeCore
         }
     };
 
-    enum class EncodingType
+    enum class EncodingType : uint8_t
     {
         HEX,
         UTF8,
@@ -194,14 +226,28 @@ namespace QLogicaeCore
     };
 
     
-    enum class FileMode
+    enum class FileMode : uint8_t
     {
         READ,
         WRITE,
         APPEND
     };
 
-    enum class TimeFormat
+    enum class TimeScaleUnit : uint8_t
+    {
+        NANOSECONDS,
+        MICROSECONDS,
+        MILLISECONDS,
+        SECONDS,
+        MINUTES,
+        HOURS,
+        DAYS,
+        WEEKS,
+        MONTHS,
+        YEARS
+    };
+
+    enum class TimeFormat : uint8_t
     {
         UNIX,
         ISO8601,
@@ -217,20 +263,20 @@ namespace QLogicaeCore
         DATE_VERBOSE
     };
 
-    enum class TimeZone
+    enum class TimeZone : uint8_t
     {
         UTC,
         LOCAL
     };
 
-    enum class LogMedium
+    enum class LogMedium : uint8_t
     {
         ALL,
         FILE,
         CONSOLE
     };
 
-    enum class LogLevel
+    enum class LogLevel : uint8_t
     {
         ALL,
         INFO,
@@ -280,7 +326,7 @@ namespace QLogicaeCore
         .uint32_t_3 = 2
     };
 
-    enum class TaskPriority
+    enum class TaskPriority : uint8_t
     {
         HIGH = 0,
         MEDIUM = 1,

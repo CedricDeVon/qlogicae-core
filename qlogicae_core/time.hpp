@@ -9,16 +9,20 @@ namespace QLogicaeCore
     class Time
     {
     public:
-        int nanosecond() const;
-        int millisecond() const;
-        int microsecond() const;
-        int day(const TimeZone& = TimeZone::LOCAL) const;
-        int hour(const TimeZone& = TimeZone::LOCAL) const;
-        int year(const TimeZone& = TimeZone::LOCAL) const;
-        int month(const TimeZone& = TimeZone::LOCAL) const;
-        int second(const TimeZone& = TimeZone::LOCAL) const;
-        int minute(const TimeZone& = TimeZone::LOCAL) const;
+        double now() const;
+        double nanosecond() const;
+        double millisecond() const;
+        double microsecond() const;
+        double day(const TimeZone& = TimeZone::LOCAL) const;
+        double hour(const TimeZone& = TimeZone::LOCAL) const;
+        double year(const TimeZone& = TimeZone::LOCAL) const;
+        double month(const TimeZone& = TimeZone::LOCAL) const;
+        double second(const TimeZone& = TimeZone::LOCAL) const;
+        double minute(const TimeZone& = TimeZone::LOCAL) const;
         std::string now(const TimeFormat&, const TimeZone& = TimeZone::LOCAL) const;
+        std::string_view get_time_unit_full_name(const TimeScaleUnit& format) const;
+        std::string_view get_time_unit_abbreviation(const TimeScaleUnit& format) const;
+        double convert_seconds(const double& time, const TimeScaleUnit& format) const;
 
         static Time& get_instance();
 
@@ -34,4 +38,3 @@ namespace QLogicaeCore
         const char* _get_format_string(const TimeFormat&) const;
     };
 }
-

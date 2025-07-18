@@ -168,6 +168,12 @@
     <ClInclude Include="gmail_mailer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="groq_cloud_api.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sha256_hash_cryptographer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="qlogicae_core.cpp">
@@ -309,6 +315,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gmail_mailer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sha256_hash_cryptographer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

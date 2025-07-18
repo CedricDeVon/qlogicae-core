@@ -82,6 +82,15 @@ namespace QLogicaeCore
         }
     }
 
+    double Time::now() const
+    {
+        return static_cast<double>(
+            std::chrono::duration_cast<std::chrono::nanoseconds>(
+                std::chrono::high_resolution_clock::now()
+                    .time_since_epoch()).count()
+            );
+    }
+
     std::string Time::now(
         const TimeFormat& format, const TimeZone& zone) const
     {
@@ -233,63 +242,181 @@ namespace QLogicaeCore
         return oss.str();
     }
 
-    int Time::year(const TimeZone& zone) const
+    double Time::year(const TimeZone& zone) const
     {
-        return _get_time_zone(zone).tm_year +
+        return static_cast<double>(_get_time_zone(zone).tm_year )+
             Constants::UNIX_START_YEAR_OFFSET;
     }
 
-    int Time::month(const TimeZone& zone) const
+    double Time::month(const TimeZone& zone) const
     {
-        return _get_time_zone(zone).tm_mon +
+        return static_cast<double>(_get_time_zone(zone).tm_mon )+
             Constants::NUMBER_ONE;
     }
-    
-    int Time::day(const TimeZone& zone) const
-    { 
-        return _get_time_zone(zone).tm_mday;
-    }
-    
-    int Time::hour(const TimeZone& zone) const
-    { 
-        return _get_time_zone(zone).tm_hour;
-    }
-    
-    int Time::minute(const TimeZone& zone) const
-    { 
-        return _get_time_zone(zone).tm_min;
-    }
-    
-    int Time::second(const TimeZone& zone) const
+
+    double Time::day(const TimeZone& zone) const
     {
-        return _get_time_zone(zone).tm_sec;
+        return static_cast<double>(_get_time_zone(zone).tm_mday);
     }
 
-    int Time::millisecond() const
+    double Time::hour(const TimeZone& zone) const
     {
-        return static_cast<int>(
+        return static_cast<double>(_get_time_zone(zone).tm_hour);
+    }
+
+    double Time::minute(const TimeZone& zone) const
+    {
+        return static_cast<double>(_get_time_zone(zone).tm_min);
+    }
+
+    double Time::second(const TimeZone& zone) const
+    {
+        return static_cast<double>(_get_time_zone(zone).tm_sec);
+    }
+
+    double Time::millisecond() const
+    {
+        return static_cast<double>(
             std::chrono::duration_cast<std::chrono::milliseconds>(
                 std::chrono::system_clock::now()
-                    .time_since_epoch())
-                        .count() % Constants::NUMBER_THOUSAND);
+                .time_since_epoch())
+            .count() % Constants::NUMBER_THOUSAND);
     }
 
-    int Time::microsecond() const
+    double Time::microsecond() const
     {
-        return static_cast<int>(
+        return static_cast<double>(
             std::chrono::duration_cast<std::chrono::microseconds>(
                 std::chrono::system_clock::now()
-                    .time_since_epoch())
-                        .count() % Constants::NUMBER_MILLION);
+                .time_since_epoch())
+            .count() % Constants::NUMBER_MILLION);
     }
 
-    int Time::nanosecond() const
+    double Time::nanosecond() const
     {
-        return static_cast<int>(
+        return static_cast<double>(
             std::chrono::duration_cast<std::chrono::nanoseconds>(
                 std::chrono::system_clock::now()
                     .time_since_epoch())
                         .count() % Constants::NUMBER_BILLION);
+    }
+
+    std::string_view Time::get_time_unit_full_name(
+        const TimeScaleUnit& format) const
+    {
+        switch (format)
+        {
+        case (TimeScaleUnit::NANOSECONDS):
+            return Constants::TIME_SCALE_UNIT_FULL_NAME_NANOSECONDS;
+
+        case (TimeScaleUnit::MICROSECONDS):
+            return Constants::TIME_SCALE_UNIT_FULL_NAME_MICROSECONDS;
+
+        case (TimeScaleUnit::MILLISECONDS):
+            return Constants::TIME_SCALE_UNIT_FULL_NAME_MILLISECONDS;
+
+        case (TimeScaleUnit::SECONDS):
+            return Constants::TIME_SCALE_UNIT_FULL_NAME_SECONDS;
+
+        case (TimeScaleUnit::MINUTES):
+            return Constants::TIME_SCALE_UNIT_FULL_NAME_MINUTES;
+
+        case (TimeScaleUnit::HOURS):
+            return Constants::TIME_SCALE_UNIT_FULL_NAME_HOURS;
+
+        case (TimeScaleUnit::DAYS):
+            return Constants::TIME_SCALE_UNIT_FULL_NAME_DAYS;
+
+        case (TimeScaleUnit::WEEKS):
+            return Constants::TIME_SCALE_UNIT_FULL_NAME_WEEKS;
+
+        case (TimeScaleUnit::MONTHS):
+            return Constants::TIME_SCALE_UNIT_FULL_NAME_MONTHS;
+
+        case (TimeScaleUnit::YEARS):
+            return Constants::TIME_SCALE_UNIT_FULL_NAME_YEARS;
+        }
+
+        return Constants::TIME_SCALE_UNIT_FULL_NAME_SECONDS;
+    }
+
+    std::string_view Time::get_time_unit_abbreviation(
+        const TimeScaleUnit& format) const
+    {
+        switch (format)
+        {
+        case (TimeScaleUnit::NANOSECONDS):
+            return Constants::TIME_SCALE_UNIT_ABBREVIATION_NANOSECONDS;
+
+        case (TimeScaleUnit::MICROSECONDS):
+            return Constants::TIME_SCALE_UNIT_ABBREVIATION_MICROSECONDS;
+
+        case (TimeScaleUnit::MILLISECONDS):
+            return Constants::TIME_SCALE_UNIT_ABBREVIATION_MILLISECONDS;
+
+        case (TimeScaleUnit::SECONDS):
+            return Constants::TIME_SCALE_UNIT_ABBREVIATION_SECONDS;
+
+        case (TimeScaleUnit::MINUTES):
+            return Constants::TIME_SCALE_UNIT_ABBREVIATION_MINUTES;
+
+        case (TimeScaleUnit::HOURS):
+            return Constants::TIME_SCALE_UNIT_ABBREVIATION_HOURS;
+
+        case (TimeScaleUnit::DAYS):
+            return Constants::TIME_SCALE_UNIT_ABBREVIATION_DAYS;
+
+        case (TimeScaleUnit::WEEKS):
+            return Constants::TIME_SCALE_UNIT_ABBREVIATION_WEEKS;
+
+        case (TimeScaleUnit::MONTHS):
+            return Constants::TIME_SCALE_UNIT_ABBREVIATION_MONTHS;
+
+        case (TimeScaleUnit::YEARS):
+            return Constants::TIME_SCALE_UNIT_ABBREVIATION_YEARS;
+        }
+
+        return Constants::TIME_SCALE_UNIT_ABBREVIATION_SECONDS;
+    }
+
+    double Time::convert_seconds(
+        const double& time, const TimeScaleUnit& format) const
+    {
+        switch (format)
+        {
+        case (TimeScaleUnit::NANOSECONDS):
+            return time / Constants::SECONDS_OVER_NANOSECONDS;
+
+        case (TimeScaleUnit::MICROSECONDS):
+            return time / Constants::SECONDS_OVER_MICROSECONDS;
+
+        case (TimeScaleUnit::MILLISECONDS):
+            return time / Constants::SECONDS_OVER_MILLISECONDS;
+
+        case (TimeScaleUnit::SECONDS):
+            return time;
+
+        case (TimeScaleUnit::MINUTES):
+            return time * Constants::SECONDS_PER_MINUTE;
+
+        case (TimeScaleUnit::HOURS):
+            return time * Constants::SECONDS_PER_HOUR;
+
+        case (TimeScaleUnit::DAYS):
+            return time * Constants::SECONDS_PER_DAY;
+
+        case (TimeScaleUnit::WEEKS):
+            return time * Constants::SECONDS_PER_WEEK;
+
+        case (TimeScaleUnit::MONTHS):
+            return time * Constants::SECONDS_PER_MONTH;
+
+        case (TimeScaleUnit::YEARS):
+            return time * Constants::SECONDS_PER_YEAR;
+
+        }
+
+        return time;
     }
 } 
 

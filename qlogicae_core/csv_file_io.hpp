@@ -40,6 +40,9 @@ namespace QLogicaeCore
         std::string read();
         std::string export_to_json(); 
         bool write(const std::string_view&);
+        bool write(
+            const std::vector<std::string>& headers,
+            const std::vector<std::vector<std::string>>& rows); // TODO
         bool append(const std::string_view&);
         bool remove_row(const unsigned int&);
         static std::string trim(std::string_view);

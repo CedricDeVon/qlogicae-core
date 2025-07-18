@@ -33,7 +33,7 @@ namespace QLogicaeCore
         StringBuilder& left_and_right_trim();
         const std::string& to_string() const;
         const std::pmr::string& to_pmr_string() const;
-        StringBuilder& append(const std::string_view& text);
+        StringBuilder& append(const std::string_view& text); // TODO
         StringBuilder& prepend(const std::string_view& text);
         StringBuilder& reserve_capacity(const std::size_t& value);
         StringBuilder& insert(

@@ -3,6 +3,7 @@
 #include "pch.h"
 
 #include "csv_file_io.hpp"
+#include "string_builder.hpp"
 
 namespace QLogicaeCore {
 
@@ -229,6 +230,50 @@ namespace QLogicaeCore {
             fast_io::obuf_file out(_file_path, fast_io::open_mode::out);
             fast_io::io::print(out, content);
 
+            return true;
+        }
+        catch (...)
+        {
+            return false;
+        }
+    }
+
+    bool CsvFileIO::write(
+        const std::vector<std::string>& headers,
+        const std::vector<std::vector<std::string>>& rows)
+    {
+        try
+        {
+            std::ofstream file(_file_path);
+            if (!file.is_open())
+            {
+                return false;
+            }
+
+            for (size_t i = 0; i < headers.size(); ++i)
+            {
+                file << headers[i];
+                if (i != headers.size() - 1)
+                {
+                    file << ",";
+                }
+            }
+            file << "\n";
+
+            for (const auto& row : rows)
+            {
+                for (size_t i = 0; i < row.size(); ++i)
+                {
+                    file << row[i];
+                    if (i != row.size() - 1)
+                    {
+                        file << ",";
+                    }
+                }
+                file << "\n";
+            }
+
+            file.close();
             return true;
         }
         catch (...)

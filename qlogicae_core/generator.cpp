@@ -24,7 +24,7 @@ namespace QLogicaeCore
     
     std::string Generator::random_hex(
         const size_t& length,
-        const std::string_view& character_set)
+        const std::string_view& character_set) const
     {
         if (character_set.empty() || length < 1)
         {
@@ -35,9 +35,33 @@ namespace QLogicaeCore
         return Encoder::get_instance().from_utf8_to_hex(raw);
     }
 
+    std::string Generator::random_rgb_hex() const
+    {
+        std::string result;
+        fmt::format_to(
+            std::back_inserter(result),
+            "#{}",
+            random_hex(6)
+        );
+
+        return result;
+    }
+
+    std::string Generator::random_rgba_hex() const
+    {
+        std::string result;
+        fmt::format_to(
+            std::back_inserter(result),
+            "#{}",
+            random_hex(8)
+        );
+
+        return result;
+    }
+
     std::string Generator::random_base64(
         const size_t& length,
-        const std::string_view& character_set)
+        const std::string_view& character_set) const
     {
         if (character_set.size() < 64 || length < 1)
         {
@@ -77,7 +101,7 @@ namespace QLogicaeCore
 
     std::vector<std::string> Generator::random_string_vector(
         const size_t& size,
-        const size_t& length)
+        const size_t& length) const
     {
         size_t index;
         std::vector<std::string> result;
@@ -93,7 +117,7 @@ namespace QLogicaeCore
 
     std::string Generator::random_string(
         const size_t& length,
-        const std::string_view& character_set)
+        const std::string_view& character_set) const
     {
         if (character_set.empty() || length < 1)
         {

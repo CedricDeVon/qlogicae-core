@@ -128,6 +128,7 @@
     <ClCompile Include="file_uri_io.cpp" />
     <ClCompile Include="gmail_mailer.cpp" />
     <ClCompile Include="jsonwebtoken_cryptographer.cpp" />
+    <ClCompile Include="sha256_hash_cryptographer.cpp" />
     <ClCompile Include="sqlite.cpp" />
     <ClCompile Include="string_builder.cpp" />
     <ClCompile Include="thread_pool.cpp" />
@@ -139,7 +140,6 @@
     <ClCompile Include="dot_env.cpp" />
     <ClCompile Include="dot_env_value_extractor.cpp" />
     <ClCompile Include="encoder.cpp" />
-    <ClCompile Include="erwin_setup.cpp" />
     <ClCompile Include="event_dispatcher.cpp" />
     <ClCompile Include="generator.cpp" />
     <ClCompile Include="globals.cpp" />
