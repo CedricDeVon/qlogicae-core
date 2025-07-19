@@ -173,7 +173,7 @@
     <ClInclude Include="bad_result.hpp" />
     <ClInclude Include="bcrypt_hash_cryptographer.hpp" />
     <ClInclude Include="binary_file_io.hpp" />
-    <ClInclude Include="groq_cloud_api.hpp" />
+    <ClInclude Include="groq_cloud_client_api.hpp" />
     <ClInclude Include="cli_io.hpp" />
     <ClInclude Include="cryptographer.hpp" />
     <ClInclude Include="excel_file_io.hpp" />

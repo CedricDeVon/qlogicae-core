@@ -168,7 +168,7 @@
     <ClInclude Include="gmail_mailer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="groq_cloud_api.hpp">
+    <ClInclude Include="groq_cloud_client_api.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sha256_hash_cryptographer.hpp">

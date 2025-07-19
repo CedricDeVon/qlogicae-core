@@ -30,7 +30,10 @@ namespace QLogicaeCore
 		}
 
 		return QLogicaeCore::Encoder::get_instance()
-			.from_bytes_to_base64(digest, crypto_hash_sha256_BYTES);
+			.from_bytes_to_base64(
+				digest,
+				crypto_hash_sha256_BYTES
+			);
 	}
 
 	bool SHA256HashCryptographer::reverse(
