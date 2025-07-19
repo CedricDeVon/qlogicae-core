@@ -106,8 +106,3 @@ namespace QLogicaeCore
         std::string _build_request_body() const;
     };
 }
-
-/*
-
-*/
-
