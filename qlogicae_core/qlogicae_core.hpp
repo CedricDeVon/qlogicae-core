@@ -47,3 +47,4 @@
 #include "xml_file_io.hpp"
 #include "gmail_mailer.hpp"
 #include "sha256_hash_cryptographer.hpp"
+#include "statistician.hpp"

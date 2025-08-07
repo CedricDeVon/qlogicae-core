@@ -172,6 +172,7 @@
     <ClInclude Include="abstract_value_extractor.hpp" />
     <ClInclude Include="bad_result.hpp" />
     <ClInclude Include="bcrypt_hash_cryptographer.hpp" />
+    <ClInclude Include="benchmarks.hpp" />
     <ClInclude Include="binary_file_io.hpp" />
     <ClInclude Include="groq_cloud_client_api.hpp" />
     <ClInclude Include="cli_io.hpp" />
@@ -182,6 +183,7 @@
     <ClInclude Include="jsonwebtoken_cryptographer.hpp" />
     <ClInclude Include="sha256_hash_cryptographer.hpp" />
     <ClInclude Include="sqlite.hpp" />
+    <ClInclude Include="statistician.hpp" />
     <ClInclude Include="string_builder.hpp" />
     <ClInclude Include="thread_pool.hpp" />
     <ClInclude Include="xchacha20_poly1305_cipher_cryptographer.hpp" />
@@ -227,14 +229,17 @@
     <ClCompile Include="abstract_value_extractor.cpp" />
     <ClCompile Include="bad_result.cpp" />
     <ClCompile Include="bcrypt_hash_cryptographer.cpp" />
+    <ClCompile Include="benchmarks.cpp" />
     <ClCompile Include="binary_file_io.cpp" />
     <ClCompile Include="cli_io.cpp" />
     <ClCompile Include="cryptographer.cpp" />
     <ClCompile Include="file_uri_io.cpp" />
     <ClCompile Include="gmail_mailer.cpp" />
+    <ClCompile Include="groq_cloud_client_api.cpp" />
     <ClCompile Include="jsonwebtoken_cryptographer.cpp" />
     <ClCompile Include="sha256_hash_cryptographer.cpp" />
     <ClCompile Include="sqlite.cpp" />
+    <ClCompile Include="statistician.cpp" />
     <ClCompile Include="string_builder.cpp">
       <UseUnicodeForAssemblerListing Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</UseUnicodeForAssemblerListing>
       <UseUnicodeForAssemblerListing Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</UseUnicodeForAssemblerListing>

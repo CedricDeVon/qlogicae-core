@@ -198,3 +198,74 @@ bool QLogicaeCore::WindowsRegistry::remove_value_via_utf8(
     );
 }
 
+std::unordered_map<std::string, std::wstring> QLogicaeCore::WindowsRegistry::get_values_via_utf16(
+    std::wstring_view sub_key) const
+{
+    std::unordered_map<std::string, std::wstring> result;
+
+    sub_key = sub_key.empty() ? _sub_key : sub_key;
+
+    HKEY raw_key = nullptr;
+    if (RegOpenKeyExW(_root_key, sub_key.data(), 0, KEY_READ, &raw_key) != ERROR_SUCCESS)
+    {
+        return result;
+    }
+
+    std::unique_ptr<std::remove_pointer<HKEY>::type, ValueEnumKeyDeleteHandler> hkey(raw_key);
+
+    DWORD index = 0;
+    wchar_t value_name[Constants::HKEY_MAXIMUM_VALUE_NAME_SIZE] = { 0 };
+    DWORD value_name_size = Constants::HKEY_MAXIMUM_VALUE_NAME_SIZE;
+    DWORD value_type = 0;
+    BYTE value_data[Constants::HKEY_MAXIMUM_VALUE_DATA_SIZE] = { 0 };
+    DWORD value_data_size = Constants::HKEY_MAXIMUM_VALUE_DATA_SIZE;
+
+    while (true)
+    {
+        value_name_size = Constants::HKEY_MAXIMUM_VALUE_NAME_SIZE;
+        value_data_size = Constants::HKEY_MAXIMUM_VALUE_DATA_SIZE;
+
+        LONG enum_result = RegEnumValueW(
+            hkey.get(),
+            index++,
+            value_name,
+            &value_name_size,
+            nullptr,
+            &value_type,
+            value_data,
+            &value_data_size);
+
+        if (enum_result == ERROR_NO_MORE_ITEMS)
+        {
+            break;
+        }
+
+        if (enum_result == ERROR_SUCCESS && value_type == REG_SZ)
+        {
+            std::wstring name(value_name, value_name_size);
+            std::wstring value(reinterpret_cast<wchar_t*>(value_data));
+            result.emplace(QLogicaeCore::Encoder::get_instance().from_utf16_to_utf8(name), value);
+        }
+    }
+
+    return result;
+}
+
+std::unordered_map<std::string, std::string> QLogicaeCore::WindowsRegistry::get_values_via_utf8(
+    std::string_view sub_key) const
+{
+    std::unordered_map<std::string, std::string> utf8_result;
+
+    const std::wstring wide_sub_key = QLogicaeCore::Encoder::get_instance().from_utf8_to_utf16(sub_key);
+    const auto wide_map = get_values_via_utf16(wide_sub_key);
+
+    for (const auto& [key, value] : wide_map)
+    {
+        utf8_result.emplace(
+            key,
+            QLogicaeCore::Encoder::get_instance().from_utf16_to_utf8(value)
+        );
+    }
+
+    return utf8_result;
+}

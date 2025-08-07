@@ -70,6 +70,7 @@
 #include <utf8proc.h> 
 #include <curl/curl.h>
 #include <pugixml.hpp>
+#include <nanobench.h>
 #include <date/date.h>
 #include <fmt/format.h>
 #include <fmt/compile.h>
@@ -78,10 +79,11 @@
 #include <fast_io_device.h>
 #include <fast_io_legacy.h>
 #include <nlohmann/json.hpp>
-#include <libxml/xmlschemas.h>
 #include <rapidjson/writer.h>
 #include <rapidjson/pointer.h>
+#include <libxml/xmlschemas.h>
 #include <rapidjson/document.h>
+#include <absl/strings/str_cat.h>
 #include <rapidjson/allocators.h>
 #include <rapidjson/prettywriter.h>
 #include <rapidjson/stringbuffer.h>

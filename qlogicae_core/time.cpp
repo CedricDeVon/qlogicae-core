@@ -418,5 +418,45 @@ namespace QLogicaeCore
 
         return time;
     }
+
+    double Time::convert_nanoseconds(
+        const double& time, const TimeScaleUnit& format) const
+    {
+        switch (format)
+        {
+        case (TimeScaleUnit::NANOSECONDS):
+            return time;
+
+        case (TimeScaleUnit::MICROSECONDS):
+            return time / Constants::SECONDS_OVER_MILLISECONDS;
+
+        case (TimeScaleUnit::MILLISECONDS):
+            return time / Constants::SECONDS_OVER_MICROSECONDS;
+
+        case (TimeScaleUnit::SECONDS):
+            return time / Constants::SECONDS_OVER_NANOSECONDS;
+
+        case (TimeScaleUnit::MINUTES):
+            return time / (Constants::SECONDS_OVER_NANOSECONDS * Constants::SECONDS_PER_MINUTE);
+
+        case (TimeScaleUnit::HOURS):
+            return time / (Constants::SECONDS_OVER_NANOSECONDS * Constants::SECONDS_PER_HOUR);
+
+        case (TimeScaleUnit::DAYS):
+            return time / (Constants::SECONDS_OVER_NANOSECONDS * Constants::SECONDS_PER_DAY);
+
+        case (TimeScaleUnit::WEEKS):
+            return time / (Constants::SECONDS_OVER_NANOSECONDS * Constants::SECONDS_PER_WEEK);
+
+        case (TimeScaleUnit::MONTHS):
+            return time / (Constants::SECONDS_OVER_NANOSECONDS * Constants::SECONDS_PER_MONTH);
+
+        case (TimeScaleUnit::YEARS):
+            return time / (Constants::SECONDS_OVER_NANOSECONDS * Constants::SECONDS_PER_YEAR);
+
+        }
+
+        return time;
+    }
 } 
 

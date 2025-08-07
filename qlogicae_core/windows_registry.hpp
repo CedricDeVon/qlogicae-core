@@ -9,6 +9,9 @@ namespace QLogicaeCore
     class WindowsRegistry
     {
     public:
+        std::unordered_map<std::string, std::string> get_values_via_utf8(std::string_view) const;
+        std::unordered_map<std::string, std::wstring> get_values_via_utf16(std::wstring_view) const;
+        
         bool remove_value_via_utf8(std::string_view, std::string_view) const;
         bool remove_value_via_utf16(std::wstring_view, std::wstring_view) const;
         bool set_sub_and_name_keys_via_utf8(const std::string_view, const std::string_view);

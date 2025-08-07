@@ -6,11 +6,16 @@ namespace QLogicaeCore
 {    
     struct Constants
     {
+        static constexpr std::string EMPTY_STRING = "";
+        static constexpr std::wstring EMPTY_WSTRING = L"";
+
         static constexpr unsigned int DEFAULT_MILLISECONDS_PER_CALLBACK = 1000;
         static constexpr bool DEFAULT_IS_LISTENING = true;
 
         static constexpr HKEY DEFAULT_HKEY = HKEY_CURRENT_USER;
         static constexpr int HKEY_MAXIMUM_VALUE_SIZE = 1 << 16;
+        static constexpr DWORD HKEY_MAXIMUM_VALUE_NAME_SIZE = 32767;
+        static constexpr DWORD HKEY_MAXIMUM_VALUE_DATA_SIZE = 65535;
         static constexpr std::wstring_view DEFAULT_NAME_KEY = L"Data";
         static constexpr std::wstring_view DEFAULT_SUB_KEY = L"Software\\App";
         static constexpr REGSAM REGULAR_ACCESS_FLAGS = KEY_READ | KEY_SET_VALUE;
@@ -102,6 +107,19 @@ namespace QLogicaeCore
         static constexpr std::string_view TIME_SCALE_UNIT_ABBREVIATION_WEEKS = "wk";
         static constexpr std::string_view TIME_SCALE_UNIT_ABBREVIATION_MONTHS = "mo";
         static constexpr std::string_view TIME_SCALE_UNIT_ABBREVIATION_YEARS = "yr";
+
+        static constexpr double EPSILON = 1e-12;
+    };
+
+    struct ValueEnumKeyDeleteHandler
+    {
+        void operator()(HKEY handler) const
+        {
+            if (handler)
+            {
+                RegCloseKey(handler);
+            }
+        }
     };
 
     struct NetworkPingResponse

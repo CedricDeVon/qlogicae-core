@@ -24,6 +24,11 @@ namespace QLogicaeCore
         return *this;
     }
 
+    StringBuilder& StringBuilder::append(const double& text)
+    {
+        return append(fmt::format("{}", text));
+    }
+
     StringBuilder& StringBuilder::prepend(const std::string_view& text)
     {
         std::unique_lock lock(character_buffer_mutex);
@@ -32,6 +37,11 @@ namespace QLogicaeCore
             text.begin(),
             text.end());
         return *this;
+    }
+
+    StringBuilder& StringBuilder::prepend(const double& text)
+    {
+        return prepend(fmt::format("{}", text));
     }
 
     StringBuilder& StringBuilder::insert(
@@ -46,6 +56,13 @@ namespace QLogicaeCore
             text.begin(),
             text.end());
         return *this;
+    }
+
+    StringBuilder& StringBuilder::insert(
+        const double& text,
+        const std::size_t& position)
+    {
+        return insert(fmt::format("{}", text), position);
     }
 
     StringBuilder& StringBuilder::clear()
@@ -252,6 +269,33 @@ namespace QLogicaeCore
 
     std::future<void> StringBuilder::async_insert(
         const std::string_view& text, const std::size_t& position)
+    {
+        return std::async(std::launch::async, [this, text, position]()
+            {
+                insert(text, position);
+            });
+    }
+
+    std::future<void> StringBuilder::async_append(
+        const double& text)
+    {
+        return std::async(std::launch::async, [this, text]()
+            {
+                append(text);
+            });
+    }
+
+    std::future<void> StringBuilder::async_prepend(
+        const double& text)
+    {
+        return std::async(std::launch::async, [this, text]()
+            {
+                prepend(text);
+            });
+    }
+
+    std::future<void> StringBuilder::async_insert(
+        const double& text, const std::size_t& position)
     {
         return std::async(std::launch::async, [this, text, position]()
             {

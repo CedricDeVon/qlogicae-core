@@ -33,9 +33,13 @@ namespace QLogicaeCore
         StringBuilder& left_and_right_trim();
         const std::string& to_string() const;
         const std::pmr::string& to_pmr_string() const;
-        StringBuilder& append(const std::string_view& text); // TODO
+        StringBuilder& append(const double& text);
+        StringBuilder& append(const std::string_view& text);
+        StringBuilder& prepend(const double& text);
         StringBuilder& prepend(const std::string_view& text);
         StringBuilder& reserve_capacity(const std::size_t& value);
+        StringBuilder& insert(
+            const double& text, const std::size_t& position);
         StringBuilder& insert(
             const std::string_view& text, const std::size_t& position);
 
@@ -44,8 +48,12 @@ namespace QLogicaeCore
         std::future<std::string> async_to_string() const;
         std::future<std::pmr::string> async_take_pmr_string();
         std::future<std::pmr::string> async_to_pmr_string() const;
+        std::future<void> async_append(const double& text);
         std::future<void> async_append(const std::string_view& text);
+        std::future<void> async_prepend(const double& text);
         std::future<void> async_prepend(const std::string_view& text);
+        std::future<void> async_insert(
+            const double& text, const std::size_t& position);
         std::future<void> async_insert(
             const std::string_view& text, const std::size_t& position);
 

@@ -23,6 +23,7 @@ namespace QLogicaeCore
         std::string_view get_time_unit_full_name(const TimeScaleUnit& format) const;
         std::string_view get_time_unit_abbreviation(const TimeScaleUnit& format) const;
         double convert_seconds(const double& time, const TimeScaleUnit& format) const;
+        double convert_nanoseconds(const double& time, const TimeScaleUnit& format) const;
 
         static Time& get_instance();
 

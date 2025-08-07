@@ -130,6 +130,7 @@
     <ClCompile Include="jsonwebtoken_cryptographer.cpp" />
     <ClCompile Include="sha256_hash_cryptographer.cpp" />
     <ClCompile Include="sqlite.cpp" />
+    <ClCompile Include="statistician.cpp" />
     <ClCompile Include="string_builder.cpp" />
     <ClCompile Include="thread_pool.cpp" />
     <ClCompile Include="xchacha20_poly1305_cipher_cryptographer.cpp" />

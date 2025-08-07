@@ -39,17 +39,14 @@ namespace QLogicaeCore
         std::string id = "";
         std::string object = "";
         std::string model = "";
-        uint32_t timestamp_created = 0;
-        
+        uint32_t timestamp_created = 0;     
         uint32_t total_tokens = 0;
         uint32_t prompt_tokens = 0;
-        uint32_t completion_tokens = 0;
-        
+        uint32_t completion_tokens = 0;        
         uint32_t index = 0;
         std::string role = "";
 		std::string content = "";
 		std::string finish_reason = "";
-
         uint32_t status_code = 0;
         std::optional<std::string> error_type;
         std::optional<std::string> error_message;
@@ -97,12 +94,24 @@ namespace QLogicaeCore
         GroqCloudClientAPIResponse prompt(const GroqCloudClientAPIRequest& value);
         std::future<GroqCloudClientAPIResponse> prompt_async(const GroqCloudClientAPIRequest& value);
 
+        EventDispatcher<void> on_retry;
+        EventDispatcher<void> on_timeout;
+        EventDispatcher<void> on_cancelled;
+        EventDispatcher<std::exception> on_exception;
+        EventDispatcher<std::string_view> on_stream_chunk;
+        EventDispatcher<GroqCloudClientAPIResponse> on_response;
+        EventDispatcher<uint32_t, std::string_view> on_http_error;
+
+
     protected:
         mutable std::mutex _messages_mutex;
         mutable std::mutex _response_mutex;
         GroqCloudClientAPIPromptConfigurations _prompt_configurations;      
 
-        bool _send_internal(const std::stop_token& token);
         std::string _build_request_body() const;
+        bool _send_internal(const std::stop_token& token);
     };
 }
+
+
+
