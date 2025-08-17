@@ -21,6 +21,9 @@ namespace QLogicaeCore
         SystemAccess& operator = (SystemAccess&&) = delete;
         SystemAccess& operator = (const SystemAccess&) = delete;
     };
+
+    inline static SystemAccess& SYSTEM_ACCESS =
+        SystemAccess::get_instance();
 }
 
 

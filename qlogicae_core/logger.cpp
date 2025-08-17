@@ -61,7 +61,7 @@ namespace QLogicaeCore
 	}
 
 	void Logger::log(
-		const std::string_view& message,
+		const std::string& message,
 		const LogLevel& log_level,
 		const bool is_simplified) const
 	{
@@ -69,20 +69,20 @@ namespace QLogicaeCore
 		{
 			std::scoped_lock lock(_mutex);
 
-			CliIO::get_instance().print(
+			CLI_IO.print(
 				(is_simplified) ?
 				message :
-				Transformer::get_instance()
+				TRANSFORMER
 					.to_log_format(message, log_level));
 		}
-		catch (...)
+		catch (const std::exception& exception)
 		{
-			CliIO::get_instance().builtin_print(message);
+			CLI_IO.print_with_new_line_async(std::string("Exception at Logger::log(): ") + exception.what());
 		}
 	}
 
 	std::future<void> Logger::log_async(
-		const std::string_view& message,
+		const std::string& message,
 		const LogLevel& log_level,
 		const bool is_simplified) const
 	{
@@ -93,9 +93,9 @@ namespace QLogicaeCore
 			{
 				log(message, log_level, is_simplified);
 			}
-			catch (...)
+			catch (const std::exception& exception)
 			{
-				std::scoped_lock lock(_mutex);
+				CLI_IO.print_with_new_line_async(std::string("Exception at Logger::log_async(): ") + exception.what());
 			}
 		});
 	}

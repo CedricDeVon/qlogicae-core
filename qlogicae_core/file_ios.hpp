@@ -52,5 +52,7 @@ namespace QLogicaeCore
             return {};
         }
     }
+
+    inline static FileIOs& FILE_IOS = FileIOs::get_instance();
 }
 

@@ -2,6 +2,7 @@
 
 #include "pch.h"
 
+#include "cli_io.hpp"
 #include "time.hpp"
 
 namespace QLogicaeCore
@@ -13,8 +14,8 @@ namespace QLogicaeCore
         std::string to_na_format(const std::string& = "") const;
         std::string to_none_format(const std::string& = "") const;
         std::vector<std::string> split(const std::string&, const std::string&) const;
-        std::string to_log_format(const std::string_view& = "", const LogLevel& = LogLevel::INFO, const size_t& = 256) const;
-        std::string to_log_level_color_format(const std::string_view & = "", const LogLevel & = LogLevel::INFO, const size_t & = 256) const;
+        std::string to_log_format(const std::string& = "", const LogLevel& = LogLevel::INFO, const size_t& = 256) const;
+        std::string to_log_level_color_format(const std::string & = "", const LogLevel & = LogLevel::INFO, const size_t & = 256) const;
 
         static Transformer& get_instance();
 
@@ -26,6 +27,6 @@ namespace QLogicaeCore
         Transformer& operator = (Transformer&&) = delete;
         Transformer& operator = (const Transformer&) = delete;
     };
+
+    inline static Transformer& TRANSFORMER = Transformer::get_instance();
 }
-
-

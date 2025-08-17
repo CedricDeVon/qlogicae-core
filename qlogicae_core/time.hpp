@@ -22,6 +22,7 @@ namespace QLogicaeCore
         std::string now(const TimeFormat&, const TimeZone& = TimeZone::LOCAL) const;
         std::string_view get_time_unit_full_name(const TimeScaleUnit& format) const;
         std::string_view get_time_unit_abbreviation(const TimeScaleUnit& format) const;
+        TimeScaleUnit get_time_unit_abbreviation(const std::string& format) const;
         double convert_seconds(const double& time, const TimeScaleUnit& format) const;
         double convert_nanoseconds(const double& time, const TimeScaleUnit& format) const;
 
@@ -38,4 +39,6 @@ namespace QLogicaeCore
         std::tm _get_time_zone(const TimeZone&) const;
         const char* _get_format_string(const TimeFormat&) const;
     };
+
+    inline Time& TIME = Time::get_instance();
 }

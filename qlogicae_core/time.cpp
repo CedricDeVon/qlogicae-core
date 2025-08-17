@@ -379,6 +379,11 @@ namespace QLogicaeCore
         return Constants::TIME_SCALE_UNIT_ABBREVIATION_SECONDS;
     }
 
+    TimeScaleUnit Time::get_time_unit_abbreviation(const std::string& format) const
+    {
+        return (Constants::TIME_SCALE_UNIT_ABBREVIATION_STRINGS.contains(format)) ? Constants::TIME_SCALE_UNIT_ABBREVIATION_STRINGS[format] : TimeScaleUnit::NANOSECONDS;
+    }
+
     double Time::convert_seconds(
         const double& time, const TimeScaleUnit& format) const
     {

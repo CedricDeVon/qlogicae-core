@@ -169,6 +169,9 @@ namespace QLogicaeCore
         return std::ranges::any_of(values, predicate);
     }
 
+    inline static Validators& VALIDATORS =
+        Validators::get_instance();
+
     template bool Validators::is_empty<int>(const std::vector<int>&);
     template bool Validators::is_unique<int>(const std::vector<int>&);
     template bool Validators::is_sorted<int>(const std::vector<int>&);

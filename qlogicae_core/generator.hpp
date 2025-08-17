@@ -35,5 +35,7 @@ namespace QLogicaeCore
 
         static std::mt19937& _random_m19937();
     };
+
+    inline static Generator& GENERATOR = Generator::get_instance();
 }
 

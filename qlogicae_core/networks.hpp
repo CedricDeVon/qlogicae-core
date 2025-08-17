@@ -17,5 +17,7 @@ namespace QLogicaeCore
         Networks& operator = (Networks&&) = delete;
         Networks& operator = (const Networks&) = delete;
     };
+
+    inline static Networks& NETWORKS = Networks::get_instance();
 }
 

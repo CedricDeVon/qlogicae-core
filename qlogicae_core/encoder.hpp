@@ -33,4 +33,6 @@ namespace QLogicaeCore
         std::string _to_hex(const std::string_view&) const;
         std::string _to_base64(const std::string_view&) const;
     };
+
+    inline static Encoder& ENCODER = Encoder::get_instance();
 }

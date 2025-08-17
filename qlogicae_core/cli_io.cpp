@@ -31,7 +31,7 @@ namespace QLogicaeCore
 		_is_print_enabled = value;
 	}
 	
-	std::string CliIO::scan() const
+	std::string CliIO::scan()
 	{
 		try
 		{
@@ -42,8 +42,16 @@ namespace QLogicaeCore
 
 			return result;
 		}
+		catch (const std::exception& exception)
+		{
+			std::cout << std::string("Exception at CliIO::scan(): ") + exception.what() << "\n";
+
+			return builtin_scan();
+		}
 		catch (...)
 		{
+			std::cout << "Exception at CliIO::scan(): " << "\n";
+
 			return builtin_scan();
 		}
 	}
@@ -56,13 +64,13 @@ namespace QLogicaeCore
 
 			fast_io::io::print(fast_io::out(), text);
 		}
-		catch (...)
+		catch (const std::exception& exception)
 		{
-			builtin_print(text);
+			std::cout << std::string("Exception at CliIO::print(): ") + exception.what() << "\n";
 		}
 	}
 	
-	std::future<std::string> CliIO::scan_async() const
+	std::future<std::string> CliIO::scan_async()
 	{
 		return std::async(std::launch::async, [this]() -> std::string
 		{
@@ -70,9 +78,11 @@ namespace QLogicaeCore
 			{
 				return scan();
 			}
-			catch (...)
+			catch (const std::exception& exception)
 			{
-				return builtin_scan();
+				std::cout << std::string("Exception at CliIO::scan_async(): ") + exception.what() << "\n";
+
+				return "";
 			}
 		});
 	}
@@ -85,9 +95,9 @@ namespace QLogicaeCore
 
 			fast_io::io::println(fast_io::out(), text);
 		}
-		catch (...)
+		catch (const std::exception& exception)
 		{
-			builtin_print(text);
+			std::cout << std::string("Exception at CliIO::print_with_new_line(): ") + exception.what() << "\n";
 		}
 	}
 
@@ -100,9 +110,9 @@ namespace QLogicaeCore
 			{
 				print_with_new_line(text);
 			}
-			catch (...)
+			catch (const std::exception& exception)
 			{
-				builtin_print(text);
+				std::cout << std::string("Exception at CliIO::print_with_new_line_async(): ") + exception.what() << "\n";
 			}
 		});
 	}
@@ -115,9 +125,9 @@ namespace QLogicaeCore
 
 			std::cout << text;
 		}
-		catch (...)
+		catch (const std::exception& exception)
 		{
-			std::cout << text;
+			std::cout << std::string("Exception at CliIO::builtin_print_with_new_line(): ") + exception.what() << "\n";
 		}
 	}
 
@@ -130,9 +140,9 @@ namespace QLogicaeCore
 			{
 				builtin_print_with_new_line(text);
 			}
-			catch (...)
+			catch (const std::exception& exception)
 			{
-				builtin_print_with_new_line(text);
+				std::cout << std::string("Exception at CliIO::builtin_print_with_new_line_async(): ") + exception.what() << "\n";
 			}
 		});
 	}
@@ -145,14 +155,14 @@ namespace QLogicaeCore
 			{
 				print(text);
 			}
-			catch (...)
+			catch (const std::exception& exception)
 			{
-				builtin_print(text);
+				std::cout << std::string("Exception at CliIO::print_async(): ") + exception.what() << "\n";
 			}
 		});
 	}
 
-	std::future<std::string> CliIO::builtin_scan_async() const
+	std::future<std::string> CliIO::builtin_scan_async()
 	{
 		return std::async(std::launch::async, [this]() -> std::string
 		{
@@ -160,9 +170,11 @@ namespace QLogicaeCore
 			{
 				return builtin_scan();
 			}
-			catch (...)
+			catch (const std::exception& exception)
 			{
-				return builtin_scan();
+				std::cout << std::string("Exception at CliIO::builtin_scan_async(): ") + exception.what() << "\n";
+
+				return "";
 			}
 		});
 	}
@@ -176,9 +188,9 @@ namespace QLogicaeCore
 			{
 				builtin_print(text);
 			}
-			catch (...)
+			catch (const std::exception& exception)
 			{
-				builtin_print(text);
+				std::cout << std::string("Exception at CliIO::builtin_print_async(): ") + exception.what() << "\n";
 			}
 		});
 	}
@@ -189,7 +201,7 @@ namespace QLogicaeCore
 		std::cout << text;
 	}
 
-	std::string CliIO::builtin_scan() const
+	std::string CliIO::builtin_scan()
 	{
 		std::string result;
 		std::cin >> result;

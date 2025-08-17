@@ -41,4 +41,7 @@ namespace QLogicaeCore
 		bool _do_match(
 			const std::string& subject, pcre2_code* get_error_code) const;
 	};
+
+	inline static RegularExpression& REGULAR_EXPRESSION =
+		RegularExpression::get_instance();
 }

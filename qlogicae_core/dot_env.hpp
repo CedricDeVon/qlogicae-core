@@ -21,5 +21,7 @@ namespace QLogicaeCore
 		DotEnv& operator = (DotEnv&&) = delete;
 		DotEnv& operator = (const DotEnv&) = delete;
 	};
+
+	inline static DotEnv& DOT_ENV = DotEnv::get_instance();
 }
 

@@ -6,7 +6,6 @@
 
 namespace QLogicaeCoreTest
 {
-
     class CliIOTest : public ::testing::Test {};
 
     TEST_F(CliIOTest, Should_Expect_DefaultEnabled_When_Initialized)

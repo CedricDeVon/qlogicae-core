@@ -4,9 +4,91 @@
 
 namespace QLogicaeCore
 {    
+    enum class EncodingType : uint8_t
+    {
+        HEX,
+        UTF8,
+        BASE64
+    };
+
+
+    enum class FileMode : uint8_t
+    {
+        READ,
+        WRITE,
+        APPEND
+    };
+
+    enum class TimeScaleUnit : uint8_t
+    {
+        NANOSECONDS,
+        MICROSECONDS,
+        MILLISECONDS,
+        SECONDS,
+        MINUTES,
+        HOURS,
+        DAYS,
+        WEEKS,
+        MONTHS,
+        YEARS
+    };
+
+    enum class TimeFormat : uint8_t
+    {
+        UNIX,
+        ISO8601,
+        FULL_TIMESTAMP,
+        FULL_DASHED_TIMESTAMP,
+        HOUR_12,
+        HOUR_24,
+        MILLISECOND_MICROSECOND_NANOSECOND,
+        DATE_DASHED,
+        DATE_MDY_SLASHED,
+        DATE_DMY_SLASHED,
+        DATE_DMY_SPACED,
+        DATE_VERBOSE
+    };
+
+    enum class TimeZone : uint8_t
+    {
+        UTC,
+        LOCAL
+    };
+
+    enum class LogMedium : uint8_t
+    {
+        ALL,
+        FILE,
+        CONSOLE
+    };
+
+    enum class LogLevel : uint8_t
+    {
+        ALL,
+        INFO,
+        DEBUG,
+        WARNING,
+        SUCCESS,
+        CRITICAL,
+        EXCEPTION,
+        HIGHLIGHTED_INFO
+    };
+
+    enum class TaskPriority : uint8_t
+    {
+        HIGH = 0,
+        MEDIUM = 1,
+        LOW = 2
+    };
+
     struct Constants
     {
+        static constexpr std::string DOT = ".";
+        static constexpr std::string COMMA = ",";
+        static constexpr std::string END_Of_LINE = "\n";
         static constexpr std::string EMPTY_STRING = "";
+        static constexpr std::string FRONT_SLASH = "/";
+        static constexpr std::string BACK_SLASH = "/";
         static constexpr std::wstring EMPTY_WSTRING = L"";
 
         static constexpr unsigned int DEFAULT_MILLISECONDS_PER_CALLBACK = 1000;
@@ -57,22 +139,18 @@ namespace QLogicaeCore
         static constexpr char TIME_FORMAT_PART_6 = '0';
         static constexpr std::streamsize TIME_FORMAT_MIL_MIC_NAN_STREAM_SIZE = 3;
 
-        static constexpr std::string_view STRING_EMPTY = "";
-        static constexpr std::string_view STRING_NONE_1 = "None";
-        static constexpr std::string_view STRING_NONE_2 = "N/A";
+        static constexpr std::string STRING_EMPTY = "";
+        static constexpr std::string STRING_NONE_1 = "None";
+        static constexpr std::string STRING_NONE_2 = "N/A";
 
-        static constexpr std::string_view LOG_PART_1 = "[";
-        static constexpr std::string_view LOG_PART_2 = "] [";
-        static constexpr std::string_view LOG_PART_3 = "]\t";
-        static constexpr std::string_view LOG_PART_4 = "\n";
-        static constexpr std::string_view LOG_LEVEL_ALL = "INFO";
-        static constexpr std::string_view LOG_LEVEL_INFO = "INFO";
-        static constexpr std::string_view LOG_LEVEL_DEBUG = "DEBUG";
-        static constexpr std::string_view LOG_LEVEL_SUCCESS = "SUCCESS";
-        static constexpr std::string_view LOG_LEVEL_WARNING = "WARNING";
-        static constexpr std::string_view LOG_LEVEL_CRITICAL = "CRITICAL";
-        static constexpr std::string_view LOG_LEVEL_EXCEPTION = "EXCEPTION";
-        static constexpr std::string_view LOG_LEVEL_HIGHLIGHTED_INFO = "INFO";
+        static constexpr std::string LOG_LEVEL_ALL = "INFO";
+        static constexpr std::string LOG_LEVEL_INFO = "INFO";
+        static constexpr std::string LOG_LEVEL_DEBUG = "DEBUG";
+        static constexpr std::string LOG_LEVEL_SUCCESS = "SUCCESS";
+        static constexpr std::string LOG_LEVEL_WARNING = "WARNING";
+        static constexpr std::string LOG_LEVEL_CRITICAL = "CRITICAL";
+        static constexpr std::string LOG_LEVEL_EXCEPTION = "EXCEPTION";
+        static constexpr std::string LOG_LEVEL_HIGHLIGHTED_INFO = "INFO";
 
         static constexpr std::string_view DEFAULT_HOST_ADDRESS = "1.1.1.1";
 
@@ -108,6 +186,8 @@ namespace QLogicaeCore
         static constexpr std::string_view TIME_SCALE_UNIT_ABBREVIATION_MONTHS = "mo";
         static constexpr std::string_view TIME_SCALE_UNIT_ABBREVIATION_YEARS = "yr";
 
+        static std::unordered_map<std::string_view, TimeScaleUnit> TIME_SCALE_UNIT_ABBREVIATION_STRINGS;
+        
         static constexpr double EPSILON = 1e-12;
     };
 
@@ -236,77 +316,7 @@ namespace QLogicaeCore
         }
     };
 
-    enum class EncodingType : uint8_t
-    {
-        HEX,
-        UTF8,
-        BASE64
-    };
-
-    
-    enum class FileMode : uint8_t
-    {
-        READ,
-        WRITE,
-        APPEND
-    };
-
-    enum class TimeScaleUnit : uint8_t
-    {
-        NANOSECONDS,
-        MICROSECONDS,
-        MILLISECONDS,
-        SECONDS,
-        MINUTES,
-        HOURS,
-        DAYS,
-        WEEKS,
-        MONTHS,
-        YEARS
-    };
-
-    enum class TimeFormat : uint8_t
-    {
-        UNIX,
-        ISO8601,
-        FULL_TIMESTAMP,
-        FULL_DASHED_TIMESTAMP,
-        HOUR_12,
-        HOUR_24,
-        MILLISECOND_MICROSECOND_NANOSECOND,
-        DATE_DASHED,
-        DATE_MDY_SLASHED,
-        DATE_DMY_SLASHED,
-        DATE_DMY_SPACED,
-        DATE_VERBOSE
-    };
-
-    enum class TimeZone : uint8_t
-    {
-        UTC,
-        LOCAL
-    };
-
-    enum class LogMedium : uint8_t
-    {
-        ALL,
-        FILE,
-        CONSOLE
-    };
-
-    enum class LogLevel : uint8_t
-    {
-        ALL,
-        INFO,
-        DEBUG,
-        WARNING,
-        SUCCESS,
-        CRITICAL,
-        EXCEPTION,
-        HIGHLIGHTED_INFO
-    };
-
-    constexpr std::string_view get_log_level_string(const LogLevel& level)
+    constexpr std::string get_log_level_string(const LogLevel& level)
     {
         switch (level)
         {
@@ -342,13 +352,6 @@ namespace QLogicaeCore
         .uint32_t_1 = 3,
         .uint32_t_2 = 1 << 16,
         .uint32_t_3 = 2
-    };
-
-    enum class TaskPriority : uint8_t
-    {
-        HIGH = 0,
-        MEDIUM = 1,
-        LOW = 2
     };
 
     struct SmallTaskObject

@@ -117,4 +117,7 @@ namespace QLogicaeCore
         Statistician& operator = (Statistician&&) = delete;
         Statistician& operator = (const Statistician&) = delete;
     };
+
+    inline static Statistician& STATISTICIAN =
+        Statistician::get_instance();
 }

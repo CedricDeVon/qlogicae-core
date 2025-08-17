@@ -16,117 +16,162 @@ namespace QLogicaeCore
     std::string Transformer::color_type(
         const LogLevel& level) const
     {
-        switch(level)
+        try
         {
-            case LogLevel::ALL:
+            switch(level)
             {
-                return "";
+                case LogLevel::ALL:
+                {
+                    return "";
+                }
+                case LogLevel::INFO:
+                {
+                    return "";
+                }
+                case LogLevel::DEBUG:
+                {
+                    return "\033[94m";
+                }
+                case LogLevel::WARNING:
+                {
+                    return "\033[93m";
+                }
+                case LogLevel::EXCEPTION:
+                {
+                    return "\033[91m";
+                }
+                case LogLevel::CRITICAL:
+                {
+                    return "\033[95m";
+                }
+                case LogLevel::SUCCESS:
+                {
+                    return "\033[92m";
+                }
+                case LogLevel::HIGHLIGHTED_INFO:
+                {
+                    return "\033[94m";
+                }
+                default:
+                {
+                    return "";
+                }
             }
-            case LogLevel::INFO:
-            {
-                return "";
-            }
-            case LogLevel::DEBUG:
-            {
-                return "\033[94m";
-            }
-            case LogLevel::WARNING:
-            {
-                return "\033[93m";
-            }
-            case LogLevel::EXCEPTION:
-            {
-                return "\033[91m";
-            }
-            case LogLevel::CRITICAL:
-            {
-                return "\033[95m";
-            }
-            case LogLevel::SUCCESS:
-            {
-                return "\033[92m";
-            }
-            case LogLevel::HIGHLIGHTED_INFO:
-            {
-                return "\033[94m";
-            }
-            default:
-            {
-                return "";
-            }
+        }
+        catch (const std::exception& exception)
+        {
+            CLI_IO.print_with_new_line_async(std::string("Exception at Transformer::color_type(): ") + exception.what());
+
+            return "";
         }
     }
 
     std::string Transformer::to_log_format(
-        const std::string_view& text,
+        const std::string& text,
         const LogLevel& level,
         const size_t& output_size) const
     {
-        std::string result;
-        result.reserve(output_size);
+        try
+        {
+            std::string result;
+            result.reserve(output_size);
 
-        fmt::format_to(
-            std::back_inserter(result),
-            "{}{}{}{}{}{}{}{}\033[0m",
-            color_type(level),
-            Constants::LOG_PART_1,
-            Time::get_instance().now(TimeFormat::FULL_TIMESTAMP),
-            Constants::LOG_PART_2,
-            get_log_level_string(level),
-            Constants::LOG_PART_3,
-            text,
-            Constants::LOG_PART_4
-        );
+            result =
+                "[" +
+                TIME.now(TimeFormat::FULL_TIMESTAMP) +
+                "] [" +
+                get_log_level_string(level) +
+                "]\t" +
+                text +
+                "\n";
 
-        return result;
+            return result;
+        }
+        catch (const std::exception& exception)
+        {
+            CLI_IO.print_with_new_line_async(std::string("Exception at Transformer::to_log_format(): ") + exception.what());
+
+            return "";
+        }
     }
 
     std::string Transformer::to_log_level_color_format(
-        const std::string_view& text,
+        const std::string& text,
         const LogLevel& level,
         const size_t& output_size) const
     {
-        std::string result;
-        result.reserve(output_size);
+        try
+        {
+            std::string result;
+            result.reserve(output_size);
 
-        fmt::format_to(
-            std::back_inserter(result),
-            "{}{}\033[0m",
-            color_type(level),
-            text
-        );
+            result = text;
 
-        return result;
+            return result;
+        }
+        catch (const std::exception& exception)
+        {
+            CLI_IO.print_with_new_line_async(std::string("Exception at Transformer::to_log_level_color_format(): ") + exception.what());
+
+            return "";
+        }
     }
 
     std::string Transformer::to_none_format(
         const std::string& text) const
     {
-        if (text.empty())
+        try
         {
-            return Constants::STRING_NONE_1.data();
-        }
+            if (text.empty())
+            {
+                return Constants::STRING_NONE_1;
+            }
 
-        return text;
+            return text;
+        }
+        catch (const std::exception& exception)
+        {
+            CLI_IO.print_with_new_line_async(std::string("Exception at Transformer::to_none_format(): ") + exception.what());
+
+            return "";
+        }
     }
 
     std::string Transformer::to_na_format(
         const std::string& text) const
     {
-        if (text.empty())
+        try
         {
-            return Constants::STRING_NONE_2.data();
-        }
+            if (text.empty())
+            {
+                return Constants::STRING_NONE_2;
+            }
 
-        return text;
+            return text;
+        }
+        catch (const std::exception& exception)
+        {
+            CLI_IO.print_with_new_line_async(std::string("Exception at Transformer::to_na_format(): ") + exception.what());
+
+            return "";
+        }
     }
 
     std::vector<std::string> Transformer::split(
         const std::string& text,
         const std::string& delimeter) const
     {
-        auto result = absl::StrSplit(text, delimeter);
-        
-        return std::vector<std::string>(result.begin(), result.end());
+        try
+        {
+            auto result = absl::StrSplit(text, delimeter);
+
+            return std::vector<std::string>(result.begin(), result.end());
+        }
+        catch (const std::exception& exception)
+        {
+            CLI_IO.print_with_new_line_async(std::string("Exception at Transformer::split(): ") + exception.what());
+
+            return {};
+        }
     }
 }

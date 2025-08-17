@@ -91,36 +91,41 @@ namespace QLogicaeCore
         if (!is_valid_data(data)) return false;
         if (options.factor <= 0.0 || options.threshold <= 0.0) return false;
 
-        std::vector<double> flat_data = flatten_data(data);
-        const double median = compute_median(flat_data);
-
-        std::vector<double> deviations;
-        deviations.reserve(flat_data.size());
-
-        for (const double value : flat_data)
+        size_t index_a, size_a = data.size();
+        for (index_a = 0; index_a < size_a; ++index_a)
         {
-            deviations.push_back(std::abs(value - median));
-        }
+            std::vector<double> flat_data = data[index_a];
+            const double median = compute_median(flat_data);
 
-        const double mad = compute_median(deviations);
-        if (mad < Constants::EPSILON) return false;
+            std::vector<double> deviations;
+            deviations.reserve(flat_data.size());
 
-        const double modified_z_threshold = options.threshold;
-        std::vector<double> filtered;
-        filtered.reserve(flat_data.size());
-
-        for (const double value : flat_data)
-        {
-            const double modified_z = 0.6745 * (value - median) / mad;
-            if (std::abs(modified_z) <= modified_z_threshold)
+            for (const double value : flat_data)
             {
-                filtered.push_back(value);
+                deviations.push_back(std::abs(value - median));
             }
+
+            const double mad = compute_median(deviations);
+            if (mad < Constants::EPSILON) return false;
+
+            const double modified_z_threshold = options.threshold;
+            std::vector<double> filtered;
+            filtered.reserve(flat_data.size());
+
+            for (const double value : flat_data)
+            {
+                const double modified_z = 0.6745 * (value - median) / mad;
+                if (std::abs(modified_z) <= modified_z_threshold)
+                {
+                    filtered.push_back(value);
+                }
+            }
+
+            if (filtered.empty()) return false;
+
+            data[index_a] = filtered;
         }
 
-        if (filtered.empty()) return false;
-
-        data = { filtered };
         return true;
     }
 
