@@ -76,6 +76,8 @@
 #include <fmt/compile.h>
 #include <toml++/toml.h>
 #include <stduuid/uuid.h>
+#include <absl/time/clock.h>
+#include <absl/time/time.h>
 #include <fast_io_device.h>
 #include <fast_io_legacy.h>
 #include <nlohmann/json.hpp>

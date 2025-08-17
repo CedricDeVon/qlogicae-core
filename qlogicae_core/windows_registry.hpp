@@ -38,4 +38,7 @@ namespace QLogicaeCore
         WindowsRegistry& operator = (WindowsRegistry&&) = delete;
         WindowsRegistry& operator = (const WindowsRegistry&) = delete;
     };
+
+    inline static WindowsRegistry& WINDOWS_REGISTRY_HKCU = WindowsRegistry::hkcu();
+    inline static WindowsRegistry& WINDOWS_REGISTRY_HKLM = WindowsRegistry::hklm();
 }

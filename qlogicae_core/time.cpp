@@ -92,154 +92,51 @@ namespace QLogicaeCore
     }
 
     std::string Time::now(
-        const TimeFormat& format, const TimeZone& zone) const
+        const TimeFormat& format,
+        const TimeZone& zone) const
     {
-        std::ostringstream oss;
+        absl::Time now = absl::Now();
+        absl::Duration since_epoch = now - absl::UnixEpoch();
+
         std::tm tm = _get_time_zone(zone);
-        std::chrono::system_clock::duration duration =
-            std::chrono::system_clock::now().time_since_epoch();
+        const char* fmt = _get_format_string(format);
 
-        oss << std::setfill(Constants::TIME_FORMAT_PART_6);
-        
-        switch (format)
-        {
-            case TimeFormat::UNIX:
-            {
-                return std::to_string(
-                    std::chrono::duration_cast<std::chrono::seconds>(
-                        duration).count());
-            }
+        switch (format) {
+        case TimeFormat::UNIX:
+            return absl::StrCat(absl::ToUnixSeconds(now));
 
-            case TimeFormat::ISO8601:
-            {
-                oss << std::put_time(&tm, _get_format_string(format));
+        case TimeFormat::ISO8601:
+            return _format_time(tm, fmt);
 
-                break;
-            }
+        case TimeFormat::FULL_TIMESTAMP:
+            return _format_time(tm, fmt) +
+                "." + _format_subseconds(since_epoch, ":");
 
-            case TimeFormat::FULL_TIMESTAMP:
-            {
-                oss << std::put_time(&tm, _get_format_string(format))
-                    << Constants::TIME_FORMAT_PART_4
-                    << std::setw(
-                        Constants::TIME_FORMAT_MIL_MIC_NAN_STREAM_SIZE)
-                    << static_cast<int>(
-                        std::chrono::duration_cast<std::chrono::milliseconds>(
-                            duration).count() % Constants::NUMBER_THOUSAND)
-                    << Constants::TIME_FORMAT_PART_5
-                    << std::setw(
-                        Constants::TIME_FORMAT_MIL_MIC_NAN_STREAM_SIZE)
-                    << static_cast<int>(
-                        std::chrono::duration_cast<std::chrono::microseconds>(
-                            duration).count() % Constants::NUMBER_THOUSAND)
-                    << Constants::TIME_FORMAT_PART_5
-                    << std::setw(
-                        Constants::TIME_FORMAT_MIL_MIC_NAN_STREAM_SIZE)
-                    << static_cast<int>(
-                        std::chrono::duration_cast<std::chrono::nanoseconds>(
-                            duration).count() % Constants::NUMBER_THOUSAND);
-                break;
-            }
+        case TimeFormat::FULL_DASHED_TIMESTAMP:
+            return _format_time(tm, fmt) + "-" +
+                _format_subseconds(since_epoch, "-");
 
-            case TimeFormat::FULL_DASHED_TIMESTAMP:
-            {
-                oss << std::put_time(&tm, _get_format_string(format))
-                    << "-"
-                    << std::setw(
-                        Constants::TIME_FORMAT_MIL_MIC_NAN_STREAM_SIZE)
-                    << static_cast<int>(
-                        std::chrono::duration_cast<std::chrono::milliseconds>(
-                            duration).count() % Constants::NUMBER_THOUSAND)
-                    << "-"
-                    << std::setw(
-                        Constants::TIME_FORMAT_MIL_MIC_NAN_STREAM_SIZE)
-                    << static_cast<int>(
-                        std::chrono::duration_cast<std::chrono::microseconds>(
-                            duration).count() % Constants::NUMBER_THOUSAND)
-                    << "-"
-                    << std::setw(
-                        Constants::TIME_FORMAT_MIL_MIC_NAN_STREAM_SIZE)
-                    << static_cast<int>(
-                        std::chrono::duration_cast<std::chrono::nanoseconds>(
-                            duration).count() % Constants::NUMBER_THOUSAND);
-                break;
-            }
+        case TimeFormat::HOUR_12:
+        case TimeFormat::HOUR_24:
+        case TimeFormat::DATE_DASHED:
+        case TimeFormat::DATE_MDY_SLASHED:
+        case TimeFormat::DATE_DMY_SLASHED:
+        case TimeFormat::DATE_DMY_SPACED:
+        case TimeFormat::DATE_VERBOSE:
+            return _format_time(tm, fmt);
 
-            case TimeFormat::HOUR_12:
-            {
-                oss << std::put_time(&tm, _get_format_string(format));
+        case TimeFormat::MILLISECOND_MICROSECOND_NANOSECOND:
+            return absl::StrCat(
+                "ms: ",
+                absl::ToInt64Milliseconds(since_epoch),
+                ", us: ",
+                absl::ToInt64Microseconds(since_epoch),
+                ", ns: ",
+                absl::ToInt64Nanoseconds(since_epoch));
 
-                break;
-            }
-
-            case TimeFormat::HOUR_24:
-            {
-                oss << std::put_time(&tm, _get_format_string(format));
-            
-                break;
-            }
-
-            case TimeFormat::MILLISECOND_MICROSECOND_NANOSECOND:
-            {
-                oss << Constants::TIME_FORMAT_PART_1
-                    << std::chrono::duration_cast<std::chrono::milliseconds>(
-                        duration).count()
-                    << Constants::TIME_FORMAT_PART_2
-                    << std::chrono::duration_cast<std::chrono::microseconds>(
-                        duration).count()
-                    << Constants::TIME_FORMAT_PART_3
-                    << std::chrono::duration_cast<std::chrono::nanoseconds>(
-                        duration).count();
-                return oss.str();
-            }
-
-            case TimeFormat::DATE_DASHED:
-            {
-                oss << std::put_time(
-                    &tm, _get_format_string(format));
-
-                break;
-            }
-
-            case TimeFormat::DATE_MDY_SLASHED:
-            {
-                oss << std::put_time(
-                    &tm, _get_format_string(format));
-
-                break;
-            }
-
-            case TimeFormat::DATE_DMY_SLASHED:
-            {
-                oss << std::put_time(
-                    &tm, _get_format_string(format));
-
-                break;
-            }
-
-            case TimeFormat::DATE_DMY_SPACED:
-            {
-                oss << std::put_time(
-                    &tm, _get_format_string(format));
-
-                break;
-            }
-
-            case TimeFormat::DATE_VERBOSE:
-            {
-                oss << std::put_time(
-                    &tm, _get_format_string(format));
-
-                break;
-            }
-
-            default:
-            {
-                return Constants::TIME_FORMAT_INVALID;
-            }
+        default:
+            return Constants::TIME_FORMAT_INVALID;
         }
-
-        return oss.str();
     }
 
     double Time::year(const TimeZone& zone) const
@@ -381,7 +278,9 @@ namespace QLogicaeCore
 
     TimeScaleUnit Time::get_time_unit_abbreviation(const std::string& format) const
     {
-        return (Constants::TIME_SCALE_UNIT_ABBREVIATION_STRINGS.contains(format)) ? Constants::TIME_SCALE_UNIT_ABBREVIATION_STRINGS[format] : TimeScaleUnit::NANOSECONDS;
+        return (Constants::TIME_SCALE_UNIT_ABBREVIATION_STRINGS.contains(format)) ?
+            Constants::TIME_SCALE_UNIT_ABBREVIATION_STRINGS[format] :
+            TimeScaleUnit::NANOSECONDS;
     }
 
     double Time::convert_seconds(
@@ -463,5 +362,36 @@ namespace QLogicaeCore
 
         return time;
     }
-} 
 
+    std::string Time::_pad3(int value) const
+    {
+        char buf[4];
+        std::snprintf(buf, sizeof(buf), "%03d", value);
+        return std::string(buf);
+    }
+
+    std::string Time::_format_subseconds(
+        absl::Duration since_epoch, const std::string& sep) const
+    {
+        return absl::StrCat(
+            _pad3(static_cast<int>(
+                absl::ToInt64Milliseconds(since_epoch) % 1000)),
+            sep,
+            _pad3(static_cast<int>(
+                absl::ToInt64Microseconds(since_epoch) % 1000)),
+            sep,
+            _pad3(static_cast<int>(
+                absl::ToInt64Nanoseconds(since_epoch) % 1000)));
+    }
+
+    std::string Time::_format_time(
+        const std::tm& tm, const char* fmt) const
+    {
+        char buffer[128];
+        if (std::strftime(buffer, sizeof(buffer), fmt, &tm))
+        {
+            return std::string(buffer);
+        }
+        return {};
+    }
+} 

@@ -36,8 +36,11 @@ namespace QLogicaeCore
         Time& operator = (Time&&) = delete;
         Time& operator = (const Time&) = delete;
 
+        std::string _pad3(int value) const;
         std::tm _get_time_zone(const TimeZone&) const;
         const char* _get_format_string(const TimeFormat&) const;
+        std::string _format_time(const std::tm& tm, const char* fmt) const;
+        std::string _format_subseconds(absl::Duration since_epoch, const std::string& sep) const;
     };
 
     inline Time& TIME = Time::get_instance();
