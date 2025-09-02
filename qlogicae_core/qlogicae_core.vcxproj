@@ -141,6 +141,7 @@
       <AdditionalOptions>/INCLUDE:mi_redirect
  %(AdditionalOptions)</AdditionalOptions>
       <AdditionalLibraryDirectories>C:\vcpkg\installed\x64-windows-static\lib</AdditionalLibraryDirectories>
+      <LinkTimeCodeGeneration>true</LinkTimeCodeGeneration>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
