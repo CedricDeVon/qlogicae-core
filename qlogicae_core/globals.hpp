@@ -83,14 +83,6 @@ namespace QLogicaeCore
 
     struct Constants
     {
-        static constexpr std::string DOT = ".";
-        static constexpr std::string COMMA = ",";
-        static constexpr std::string END_Of_LINE = "\n";
-        static constexpr std::string EMPTY_STRING = "";
-        static constexpr std::string FRONT_SLASH = "/";
-        static constexpr std::string BACK_SLASH = "/";
-        static constexpr std::wstring EMPTY_WSTRING = L"";
-
         static constexpr unsigned int DEFAULT_MILLISECONDS_PER_CALLBACK = 1000;
         static constexpr bool DEFAULT_IS_LISTENING = true;
 
@@ -139,18 +131,18 @@ namespace QLogicaeCore
         static constexpr char TIME_FORMAT_PART_6 = '0';
         static constexpr std::streamsize TIME_FORMAT_MIL_MIC_NAN_STREAM_SIZE = 3;
 
-        static constexpr std::string STRING_EMPTY = "";
-        static constexpr std::string STRING_NONE_1 = "None";
-        static constexpr std::string STRING_NONE_2 = "N/A";
+        static constexpr std::string_view STRING_EMPTY = "";
+        static constexpr std::string_view STRING_NONE_1 = "None";
+        static constexpr std::string_view STRING_NONE_2 = "N/A";
 
-        static constexpr std::string LOG_LEVEL_ALL = "INFO";
-        static constexpr std::string LOG_LEVEL_INFO = "INFO";
-        static constexpr std::string LOG_LEVEL_DEBUG = "DEBUG";
-        static constexpr std::string LOG_LEVEL_SUCCESS = "SUCCESS";
-        static constexpr std::string LOG_LEVEL_WARNING = "WARNING";
-        static constexpr std::string LOG_LEVEL_CRITICAL = "CRITICAL";
-        static constexpr std::string LOG_LEVEL_EXCEPTION = "EXCEPTION";
-        static constexpr std::string LOG_LEVEL_HIGHLIGHTED_INFO = "INFO";
+        static constexpr std::string_view LOG_LEVEL_ALL = "INFO";
+        static constexpr std::string_view LOG_LEVEL_INFO = "INFO";
+        static constexpr std::string_view LOG_LEVEL_DEBUG = "DEBUG";
+        static constexpr std::string_view LOG_LEVEL_SUCCESS = "SUCCESS";
+        static constexpr std::string_view LOG_LEVEL_WARNING = "WARNING";
+        static constexpr std::string_view LOG_LEVEL_CRITICAL = "CRITICAL";
+        static constexpr std::string_view LOG_LEVEL_EXCEPTION = "EXCEPTION";
+        static constexpr std::string_view LOG_LEVEL_HIGHLIGHTED_INFO = "INFO";
 
         static constexpr std::string_view DEFAULT_HOST_ADDRESS = "1.1.1.1";
 
@@ -320,17 +312,17 @@ namespace QLogicaeCore
     {
         switch (level)
         {
-        case LogLevel::ALL: return Constants::LOG_LEVEL_INFO;
-        case LogLevel::INFO: return Constants::LOG_LEVEL_INFO;
-        case LogLevel::DEBUG: return Constants::LOG_LEVEL_DEBUG;
-        case LogLevel::SUCCESS: return Constants::LOG_LEVEL_SUCCESS;
-        case LogLevel::WARNING: return Constants::LOG_LEVEL_WARNING;
-        case LogLevel::CRITICAL: return Constants::LOG_LEVEL_CRITICAL;
-        case LogLevel::EXCEPTION: return Constants::LOG_LEVEL_EXCEPTION;
-        case LogLevel::HIGHLIGHTED_INFO: return Constants::LOG_LEVEL_HIGHLIGHTED_INFO;
+        case LogLevel::ALL: return Constants::LOG_LEVEL_INFO.data();
+        case LogLevel::INFO: return Constants::LOG_LEVEL_INFO.data();
+        case LogLevel::DEBUG: return Constants::LOG_LEVEL_DEBUG.data();
+        case LogLevel::SUCCESS: return Constants::LOG_LEVEL_SUCCESS.data();
+        case LogLevel::WARNING: return Constants::LOG_LEVEL_WARNING.data();
+        case LogLevel::CRITICAL: return Constants::LOG_LEVEL_CRITICAL.data();
+        case LogLevel::EXCEPTION: return Constants::LOG_LEVEL_EXCEPTION.data();
+        case LogLevel::HIGHLIGHTED_INFO: return Constants::LOG_LEVEL_HIGHLIGHTED_INFO.data();
         }
-
-        return Constants::LOG_LEVEL_INFO;
+        
+        return Constants::LOG_LEVEL_INFO.data();
     }
 
     struct CryptographerProperties

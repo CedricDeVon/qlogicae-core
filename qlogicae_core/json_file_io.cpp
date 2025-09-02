@@ -1,12 +1,11 @@
+#pragma once
+
 #include "pch.h"
 
 #include "json_file_io.hpp"
-using namespace std;
 
-namespace QLogicaeCore {
-
-    using namespace rapidjson;
-
+namespace QLogicaeCore
+{
     JsonFileIO::~JsonFileIO() {}
 
     JsonFileIO::JsonFileIO(const std::string_view& path)
@@ -80,7 +79,7 @@ namespace QLogicaeCore {
         }
     }
 
-    Pointer JsonFileIO::build_pointer(const JsonPath& key_path)
+    rapidjson::Pointer JsonFileIO::build_pointer(const JsonPath& key_path)
     {
         std::string pointer_string;
         for (const auto& key : key_path)
@@ -97,13 +96,13 @@ namespace QLogicaeCore {
             }
         }
 
-        return Pointer(pointer_string.c_str());
+        return rapidjson::Pointer(pointer_string.c_str());
     }
 
-    std::string JsonFileIO::to_string(const Document& document)
+    std::string JsonFileIO::to_string(const rapidjson::Document& document)
     {
-        StringBuffer buffer;
-        PrettyWriter<StringBuffer> writer(buffer);
+        rapidjson::StringBuffer buffer;
+        rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buffer);
         document.Accept(writer);
 
         return buffer.GetString();
@@ -118,7 +117,7 @@ namespace QLogicaeCore {
             return false;
         }
 
-        Document document;
+        rapidjson::Document document;
         if (document.Parse(read().c_str()).HasParseError())
         {
             return false;
@@ -138,14 +137,14 @@ namespace QLogicaeCore {
             return "";
         }
 
-        Document document;
+        rapidjson::Document document;
         if (document.Parse(read().c_str()).HasParseError())
         {
             return "";
         }
 
         auto pointer = build_pointer(path);
-        const Value* value = pointer.Get(document);
+        const rapidjson::Value* value = pointer.Get(document);
 
         return (value && value->IsString()) ? value->GetString() : "";
     }
@@ -159,14 +158,14 @@ namespace QLogicaeCore {
             return false;
         }
 
-        Document document;
+        rapidjson::Document document;
         if (document.Parse(read().c_str()).HasParseError())
         {
             return false;
         }
 
         auto ptr = build_pointer(path);
-        const Value* val = ptr.Get(document);
+        const rapidjson::Value* val = ptr.Get(document);
 
         return (val && val->IsBool()) ? val->GetBool() : false;
     }
@@ -180,14 +179,14 @@ namespace QLogicaeCore {
             return 0.0;
         }
 
-        Document document;
+        rapidjson::Document document;
         if (document.Parse(read().c_str()).HasParseError())
         {
             return 0.0;
         }
 
         auto ptr = build_pointer(path);
-        const Value* val = ptr.Get(document);
+        const rapidjson::Value* val = ptr.Get(document);
 
         return (val && val->IsNumber()) ? val->GetDouble() : 0.0;
     }
@@ -201,14 +200,14 @@ namespace QLogicaeCore {
             return nullptr;
         }
 
-        Document document;
+        rapidjson::Document document;
         if (document.Parse(read().c_str()).HasParseError())
         {
             return nullptr;
         }
 
         auto ptr = build_pointer(path);
-        const Value* val = ptr.Get(document);
+        const rapidjson::Value* val = ptr.Get(document);
 
         return (val && val->IsNull()) ? nullptr : nullptr;
     }
@@ -218,13 +217,13 @@ namespace QLogicaeCore {
     {
         if (_file_path.empty())
         {
-            throw std::runtime_error("File path is empty.");
+            throw std::runtime_error("File path is empty");
         }
         
         std::ifstream in_file(_file_path);
         if (!in_file.is_open())
         {
-            throw std::runtime_error("Failed to open JSON file.");
+            throw std::runtime_error("Failed to open JSON file '" + _file_path + "'");
         }
         
         std::string json_string((std::istreambuf_iterator<char>(in_file)),
@@ -233,7 +232,7 @@ namespace QLogicaeCore {
         rapidjson::Document document;
         if (document.Parse(json_string.c_str()).HasParseError())
         {
-            throw std::runtime_error("Failed to parse JSON content.");
+            throw std::runtime_error("Failed to parse JSON content");
         }
 
         auto pointer = build_pointer(key_path);
@@ -241,7 +240,7 @@ namespace QLogicaeCore {
         
         if (!array_value || !array_value->IsArray())
         {
-            throw std::runtime_error("Value at path is not an array.");
+            throw std::runtime_error("Value at path is not an array");
         }
         
         std::vector<std::any> result;
@@ -270,7 +269,7 @@ namespace QLogicaeCore {
             }
             else
             {
-                throw std::runtime_error("Unsupported array element type.");
+                throw std::runtime_error("Unsupported array element type");
             }
         }
         
@@ -282,13 +281,13 @@ namespace QLogicaeCore {
     {
         if (_file_path.empty())
         {
-            throw std::runtime_error("File path is empty.");
+            throw std::runtime_error("File path is empty");
         }
 
         std::ifstream in_file(_file_path);
         if (!in_file.is_open())
         {
-            throw std::runtime_error("Failed to open JSON file.");
+            throw std::runtime_error("Failed to open JSON file '" + _file_path + "'");
         }
 
         std::string json_string((std::istreambuf_iterator<char>(in_file)),
@@ -297,7 +296,7 @@ namespace QLogicaeCore {
         rapidjson::Document document;
         if (document.Parse(json_string.c_str()).HasParseError())
         {
-            throw std::runtime_error("Failed to parse JSON content.");
+            throw std::runtime_error("Failed to parse JSON content");
         }
 
         auto pointer = build_pointer(key_path);
@@ -305,7 +304,7 @@ namespace QLogicaeCore {
 
         if (!value_pointer || !value_pointer->IsObject())
         {
-            throw std::runtime_error("Value at path is not an object.");
+            throw std::runtime_error("Value at path is not an object");
         }
 
         std::function<std::any(const rapidjson::Value&)> parse_value;
@@ -346,7 +345,7 @@ namespace QLogicaeCore {
                 return nested_obj;
             }
 
-            throw std::runtime_error("Unsupported JSON value encountered.");
+            throw std::runtime_error("Unsupported JSON value encountered");
             };
 
         std::unordered_map<std::string, std::any> result;
@@ -360,45 +359,45 @@ namespace QLogicaeCore {
     }
 
 
-    Value JsonFileIO::make_value(
+    rapidjson::Value JsonFileIO::make_value(
         const std::string& str,
-        Document::AllocatorType& allocator)
+        rapidjson::Document::AllocatorType& allocator)
     {
-        Value v;
-        v.SetString(str.c_str(), static_cast<SizeType>(str.length()), allocator);
+        rapidjson::Value v;
+        v.SetString(str.c_str(), static_cast<rapidjson::SizeType>(str.length()), allocator);
 
         return v;
     }
 
-    Value JsonFileIO::make_value(const bool& b, Document::AllocatorType&)
+    rapidjson::Value JsonFileIO::make_value(const bool& b, rapidjson::Document::AllocatorType&)
     {
-        Value v;
+        rapidjson::Value v;
         v.SetBool(b);
 
         return v;
     }
 
-    Value JsonFileIO::make_value(const double& d, Document::AllocatorType&)
+    rapidjson::Value JsonFileIO::make_value(const double& d, rapidjson::Document::AllocatorType&)
     {
-        Value v;
+        rapidjson::Value v;
         v.SetDouble(d);
 
         return v;
     }
 
-    Value JsonFileIO::make_value(std::nullptr_t, Document::AllocatorType&)
+    rapidjson::Value JsonFileIO::make_value(std::nullptr_t, rapidjson::Document::AllocatorType&)
     {
-        Value v;
+        rapidjson::Value v;
         v.SetNull();
 
         return v;
     }
 
-    Value JsonFileIO::make_value(
+    rapidjson::Value JsonFileIO::make_value(
         const std::vector<std::any>& array,
-        Document::AllocatorType& allocator)
+        rapidjson::Document::AllocatorType& allocator)
     {
-        Value arr(kArrayType);
+        rapidjson::Value arr(rapidjson::kArrayType);
         for (const auto& item : array)
         {
             if (item.type() == typeid(std::string))
@@ -421,7 +420,7 @@ namespace QLogicaeCore {
             }
             else if (item.type() == typeid(std::nullptr_t))
             {
-                arr.PushBack(Value().SetNull(), allocator);
+                arr.PushBack(rapidjson::Value().SetNull(), allocator);
             }
             else
             {
@@ -431,17 +430,17 @@ namespace QLogicaeCore {
         return arr;
     }
 
-    Value JsonFileIO::make_value(
+    rapidjson::Value JsonFileIO::make_value(
         const std::unordered_map<std::string, std::any>& object,
-        Document::AllocatorType& allocator)
+        rapidjson::Document::AllocatorType& allocator)
     {
-        Value val(kObjectType);
+        rapidjson::Value val(rapidjson::kObjectType);
         for (const auto& [key, any_val] : object)
         {
-            Value json_key;
+            rapidjson::Value json_key;
             json_key.SetString(
                 key.c_str(),
-                static_cast<SizeType>(key.length()),
+                static_cast<rapidjson::SizeType>(key.length()),
             allocator);
 
             if (any_val.type() == typeid(std::string))
@@ -461,7 +460,7 @@ namespace QLogicaeCore {
             }
             else if (any_val.type() == typeid(std::nullptr_t))
             {
-                val.AddMember(json_key, Value().SetNull(), allocator);
+                val.AddMember(json_key, rapidjson::Value().SetNull(), allocator);
             }
             else
             {
@@ -483,17 +482,17 @@ namespace QLogicaeCore {
             return false;
         }
 
-        Document document;
+        rapidjson::Document document;
         if (document.Parse(read().c_str()).HasParseError())
         {
             return false;
         }
 
         auto pointer = build_pointer(path);
-        Value& root = document;
+        rapidjson::Value& root = document;
         auto& allocator = document.GetAllocator();
 
-        Value* existing = pointer.Get(root);
+        rapidjson::Value* existing = pointer.Get(root);
         if (existing && !existing->IsObject() &&
             path.back().index() == 1)
         {
@@ -517,17 +516,17 @@ namespace QLogicaeCore {
             return false;
         }
 
-        Document document;
+        rapidjson::Document document;
         if (document.Parse(read().c_str()).HasParseError())
         {
             return false;
         }
 
         auto pointer = build_pointer(path);
-        Value& root = document;
+        rapidjson::Value& root = document;
         auto& allocator = document.GetAllocator();
 
-        Value* existing = pointer.Get(root);
+        rapidjson::Value* existing = pointer.Get(root);
         if (existing && !existing->IsObject() &&
             path.back().index() == 1)
         {
@@ -553,17 +552,17 @@ namespace QLogicaeCore {
             return false;
         }
 
-        Document document;
+        rapidjson::Document document;
         if (document.Parse(read().c_str()).HasParseError())
         {
             return false;
         }
 
         auto pointer = build_pointer(path);
-        Value& root = document;
+        rapidjson::Value& root = document;
         auto& allocator = document.GetAllocator();
 
-        Value* existing = pointer.Get(root);
+        rapidjson::Value* existing = pointer.Get(root);
         if (existing && !existing->IsObject() &&
             path.back().index() == 1)
         {
@@ -589,17 +588,17 @@ namespace QLogicaeCore {
             return false;
         }
 
-        Document document;
+        rapidjson::Document document;
         if (document.Parse(read().c_str()).HasParseError())
         {
             return false;
         }
 
         auto pointer = build_pointer(path);
-        Value& root = document;
+        rapidjson::Value& root = document;
         auto& allocator = document.GetAllocator();
 
-        Value* existing = pointer.Get(root);
+        rapidjson::Value* existing = pointer.Get(root);
         if (existing && !existing->IsObject() &&
             path.back().index() == 1)
         {
@@ -625,17 +624,17 @@ namespace QLogicaeCore {
             return false;
         }
 
-        Document document;
+        rapidjson::Document document;
         if (document.Parse(read().c_str()).HasParseError())
         {
             return false;
         }
 
         auto pointer = build_pointer(path);
-        Value& root = document;
+        rapidjson::Value& root = document;
         auto& allocator = document.GetAllocator();
 
-        Value* existing = pointer.Get(root);
+        rapidjson::Value* existing = pointer.Get(root);
         if (existing && !existing->IsObject() &&
             path.back().index() == 1)
         {
@@ -661,17 +660,17 @@ namespace QLogicaeCore {
             return false;
         }
 
-        Document document;
+        rapidjson::Document document;
         if (document.Parse(read().c_str()).HasParseError())
         {
             return false;
         }
 
         auto pointer = build_pointer(path);
-        Value& root = document;
+        rapidjson::Value& root = document;
         auto& allocator = document.GetAllocator();
 
-        Value* existing = pointer.Get(root);
+        rapidjson::Value* existing = pointer.Get(root);
         if (existing && !existing->IsObject() &&
             path.back().index() == 1)
         {
