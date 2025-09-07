@@ -68,6 +68,45 @@ namespace QLogicaeCore
         ExitProcess(0);
     }
 
+    std::string SystemAccess::get_roaming_appdata_folder_path() const
+    {
+        wchar_t* path = nullptr;
+        std::wstring result;
+        if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_RoamingAppData, 0, NULL, &path)))
+        {
+            result.assign(path);
+            CoTaskMemFree(path);
+        }
+
+        return QLogicaeCore::ENCODER.from_utf16_to_utf8(result);
+    }
+
+    std::string SystemAccess::get_local_appdata_folder_path() const
+    {
+        wchar_t* path = nullptr;
+        std::wstring result;
+        if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, NULL, &path)))
+        {
+            result.assign(path);
+            CoTaskMemFree(path);
+        }
+
+        return QLogicaeCore::ENCODER.from_utf16_to_utf8(result);
+    }
+
+    std::string SystemAccess::get_programdata_folder_path() const
+    {
+        wchar_t* path = nullptr;
+        std::wstring result;
+        if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_ProgramData, 0, NULL, &path)))
+        {
+            result.assign(path);
+            CoTaskMemFree(path);
+        }
+
+        return QLogicaeCore::ENCODER.from_utf16_to_utf8(result);
+    }
+
     QLogicaeCore::SystemAccess& QLogicaeCore::SystemAccess::get_instance()
     {
         static SystemAccess get_instance;

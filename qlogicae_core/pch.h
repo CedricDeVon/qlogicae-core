@@ -9,7 +9,9 @@
 #endif
 
 #define WIN32_LEAN_AND_MEAN
+#include <WinSock2.h>
 #include <windows.h>
+#include <shlobj.h>
 #include <shellapi.h>
 #include <boost/asio.hpp>
 #include <boost/asio/ip/icmp.hpp>

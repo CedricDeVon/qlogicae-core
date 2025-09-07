@@ -198,6 +198,7 @@
     <ClInclude Include="sqlite.hpp" />
     <ClInclude Include="statistician.hpp" />
     <ClInclude Include="string_builder.hpp" />
+    <ClInclude Include="temperature.hpp" />
     <ClInclude Include="thread_pool.hpp" />
     <ClInclude Include="xchacha20_poly1305_cipher_cryptographer.hpp" />
     <ClInclude Include="aes256_cipher_cryptographer.hpp" />
@@ -257,6 +258,7 @@
       <UseUnicodeForAssemblerListing Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</UseUnicodeForAssemblerListing>
       <UseUnicodeForAssemblerListing Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</UseUnicodeForAssemblerListing>
     </ClCompile>
+    <ClCompile Include="temperature.cpp" />
     <ClCompile Include="thread_pool.cpp" />
     <ClCompile Include="xchacha20_poly1305_cipher_cryptographer.cpp" />
     <ClCompile Include="aes256_cipher_cryptographer.cpp" />

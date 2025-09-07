@@ -180,6 +180,9 @@
     <ClInclude Include="statistician.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="temperature.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="qlogicae_core.cpp">
@@ -333,6 +336,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="statistician.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="temperature.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

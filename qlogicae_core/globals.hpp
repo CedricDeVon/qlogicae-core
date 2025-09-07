@@ -11,7 +11,6 @@ namespace QLogicaeCore
         BASE64
     };
 
-
     enum class FileMode : uint8_t
     {
         READ,
@@ -456,5 +455,30 @@ namespace QLogicaeCore
         sqlite3_stmt* statement_handle;
     };
 
+    enum class TemperatureUnitType : uint8_t
+    {
+        CELSIUS,
+        FAHRENHEIT,
+        KELVIN,
+        NONE
+    };
+    static const std::string TEMPERATURE_UNIT_TYPE_CELSIUS = "celsius";
+    static const std::string TEMPERATURE_UNIT_TYPE_FAHRENHEIT = "fahrenheit";
+    static const std::string TEMPERATURE_UNIT_TYPE_KELVIN = "kelvin";
+    static const std::string TEMPERATURE_UNIT_TYPE_NONE = "none";
+    static const std::unordered_map<std::string, TemperatureUnitType> TEMPERATURE_UNIT_TYPE_STRINGS =
+    {
+        { TEMPERATURE_UNIT_TYPE_CELSIUS, TemperatureUnitType::CELSIUS },
+        { TEMPERATURE_UNIT_TYPE_FAHRENHEIT, TemperatureUnitType::FAHRENHEIT },
+        { TEMPERATURE_UNIT_TYPE_KELVIN, TemperatureUnitType::KELVIN },
+        { TEMPERATURE_UNIT_TYPE_NONE, TemperatureUnitType::NONE }
+    };
+    static const std::unordered_map<TemperatureUnitType, std::string> TEMPERATURE_UNIT_TYPE_ENUMS =
+    {
+        { TemperatureUnitType::CELSIUS, TEMPERATURE_UNIT_TYPE_CELSIUS },
+        { TemperatureUnitType::FAHRENHEIT, TEMPERATURE_UNIT_TYPE_FAHRENHEIT },
+        { TemperatureUnitType::KELVIN, TEMPERATURE_UNIT_TYPE_KELVIN },
+        { TemperatureUnitType::NONE, TEMPERATURE_UNIT_TYPE_NONE }
+    };
 }
 

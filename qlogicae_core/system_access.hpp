@@ -2,6 +2,8 @@
 
 #include "pch.h"
 
+#include "encoder.hpp"
+
 namespace QLogicaeCore
 {
     class SystemAccess
@@ -10,6 +12,9 @@ namespace QLogicaeCore
         bool has_admin_access() const;
         std::string get_executable_dir() const;
         void restart_with_admin_access() const;
+        std::string get_roaming_appdata_folder_path() const;
+        std::string get_local_appdata_folder_path() const;
+        std::string get_programdata_folder_path() const;
 
         static SystemAccess& get_instance();
 

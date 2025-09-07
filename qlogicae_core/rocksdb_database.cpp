@@ -6,10 +6,15 @@
 
 namespace QLogicaeCore
 {
-
     RocksDBDatabase::~RocksDBDatabase()
     {
         close_db();
+    }
+
+    RocksDBDatabase::RocksDBDatabase() :
+        _file_path(""),
+        _config({})
+    {
     }
 
     RocksDBDatabase::RocksDBDatabase(
@@ -20,16 +25,51 @@ namespace QLogicaeCore
         open_db();
     }
 
+    std::string RocksDBDatabase::get_file_path() const
+    {
+        return _file_path;
+    }
+
+    void RocksDBDatabase::setup(
+        const std::string& path,
+        const RocksDBConfig& config)
+    {
+        close_db();
+
+        _file_path = path;
+        _config = config;
+
+        open_db();
+    }
+
+    bool RocksDBDatabase::is_path_found(
+        const std::string_view& path) const
+    {
+        try
+        {
+            std::shared_lock lock(_mutex);
+
+            return std::filesystem::exists(path);
+        }
+        catch (...)
+        {
+            return false;
+        }
+    }
+
     bool RocksDBDatabase::is_key_found(
         const std::string_view& key) const
     {
         std::shared_lock lock(_mutex);
 
+        if (_object == nullptr)
+        {
+            return false;
+        }
         std::string value;
-        auto string = _object->Get(
-            _read_options, key.data(), &value);
+        auto s = _object->Get(_read_options, std::string(key), &value);
 
-        return string.ok();
+        return s.ok();
     }
 
     bool RocksDBDatabase::remove_value(
@@ -57,11 +97,13 @@ namespace QLogicaeCore
     std::future<bool> RocksDBDatabase::remove_value_async(
         const std::string_view& key)
     {
+        std::string key_str(key);
         return std::async(std::launch::async,
-            [this, key = std::move(key)]()
-        {
-            return remove_value(key);
-        });
+            [this, key_str = std::move(key_str)]()
+            {
+                return remove_value(key_str);
+            }
+        );
     }
 
     std::future<bool> RocksDBDatabase::batch_execute_async()
@@ -77,14 +119,15 @@ namespace QLogicaeCore
     {
         std::unique_lock lock(_mutex);
 
-        rocksdb::ColumnFamilyHandle* handle;
-        auto string = _object->CreateColumnFamily(
-            rocksdb::ColumnFamilyOptions(), name.data(), &handle);
-        if (string.ok())
+        std::string name_key(name);
+        rocksdb::ColumnFamilyHandle* handle = nullptr;
+        auto s = _object->CreateColumnFamily(
+            rocksdb::ColumnFamilyOptions(), name_key, &handle);
+        if (s.ok())
         {
-            _column_families[name.data()] = handle;
+            _column_families.emplace(std::move(name_key), handle);
         }
-        return string.ok();
+        return s.ok();
     }
 
     bool RocksDBDatabase::drop_column_family(
@@ -92,18 +135,19 @@ namespace QLogicaeCore
     {
         std::unique_lock lock(_mutex);
 
-        auto iterator = _column_families.find(name.data());
+        std::string name_key(name);
+        auto iterator = _column_families.find(name_key);
         if (iterator == _column_families.end())
         {
             return false;
         }
-        auto string = _object->DropColumnFamily(iterator->second);
-        if (string.ok())
+        auto s = _object->DropColumnFamily(iterator->second);
+        if (s.ok())
         {
+            _object->DestroyColumnFamilyHandle(iterator->second);
             _column_families.erase(iterator);
         }
-
-        return string.ok();
+        return s.ok();
     }
 
     bool RocksDBDatabase::use_column_family(const std::string_view& name)
@@ -189,20 +233,28 @@ namespace QLogicaeCore
     {
         std::shared_lock lock(_mutex);
 
-        std::string value;
-        rocksdb::Slice result;
+        if (_object == nullptr)
+        {
+            return std::nullopt;
+        }
         rocksdb::PinnableSlice pvalue;
         rocksdb::ReadOptions options;
         options.verify_checksums = true;
-        auto string = _object->Get(
-            options, _object->DefaultColumnFamily(), key, &pvalue);
-        if (string.ok() && pvalue.size() > offset)
+        auto s = _object->Get(options, _object->DefaultColumnFamily(),
+            std::string(key), &pvalue);
+        if (!s.ok())
         {
-            size = std::min<size_t>(size, pvalue.size() - offset);
-            return std::string(pvalue.data() + offset, size);
+            return std::nullopt;
         }
+        const uint64_t psize = static_cast<uint64_t>(pvalue.size());
+        if (offset >= psize)
+        {
+            return std::nullopt;
+        }
+        const uint64_t max_size = psize - offset;
+        const size_t use_size = static_cast<size_t>(std::min<uint64_t>(size, max_size));
 
-        return std::nullopt;
+        return std::string(pvalue.data() + static_cast<size_t>(offset), use_size);
     }
 
     bool RocksDBDatabase::begin_transaction()
@@ -251,6 +303,11 @@ namespace QLogicaeCore
 
     void RocksDBDatabase::open_db()
     {
+        if (!std::filesystem::exists(_file_path))
+        {
+            std::filesystem::create_directories(_file_path);
+        }
+
         _options.create_if_missing = true;
         _options.max_background_jobs =
             static_cast<int>(_config.max_background_jobs);
@@ -276,26 +333,49 @@ namespace QLogicaeCore
 
         _object = _transaction_db;
     }
-    
+
     void RocksDBDatabase::close_db()
     {
-        for (auto& [name, handle] : _column_families)
+        std::unique_lock lock(_mutex);
+
+        if (_object != nullptr)
         {
-            _object->DestroyColumnFamilyHandle(handle);
+            for (auto& [name, handle] : _column_families)
+            {
+                if (handle != nullptr)
+                {
+                    _object->DestroyColumnFamilyHandle(handle);
+                }
+            }
         }
         _column_families.clear();
-        delete _transaction;
-        delete _transaction_db;
-        _transaction = nullptr;
-        _transaction_db = nullptr;
+
+        if (_transaction != nullptr)
+        {
+            delete _transaction;
+            _transaction = nullptr;
+        }
+        if (_transaction_db != nullptr)
+        {
+            delete _transaction_db;
+            _transaction_db = nullptr;
+        }
         _object = nullptr;
     }
 
     rocksdb::ColumnFamilyHandle* RocksDBDatabase::get_cf_handle(
         const std::string& name) const
     {
-        auto iterator = _column_families.find(name);
-        return (iterator != _column_families.end()) ?
-            iterator->second : _object->DefaultColumnFamily();
+        std::string name_key(name);
+        auto iterator = _column_families.find(name_key);
+        if (iterator != _column_families.end())
+        {
+            return iterator->second;
+        }
+        if (_object != nullptr)
+        {
+            return _object->DefaultColumnFamily();
+        }
+        return nullptr;
     }
 }

@@ -14,7 +14,7 @@ namespace QLogicaeCore
     class RocksDBDatabase
     {
     public:
-        RocksDBDatabase() = default;
+        RocksDBDatabase();
         ~RocksDBDatabase();
 
         RocksDBDatabase(const std::string_view&, const RocksDBConfig & = {});
@@ -23,6 +23,10 @@ namespace QLogicaeCore
         RocksDBDatabase& operator=(const RocksDBDatabase&) = delete;
         RocksDBDatabase& operator=(RocksDBDatabase&&) = delete;
 
+        std::string get_file_path() const;
+        void setup(const std::string& path, const RocksDBConfig& config = {});
+
+        bool is_path_found(const std::string_view&) const;
         bool is_key_found(const std::string_view&) const;
 
         bool remove_value(const std::string_view&);
