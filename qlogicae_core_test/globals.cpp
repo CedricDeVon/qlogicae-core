@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "globals.hpp"
@@ -98,3 +96,4 @@ namespace QLogicaeCoreTest
         ConstantsTest,
         ::testing::Values(1, 10, 100));
 }
+

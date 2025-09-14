@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "statistician.hpp"
@@ -659,4 +657,3 @@ namespace QLogicaeCoreTest
         ASSERT_LT(elapsed.count(), 2.0);
     }
 }
-

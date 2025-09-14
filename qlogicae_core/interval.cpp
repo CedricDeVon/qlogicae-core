@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "interval.hpp"
@@ -15,6 +13,7 @@ namespace QLogicaeCore
             _max_count(max_count),
             _execute_now(execute_now)
     {
+
     }
 
     Interval::~Interval()
@@ -23,146 +22,252 @@ namespace QLogicaeCore
         if (_thread.joinable())
         {
             _thread.join();
-        }
+        }        
     }
 
     void Interval::start()
     {
-        if (_thread.joinable())
+        try
         {
-            return;
+            if (_thread.joinable())
+            {
+                return;
+            }
+
+            _cancelled.store(false);
+            _paused.store(false);
+            _running.store(true);
+            _count.store(0);
+
+            _thread = std::thread(&Interval::run, this);
         }
-
-        _cancelled.store(false);
-        _paused.store(false);
-        _running.store(true);
-        _count.store(0);
-
-        _thread = std::thread(&Interval::run, this);
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at Interval::start(): " + exception.what());
+        }
     }
 
     void Interval::run()
     {
-        if (_execute_now && !_cancelled.load())
+        try
         {
-            if (!_callback(++_count))
+            if (_execute_now && !_cancelled.load())
             {
-                stop();
-                return;
+                if (!_callback(++_count))
+                {
+                    stop();
+                    return;
+                }
+            }
+
+            while (!_cancelled.load())
+            {
+                std::unique_lock lock(_mutex);
+
+                if (_paused.load())
+                {
+                    _cv.wait(lock, [this]() {
+                        return !_paused.load() || _cancelled.load();
+                        });
+                }
+
+                if (_cancelled.load())
+                {
+                    return;
+                }
+
+                auto start = std::chrono::steady_clock::now();
+                lock.unlock();
+
+                if (!_callback(++_count))
+                {
+                    stop();
+                    return;
+                }
+
+                if (_max_count && _count.load() >= *_max_count)
+                {
+                    stop();
+                    return;
+                }
+
+                auto end = std::chrono::steady_clock::now();
+                auto elapsed =
+                    std::chrono::duration_cast<std::chrono::milliseconds>(
+                        end - start
+                    );
+                auto delay =
+                    _interval > elapsed ?
+                    _interval - elapsed :
+                    std::chrono::milliseconds(0);
+                std::this_thread::sleep_for(delay);
             }
         }
-
-        while (!_cancelled.load())
+        catch (const std::exception& exception)
         {
-            std::unique_lock lock(_mutex);
-
-            if (_paused.load())
-            {
-                _cv.wait(lock, [this]() {
-                    return !_paused.load() || _cancelled.load();
-                    });
-            }
-
-            if (_cancelled.load())
-            {
-                return;
-            }
-
-            auto start = std::chrono::steady_clock::now();
-            lock.unlock();
-
-            if (!_callback(++_count))
-            {
-                stop();
-                return;
-            }
-
-            if (_max_count && _count.load() >= *_max_count)
-            {
-                stop();
-                return;
-            }
-
-            auto end = std::chrono::steady_clock::now();
-            auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-            auto delay = _interval > elapsed ? _interval - elapsed : std::chrono::milliseconds(0);
-            std::this_thread::sleep_for(delay);
+            throw std::runtime_error(std::string() + "Exception at Interval::run(): " + exception.what());
         }
     }
 
     void Interval::pause()
     {
-        _paused.store(true);
+        try
+        {
+            _paused.store(true);
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at Interval::pause(): " + exception.what());
+        }
     }
 
     void Interval::resume()
     {
-        if (_paused.load())
+        try
         {
-            _paused.store(false);
-            _cv.notify_all();
+            if (_paused.load())
+            {
+                _paused.store(false);
+                _cv.notify_all();
+            }
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at Interval::resume(): " + exception.what());
         }
     }
 
     void Interval::stop()
     {
-        _running.store(false);
-        _paused.store(false);
-        _cv.notify_all();
+        try
+        {
+            _running.store(false);
+            _paused.store(false);
+            _cv.notify_all();
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at Interval::stop(): " + exception.what());
+        }
     }
 
     void Interval::cancel()
     {
-        _cancelled.store(true);
-        _cv.notify_all();
+        try
+        {
+            _cancelled.store(true);
+            _cv.notify_all();
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at Interval::cancel(): " + exception.what());
+        }
     }
 
     void Interval::restart()
     {
-        cancel();
-        if (_thread.joinable())
+        try
         {
-            _thread.join();
+            cancel();
+            if (_thread.joinable())
+            {
+                _thread.join();
+            }
+            start();
         }
-        start();
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at Interval::restart(): " + exception.what());
+        }
     }
 
     bool Interval::is_running() const
     {
-        return _running.load();
+        try
+        {
+            return _running.load();
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at Interval::is_running(): " + exception.what());
+        }
     }
 
     bool Interval::is_paused() const
     {
-        return _paused.load();
+        try
+        {
+            return _paused.load();
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at Interval::is_paused(): " + exception.what());
+        }
     }
 
     bool Interval::is_cancelled() const
     {
-        return _cancelled.load();
+        try
+        {
+            return _cancelled.load();
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at Interval::is_cancelled(): " + exception.what());
+        }
     }
 
     void Interval::set_interval(std::chrono::milliseconds interval)
     {
-        std::lock_guard lock(_mutex);
-        _interval = interval;
+        try
+        {
+            std::lock_guard lock(_mutex);
+
+            _interval = interval;
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at Interval::set_interval(): " + exception.what());
+        }
     }
 
     std::chrono::milliseconds Interval::get_interval() const
     {
-        std::lock_guard lock(_mutex);
+        try
+        {
+            std::lock_guard lock(_mutex);
 
-        return _interval;
+            return _interval;
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at Interval::get_interval(): " + exception.what());
+        }
     }
 
     void Interval::set_callback(std::function<bool(size_t)> cb)
     {
-        std::lock_guard lock(_mutex);
-        _callback = std::move(cb);
+        try
+        {
+            std::lock_guard lock(_mutex);
+
+            _callback = std::move(cb);
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at Interval::set_callback(): " + exception.what());
+        }
     }
 
     size_t Interval::get_execution_count() const
     {
-        return _count.load();
+        try
+        {
+            return _count.load();
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at Interval::get_execution_count(): " + exception.what());
+        }
     }
 }

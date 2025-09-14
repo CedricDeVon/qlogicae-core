@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "file_uri_io.hpp"
@@ -9,12 +7,14 @@ namespace QLogicaeCore
 {
     FileUriIO::~FileUriIO()
     {
+
     }
 
     FileUriIO::FileUriIO(
         const std::string_view& file_path)
         : AbstractFileIO(file_path)
     {
+
     }
 
     FileUriIO::FileUriIO(
@@ -23,6 +23,7 @@ namespace QLogicaeCore
         : AbstractFileIO(file_path),
         _mimetype(mimetype)
     {
+
     }
 
     FileUriIO::FileUriIO(
@@ -30,46 +31,42 @@ namespace QLogicaeCore
         const std::string_view& mimetype,
         const std::string_view& name)
         : AbstractFileIO(name, file_path),
-        _mimetype(mimetype)
+            _mimetype(mimetype)
     {
+
     }
 
     std::string FileUriIO::generate_data_uri() const
     {
-        std::scoped_lock lock(_mutex);
-
-        if (_file_path.empty() ||
-            !std::filesystem::exists(_file_path) ||
-            std::filesystem::is_directory(_file_path))
+        try
         {
-            throw std::runtime_error(
-                "Invalid file path or file does not exist: " +
-                _file_path);
+            std::scoped_lock lock(_mutex);
+
+            if (_file_path.empty() ||
+                !std::filesystem::exists(_file_path) ||
+                std::filesystem::is_directory(_file_path))
+            {
+                throw std::runtime_error(std::string() + "Exception at FileUriIO::generate_data_uri(): File does not exist");
+            }
+
+            std::ifstream input_file(
+                _file_path, std::ios::binary);
+
+            if (!input_file)
+            {
+                return "";
+            }
+
+            std::ostringstream output_buffer;
+            output_buffer << input_file.rdbuf();
+            std::string raw_data = output_buffer.str();
+
+            return std::string() + "data:" + _mimetype.data() + ";base64," + "AKLOMP_ENCODED(" + raw_data + ")";
         }
-
-        std::ifstream input_file(
-            _file_path, std::ios::binary);
-
-        if (!input_file)
+        catch (const std::exception& exception)
         {
-            throw std::runtime_error(
-                "Failed to open file: " + _file_path);
+            throw std::runtime_error(std::string() + "Exception at FileUriIO::generate_data_uri(): " + exception.what());
         }
-
-        std::ostringstream output_buffer;
-        output_buffer << input_file.rdbuf();
-        const std::string& raw_data = output_buffer.str();
-
-        std::string base64_encoded =
-            "AKLOMP_ENCODED(" + raw_data + ")";
-
-        std::ostringstream uri_stream;
-        uri_stream << "data:"
-            << _mimetype
-            << ";base64,"
-            << base64_encoded;
-
-        return uri_stream.str();
     }
 
     std::future<std::string> FileUriIO::generate_data_uri_async() const

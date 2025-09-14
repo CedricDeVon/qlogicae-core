@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "placeholder_value_extractor.hpp"
@@ -19,9 +17,9 @@ namespace QLogicaeCore
         {
             return _value;
         }
-        catch (...)
+        catch (const std::exception& exception)
         {
-            return "";
+            throw std::runtime_error(std::string() + "Exception at PlaceholderValueExtractor::get_value(): " + exception.what());
         }
     }
 }

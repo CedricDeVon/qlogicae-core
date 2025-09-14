@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "binary_file_io.hpp"
@@ -8,15 +6,17 @@ namespace QLogicaeCore
 {
     BinaryFileIO::BinaryFileIO(
         const std::string_view& file_path) :
-        AbstractFileIO(file_path)
+            AbstractFileIO(file_path)
     {
+
     }
 
     BinaryFileIO::BinaryFileIO(
         const std::string_view& name,
         const std::string_view& file_path) :
-        AbstractFileIO(name, file_path)
+            AbstractFileIO(name, file_path)
     {
+
     }
 
     BinaryFileIO::~BinaryFileIO()
@@ -68,9 +68,9 @@ namespace QLogicaeCore
                 return false;
             }
         }
-        catch (...)
+        catch (const std::exception& exception)
         {
-            return false;
+            throw std::runtime_error(std::string() + "Exception at BinaryFileIO::open(): " + exception.what());
         }
     }
 
@@ -108,9 +108,9 @@ namespace QLogicaeCore
                 return false;
             }
         }
-        catch (...)
+        catch (const std::exception& exception)
         {
-            return false;
+            throw std::runtime_error(std::string() + "Exception at BinaryFileIO::close(): " + exception.what());
         }
     }
 
@@ -120,27 +120,27 @@ namespace QLogicaeCore
         {
             switch (file_mode)
             {
-                case FileMode::READ:
-                {
-                    return _read_file.has_value();
-                }
-                case FileMode::WRITE:
-                {
-                    return _write_file.has_value();
-                }
-                case FileMode::APPEND:
-                {
-                    return _append_file.has_value();
-                }
-                default:
-                {
-                    return false;
-                }
+            case FileMode::READ:
+            {
+                return _read_file.has_value();
+            }
+            case FileMode::WRITE:
+            {
+                return _write_file.has_value();
+            }
+            case FileMode::APPEND:
+            {
+                return _append_file.has_value();
+            }
+            default:
+            {
+                return false;
+            }
             }
         }
-        catch (...)
+        catch (const std::exception& exception)
         {
-            return false;
+            throw std::runtime_error(std::string() + "Exception at BinaryFileIO::is_open(): " + exception.what());
         }
     }
 
@@ -171,9 +171,9 @@ namespace QLogicaeCore
 
             return content;
         }
-        catch (...)
+        catch (const std::exception& exception)
         {
-            return {};
+            throw std::runtime_error(std::string() + "Exception at BinaryFileIO::read(): " + exception.what());
         }
     }
 
@@ -202,9 +202,9 @@ namespace QLogicaeCore
 
             return true;
         }
-        catch (...)
+        catch (const std::exception& exception)
         {
-            return false;
+            throw std::runtime_error(std::string() + "Exception at BinaryFileIO::write(): " + exception.what());
         }
     }
 
@@ -221,7 +221,7 @@ namespace QLogicaeCore
             }
 
             fast_io::write(
-                _append_file.value(), 
+                _append_file.value(),
                 content.begin(),
                 content.end()
             );
@@ -232,9 +232,9 @@ namespace QLogicaeCore
 
             return true;
         }
-        catch (...)
+        catch (const std::exception& exception)
         {
-            return false;
+            throw std::runtime_error(std::string() + "Exception at BinaryFileIO::append(): " + exception.what());
         }
     }
 
@@ -243,14 +243,7 @@ namespace QLogicaeCore
         return std::async(std::launch::async,
             [this]() -> std::vector<std::byte>
         {
-            try
-            {
-                return read();
-            }
-            catch (...)
-            {
-                return {};
-            }
+            return read();
         });
     }
 
@@ -260,14 +253,7 @@ namespace QLogicaeCore
         return std::async(std::launch::async,
             [this, content]() -> bool
         {
-            try
-            {
-                return write(content);
-            }
-            catch (...)
-            {
-                return false;
-            }
+            return write(content);
         });
     }
 
@@ -276,14 +262,7 @@ namespace QLogicaeCore
     {
         return std::async(std::launch::async, [this, content]() -> bool
         {
-            try
-            {
-                return append(content);
-            }
-            catch (...)
-            {
-                return false;
-            }
+            return append(content);            
         });
     }
 
@@ -291,14 +270,7 @@ namespace QLogicaeCore
     {
         return std::async(std::launch::async, [this, file_mode]() -> bool
         {
-            try
-            {
-                return open(file_mode);
-            }
-            catch (...)
-            {
-                return false;
-            }
+            return open(file_mode);
         });
     }
 
@@ -306,14 +278,7 @@ namespace QLogicaeCore
     {
         return std::async(std::launch::async, [this, file_mode]() -> bool
         {
-            try
-            {
-                return close(file_mode);
-            }
-            catch (...)
-            {
-                return false;
-            }
+            return close(file_mode);            
         });
     }
 }

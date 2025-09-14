@@ -1,12 +1,9 @@
-﻿#pragma once
-
-#include "pch.h"
+﻿#include "pch.h"
 
 #include "sha256_hash_cryptographer.hpp"
 
 namespace QLogicaeCoreTest
 {
-
     class SHA256HashCryptographerTest : public ::testing::TestWithParam<std::string>
     {
     protected:

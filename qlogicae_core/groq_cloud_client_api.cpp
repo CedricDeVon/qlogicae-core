@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "groq_cloud_client_api.hpp"
@@ -8,6 +6,7 @@ namespace QLogicaeCore
 {
     GroqCloudClientAPI::GroqCloudClientAPI()
     {
+
     }
 
     GroqCloudClientAPI::GroqCloudClientAPI(const GroqCloudClientAPIPromptConfigurations& value)
@@ -169,6 +168,7 @@ namespace QLogicaeCore
                 {
                     on_exception.dispatch(exception);
                 }
+
                 return response;
             });
     }

@@ -1,61 +1,89 @@
 #pragma once
 
-#include "pch.h"
-
+#include "globals.hpp"
 #include "abstract_file_io.hpp"
+
+#include <toml++/toml.h>
+
+#include <string>
+#include <vector>
+#include <optional>
+#include <functional>
 
 namespace QLogicaeCore
 {
-    class TomlFileIO : public AbstractFileIO
+    class TomlFileIO :
+        public AbstractFileIO
     {
     public:
         ~TomlFileIO();
+        
         TomlFileIO();
+        
         TomlFileIO(const std::string_view& file_path);
+        
         TomlFileIO(const std::string_view& name,
             const std::string_view& file_path);
-        TomlFileIO(const TomlFileIO&) = delete;
-        TomlFileIO(TomlFileIO&&) noexcept = default;
-        TomlFileIO& operator=(const TomlFileIO&) = delete;
-        TomlFileIO& operator=(TomlFileIO&&) noexcept = default;
+        
+        TomlFileIO(const TomlFileIO& toml_file_io) = delete;
+        
+        TomlFileIO(TomlFileIO&& toml_file_io) noexcept = default;
+        
+        TomlFileIO& operator=(const TomlFileIO& toml_file_io) = delete;
+        
+        TomlFileIO& operator=(TomlFileIO&& toml_file_io) noexcept = default;
       
         bool load();
+        
         bool save();
+        
         bool save_as(const std::string_view& file_path);
+        
         template<typename ValueType>
         std::optional<ValueType> get_value(
             const std::vector<std::string>& key_path) const;
+        
         template<typename ValueType>
         bool set_value(
             const std::vector<std::string>& key_path,
             const ValueType& value);
+        
         bool remove_value(const std::vector<std::string>& key_path);
+        
         template<typename ValueType>
         bool set_values(
             const std::unordered_map<std::vector<std::string>,
             ValueType, VectorStringHash, VectorStringEqual>& map);
+        
         bool remove_keys(
             const std::vector<std::vector<std::string>>& keys);
         
         std::future<bool> load_async();
+        
         std::future<bool> save_async();
+        
         std::future<bool> save_as_async(
             const std::string_view& file_path);
+        
         template<typename ValueType>
         std::future<std::optional<ValueType>>
             get_value_async(
                 const std::vector<std::string>& key_path) const;
+        
         template<typename ValueType>
         std::future<bool>
             set_value_async(
                 const std::vector<std::string>& key_path,
                 const ValueType& value);
+        
         std::future<bool> remove_value_async(
             const std::vector<std::string>& key_path);
+        
         template<typename ValueType>
         std::future<bool> set_values_async(
             const std::unordered_map<std::vector<std::string>, ValueType,
             VectorStringHash, VectorStringEqual>& values);
+        
         std::future<bool> remove_keys_async(
             const std::vector<std::vector<std::string>>& keys);
 

@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "toml_file_io.hpp"
@@ -689,10 +687,10 @@ namespace QLogicaeCoreTest
 
         QLogicaeCore::TomlFileIO io(temp_file_path);
 
-        EXPECT_NO_THROW({
+        EXPECT_ANY_THROW({
             bool result = io.load();
             EXPECT_FALSE(result);
-            });
+        });
     }
 }
 

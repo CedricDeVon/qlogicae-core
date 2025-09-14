@@ -1,35 +1,59 @@
 #pragma once
 
-#include "pch.h"
+#include "globals.hpp"
+
+#include <rocksdb/db.h>
+#include <rocksdb/slice.h>
+#include <rocksdb/table.h>
+#include <rocksdb/options.h>
+#include <rocksdb/iterator.h>
+#include <rocksdb/listener.h>
+#include <rocksdb/convenience.h>
+#include <rocksdb/write_batch.h>
+#include <rocksdb/filter_policy.h>
+#include <rocksdb/compaction_filter.h>
+#include <rocksdb/utilities/checkpoint.h>
+#include <rocksdb/utilities/backup_engine.h>
+#include <rocksdb/utilities/transaction_db.h>
+
+#include <any>
+#include <vector>
+#include <string>
+#include <future>
+#include <algorithm>
+#include <typeindex>
+#include <Windows.h>
+#include <memory_resource>
 
 namespace QLogicaeCore
 {
-    struct RocksDBConfig
-    {
-        size_t block_cache_size = 64 * 1024 * 1024;
-        size_t write_buffer_size = 64 * 1024 * 1024;
-        int max_background_jobs = 4;
-    };
-
     class RocksDBDatabase
     {
     public:
         RocksDBDatabase();
+        
         ~RocksDBDatabase();
 
         RocksDBDatabase(const std::string_view&, const RocksDBConfig & = {});
+        
         RocksDBDatabase(const RocksDBDatabase&) = delete;
+        
         RocksDBDatabase(RocksDBDatabase&&) noexcept = delete;
+        
         RocksDBDatabase& operator=(const RocksDBDatabase&) = delete;
+        
         RocksDBDatabase& operator=(RocksDBDatabase&&) = delete;
 
         std::string get_file_path() const;
+        
         void setup(const std::string& path, const RocksDBConfig& config = {});
 
         bool is_path_found(const std::string_view&) const;
+        
         bool is_key_found(const std::string_view&) const;
 
         bool remove_value(const std::string_view&);
+        
         bool batch_execute();
 
         template <typename T>
@@ -45,6 +69,7 @@ namespace QLogicaeCore
         void batch_remove_value(const std::string_view&, const T&);
 
         std::future<bool> remove_value_async(const std::string_view&);
+        
         std::future<bool> batch_execute_async();
 
         template <typename T>
@@ -54,13 +79,17 @@ namespace QLogicaeCore
         std::future<void> set_value_async(const std::string_view&, const T&);
 
         bool create_column_family(const std::string_view&);
+        
         bool drop_column_family(const std::string_view&);
+        
         bool use_column_family(const std::string_view&);
 
         void begin_batch();
+        
         bool commit_batch();
 
         bool create_backup(const std::string_view&) const;
+        
         bool restore_backup(const std::string_view&);
 
         bool create_checkpoint(const std::string_view&) const;
@@ -69,28 +98,30 @@ namespace QLogicaeCore
             const std::string_view&, uint64_t, uint64_t);
 
         bool begin_transaction();
+        
         bool commit_transaction();
+        
         bool rollback_transaction();
 
     protected:
+        RocksDBConfig _config;
         rocksdb::DB* _object{};
-        rocksdb::TransactionDB* _transaction_db{};
-        rocksdb::Transaction* _transaction{};
-        rocksdb::WriteBatch _write_batch;
-
-        std::unordered_map<std::string, rocksdb::ColumnFamilyHandle*> _column_families;
+        std::string _file_path;
         rocksdb::Options _options;
-        rocksdb::TransactionDBOptions _txn_options;
+        mutable std::shared_mutex _mutex;
+        rocksdb::WriteBatch _write_batch;
         std::vector<std::string> _cf_names;
         rocksdb::ReadOptions _read_options;
+        rocksdb::Transaction* _transaction{};
+        rocksdb::TransactionDB* _transaction_db{};
+        rocksdb::TransactionDBOptions _txn_options;
         std::unique_ptr<const rocksdb::FilterPolicy> _bloom_filter;
-
-        std::string _file_path;
-        RocksDBConfig _config;
-        mutable std::shared_mutex _mutex;
+        std::unordered_map<std::string, rocksdb::ColumnFamilyHandle*> _column_families;
 
         void open_db();
+        
         void close_db();
+
         rocksdb::ColumnFamilyHandle* get_cf_handle(const std::string& name) const;
 
         template <typename T>

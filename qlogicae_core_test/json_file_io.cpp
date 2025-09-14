@@ -1,12 +1,9 @@
-#pragma once
-
 #include "pch.h"
 
 #include "json_file_io.hpp"
 
 namespace QLogicaeCoreTest
 {
-
     class JsonFileIOTest : public ::testing::TestWithParam<std::tuple<std::string, bool, double>> {
     protected:
         void SetUp() override {

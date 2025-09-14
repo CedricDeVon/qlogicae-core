@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "file_uri_io.hpp"
@@ -132,3 +130,4 @@ namespace QLogicaeCoreTest
         FileUriIOTest,
         ::testing::Values("application/octet-stream", "text/plain"));
 }
+

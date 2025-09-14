@@ -1,7 +1,5 @@
 #pragma once
 
-#include "pch.h"
-
 #include "time.hpp"
 #include "cli_io.hpp"
 #include "logger.hpp"

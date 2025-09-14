@@ -1,24 +1,30 @@
 #pragma once
 
-#include "pch.h"
-
 namespace QLogicaeCore
 {
     class Timeout
     {
     public:
         ~Timeout();
+        
         Timeout() = default;
+        
         Timeout(std::function<void()>,
             std::chrono::milliseconds,
             bool = false);
+        
         Timeout(const Timeout&) = delete;
+        
         Timeout(Timeout&&) noexcept = delete;
+        
         Timeout& operator = (Timeout&&) = delete;
+        
         Timeout& operator = (const Timeout&) = delete;
 
         void cancel();
+        
         void restart();
+        
         bool is_cancelled() const;
 
     protected:

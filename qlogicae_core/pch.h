@@ -1,14 +1,7 @@
 #pragma once
 
-#ifndef _WIN32_WINNT
-#define _WIN32_WINNT 0x0A00 
-#endif
+#include "framework.h"
 
-#ifndef NOMINMAX
-#define NOMINMAX
-#endif
-
-#define WIN32_LEAN_AND_MEAN
 #include <WinSock2.h>
 #include <windows.h>
 #include <shlobj.h>
@@ -17,48 +10,6 @@
 #include <boost/asio/ip/icmp.hpp>
 #include <boost/asio/steady_timer.hpp>
 
-#define NOMINMAX
-
-#include <any>
-#include <map>
-#include <mutex>
-#include <ctime>
-#include <regex>
-#include <queue>
-#include <tuple>
-#include <vector>
-#include <thread>
-#include <future>
-#include <string>
-#include <memory>
-#include <chrono>
-#include <limits>
-#include <format>
-#include <random>
-#include <cctype>
-#include <sstream>
-#include <variant>
-#include <iomanip>
-#include <fstream>
-#include <cstdint>
-#include <cassert>
-#include <cstddef>
-#include <iterator>
-#include <iostream>
-#include <typeindex>
-#include <optional>
-#include <algorithm>
-#include <functional>
-#include <filesystem>
-#include <type_traits>
-#include <string_view>
-#include <shared_mutex>
-#include <unordered_map>
-#include <unordered_set>
-#include <memory_resource>
-#include <condition_variable>
-
-#define PCRE2_CODE_UNIT_WIDTH 8
 #include <pcre2.h>
 #include <argon2.h>
 #include <fmt/os.h>
@@ -120,9 +71,42 @@
 #pragma warning(pop)
 #endif
 
-#define HASH_LEN 32
-#define SALT_LEN crypto_pwhash_SALTBYTES
-
-#include "framework.h"
-
-#include "globals.hpp"
+#include <any>
+#include <map>
+#include <array>
+#include <mutex>
+#include <ctime>
+#include <regex>
+#include <queue>
+#include <tuple>
+#include <vector>
+#include <thread>
+#include <future>
+#include <string>
+#include <memory>
+#include <chrono>
+#include <limits>
+#include <format>
+#include <random>
+#include <cctype>
+#include <sstream>
+#include <variant>
+#include <iomanip>
+#include <fstream>
+#include <cstdint>
+#include <cassert>
+#include <cstddef>
+#include <iterator>
+#include <iostream>
+#include <typeindex>
+#include <optional>
+#include <algorithm>
+#include <functional>
+#include <filesystem>
+#include <type_traits>
+#include <string_view>
+#include <shared_mutex>
+#include <unordered_map>
+#include <unordered_set>
+#include <memory_resource>
+#include <condition_variable>

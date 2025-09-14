@@ -1,31 +1,54 @@
 #pragma once
 
-#include "pch.h"
-
 #include "encoder.hpp"
 #include "generator.hpp"
 #include "cryptographer.hpp"
 
 namespace QLogicaeCore
 {
-    class Argon2idHashCryptographer : public Cryptographer
+    class Argon2idHashCryptographer :
+        public Cryptographer
     {
     public:
         Argon2idHashCryptographer();
+
         ~Argon2idHashCryptographer() = default;
-        Argon2idHashCryptographer(const CryptographerProperties&);
-        Argon2idHashCryptographer(const Argon2idHashCryptographer&) = delete;
-        Argon2idHashCryptographer(Argon2idHashCryptographer&&) noexcept = delete;
-        Argon2idHashCryptographer& operator = (Argon2idHashCryptographer&&) = delete;
-        Argon2idHashCryptographer& operator = (const Argon2idHashCryptographer&) = delete;
 
-        std::string transform(const std::string& va) const;
-        bool reverse(const std::string_view& va, const std::string_view& vb) const;
+        Argon2idHashCryptographer(
+            const CryptographerProperties&
+                cryptographer_properties);
 
-        std::future<std::string> transform_async(const std::string& va) const;
-        std::future<bool> reverse_async(const std::string_view& va, const std::string_view& vb) const;
+        Argon2idHashCryptographer(
+            const Argon2idHashCryptographer&
+                argon2id_hash_cryptographer) = delete;
+
+        Argon2idHashCryptographer(
+            Argon2idHashCryptographer&&
+                argon2id_hash_cryptographer) noexcept = delete;
+
+        Argon2idHashCryptographer& operator = (
+            Argon2idHashCryptographer&&
+                argon2id_hash_cryptographer) = delete;
+
+        Argon2idHashCryptographer& operator = (
+            const Argon2idHashCryptographer&
+                argon2id_hash_cryptographer) = delete;
+
+        std::string transform(const std::string& text) const;
+        bool reverse(
+            const std::string_view& hash,
+            const std::string_view& key
+        ) const;
+
+        std::future<std::string> transform_async(
+            const std::string& text
+        ) const;
+        std::future<bool> reverse_async(
+            const std::string_view& hash,
+            const std::string_view& key
+        ) const;
 
     protected:
-        CryptographerProperties _va;
+        CryptographerProperties _cryptographer_properties;
     };
 }

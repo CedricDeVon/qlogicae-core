@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "abstract_file_io.hpp"
@@ -16,7 +14,8 @@ namespace QLogicaeCore
 	AbstractFileIO::AbstractFileIO(
 		const std::string_view& name,
 		const std::string_view& file_path) :
-			_name(name), _file_path(file_path)
+			_name(name),
+			_file_path(file_path)
 	{
 
 	}

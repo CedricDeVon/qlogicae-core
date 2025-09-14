@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "windows_registry_value_extractor.hpp"
@@ -43,9 +41,9 @@ namespace QLogicaeCore
             return WindowsRegistry::hkcu()
                 .get_value_via_utf8(_sub_key, _name_key).value();
         }
-        catch (...)
+        catch (const std::exception& exception)
         {
-            return "";
+            throw std::runtime_error(std::string("Exception at WindowsRegistryValueExtractor::get_value(): ") + exception.what());
         }
     }
 }

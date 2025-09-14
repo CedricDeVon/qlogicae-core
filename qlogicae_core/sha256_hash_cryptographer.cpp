@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "sha256_hash_cryptographer.hpp"
@@ -14,48 +12,62 @@ namespace QLogicaeCore
 	std::string SHA256HashCryptographer::transform(
 		const std::string& va) const
 	{
-		if (va.empty())
+		try
 		{
-			return "";
-		}
+			if (va.empty())
+			{
+				return "";
+			}
 
-		unsigned char digest[crypto_hash_sha256_BYTES];
+			unsigned char digest[crypto_hash_sha256_BYTES];
 
-		if (crypto_hash_sha256(
-			digest,
-			reinterpret_cast<const unsigned char*>(va.data()),
-			va.size()) != 0)
-		{
-			return "";
-		}
-
-		return QLogicaeCore::Encoder::get_instance()
-			.from_bytes_to_base64(
+			if (crypto_hash_sha256(
 				digest,
-				crypto_hash_sha256_BYTES
-			);
+				reinterpret_cast<const unsigned char*>(va.data()),
+				va.size()) != 0)
+			{
+				return "";
+			}
+
+			return QLogicaeCore::Encoder::get_instance()
+				.from_bytes_to_base64(
+					digest,
+					crypto_hash_sha256_BYTES
+				);
+		}
+		catch (const std::exception& exception)
+		{
+			throw std::runtime_error(std::string() + "Exception at SHA256HashCryptographer::transform(): " + exception.what());
+		}
 	}
 
 	bool SHA256HashCryptographer::reverse(
 		const std::string& va, const std::string& vb
 	) const
 	{
-		if (va.empty() ||
-			vb.empty())
+		try
 		{
-			return false;
-		}
+			if (va.empty() ||
+				vb.empty())
+			{
+				return false;
+			}
 
-		const std::string computed_base64_hash = transform(va);
-		if (computed_base64_hash.empty())
+			const std::string computed_base64_hash = transform(va);
+			if (computed_base64_hash.empty())
+			{
+				return false;
+			}
+
+			return sodium_memcmp(
+				computed_base64_hash.data(),
+				vb.data(),
+				vb.size()) == 0;
+		}
+		catch (const std::exception& exception)
 		{
-			return false;
+			throw std::runtime_error(std::string() + "Exception at SHA256HashCryptographer::reverse(): " + exception.what());
 		}
-
-		return sodium_memcmp(
-			computed_base64_hash.data(),
-			vb.data(),
-			vb.size()) == 0;
 	}
 
 
@@ -65,14 +77,7 @@ namespace QLogicaeCore
 	{
 		return std::async(std::launch::async, [this, va, vb]() -> bool
 			{
-				try
-				{
-					return reverse(va, vb);
-				}
-				catch (...)
-				{
-					return false;
-				}
+				return reverse(va, vb);				
 			});
 	}
 
@@ -81,14 +86,7 @@ namespace QLogicaeCore
 	{
 		return std::async(std::launch::async, [this, va]() -> std::string
 			{
-				try
-				{
-					return transform(va);
-				}
-				catch (...)
-				{
-					return "";
-				}
+				return transform(va);				
 			});
 	}
 }

@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "globals.hpp"
@@ -29,5 +27,22 @@ namespace QLogicaeCore
         { Constants::TIME_SCALE_UNIT_ABBREVIATION_MONTHS, TimeScaleUnit::MONTHS },
         { Constants::TIME_SCALE_UNIT_ABBREVIATION_YEARS, TimeScaleUnit::YEARS }
     };
+
+    std::unordered_map<std::string_view, TemperatureUnitType> Constants::TEMPERATURE_UNIT_TYPE_STRINGS =
+    {
+        { TEMPERATURE_UNIT_TYPE_CELSIUS, TemperatureUnitType::CELSIUS },
+        { TEMPERATURE_UNIT_TYPE_FAHRENHEIT, TemperatureUnitType::FAHRENHEIT },
+        { TEMPERATURE_UNIT_TYPE_KELVIN, TemperatureUnitType::KELVIN },
+        { TEMPERATURE_UNIT_TYPE_NONE, TemperatureUnitType::NONE }
+    };
+
+    std::unordered_map<TemperatureUnitType, std::string_view> Constants::TEMPERATURE_UNIT_TYPE_ENUMS =
+    {
+        { TemperatureUnitType::CELSIUS, TEMPERATURE_UNIT_TYPE_CELSIUS },
+        { TemperatureUnitType::FAHRENHEIT, TEMPERATURE_UNIT_TYPE_FAHRENHEIT },
+        { TemperatureUnitType::KELVIN, TEMPERATURE_UNIT_TYPE_KELVIN },
+        { TemperatureUnitType::NONE, TEMPERATURE_UNIT_TYPE_NONE }
+    };
+
 }
 

@@ -1,13 +1,13 @@
-#pragma once
-
 #include "pch.h"
 
 #include "xchacha20_poly1305_cipher_cryptographer.hpp"
 
 namespace QLogicaeCore
 {
-	XChaCha20Poly1305CipherCryptographer::XChaCha20Poly1305CipherCryptographer() : Cryptographer()
+	XChaCha20Poly1305CipherCryptographer::XChaCha20Poly1305CipherCryptographer() :
+        Cryptographer()
 	{
+
 	}
 
     std::string XChaCha20Poly1305CipherCryptographer::reverse(
@@ -40,14 +40,7 @@ namespace QLogicaeCore
         return std::async(std::launch::async,
             [this, va, vb, vc]() -> std::string
         {
-            try
-            {
-                return reverse(va, vb, vc);
-            }
-            catch (...)
-            {
-                return "";
-            }
+            return reverse(va, vb, vc);            
         });
     }
 
@@ -59,14 +52,7 @@ namespace QLogicaeCore
         return std::async(std::launch::async,
             [this, va, vb, vc]() -> std::string
         {
-            try
-            {
-                return transform(va, vb, vc);
-            }
-            catch (...)
-            {
-                return "";
-            }
+            return transform(va, vb, vc);            
         });
     }
 
@@ -101,9 +87,9 @@ namespace QLogicaeCore
             return QLogicaeCore::Encoder::get_instance()
                 .from_bytes_to_base64(vf, ve);
         }
-        catch (...)
+        catch (const std::exception& exception)
         {
-            return "";
+            throw std::runtime_error(std::string("Exception at XChaCha20Poly1305CipherCryptographer::transform(): ") + exception.what());
         }
     }
 
@@ -143,9 +129,9 @@ namespace QLogicaeCore
                 reinterpret_cast<char*>(decrypted.data()), ve
             );
         }
-        catch (...)
+        catch (const std::exception& exception)
         {
-            return "";
+            throw std::runtime_error(std::string("Exception at XChaCha20Poly1305CipherCryptographer::reverse(): ") + exception.what());
         }
     }
 
@@ -156,14 +142,7 @@ namespace QLogicaeCore
     {
         return std::async(std::launch::async, [this, va, vb, vc]() -> std::string
         {
-            try
-            {
-                return reverse(va, vb, vc);
-            }
-            catch (...)
-            {
-                return "";
-            }
+            return reverse(va, vb, vc);            
         });
     }
 
@@ -174,14 +153,7 @@ namespace QLogicaeCore
     {
         return std::async(std::launch::async, [this, va, vb, vc]() -> std::string
         {
-            try
-            {
-                return transform(va, vb, vc);
-            }
-            catch (...)
-            {
-                return "";
-            }
+            return transform(va, vb, vc);            
         });
     }
 }

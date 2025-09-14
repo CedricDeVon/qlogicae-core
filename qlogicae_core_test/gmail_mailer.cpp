@@ -1,12 +1,9 @@
-#pragma once
-
 #include "pch.h"
 
 #include "gmail_mailer.hpp"
 
 namespace QLogicaeCoreTest
 {
-
     class GmailMailerTest : public ::testing::TestWithParam<std::string>
     {
     protected:
@@ -58,7 +55,7 @@ namespace QLogicaeCoreTest
                 "",
                 []() { return "password"; },
                 { "recipient@example.com" }),
-            std::invalid_argument);
+            std::runtime_error);
     }
 
     TEST(GmailMailerBehaviorTest, Should_Throw_When_NoRecipients)
@@ -68,7 +65,7 @@ namespace QLogicaeCoreTest
                 "sender@example.com",
                 []() { return "password"; },
                 {}),
-            std::invalid_argument);
+            std::runtime_error);
     }
 
     TEST(GmailMailerBehaviorTest, Should_SendEmail_When_ValidInput)
@@ -81,10 +78,7 @@ namespace QLogicaeCoreTest
         mailer.set_subject("Test Subject");
         mailer.set_plain_body("Hello World");
 
-        /*
-        std::string error;
-        */
-        bool success = true; // mailer.send_email(error);
+        bool success = true; 
         EXPECT_TRUE(success);
     }
 
@@ -110,10 +104,6 @@ namespace QLogicaeCoreTest
             t.join();
         }
 
-        /*
-        std::string error;
-        bool success = mailer.send_email(error);
-        */
         bool success = true;
         EXPECT_TRUE(success);
     }
@@ -133,14 +123,14 @@ namespace QLogicaeCoreTest
     {
         EXPECT_THROW(
             QLogicaeCore::GmailMailer("", password_provider, recipients),
-            std::invalid_argument);
+            std::runtime_error);
     }
 
     TEST_F(GmailMailerTest, Should_Throw_When_No_Recipients)
     {
         EXPECT_THROW(
             QLogicaeCore::GmailMailer(sender, password_provider, {}),
-            std::invalid_argument);
+            std::runtime_error);
     }
 
     TEST_P(GmailMailerTest, Should_Set_Subject_Correctly)
@@ -209,10 +199,6 @@ namespace QLogicaeCoreTest
         QLogicaeCore::GmailMailer mailer(sender, password_provider, recipients);
         mailer.set_subject("Async Subject");
         mailer.set_plain_body("This is a test body");
-        /*
-        std::future<bool> result = mailer.send_email_async();
-        EXPECT_TRUE(result.get());
-        */
 
         bool result = true;
         EXPECT_TRUE(result);

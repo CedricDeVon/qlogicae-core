@@ -1,12 +1,11 @@
-#pragma once
-
 #include "pch.h"
 
 #include "aes256_signature_cryptographer.hpp"
 
 namespace QLogicaeCore
 {
-	AES256SignatureCryptographer::AES256SignatureCryptographer() : Cryptographer()
+	AES256SignatureCryptographer::AES256SignatureCryptographer() :
+		Cryptographer()
 	{
 
 	}
@@ -40,14 +39,7 @@ namespace QLogicaeCore
 		return std::async(std::launch::async,
 			[this, va, vb]() -> std::string
 			{
-				try
-				{
-					return reverse(va, vb);
-				}
-				catch (...)
-				{
-					return "";
-				}
+				return reverse(va, vb);				
 			});
 	}
 
@@ -59,14 +51,7 @@ namespace QLogicaeCore
 		return std::async(std::launch::async,
 			[this, va, vb, vc]() -> std::string
 			{
-				try
-				{
-					return transform(va, vb, vc);
-				}
-				catch (...)
-				{
-					return "";
-				}
+				return transform(va, vb, vc);				
 			});
 	}
 
@@ -95,11 +80,11 @@ namespace QLogicaeCore
 
 			crypto_sign(vh, &vf, vd, ve, vc);
 
-			return QLogicaeCore::Encoder::get_instance().from_bytes_to_base64(vh, vf);
+			return ENCODER.from_bytes_to_base64(vh, vf);
 		}
-		catch (...)
+		catch (const std::exception& exception)
 		{
-			return "";
+			throw std::runtime_error(std::string() + "Exception at AES256SignatureCryptographer::transform(): " + exception.what());
 		}
 	}
 
@@ -117,7 +102,7 @@ namespace QLogicaeCore
 			}
 
 			std::vector<unsigned char> vc =
-				QLogicaeCore::Encoder::get_instance().from_base64_to_bytes(va);
+				ENCODER.from_base64_to_bytes(va);
 			unsigned long long ve, vh = vc.size();
 			std::vector<unsigned char> vd(vh);
 			unsigned char* vf = vd.data(), *vg = vc.data();
@@ -129,9 +114,9 @@ namespace QLogicaeCore
 
 			return std::string(reinterpret_cast<const char*>(vf), ve);
 		}
-		catch (...)
+		catch (const std::exception& exception)
 		{
-			return "";
+			throw std::runtime_error(std::string() + "Exception at AES256SignatureCryptographer::reverse(): " + exception.what());
 		}
 	}
 
@@ -141,14 +126,7 @@ namespace QLogicaeCore
 	{
 		return std::async(std::launch::async, [this, va, vb]() -> std::string
 		{
-			try
-			{
-				return reverse(va, vb);
-			}
-			catch (...)
-			{
-				return "";
-			}
+			return reverse(va, vb);			
 		});
 	}
 
@@ -159,14 +137,7 @@ namespace QLogicaeCore
 	{
 		return std::async(std::launch::async, [this, va, vb, vc]() -> std::string
 		{
-			try
-			{
-				return transform(va, vb, vc);
-			}
-			catch (...)
-			{
-				return "";
-			}
+			return transform(va, vb, vc);			
 		});
 	}
 }

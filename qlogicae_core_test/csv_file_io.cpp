@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "csv_file_io.hpp"
@@ -523,3 +521,4 @@ namespace QLogicaeCoreTest
         ASSERT_EQ(file.get_column_count(), 3);
     }
 }
+

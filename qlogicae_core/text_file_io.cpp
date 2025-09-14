@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "text_file_io.hpp"
@@ -66,9 +64,9 @@ namespace QLogicaeCore
                 return false;
             }
         }
-        catch (...)
+        catch (const std::exception& exception)
         {
-            return false;
+            throw std::runtime_error(std::string() + "Exception at TextFileIO::open(): " + exception.what());
         }
     }
 
@@ -103,9 +101,9 @@ namespace QLogicaeCore
                 return false;
             }
         }
-        catch (...)
+        catch (const std::exception& exception)
         {
-            return false;
+            throw std::runtime_error(std::string() + "Exception at TextFileIO::close(): " + exception.what());
         }
     }
 
@@ -128,9 +126,9 @@ namespace QLogicaeCore
                 return false;
             }
         }
-        catch (...)
+        catch (const std::exception& exception)
         {
-            return false;
+            throw std::runtime_error(std::string() + "Exception at TextFileIO::is_open(): " + exception.what());
         }
     }
 
@@ -154,9 +152,9 @@ namespace QLogicaeCore
 
             return content;
         }
-        catch (...)
+        catch (const std::exception& exception)
         {
-            return "";
+            throw std::runtime_error(std::string() + "Exception at TextFileIO::read(): " + exception.what());
         }
     }
 
@@ -179,9 +177,9 @@ namespace QLogicaeCore
 
             return true;
         }
-        catch (...)
+        catch (const std::exception& exception)
         {
-            return false;
+            throw std::runtime_error(std::string() + "Exception at TextFileIO::write(): " + exception.what());
         }
     }
 
@@ -204,9 +202,9 @@ namespace QLogicaeCore
 
             return true;
         }
-        catch (...)
+        catch (const std::exception& exception)
         {
-            return false;
+            throw std::runtime_error(std::string() + "Exception at TextFileIO::append(): " + exception.what());
         }
     }
 
@@ -215,14 +213,7 @@ namespace QLogicaeCore
         return std::async(std::launch::async,
             [this]() -> std::string
         {
-            try
-            {
-                return read();
-            }
-            catch (...)
-            {
-                return {};
-            }
+            return read();            
         });
     }
 
@@ -232,14 +223,7 @@ namespace QLogicaeCore
         return std::async(std::launch::async,
             [this, content]() -> bool
         {
-            try
-            {
-                return write(content);
-            }
-            catch (...)
-            {
-                return false;
-            }
+            return write(content);            
         });
     }
 
@@ -249,14 +233,7 @@ namespace QLogicaeCore
         return std::async(std::launch::async,
             [this, content]() -> bool
         {
-            try
-            {
-                return append(content);
-            }
-            catch (...)
-            {
-                return false;
-            }
+            return append(content);            
         });
     }
 
@@ -266,14 +243,7 @@ namespace QLogicaeCore
         return std::async(std::launch::async,
             [this, file_mode]() -> bool
         {
-            try
-            {
-                return open(file_mode);
-            }
-            catch (...)
-            {
-                return false;
-            }
+            return open(file_mode);            
         });
     }
 
@@ -283,14 +253,7 @@ namespace QLogicaeCore
         return std::async(std::launch::async,
             [this, file_mode]() -> bool
         {
-            try
-            {
-                return close(file_mode);
-            }
-            catch (...)
-            {
-                return false;
-            }
+            return close(file_mode);            
         });
     }
 }

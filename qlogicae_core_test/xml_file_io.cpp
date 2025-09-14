@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "xml_file_io.hpp"
@@ -22,6 +20,17 @@ namespace QLogicaeCoreTest
         {
             std::remove("test.xml");
             std::remove("copy.xml");
+        }
+    };
+
+    class XmlFileIOParamTest : public ::testing::TestWithParam<std::string> {
+    protected:
+        void SetUp() override {
+            std::ofstream file("test.xml");
+            file << "<root><item id=\"1\">123</item><item id=\"2\">456</item></root>";
+        }
+        void TearDown() override {
+            std::remove("test.xml");
         }
     };
 
@@ -276,17 +285,6 @@ namespace QLogicaeCoreTest
         ASSERT_TRUE(xml.load());
         ASSERT_FALSE(xml.validate_against_schema("invalid.xsd"));
     }
-
-    class XmlFileIOParamTest : public ::testing::TestWithParam<std::string> {
-    protected:
-        void SetUp() override {
-            std::ofstream file("test.xml");
-            file << "<root><item id=\"1\">123</item><item id=\"2\">456</item></root>";
-        }
-        void TearDown() override {
-            std::remove("test.xml");
-        }
-    };
 
     TEST_P(XmlFileIOParamTest, Should_Convert_Text_To_TypedValue)
     {

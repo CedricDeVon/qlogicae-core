@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "dot_env.hpp"
@@ -7,20 +5,27 @@
 
 namespace QLogicaeCore
 {
+	DotEnv::DotEnv()
+	{
+
+	}
+
 	bool DotEnv::set(const wchar_t* key, const wchar_t* value)
 	{
 		try
 		{
-			if (key == nullptr || key[0] == L'\0' || value == nullptr)
+			if (key == nullptr ||
+				key[0] == L'\0' ||
+				value == nullptr)
 			{
 				return false;
 			}
 
 			return SetEnvironmentVariableW(key, value) != 0;
 		}
-		catch (...)
+		catch (const std::exception& exception)
 		{
-			return false;
+			throw std::runtime_error(std::string() + "Exception at DotEnv::set(): " + exception.what());
 		}
 	}
 
@@ -28,16 +33,17 @@ namespace QLogicaeCore
 	{
 		try
 		{
-			if (key == nullptr || key[0] == L'\0')
+			if (key == nullptr ||
+				key[0] == L'\0')
 			{
 				return false;
 			}
 
 			return SetEnvironmentVariableW(key, nullptr) != 0;
 		}
-		catch (...)
+		catch (const std::exception& exception)
 		{
-			return false;
+			throw std::runtime_error(std::string() + "Exception at DotEnv::remove(): " + exception.what());
 		}
 	}
 
@@ -69,9 +75,9 @@ namespace QLogicaeCore
 
 			return result;
 		}
-		catch (...)
+		catch (const std::exception& exception)
 		{
-			return L"";
+			throw std::runtime_error(std::string() + "Exception at DotEnv::get(): " + exception.what());
 		}
 	}
 
@@ -80,10 +86,5 @@ namespace QLogicaeCore
 		static DotEnv singleton;
 
 		return singleton;
-	}
-
-	DotEnv::DotEnv()
-	{
-
 	}
 }

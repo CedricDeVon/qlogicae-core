@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "dot_env_value_extractor.hpp"
@@ -8,7 +6,8 @@ namespace QLogicaeCore
 {
     DotEnvValueExtractor::DotEnvValueExtractor(
         const std::string& key) :
-            _key(QLogicaeCore::Encoder::get_instance().from_utf8_to_utf16(key))
+            _key(ENCODER
+                .from_utf8_to_utf16(key))
     {
 
     }
@@ -24,13 +23,15 @@ namespace QLogicaeCore
     {
         try
         {
-            return QLogicaeCore::Encoder::get_instance().from_utf16_to_utf8(
-                DotEnv::get_instance().get(_key.c_str()).value()
+            return ENCODER
+                .from_utf16_to_utf8(
+                    DOT_ENV.get(_key.c_str()
+                ).value()
             ); 
         }
-        catch (...)
+        catch (const std::exception& exception)
         {
-            return "";
+            throw std::runtime_error(std::string() + "Exception at DotEnvValueExtractor::get_value(): " + exception.what());
         }
     }
 

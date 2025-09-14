@@ -1,24 +1,36 @@
 #pragma once
 
-#include "pch.h"
-
 #include "abstract_value_extractor.hpp"
 
 namespace QLogicaeCore
 {
-    class PlaceholderValueExtractor : public AbstractValueExtractor
+    class PlaceholderValueExtractor :
+        public AbstractValueExtractor
     {
     public:
         ~PlaceholderValueExtractor() = default;
-        PlaceholderValueExtractor(const std::string&);
+        
         PlaceholderValueExtractor(
-            const PlaceholderValueExtractor&) = delete;
+            const std::string& name
+        );
+        
         PlaceholderValueExtractor(
-            PlaceholderValueExtractor&&) noexcept = delete;
+            const PlaceholderValueExtractor&
+                placeholder_value_extractor
+        ) = delete;
+        
+        PlaceholderValueExtractor(
+            PlaceholderValueExtractor&&
+                placeholder_value_extractor
+        ) noexcept = delete;
+        
         PlaceholderValueExtractor& operator =
-            (PlaceholderValueExtractor&&) = delete;
+            (PlaceholderValueExtractor&&
+                placeholder_value_extractor) = delete;
+        
         PlaceholderValueExtractor& operator =
-            (const PlaceholderValueExtractor&) = delete;
+            (const PlaceholderValueExtractor&
+                placeholder_value_extractor) = delete;
 
         std::optional<std::string> get_value() const;
 

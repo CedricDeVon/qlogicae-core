@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "text_file_io.hpp"
@@ -101,9 +99,12 @@ namespace QLogicaeCoreTest
 
     TEST(TextFileIOErrorTest, Should_Expect_Failure_When_UsingInvalidPath)
     {
-        QLogicaeCore::TextFileIO file("/invalid_path/file.txt");
-        EXPECT_FALSE(file.write("fail"));
-        EXPECT_EQ(file.read(), "");
+        EXPECT_ANY_THROW(
+            {
+                QLogicaeCore::TextFileIO file("/invalid_path/file.txt");
+                file.write("fail");
+                EXPECT_EQ(file.read(), "");
+            });
     }
 
     TEST(TextFileIOEdgeTest, Should_Expect_Empty_When_ReadingNonexistentFile)

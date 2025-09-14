@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "argon2id_hash_cryptographer.hpp"
@@ -9,14 +7,14 @@ namespace QLogicaeCore
 	Argon2idHashCryptographer::Argon2idHashCryptographer() :
 		Cryptographer()
 	{
-		_va = QLogicaeCore::default_cryptographer_3_properties;
+		_cryptographer_properties = QLogicaeCore::default_cryptographer_3_properties;
 	}
 
 	Argon2idHashCryptographer::Argon2idHashCryptographer(
 		const CryptographerProperties& va) :
 			Cryptographer()
 	{
-		_va = va;
+		_cryptographer_properties = va;
 	}
 
 	std::string Argon2idHashCryptographer::transform(
@@ -28,14 +26,14 @@ namespace QLogicaeCore
 
 			std::array<char, 512> vb{};
 			int vc = argon2id_hash_encoded(
-				_va.uint32_t_1,
-				_va.uint32_t_2,
-				_va.uint32_t_3,
+				_cryptographer_properties.uint32_t_1,
+				_cryptographer_properties.uint32_t_2,
+				_cryptographer_properties.uint32_t_3,
 				va.data(),
 				va.size(),
-				QLogicaeCore::Generator::get_instance().random_salt().data(),
-				_va.size_t_2,
-				_va.size_t_1,
+				GENERATOR.random_salt().data(),
+				_cryptographer_properties.size_t_2,
+				_cryptographer_properties.size_t_1,
 				vb.data(), vb.size());
 			if (vc != ARGON2_OK)
 			{
@@ -44,9 +42,9 @@ namespace QLogicaeCore
 
 			return vb.data();
 		}
-		catch (...)
+		catch (const std::exception& exception)
 		{
-			return "";
+			throw std::runtime_error(std::string() + "Exception at Argon2idHashCryptographer::transform(): " + exception.what());
 		}
 	}
 
@@ -55,14 +53,7 @@ namespace QLogicaeCore
 	{
 		return std::async(std::launch::async, [this, va]() -> std::string
 		{
-			try
-			{
-				return transform(va);
-			}
-			catch (...)
-			{
-				return "";
-			}
+			return transform(va);			
 		});
 	}
 
@@ -78,9 +69,9 @@ namespace QLogicaeCore
 				va.data(), vb.data(), vb.size()
 			) == ARGON2_OK;
 		}
-		catch (...)
+		catch (const std::exception& exception)
 		{
-			return "";
+			throw std::runtime_error(std::string() + "Exception at Argon2idHashCryptographer::reverse(): " + exception.what());
 		}
 	}
 	
@@ -90,14 +81,7 @@ namespace QLogicaeCore
 	{
 		return std::async(std::launch::async, [this, va, vb]() -> bool
 		{
-			try
-			{
-				return reverse(va, vb);
-			}
-			catch (...)
-			{
-				return "";
-			}
+			return reverse(va, vb);			
 		});
 	}
 }

@@ -12,6 +12,8 @@ namespace QLogicaeCoreTest
             QLogicaeCore::WindowsRegistry::hkcu();
     };
 
+    class WindowsRegistryEmptyArgumentTest : public ::testing::Test {};
+
     TEST_P(WindowsRegistryTest,
         Should_Set_Expect_Success_When_Key_And_Value_Are_Valid)
     {
@@ -45,8 +47,6 @@ namespace QLogicaeCoreTest
             std::wstring(L"key\0mid", 7)
         )
     );
-
-    class WindowsRegistryEmptyArgumentTest : public ::testing::Test {};
 
     TEST_F(WindowsRegistryEmptyArgumentTest,
         Should_Fail_When_Sub_And_Name_Are_Empty)

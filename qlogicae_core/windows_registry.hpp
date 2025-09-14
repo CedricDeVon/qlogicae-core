@@ -1,42 +1,101 @@
 #pragma once
 
-#include "pch.h"
-
+#include "globals.hpp"
 #include "encoder.hpp"
+
+#include <windows.h>
 
 namespace QLogicaeCore
 {
     class WindowsRegistry
     {
     public:
-        std::unordered_map<std::string, std::string> get_values_via_utf8(std::string_view) const;
-        std::unordered_map<std::string, std::wstring> get_values_via_utf16(std::wstring_view) const;
+        std::unordered_map<std::string, std::string>
+            get_values_via_utf8(
+                std::string_view value
+        ) const;
         
-        bool remove_value_via_utf8(std::string_view, std::string_view) const;
-        bool remove_value_via_utf16(std::wstring_view, std::wstring_view) const;
-        bool set_sub_and_name_keys_via_utf8(const std::string_view, const std::string_view);
-        bool set_sub_and_name_keys_via_utf16(const std::wstring_view, const std::wstring_view);
-        bool is_sub_and_name_key_path_found_via_utf8(std::string_view, std::string_view) const;
-        std::optional<std::string> get_value_via_utf8(std::string_view, std::string_view) const;
-        bool is_sub_and_name_key_path_found_via_utf16(std::wstring_view, std::wstring_view) const;
-        bool set_value_via_utf8(std::string_view, std::string_view, const std::string_view) const;
-        std::optional<std::wstring> get_value_via_utf16(std::wstring_view, std::wstring_view) const;
-        bool set_value_via_utf16(std::wstring_view, std::wstring_view, const std::wstring_view) const;
+        std::unordered_map<std::string, std::wstring>
+            get_values_via_utf16(
+                std::wstring_view value
+        ) const;
+        
+        bool remove_value_via_utf8(
+            std::string_view sub_path,
+            std::string_view name
+        ) const;
+        
+        bool remove_value_via_utf16(
+            std::wstring_view sub_path,
+            std::wstring_view name
+        ) const;
+        
+        bool set_sub_and_name_keys_via_utf8(
+            const std::string_view sub_path,
+            const std::string_view name
+        );
+        
+        bool set_sub_and_name_keys_via_utf16(
+            const std::wstring_view sub_path,
+            const std::wstring_view name
+        );
+        
+        bool is_sub_and_name_key_path_found_via_utf8(
+            std::string_view sub_path,
+            std::string_view name
+        ) const;
+        
+        std::optional<std::string> get_value_via_utf8(
+            std::string_view sub_path,
+            std::string_view name
+        ) const;
+        
+        bool is_sub_and_name_key_path_found_via_utf16(
+            std::wstring_view sub_path,
+            std::wstring_view name
+        ) const;
+        
+        bool set_value_via_utf8(
+            std::string_view sub_path,
+            std::string_view name,
+            const std::string_view value
+        ) const;
+        
+        std::optional<std::wstring> get_value_via_utf16(
+            std::wstring_view sub_path,
+            std::wstring_view name
+        ) const;
+        
+        bool set_value_via_utf16(
+            std::wstring_view sub_path,
+            std::wstring_view name,
+            const std::wstring_view value
+        ) const;
 
         static WindowsRegistry& hkcu();
+
         static WindowsRegistry& hklm();
 
     protected:
+        ~WindowsRegistry() = default;
+        
+        WindowsRegistry(
+            const WindowsRegistry& windows_registry) = delete;
+        
+        WindowsRegistry(
+            WindowsRegistry&& windows_registry) noexcept = delete;
+        
+        WindowsRegistry(const HKEY hkey = Constants::DEFAULT_HKEY);
+        
+        WindowsRegistry& operator = 
+            (WindowsRegistry&& windows_registry) = delete;
+        
+        WindowsRegistry& operator = (
+            const WindowsRegistry& windows_registry) = delete;
+
         HKEY _root_key;
         std::wstring _sub_key;
         std::wstring _name_key;
-
-        ~WindowsRegistry() = default;
-        WindowsRegistry(const WindowsRegistry&) = delete;
-        WindowsRegistry(WindowsRegistry&&) noexcept = delete;
-        WindowsRegistry(const HKEY = Constants::DEFAULT_HKEY);
-        WindowsRegistry& operator = (WindowsRegistry&&) = delete;
-        WindowsRegistry& operator = (const WindowsRegistry&) = delete;
     };
 
     inline static WindowsRegistry& WINDOWS_REGISTRY_HKCU = WindowsRegistry::hkcu();

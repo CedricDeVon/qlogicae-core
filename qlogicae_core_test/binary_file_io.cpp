@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "binary_file_io.hpp"
@@ -13,7 +11,8 @@ namespace QLogicaeCoreTest
 
         void TearDown() override
         {
-            std::filesystem::remove(test_path);
+            std::error_code ec;
+            std::filesystem::remove(test_path, ec);
         }
     };
 
@@ -70,22 +69,64 @@ namespace QLogicaeCoreTest
         QLogicaeCore::BinaryFileIO file(test_path);
         std::vector<std::byte> input = GetParam();
 
-        auto write_task = [&]() {
-            for (int i = 0; i < 10; ++i) {
-                file.write(input);
+        const bool has_bytes = !input.empty();
+
+        const int writers = 4;
+        const int readers = 4;
+        const int iterations_per_writer = 25;
+        const int iterations_per_reader = 50;
+
+        std::atomic<bool> exception_occurred(false);
+
+        auto writer_task = [&](int id) {
+            try {
+                for (int i = 0; i < iterations_per_writer; ++i) {
+                    bool ok = file.append(input);
+                    if (!ok) {
+                        exception_occurred.store(true);
+                        return;
+                    }
+                }
+            }
+            catch (...) {
+                exception_occurred.store(true);
             }
             };
 
-        auto read_task = [&]() {
-            for (int i = 0; i < 10; ++i) {
-                file.read();
+        auto reader_task = [&](int id) {
+            try {
+                for (int i = 0; i < iterations_per_reader; ++i) {
+                    auto data = file.read();
+                    (void)data; 
+                }
+            }
+            catch (...) {
+                exception_occurred.store(true);
             }
             };
 
-        std::thread t1(write_task);
-        std::thread t2(read_task);
-        t1.join();
-        t2.join();
+        std::vector<std::thread> threads;
+        for (int i = 0; i < writers; ++i) {
+            threads.emplace_back(writer_task, i);
+        }
+        for (int i = 0; i < readers; ++i) {
+            threads.emplace_back(reader_task, i);
+        }
+
+        for (auto& t : threads) {
+            t.join();
+        }
+
+        ASSERT_FALSE(exception_occurred.load());
+
+        if (has_bytes) {
+            auto final_data = file.read();
+            const std::size_t expected_size =
+                static_cast<std::size_t>(writers) *
+                static_cast<std::size_t>(iterations_per_writer) *
+                input.size();
+            ASSERT_EQ(final_data.size(), expected_size);
+        }
     }
 
     TEST_P(BinaryFileIOTest, Should_SucceedQuickly_When_PerformanceIsMeasured)

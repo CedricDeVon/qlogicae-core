@@ -1,77 +1,80 @@
-#pragma once
-
 #include "pch.h"
 
 #include "csv_file_io.hpp"
-#include "string_builder.hpp"
 
-namespace QLogicaeCore {
-
+namespace QLogicaeCore
+{
     CsvFileIO::~CsvFileIO() = default;
 
     CsvFileIO::CsvFileIO(const std::string_view& path) :
         AbstractFileIO(path)
     {
-        open();
+        
     }
 
     CsvFileIO::CsvFileIO(
         const std::string_view& path,
         const std::string_view& content) :
-        AbstractFileIO(path, content)
+            AbstractFileIO(path, content)
     {
-        open();
+
     }
 
-    std::string CsvFileIO::trim(std::string_view str)
+    std::string CsvFileIO::trim(std::string_view value)
     {
-        auto start = str.find_first_not_of(" \t\n\r");
-        auto end = str.find_last_not_of(" \t\n\r");
+        try
+        {
+            auto start = value.find_first_not_of(" \t\n\r");
+            auto end = value.find_last_not_of(" \t\n\r");
 
-        return (start == std::string_view::npos) ? "" :
-            std::string(str.substr(start, end - start + 1));
+            return (start == std::string_view::npos) ? "" :
+                std::string(value.substr(start, end - start + 1));
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at CsvFileIO::open(): " + exception.what());
+        }
     }
 
     bool QLogicaeCore::CsvFileIO::clear()
     {
-        std::lock_guard<std::recursive_mutex> lock(_mutex);
-
-        if (!_temporary_csv_document_1.has_value())
-        {
-            return false;
-        }
-
         try
         {
+            std::lock_guard<std::recursive_mutex> lock(_mutex);
+
+            if (!_temporary_csv_document_1.has_value())
+            {
+                return false;
+            }
+
             const size_t row_count =
                 _temporary_csv_document_1->GetRowCount();
-            for (size_t i = 0; i < row_count; ++i)
+            for (size_t index = 0; index < row_count; ++index)
             {
-                _temporary_csv_document_1->RemoveRow(0); 
+                _temporary_csv_document_1->RemoveRow(0);
             }
 
             return true;
         }
-        catch (...)
+        catch (const std::exception& exception)
         {
             _corrupted = true;
 
-            return false;
+            throw std::runtime_error(std::string() + "Exception at CsvFileIO::close(): " + exception.what());
         }
     }
 
-
     bool CsvFileIO::open()
     {
-        std::scoped_lock lock(_mutex);
-
-        if (_file_path.empty())
-        {
-            return false;
-        }
-
         try
         {
+            std::scoped_lock lock(_mutex);
+
+            if (_file_path.empty())
+            {
+                return false;
+            }
+
             fast_io::native_file_loader loader(_file_path);
             std::string_view buffer(loader.cbegin(), loader.cend());
 
@@ -96,130 +99,232 @@ namespace QLogicaeCore {
 
             return true;
         }
-        catch (...)
+        catch (const std::exception& exception)
         {
             _corrupted = true;
             _temporary_csv_document_1.reset();
-            return false;
+
+            throw std::runtime_error(std::string() + "Exception at CsvFileIO::open(): " + exception.what());
         }
     }
 
     bool CsvFileIO::close()
     {
-        std::scoped_lock lock(_mutex);
-        _temporary_csv_document_1.reset();
+        try
+        {
+            std::scoped_lock lock(_mutex);
 
-        return true;
+            _temporary_csv_document_1.reset();
+
+            return true;
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at CsvFileIO::close(): " + exception.what());
+        }
     }
 
     size_t CsvFileIO::get_row_count()
     {
-        std::scoped_lock lock(_mutex);
+        try
+        {
+            std::scoped_lock lock(_mutex);
 
-        return _temporary_csv_document_1->GetRowCount();
+            if (!_temporary_csv_document_1)
+            {
+                return 0;
+            }
+
+            return _temporary_csv_document_1->GetRowCount();
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at CsvFileIO::get_row_count(): " + exception.what());
+        }
     }
 
     size_t CsvFileIO::get_column_count()
     {
-        std::scoped_lock lock(_mutex);
+        try
+        {
+            std::scoped_lock lock(_mutex);
 
-        return _temporary_csv_document_1->GetColumnCount();
+            if (!_temporary_csv_document_1)
+            {
+                return 0;
+            }
+
+            return _temporary_csv_document_1->GetColumnCount();
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at CsvFileIO::get_column_count(): " + exception.what());
+        }
     }
 
     std::vector<std::string> CsvFileIO::get_headers()
     {
-        std::scoped_lock lock(_mutex);
+        try
+        {
+            std::scoped_lock lock(_mutex);
 
-        return _temporary_csv_document_1->GetColumnNames();
+            if (!_temporary_csv_document_1)
+            {
+                return {};
+            }
+
+            return _temporary_csv_document_1->GetColumnNames();
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at CsvFileIO::get_headers(): " + exception.what());
+        }
     }
 
     std::string CsvFileIO::get_row(const unsigned int& index)
     {
-        std::scoped_lock lock(_mutex);
-
-        const auto row =
-            _temporary_csv_document_1->GetRow<std::string>(index);
-        std::ostringstream oss;
-        for (size_t i = 0; i < row.size(); ++i)
+        try
         {
-            oss << row[i] << (i + 1 < row.size() ? "," : "");
-        }
+            std::scoped_lock lock(_mutex);
 
-        return oss.str();
+            if (!_temporary_csv_document_1)
+            {
+                return "";
+            }
+
+            const auto row =
+                _temporary_csv_document_1->GetRow<std::string>(index);
+            std::string text = "";
+            size_t index, row_size = row.size();
+            for (index = 0; index < row_size; ++index)
+            {
+                text += absl::StrCat(row[index]) + (index + 1 < row_size ? "," : "");
+            }
+
+            return text;
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at CsvFileIO::get_row(): " + exception.what());
+        }
     }
 
     bool CsvFileIO::is_header_found(const std::string_view& header)
     {
-        std::scoped_lock lock(_mutex);
-
-        if (!_temporary_csv_document_1.has_value())
-        {
-            return false;
-        }
-
-        const auto trimmed = trim(header);
-        const auto headers = _temporary_csv_document_1->GetColumnNames();
-        return std::any_of(
-            headers.begin(), headers.end(), [&](const std::string& h
-        )
-        {
-            return trim(h) == trimmed;
-        });
-    }
-
-    std::string CsvFileIO::get_column(const std::string_view& name)
-    {
-        std::scoped_lock lock(_mutex);
-
-        const auto column =
-            _temporary_csv_document_1->GetColumn<std::string>(
-                std::string(name)
-            );
-        std::ostringstream oss;
-        for (size_t i = 0; i < column.size(); ++i)
-            oss << column[i] << (i + 1 < column.size() ? "," : "");
-        return oss.str();
-    }
-
-    std::string CsvFileIO::get_cell(
-        const std::string_view& col,
-        const unsigned int& row
-    )
-    {
-        std::scoped_lock lock(_mutex);
-        return _temporary_csv_document_1->GetCell<std::string>(
-            std::string(col), row
-        );
-    }
-
-    bool CsvFileIO::save()
-    {   
-        std::scoped_lock lock(_mutex);
-
         try
         {
-            _temporary_csv_document_1->Save();
-            return true;
+            std::scoped_lock lock(_mutex);
+
+            if (!_temporary_csv_document_1.has_value())
+            {
+                return false;
+            }
+
+            const auto trimmed = trim(header);
+            const auto headers = _temporary_csv_document_1->GetColumnNames();
+            return std::any_of(
+                headers.begin(), headers.end(), [&](const std::string& heading
+                    )
+                {
+                    return trim(heading) == trimmed;
+                });
         }
         catch (...)
         {
             return false;
+        }
+    }
+
+    std::string CsvFileIO::get_column(const std::string_view& name)
+    {
+        try
+        {
+            std::scoped_lock lock(_mutex);
+
+            if (!_temporary_csv_document_1)
+            {
+                return "";
+            }
+
+            const auto column =
+                _temporary_csv_document_1->GetColumn<std::string>(
+                    std::string(name)
+                );
+            std::string text = "";
+            size_t index, row_size = column.size();
+            for (index = 0; index < row_size; ++index)
+            {
+                text += absl::StrCat(column[index]) + (index + 1 < row_size ? "," : "");
+            }
+
+            return text;
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at CsvFileIO::get_column(): " + exception.what());
+        }
+    }
+
+    std::string CsvFileIO::get_cell(
+        const std::string_view& header_name,
+        const unsigned int& row_index
+    )
+    {
+        try
+        {
+            std::scoped_lock lock(_mutex);
+
+            if (!_temporary_csv_document_1)
+            {
+                return "";
+            }
+
+            return _temporary_csv_document_1->GetCell<std::string>(
+                std::string(header_name), row_index
+            );
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at CsvFileIO::get_cell(): " + exception.what());
+        }
+    }
+
+    bool CsvFileIO::save()
+    {
+        try
+        {
+            std::scoped_lock lock(_mutex);
+
+            if (!_temporary_csv_document_1)
+            {
+                return false;
+            }
+
+            _temporary_csv_document_1->Save();
+
+            return true;
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at CsvFileIO::save(): " + exception.what());
         }
     }
 
     std::string CsvFileIO::read()
     {
-        std::scoped_lock lock(_mutex);
         try
         {
+            std::scoped_lock lock(_mutex);
+
             fast_io::native_file_loader loader(_file_path);
 
             return std::string(loader.cbegin(), loader.cend());
         }
-        catch (...)
+        catch (const std::exception& exception)
         {
             _corrupted = true;
-            return "";
+
+            throw std::runtime_error(std::string() + "Exception at CsvFileIO::read(): " + exception.what());
         }
     }
 
@@ -232,9 +337,9 @@ namespace QLogicaeCore {
 
             return true;
         }
-        catch (...)
+        catch (const std::exception& exception)
         {
-            return false;
+            throw std::runtime_error(std::string() + "Exception at CsvFileIO::write(): " + exception.what());
         }
     }
 
@@ -244,254 +349,350 @@ namespace QLogicaeCore {
     {
         try
         {
-            std::ofstream file(_file_path);
-            if (!file.is_open())
-            {
-                return false;
-            }
+            fast_io::obuf_file out(_file_path, fast_io::open_mode::out);
 
-            for (size_t i = 0; i < headers.size(); ++i)
+            std::string content;
+            size_t index, size = headers.size();
+            for (index = 0; index < size; ++index)
             {
-                file << headers[i];
-                if (i != headers.size() - 1)
+                content += headers[index];
+                if (index != size - 1)
                 {
-                    file << ",";
+                    content += ",";
                 }
             }
-            file << "\n";
+            content += "\n";
 
             for (const auto& row : rows)
             {
-                for (size_t i = 0; i < row.size(); ++i)
+                size = row.size();
+                for (index = 0; index < size; ++index)
                 {
-                    file << row[i];
-                    if (i != row.size() - 1)
+                    content += row[index];
+                    if (index != size - 1)
                     {
-                        file << ",";
+                        content += ",";
                     }
                 }
-                file << "\n";
+                content += "\n";
             }
+            fast_io::io::print(out, content);
 
-            file.close();
             return true;
         }
-        catch (...)
+        catch (const std::exception& exception)
         {
-            return false;
+            throw std::runtime_error(std::string() + "Exception at CsvFileIO::write(): " + exception.what());
         }
     }
 
     bool CsvFileIO::append(const std::string_view& content)
     {
-        std::scoped_lock lock(_mutex);
-
-        if (_file_path.empty() || content.empty())
-        {
-            return false;
-        }
-
         try
         {
+            std::scoped_lock lock(_mutex);
+
+            if (_file_path.empty() || content.empty())
+            {
+                return false;
+            }
+
             fast_io::obuf_file out(_file_path, fast_io::open_mode::app);
             fast_io::io::print(out, content);
 
             return true;
         }
-        catch (...)
+        catch (const std::exception& exception)
         {
-            return false;
+            throw std::runtime_error(std::string() + "Exception at CsvFileIO::append(): " + exception.what());
         }
     }
 
-    void CsvFileIO::set_delimiter(const unsigned char& ch)
+    void CsvFileIO::set_delimiter(const unsigned char& character)
     {
-        _separator_params.mSeparator = static_cast<char>(ch);
+        try
+        {
+            _separator_params.mSeparator = static_cast<char>(character);
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at CsvFileIO::set_delimiter(): " + exception.what());
+        }
     }
 
-    void CsvFileIO::set_quote_character(const unsigned char& ch)
+    void CsvFileIO::set_quote_character(const unsigned char& character)
     {
-        _separator_params.mQuoteChar = static_cast<char>(ch);
+        try
+        {
+            _separator_params.mQuoteChar = static_cast<char>(character);
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at CsvFileIO::set_quote_character(): " + exception.what());
+        }
     }
 
     void CsvFileIO::set_label_params(
-        const unsigned int& col,
+        const unsigned int& column,
         const unsigned int& row)
     {
-        _label_params = rapidcsv::LabelParams(
-            static_cast<int>(col), static_cast<int>(row));
+        try
+        {
+            _label_params = rapidcsv::LabelParams(
+                static_cast<int>(column), static_cast<int>(row));
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at CsvFileIO::set_label_params(): " + exception.what());
+        }
     }
 
     bool QLogicaeCore::CsvFileIO::validate_headers(
         const std::vector<std::string>& expected)
     {
-        std::lock_guard<std::recursive_mutex> lock(_mutex);
-
-        if (!_temporary_csv_document_1.has_value())
-            return false;
-
         try
         {
-            const auto actual = _temporary_csv_document_1->GetColumnNames();
-            return actual == expected;  
+            std::lock_guard<std::recursive_mutex> lock(_mutex);
+
+            if (!_temporary_csv_document_1.has_value())
+            {
+                return false;
+            }
+
+            return _temporary_csv_document_1->GetColumnNames() == expected;
         }
-        catch (...)
+        catch (const std::exception& exception)
         {
             _corrupted = true;
-            return false;
+
+            throw std::runtime_error(std::string() + "Exception at CsvFileIO::validate_headers(): " + exception.what());
         }
     }
 
     bool CsvFileIO::is_valid_index(
         const unsigned int& row,
-        const unsigned int& col)
+        const unsigned int& column)
     {
-        std::scoped_lock lock(_mutex);
+        try
+        {
+            std::scoped_lock lock(_mutex);
 
-        return row < _temporary_csv_document_1->GetRowCount() &&
-            col < _temporary_csv_document_1->GetColumnCount();
+            if (!_temporary_csv_document_1.has_value())
+            {
+                return false;
+            }
+
+            return row < _temporary_csv_document_1->GetRowCount() &&
+                column < _temporary_csv_document_1->GetColumnCount();
+        }
+        catch (...)
+        {
+            return false;
+        }
     }
 
     std::map<std::string, std::string> CsvFileIO::get_row_as_map(
         const unsigned int& index)
     {
-        std::scoped_lock lock(_mutex);
-
-        std::map<std::string, std::string> result;
-        const auto& headers = _temporary_csv_document_1->GetColumnNames();
-        const auto row =
-            _temporary_csv_document_1->GetRow<std::string>(index);
-        for (size_t i = 0; i < headers.size() && i < row.size(); ++i)
+        try
         {
-            result[headers[i]] = row[i];
+            std::scoped_lock lock(_mutex);
+
+            if (!_temporary_csv_document_1.has_value())
+            {
+                return {};
+            }
+
+            std::map<std::string, std::string> result;
+            const auto& headers = _temporary_csv_document_1->GetColumnNames();
+            const auto row =
+                _temporary_csv_document_1->GetRow<std::string>(index);
+            size_t index, headers_size = headers.size(), row_size = row.size();
+            for (index = 0; index < headers_size && index < row_size; ++index)
+            {
+                result[headers[index]] = row[index];
+            }
+            return result;
         }
-        return result;
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at CsvFileIO::get_row_as_map(): " + exception.what());
+        }
     }
 
     std::vector<std::map<std::string, std::string>> CsvFileIO
         ::get_all_rows_as_map()
     {
-        std::scoped_lock lock(_mutex);
-
-        std::vector<std::map<std::string, std::string>> rows;
-        const auto& headers = _temporary_csv_document_1->GetColumnNames();
-        for (unsigned int i = 0;
-            i < _temporary_csv_document_1->GetRowCount();
-            ++i)
+        try
         {
-            const auto row =
-                _temporary_csv_document_1->GetRow<std::string>(i);
-            std::map<std::string, std::string> m;
-            for (size_t j = 0; j < headers.size() && j < row.size(); ++j)
-            {
-                m[headers[j]] = row[j];
-            }
-            rows.push_back(std::move(m));
-        }
+            std::scoped_lock lock(_mutex);
 
-        return rows;
+            if (!_temporary_csv_document_1.has_value())
+            {
+                return {};
+            }
+
+            std::vector<std::map<std::string, std::string>> rows;
+            const auto& headers = _temporary_csv_document_1->GetColumnNames();
+            size_t row_index,
+                column_index,
+                row_size = _temporary_csv_document_1->GetRowCount(),
+                headers_size = headers.size(),
+                column_size;
+            for (row_index = 0;
+                row_index < row_size;
+                ++row_index)
+            {
+                const auto row =
+                    _temporary_csv_document_1->GetRow<std::string>(row_index);
+                column_size = row.size();
+                std::map<std::string, std::string> values;
+                for (column_index = 0;
+                    column_index < headers_size && column_index < column_size;
+                    ++column_index)
+                {
+                    values[headers[column_index]] = row[column_index];
+                }
+                rows.push_back(std::move(values));
+            }
+
+            return rows;
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at CsvFileIO::get_all_rows_as_map(): " + exception.what());
+        }
     }
 
     bool CsvFileIO::is_corrupted()
     {
-        std::scoped_lock lock(_mutex);
+        try
+        {
+            std::scoped_lock lock(_mutex);
 
-        return _corrupted;
+            return _corrupted;
+        }
+        catch (...)
+        {
+            return false;
+        }
     }
 
     std::string CsvFileIO::export_to_json()
     {
-        std::scoped_lock lock(_mutex);
-
-        if (!_temporary_csv_document_1.has_value())
+        try
         {
-            return "[]";
-        }
+            std::scoped_lock lock(_mutex);
 
-        const auto& doc = _temporary_csv_document_1.value();
-        const auto& headers = doc.GetColumnNames();
-        const size_t row_count = doc.GetRowCount();
-        const size_t col_count = headers.size();
-
-        rapidjson::StringBuffer buffer;
-        rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
-
-        writer.StartArray();
-
-        for (size_t i = 0; i < row_count; ++i)
-        {
-            writer.StartObject();
-
-            const auto row = doc.GetRow<std::string>(i);
-            const size_t min_count = std::min(col_count, row.size());
-
-            for (size_t j = 0; j < min_count; ++j)
+            if (!_temporary_csv_document_1.has_value())
             {
-                writer.Key(headers[j].c_str());
-                writer.String(row[j].c_str());
+                return "[]";
             }
 
-            writer.EndObject();
-        }
+            const auto& doc = _temporary_csv_document_1.value();
+            const auto& headers = doc.GetColumnNames();
+            const size_t row_count = doc.GetRowCount();
+            const size_t col_count = headers.size();
 
-        writer.EndArray();
-        return buffer.GetString();
+            rapidjson::StringBuffer buffer;
+            rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+
+            writer.StartArray();
+
+            size_t row_index, column_index, min_count;
+            for (row_index = 0; row_index < row_count; ++row_index)
+            {
+                writer.StartObject();
+
+                const auto row = doc.GetRow<std::string>(row_index);
+                min_count = std::min(col_count, row.size());
+                for (column_index = 0; column_index < min_count; ++column_index)
+                {
+                    writer.Key(headers[column_index].c_str());
+                    writer.String(row[column_index].c_str());
+                }
+
+                writer.EndObject();
+            }
+            writer.EndArray();
+
+            return buffer.GetString();
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at CsvFileIO::export_to_json(): " + exception.what());
+        }
     }
 
-    bool CsvFileIO::import_from_json(const std::string& json_str)
+    bool CsvFileIO::import_from_json(const std::string& json_string)
     {
-        std::scoped_lock lock(_mutex);
-
-        rapidjson::Document doc;
-        if (doc.Parse(json_str.c_str()).HasParseError() || !doc.IsArray())
+        try
         {
-            return false;
-        }
+            std::scoped_lock lock(_mutex);
 
-        if (doc.Empty())
-        {
-            return false;
-        }
-
-        std::ostringstream oss;
-        const rapidjson::Value& firstObj = doc[0];
-        if (!firstObj.IsObject()) return false;
-
-        for (auto itr = firstObj.MemberBegin();
-            itr != firstObj.MemberEnd();
-            ++itr)
-        {
-            oss << itr->name.GetString() << ",";
-        }
-        oss << "\n";
-
-        for (const auto& row : doc.GetArray())
-        {
-            if (!row.IsObject())
+            rapidjson::Document document;
+            if (document.Parse(json_string.c_str()).HasParseError() || !document.IsArray())
             {
                 return false;
             }
-            for (auto itr = firstObj.MemberBegin();
-                itr != firstObj.MemberEnd();
-                ++itr)
-            {
-                const char* key = itr->name.GetString();
-                if (row.HasMember(key) && row[key].IsString())
-                {
-                    oss << row[key].GetString();
-                }
-                oss << ",";
-            }
-            oss << "\n";
-        }
 
-        return write(oss.str()) && open();
+            if (document.Empty())
+            {
+                return false;
+            }
+
+            std::string content;
+            const rapidjson::Value& firstObj = document[0];
+            if (!firstObj.IsObject())
+            {
+                return false;
+            }
+
+            for (auto iterable = firstObj.MemberBegin();
+                iterable != firstObj.MemberEnd();
+                ++iterable)
+            {
+                content += absl::StrCat(iterable->name.GetString(), ",");
+            }
+            content += "\n";
+
+            for (const auto& row : document.GetArray())
+            {
+                if (!row.IsObject())
+                {
+                    return false;
+                }
+                for (auto iterable = firstObj.MemberBegin();
+                    iterable != firstObj.MemberEnd();
+                    ++iterable)
+                {
+                    const char* key = iterable->name.GetString();
+                    if (row.HasMember(key) && row[key].IsString())
+                    {
+                        content += absl::StrCat(row[key].GetString());
+                    }
+                    content += ",";
+                }
+                content += "\n";
+            }
+
+            return write(content) && open();
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at CsvFileIO::import_from_json(): " + exception.what());
+        }
     }
 
     bool CsvFileIO::has_column(const std::string_view& name) const
     {
         try
         {
+            if (!_temporary_csv_document_1)
+            {
+                return false;
+            }
+
             _temporary_csv_document_1->GetColumn<std::string>(
                 std::string(name)
             );
@@ -506,8 +707,15 @@ namespace QLogicaeCore {
 
     bool CsvFileIO::has_row(const unsigned int& index) const
     {
-        try {
+        try
+        {
+            if (!_temporary_csv_document_1.has_value())
+            {
+                return false;
+            }
+
             _temporary_csv_document_1->GetRow<std::string>(index);
+
             return true;
         }
         catch (...)
@@ -518,21 +726,28 @@ namespace QLogicaeCore {
 
     bool CsvFileIO::remove_row(const unsigned int& index)
     {
-        std::scoped_lock lock(_mutex);
-
-        if (!_temporary_csv_document_1 || index >=
-            _temporary_csv_document_1->GetRowCount())
+        try
         {
-            return false;
+            std::scoped_lock lock(_mutex);
+
+            if (!_temporary_csv_document_1 || index >=
+                _temporary_csv_document_1->GetRowCount())
+            {
+                return false;
+            }
+            if (!has_row(index))
+            {
+                return false;
+            }
+
+            _temporary_csv_document_1->RemoveRow(index);
+
+            return true;
         }
-        if (!has_row(index))
+        catch (const std::exception& exception)
         {
-            return false;
+            throw std::runtime_error(std::string() + "Exception at CsvFileIO::remove_row(): " + exception.what());
         }
-
-        _temporary_csv_document_1->RemoveRow(index);
-
-        return true;
     }
 
     bool CsvFileIO::insert_row(
@@ -540,21 +755,28 @@ namespace QLogicaeCore {
         const std::vector<std::string>& row
     )
     {
-        std::scoped_lock lock(_mutex);
-
-        if (!_temporary_csv_document_1 || row.size() !=
-            _temporary_csv_document_1->GetColumnCount())
+        try
         {
-            return false;
+            std::scoped_lock lock(_mutex);
+
+            if (!_temporary_csv_document_1 || row.size() !=
+                _temporary_csv_document_1->GetColumnCount())
+            {
+                return false;
+            }
+            if (index > _temporary_csv_document_1->GetRowCount())
+            {
+                return false;
+            }
+
+            _temporary_csv_document_1->InsertRow(index, row);
+
+            return true;
         }
-        if (index > _temporary_csv_document_1->GetRowCount())
+        catch (const std::exception& exception)
         {
-            return false;
+            throw std::runtime_error(std::string() + "Exception at CsvFileIO::insert_row(): " + exception.what());
         }
-
-        _temporary_csv_document_1->InsertRow(index, row);
-
-        return true;
     }
 
     bool CsvFileIO::update_row(
@@ -562,82 +784,110 @@ namespace QLogicaeCore {
         const std::vector<std::string>& row
     )
     {
-        std::scoped_lock lock(_mutex);
-
-        if (!_temporary_csv_document_1 ||
-            index >= _temporary_csv_document_1->GetRowCount())
+        try
         {
-            return false;
-        }
-        if (row.size() != _temporary_csv_document_1->GetColumnCount())
-        {
-            return false;
-        }
-        if (!has_row(index))
-        {
-            return false;
-        }
+            std::scoped_lock lock(_mutex);
 
-        _temporary_csv_document_1->SetRow(index, row);
+            if (!_temporary_csv_document_1 ||
+                index >= _temporary_csv_document_1->GetRowCount())
+            {
+                return false;
+            }
+            if (row.size() != _temporary_csv_document_1->GetColumnCount())
+            {
+                return false;
+            }
+            if (!has_row(index))
+            {
+                return false;
+            }
 
-        return true;
+            _temporary_csv_document_1->SetRow(index, row);
+
+            return true;
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at CsvFileIO::update_row(): " + exception.what());
+        }
     }
 
     bool CsvFileIO::remove_column(const std::string_view& name)
     {
-        std::scoped_lock lock(_mutex);
-
-        if (!_temporary_csv_document_1 || !has_column(name))
+        try
         {
-            return false;
-        }
-        _temporary_csv_document_1->RemoveColumn(std::string(name));
+            std::scoped_lock lock(_mutex);
 
-        return true;
+            if (!_temporary_csv_document_1 || !has_column(name))
+            {
+                return false;
+            }
+            _temporary_csv_document_1->RemoveColumn(std::string(name));
+
+            return true;
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at CsvFileIO::remove_column(): " + exception.what());
+        }
     }
 
     bool CsvFileIO::update_column(
         const std::string_view& name,
-        const std::vector<std::string>& col
+        const std::vector<std::string>& column
     )
     {
-        std::scoped_lock lock(_mutex);
-
-        if (!_temporary_csv_document_1 ||
-            col.size() != _temporary_csv_document_1->GetRowCount())
+        try
         {
-            return false;
-        }
-        if (!has_column(name))
-        {
-            return false;
-        }
-        _temporary_csv_document_1->SetColumn(std::string(name), col);
+            std::scoped_lock lock(_mutex);
 
-        return true;
+            if (!_temporary_csv_document_1 ||
+                column.size() != _temporary_csv_document_1->GetRowCount())
+            {
+                return false;
+            }
+            if (!has_column(name))
+            {
+                return false;
+            }
+            _temporary_csv_document_1->SetColumn(std::string(name), column);
+
+            return true;
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at CsvFileIO::update_column(): " + exception.what());
+        }
     }
 
     bool CsvFileIO::update_cell(
         const std::string_view& name,
-        const unsigned int& row, const std::string& val
+        const unsigned int& row, const std::string& value
     )
     {
-        std::scoped_lock lock(_mutex);
-
-        if (!_temporary_csv_document_1 ||
-            row >= _temporary_csv_document_1->GetRowCount())
+        try
         {
-            return false;
-        }
-        if (!has_column(name))
-        {
-            return false;
-        }
-        _temporary_csv_document_1->SetCell<std::string>(
-            std::string(name), row, val
-        );
+            std::scoped_lock lock(_mutex);
 
-        return true;
+            if (!_temporary_csv_document_1 ||
+                row >= _temporary_csv_document_1->GetRowCount())
+            {
+                return false;
+            }
+            if (!has_column(name))
+            {
+                return false;
+            }
+            _temporary_csv_document_1->SetCell<std::string>(
+                std::string(name), row, value
+            );
+
+            return true;
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at CsvFileIO::update_cell(): " + exception.what());
+        }
     }
 
     bool CsvFileIO::insert_column(
@@ -645,25 +895,32 @@ namespace QLogicaeCore {
         const std::vector<std::string>& values,
         const std::string& name)
     {
-        std::scoped_lock lock(_mutex);
-
-        if (!_temporary_csv_document_1 ||
-            values.size() != _temporary_csv_document_1->GetRowCount())
+        try
         {
-            return false;
-        }
-        if (index > _temporary_csv_document_1->GetColumnCount())
-        {
-            return false;
-        }
-        if (has_column(name))
-        {
-            return false;
-        }
+            std::scoped_lock lock(_mutex);
 
-        _temporary_csv_document_1->InsertColumn(index, values, name);
+            if (!_temporary_csv_document_1 ||
+                values.size() != _temporary_csv_document_1->GetRowCount())
+            {
+                return false;
+            }
+            if (index > _temporary_csv_document_1->GetColumnCount())
+            {
+                return false;
+            }
+            if (has_column(name))
+            {
+                return false;
+            }
 
-        return true;
+            _temporary_csv_document_1->InsertColumn(index, values, name);
+
+            return true;
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at CsvFileIO::insert_column(): " + exception.what());
+        }
     }
 
     std::future<bool> CsvFileIO::append_async(
@@ -700,38 +957,38 @@ namespace QLogicaeCore {
     }
 
     std::future<std::string> CsvFileIO::get_row_async(
-        const unsigned int& r)
+        const unsigned int& row)
     {
-        return std::async(std::launch::async, [this, r]()
+        return std::async(std::launch::async, [this, row]()
         {
-            return this->get_row(r);
+            return this->get_row(row);
         });
     }
 
     std::future<bool> CsvFileIO::is_header_found_async(
-        const std::string_view& h)
+        const std::string_view& header)
     {
-        return std::async(std::launch::async, [this, h]()
+        return std::async(std::launch::async, [this, header]()
         {
-            return this->is_header_found(h);
+            return this->is_header_found(header);
         });
     }
 
     std::future<std::string> CsvFileIO::get_column_async(
-        const std::string_view& n)
+        const std::string_view& header)
     {
-        return std::async(std::launch::async, [this, n]()
+        return std::async(std::launch::async, [this, header]()
         {
-            return this->get_column(n);
+            return this->get_column(header);
         });
     }
 
     std::future<std::string> CsvFileIO::get_cell_async(
-        const std::string_view& h, const unsigned int& r)
+        const std::string_view& header, const unsigned int& row)
     {
-        return std::async(std::launch::async, [this, h, r]()
+        return std::async(std::launch::async, [this, header, row]()
         {
-            return this->get_cell(h, r);
+            return this->get_cell(header, row);
         });
     }
 
@@ -751,76 +1008,76 @@ namespace QLogicaeCore {
         });
     }
 
-    std::future<bool> CsvFileIO::write_async(const std::string_view& d)
+    std::future<bool> CsvFileIO::write_async(const std::string_view& content)
     {
-        return std::async(std::launch::async, [this, d]()
+        return std::async(std::launch::async, [this, content]()
         {
-            return this->write(d);
+            return this->write(content);
         });
     }
 
-    std::future<bool> CsvFileIO::remove_row_async(const unsigned int& i)
+    std::future<bool> CsvFileIO::remove_row_async(const unsigned int& index)
     {
-        return std::async(std::launch::async, [this, i]()
+        return std::async(std::launch::async, [this, index]()
         {
-            return this->remove_row(i);
+            return this->remove_row(index);
         });
     }
 
-    std::future<bool> CsvFileIO::remove_column_async(const std::string_view& n)
+    std::future<bool> CsvFileIO::remove_column_async(const std::string_view& header)
     {
-        return std::async(std::launch::async, [this, n]()
+        return std::async(std::launch::async, [this, header]()
         {
-            return this->remove_column(n);
+            return this->remove_column(header);
         });
     }
 
     std::future<bool> CsvFileIO::insert_row_async(
-        const unsigned int& i, const std::vector<std::string>& r)
+        const unsigned int& index, const std::vector<std::string>& row)
     {
-        return std::async(std::launch::async, [this, i, r]()
+        return std::async(std::launch::async, [this, index, row]()
         {
-            return this->insert_row(i, r);
+            return this->insert_row(index, row);
         });
     }
 
     std::future<bool> CsvFileIO::update_row_async(
-        const unsigned int& i, const std::vector<std::string>& r)
+        const unsigned int& index, const std::vector<std::string>& row)
     {
-        return std::async(std::launch::async, [this, i, r]()
+        return std::async(std::launch::async, [this, index, row]()
         {
-            return this->update_row(i, r);
+            return this->update_row(index, row);
         });
     }
 
     std::future<bool> CsvFileIO::update_column_async(
-        const std::string_view& n, const std::vector<std::string>& c)
+        const std::string_view& row, const std::vector<std::string>& column)
     {
-        return std::async(std::launch::async, [this, n, c]()
+        return std::async(std::launch::async, [this, row, column]()
         {
-            return this->update_column(n, c);
+            return this->update_column(row, column);
         });
     }
 
     std::future<bool> CsvFileIO::update_cell_async(
-        const std::string_view& n,
-        const unsigned int& r,
-        const std::string& v)
+        const std::string_view& column,
+        const unsigned int& row_index,
+        const std::string& value)
     {
-        return std::async(std::launch::async, [this, n, r, v]()
+        return std::async(std::launch::async, [this, column, row_index, value]()
         {
-            return this->update_cell(n, r, v);
+            return this->update_cell(column, row_index, value);
         });
     }
 
     std::future<bool> CsvFileIO::insert_column_async(
-        const unsigned int& i,
-        const std::vector<std::string>& v,
-        const std::string& n)
+        const unsigned int& index,
+        const std::vector<std::string>& values,
+        const std::string& column)
     {
-        return std::async(std::launch::async, [this, i, v, n]()
+        return std::async(std::launch::async, [this, index, values, column]()
         {
-            return this->insert_column(i, v, n);
+            return this->insert_column(index, values, column);
         });
     }
 

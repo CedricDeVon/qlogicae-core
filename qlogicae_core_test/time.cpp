@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "time.hpp"
@@ -7,6 +5,8 @@
 namespace QLogicaeCoreTest
 {
     class TimeTest : public ::testing::Test {};
+
+    class TimeFormatTest : public ::testing::TestWithParam<QLogicaeCore::TimeFormat> {};
 
     TEST_F(TimeTest, Should_Expect_ValidComponents_When_LocalTimeZone)
     {
@@ -212,8 +212,6 @@ namespace QLogicaeCoreTest
             QLogicaeCore::TimeZone::UTC
         )
     );
-
-    class TimeFormatTest : public ::testing::TestWithParam<QLogicaeCore::TimeFormat> {};
 
     TEST_P(TimeFormatTest, Should_Expect_NonEmpty_When_Parameterized)
     {

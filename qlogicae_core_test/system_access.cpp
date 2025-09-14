@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "system_access.hpp"
@@ -73,3 +71,4 @@ namespace QLogicaeCoreTest
         ::testing::Values(4, 8, 16, 32)
     );
 }
+

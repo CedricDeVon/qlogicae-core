@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "aes256_cipher_cryptographer.hpp"

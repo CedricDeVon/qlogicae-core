@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "dot_env_value_extractor.hpp"
@@ -14,6 +12,11 @@ namespace QLogicaeCoreTest
     };
 
     class DotEnvValueExtractorEmptyArgumentTest : public ::testing::Test
+    {
+    };
+
+    class DotEnvValueExtractorEdgeKeyTest
+        : public ::testing::TestWithParam<std::wstring>
     {
     };
 
@@ -137,11 +140,6 @@ namespace QLogicaeCoreTest
         ASSERT_TRUE(key.has_value());
         ASSERT_EQ(key.value(), testKey);
     }
-
-    class DotEnvValueExtractorEdgeKeyTest
-        : public ::testing::TestWithParam<std::wstring>
-    {
-    };
 
     TEST_P(DotEnvValueExtractorEdgeKeyTest,
         Should_Set_Expect_Success_When_Using_Edge_Case_Keys)

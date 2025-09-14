@@ -1,6 +1,22 @@
 #pragma once
 
-#include "pch.h"
+#include <sqlite3.h>
+#include <absl/time/time.h>
+#include <rapidjson/document.h>
+
+#include <ios>
+#include <map>
+#include <mutex>
+#include <queue>
+#include <chrono>
+#include <vector>
+#include <variant>
+#include <cstdint>
+#include <Windows.h>
+#include <functional>
+#include <string_view>
+#include <unordered_map>
+#include <condition_variable>
 
 namespace QLogicaeCore
 {    
@@ -80,6 +96,20 @@ namespace QLogicaeCore
         LOW = 2
     };
 
+    enum class TemperatureUnitType : uint8_t
+    {
+        CELSIUS,
+        FAHRENHEIT,
+        KELVIN,
+        NONE
+    };
+
+    enum class CaseSensitivity : uint8_t
+    {
+        SENSITIVE,
+        INSENSITIVE
+    };
+
     struct Constants
     {
         static constexpr unsigned int DEFAULT_MILLISECONDS_PER_CALLBACK = 1000;
@@ -97,6 +127,7 @@ namespace QLogicaeCore
         static constexpr double RANDOM_DOUBLE_MINIMUM = 0.0;
         static constexpr double RANDOM_DOUBLE_MAXIMUM = 1.0;
         static constexpr double RANDOM_BOOLEAN_MAXIMUM = 0.5;
+        static constexpr std::string_view HEXADECIMAL_CHARACTERS = "0123456789abcdef";
         static constexpr std::string_view ALPHA_NUMERIC_CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         static constexpr std::string_view FULL_VISIBLE_ASCII_CHARACTERSET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
 
@@ -177,9 +208,23 @@ namespace QLogicaeCore
         static constexpr std::string_view TIME_SCALE_UNIT_ABBREVIATION_MONTHS = "mo";
         static constexpr std::string_view TIME_SCALE_UNIT_ABBREVIATION_YEARS = "yr";
 
-        static std::unordered_map<std::string_view, TimeScaleUnit> TIME_SCALE_UNIT_ABBREVIATION_STRINGS;
-        
+        static constexpr std::string_view TEMPERATURE_UNIT_TYPE_CELSIUS = "celsius";
+        static constexpr std::string_view TEMPERATURE_UNIT_TYPE_FAHRENHEIT = "fahrenheit";
+        static constexpr std::string_view TEMPERATURE_UNIT_TYPE_KELVIN = "kelvin";
+        static constexpr std::string_view TEMPERATURE_UNIT_TYPE_NONE = "none";
+
+        static constexpr std::string_view DEFAULT_FILE_URI_IO_MIMETYPE =
+            "application/octet-stream";
+        static constexpr std::string_view DEFAULT_GROQ_CLOUD_CLIENT_API_TYPE =
+            "llama3-8b-8192";
+        static constexpr std::string_view DEFAULT_GMAIL_MAILER_SMTP_SERVER =
+            "smtp.gmail.com:465";
+
         static constexpr double EPSILON = 1e-12;
+
+        static std::unordered_map<std::string_view, TimeScaleUnit> TIME_SCALE_UNIT_ABBREVIATION_STRINGS;        
+        static std::unordered_map<std::string_view, TemperatureUnitType> TEMPERATURE_UNIT_TYPE_STRINGS;
+        static std::unordered_map<TemperatureUnitType, std::string_view> TEMPERATURE_UNIT_TYPE_ENUMS;
     };
 
     struct ValueEnumKeyDeleteHandler
@@ -455,30 +500,141 @@ namespace QLogicaeCore
         sqlite3_stmt* statement_handle;
     };
 
-    enum class TemperatureUnitType : uint8_t
+    struct GroqCloudClientAPIPromptConfigurations
     {
-        CELSIUS,
-        FAHRENHEIT,
-        KELVIN,
-        NONE
+        std::function<std::string()> api_key_extractor;
+        std::string model = Constants::DEFAULT_GROQ_CLOUD_CLIENT_API_TYPE.data();
+        double top_p = 1.0;
+        double temperature = 0.7;
+        double frequency_penalty = 0.0;
+        double presence_penalty = 0.0;
+        uint32_t maximum_tokens = 1024;
+        std::vector<std::string> stop_sequences;
+        std::optional<std::string> system_prompt;
+        bool is_streaming_enabled = false;
+        uint8_t retry_count = 3;
+        std::chrono::milliseconds timeout_duration =
+            std::chrono::seconds(10);
     };
-    static const std::string TEMPERATURE_UNIT_TYPE_CELSIUS = "celsius";
-    static const std::string TEMPERATURE_UNIT_TYPE_FAHRENHEIT = "fahrenheit";
-    static const std::string TEMPERATURE_UNIT_TYPE_KELVIN = "kelvin";
-    static const std::string TEMPERATURE_UNIT_TYPE_NONE = "none";
-    static const std::unordered_map<std::string, TemperatureUnitType> TEMPERATURE_UNIT_TYPE_STRINGS =
+
+    struct GroqCloudClientAPIChatMessage
     {
-        { TEMPERATURE_UNIT_TYPE_CELSIUS, TemperatureUnitType::CELSIUS },
-        { TEMPERATURE_UNIT_TYPE_FAHRENHEIT, TemperatureUnitType::FAHRENHEIT },
-        { TEMPERATURE_UNIT_TYPE_KELVIN, TemperatureUnitType::KELVIN },
-        { TEMPERATURE_UNIT_TYPE_NONE, TemperatureUnitType::NONE }
+        std::string role;
+        std::string content;
     };
-    static const std::unordered_map<TemperatureUnitType, std::string> TEMPERATURE_UNIT_TYPE_ENUMS =
+
+    struct GroqCloudClientAPIRequest
     {
-        { TemperatureUnitType::CELSIUS, TEMPERATURE_UNIT_TYPE_CELSIUS },
-        { TemperatureUnitType::FAHRENHEIT, TEMPERATURE_UNIT_TYPE_FAHRENHEIT },
-        { TemperatureUnitType::KELVIN, TEMPERATURE_UNIT_TYPE_KELVIN },
-        { TemperatureUnitType::NONE, TEMPERATURE_UNIT_TYPE_NONE }
+        std::vector<GroqCloudClientAPIChatMessage> messages;
+    };
+
+    struct GroqCloudClientAPIResponse
+    {
+        std::string id = "";
+        std::string object = "";
+        std::string model = "";
+        uint32_t timestamp_created = 0;
+        uint32_t total_tokens = 0;
+        uint32_t prompt_tokens = 0;
+        uint32_t completion_tokens = 0;
+        uint32_t index = 0;
+        std::string role = "";
+        std::string content = "";
+        std::string finish_reason = "";
+        uint32_t status_code = 0;
+        std::optional<std::string> error_type;
+        std::optional<std::string> error_message;
+    };
+
+    struct RocksDBConfig
+    {
+        size_t block_cache_size = 64 * 1024 * 1024;
+        size_t write_buffer_size = 64 * 1024 * 1024;
+        int max_background_jobs = 4;
+    };
+
+    struct OutlierRemovalOptions
+    {
+        double factor;
+        double threshold;
+        double proportion;
+        double significance_level;
+    };
+
+    struct CaseAwareHash
+    {
+        using is_transparent = void;
+
+        CaseSensitivity sensitivity;
+
+        explicit CaseAwareHash(CaseSensitivity s) : sensitivity(s) {}
+
+        std::size_t operator()(const std::string& s) const noexcept { return hash_impl(s); }
+        std::size_t operator()(const std::string_view& sv) const noexcept { return hash_impl(sv); }
+
+    private:
+        std::size_t hash_impl(std::string_view str) const noexcept
+        {
+            std::size_t hash = 14695981039346656037ull;
+            for (char c : str)
+            {
+                char x = (sensitivity == CaseSensitivity::SENSITIVE)
+                    ? c
+                    : static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+                hash = (hash ^ static_cast<unsigned char>(x)) * 1099511628211ull;
+            }
+            return hash;
+        }
+    };
+
+    struct CaseAwareEqual
+    {
+        using is_transparent = void;
+
+        CaseSensitivity sensitivity;
+
+        explicit CaseAwareEqual(CaseSensitivity s) : sensitivity(s) {}
+
+        bool operator()(const std::string& a, const std::string& b) const noexcept
+        {
+            return compare_impl(a, b);
+        }
+
+        bool operator()(const std::string_view& a, const std::string_view& b) const noexcept
+        {
+            return compare_impl(a, b);
+        }
+
+        bool operator()(const std::string& a, const std::string_view& b) const noexcept
+        {
+            return compare_impl(a, b);
+        }
+
+        bool operator()(const std::string_view& a, const std::string& b) const noexcept
+        {
+            return compare_impl(a, b);
+        }
+
+    private:
+        bool compare_impl(std::string_view a, std::string_view b) const noexcept
+        {
+            if (a.size() != b.size()) return false;
+            if (sensitivity == CaseSensitivity::SENSITIVE) return a == b;
+            for (size_t i = 0; i < a.size(); ++i) {
+                if (std::tolower(static_cast<unsigned char>(a[i])) !=
+                    std::tolower(static_cast<unsigned char>(b[i])))
+                    return false;
+            }
+            return true;
+        }
+    };
+
+    struct StringMemoryPoolSnapshot
+    {
+        std::size_t pool_hits = 0;
+        std::size_t bytes_used = 0;
+        std::size_t pool_misses = 0;
+        std::size_t interned_count = 0;
     };
 }
 

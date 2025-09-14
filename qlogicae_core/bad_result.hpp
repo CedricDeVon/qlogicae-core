@@ -1,23 +1,28 @@
 #pragma once
 
-#include "pch.h"
-
 #include "abstract_result.hpp"
 
 namespace QLogicaeCore
 {
-    template <typename ValueType, typename MetaDataType = std::string>
-    class BadResult : public AbstractResult<ValueType, MetaDataType>
+    template <
+        typename ValueType,
+        typename MetaDataType = std::string>
+    class BadResult :
+        public AbstractResult<ValueType, MetaDataType>
     {
     public:
         BadResult(
-            std::optional<ValueType> = std::nullopt,
-            std::optional<MetaDataType> = std::nullopt
+            std::optional<ValueType> value = std::nullopt,
+            std::optional<MetaDataType> metadata = std::nullopt
         );
-        BadResult(const BadResult&) = delete;
-        BadResult(BadResult&&) noexcept = default;
-        BadResult& operator=(const BadResult&) = delete;
-        BadResult& operator=(BadResult&&) noexcept = default;
+
+        BadResult(const BadResult& bad_result) = delete;
+
+        BadResult(BadResult&& bad_result) noexcept = default;
+
+        BadResult& operator=(const BadResult& bad_result) = delete;
+
+        BadResult& operator=(BadResult&& bad_result) noexcept = default;
     };
 
     template <typename ValueType, typename MetaDataType>

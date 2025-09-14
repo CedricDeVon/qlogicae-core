@@ -1,7 +1,6 @@
 #pragma once
 
-#include "pch.h"
-
+#include "globals.hpp"
 #include "encoder.hpp"
 
 namespace QLogicaeCore
@@ -19,11 +18,16 @@ namespace QLogicaeCore
 
     protected:
         Temperature() = default;
+        
         ~Temperature() = default;
-        Temperature(const Temperature&) = delete;
-        Temperature(Temperature&&) noexcept = delete;
-        Temperature& operator = (Temperature&&) = delete;
-        Temperature& operator = (const Temperature&) = delete;
+        
+        Temperature(const Temperature& temperature) = delete;
+        
+        Temperature(Temperature&& temperature) noexcept = delete;
+        
+        Temperature& operator = (Temperature&& temperature) = delete;
+        
+        Temperature& operator = (const Temperature& temperature) = delete;
     };
 
     inline static Temperature& TEMPERATURE =

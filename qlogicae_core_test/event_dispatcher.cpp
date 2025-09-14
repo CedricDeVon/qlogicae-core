@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "event_dispatcher.hpp"
@@ -277,3 +275,4 @@ namespace QLogicaeCoreTest
         )
     );
 }
+

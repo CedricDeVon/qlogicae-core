@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "placeholder_value_extractor.hpp"
@@ -113,3 +111,4 @@ namespace QLogicaeCoreTest
         )
     );
 }
+

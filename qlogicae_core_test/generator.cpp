@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "generator.hpp"
@@ -201,4 +199,3 @@ namespace QLogicaeCoreTest
         )
     );
 }
-

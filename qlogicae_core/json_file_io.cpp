@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "json_file_io.hpp"
@@ -223,32 +221,32 @@ namespace QLogicaeCore
     {
         if (_file_path.empty())
         {
-            throw std::runtime_error("File path is empty");
+            throw std::runtime_error("Exception at JsonFileIO::get_array(): File path is empty");
         }
-        
+
         std::ifstream in_file(_file_path);
         if (!in_file.is_open())
         {
-            throw std::runtime_error("Failed to open JSON file '" + _file_path + "'");
+            throw std::runtime_error("Exception at JsonFileIO::get_array(): Failed to open JSON file '" + _file_path + "'");
         }
-        
+
         std::string json_string((std::istreambuf_iterator<char>(in_file)),
             std::istreambuf_iterator<char>());
-        
+
         rapidjson::Document document;
         if (document.Parse(json_string.c_str()).HasParseError())
         {
-            throw std::runtime_error("Failed to parse JSON content");
+            throw std::runtime_error("Exception at JsonFileIO::get_array(): Failed to parse JSON content");
         }
 
         auto pointer = build_pointer(key_path);
         rapidjson::Value* array_value = pointer.Get(document);
-        
+
         if (!array_value || !array_value->IsArray())
         {
-            throw std::runtime_error("Value at path is not an array");
+            throw std::runtime_error("Exception at JsonFileIO::get_array(): Value at path is not an array");
         }
-        
+
         std::vector<std::any> result;
         for (auto& value : array_value->GetArray())
         {
@@ -275,10 +273,10 @@ namespace QLogicaeCore
             }
             else
             {
-                throw std::runtime_error("Unsupported array element type");
+                throw std::runtime_error("Exception at JsonFileIO::get_array(): Unsupported array element type");
             }
         }
-        
+
         return result;
     }
 
@@ -287,13 +285,13 @@ namespace QLogicaeCore
     {
         if (_file_path.empty())
         {
-            throw std::runtime_error("File path is empty");
+            throw std::runtime_error("Exception at JsonFileIO::get_object(): File path is empty");
         }
 
         std::ifstream in_file(_file_path);
         if (!in_file.is_open())
         {
-            throw std::runtime_error("Failed to open JSON file '" + _file_path + "'");
+            throw std::runtime_error("Exception at JsonFileIO::get_object(): Failed to open JSON file '" + _file_path + "'");
         }
 
         std::string json_string((std::istreambuf_iterator<char>(in_file)),
@@ -302,7 +300,7 @@ namespace QLogicaeCore
         rapidjson::Document document;
         if (document.Parse(json_string.c_str()).HasParseError())
         {
-            throw std::runtime_error("Failed to parse JSON content");
+            throw std::runtime_error("Exception at JsonFileIO::get_object(): Failed to parse JSON content");
         }
 
         auto pointer = build_pointer(key_path);
@@ -310,7 +308,7 @@ namespace QLogicaeCore
 
         if (!value_pointer || !value_pointer->IsObject())
         {
-            throw std::runtime_error("Value at path is not an object");
+            throw std::runtime_error("Exception at JsonFileIO::get_object(): Value at path is not an object");
         }
 
         std::function<std::any(const rapidjson::Value&)> parse_value;
@@ -351,7 +349,7 @@ namespace QLogicaeCore
                 return nested_obj;
             }
 
-            throw std::runtime_error("Unsupported JSON value encountered");
+            throw std::runtime_error("Exception at JsonFileIO::get_object(): Unsupported JSON value encountered");
             };
 
         std::unordered_map<std::string, std::any> result;
@@ -430,7 +428,7 @@ namespace QLogicaeCore
             }
             else
             {
-                throw std::runtime_error("Unsupported array element type in make_value");
+                throw std::runtime_error("Exception at JsonFileIO::make_value(): Unsupported array element type in make_value");
             }
         }
         return arr;
@@ -447,7 +445,7 @@ namespace QLogicaeCore
             json_key.SetString(
                 key.c_str(),
                 static_cast<rapidjson::SizeType>(key.length()),
-            allocator);
+                allocator);
 
             if (any_val.type() == typeid(std::string))
             {
@@ -470,7 +468,7 @@ namespace QLogicaeCore
             }
             else
             {
-                throw std::runtime_error("Unsupported object value type in make_value");
+                throw std::runtime_error("Exception at JsonFileIO::make_value(): Unsupported object value type in make_value");
             }
 
         }
@@ -910,5 +908,4 @@ namespace QLogicaeCore
             return this->write(content);
             });
     }
-
 }

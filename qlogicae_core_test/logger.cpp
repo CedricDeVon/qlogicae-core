@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "logger.hpp"
@@ -7,6 +5,8 @@
 namespace QLogicaeCoreTest
 {
     class LoggerTest : public ::testing::Test {};
+
+    class SimplifiedLogFlagTest : public ::testing::TestWithParam<bool> {};
 
     TEST_F(LoggerTest, Should_Expect_DefaultValues_When_DefaultConstructed)
     {
@@ -95,8 +95,6 @@ namespace QLogicaeCoreTest
 
         EXPECT_LT(std::chrono::duration_cast<std::chrono::seconds>(end - start).count(), 2);
     }
-
-    class SimplifiedLogFlagTest : public ::testing::TestWithParam<bool> {};
 
     TEST_P(SimplifiedLogFlagTest, Should_Expect_LogBehavesCorrectly_When_Parameterized)
     {

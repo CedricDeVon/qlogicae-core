@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "interval.hpp"
@@ -318,5 +316,4 @@ namespace QLogicaeCoreTest
         IntervalTest,
         ::testing::Values(2, 4, 8)
     );
-
 }

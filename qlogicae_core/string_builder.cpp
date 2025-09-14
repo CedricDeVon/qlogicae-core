@@ -1,6 +1,4 @@
-﻿#pragma once
-
-#include "pch.h"
+﻿#include "pch.h"
 
 #include "string_builder.hpp"
 

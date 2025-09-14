@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "transformer.hpp"
@@ -7,6 +5,10 @@
 namespace QLogicaeCoreTest
 {
     class TransformerTest : public ::testing::Test {};
+
+    class LogLevelColorParamTest : public ::testing::TestWithParam<QLogicaeCore::LogLevel> {};
+
+    class OutputSizeParamTest : public ::testing::TestWithParam<size_t> {};
 
     TEST_F(TransformerTest, Should_Expect_ColoredString_When_LogLevelIsSet)
     {
@@ -123,8 +125,6 @@ namespace QLogicaeCoreTest
         }
     }
 
-    class LogLevelColorParamTest : public ::testing::TestWithParam<QLogicaeCore::LogLevel> {};
-
     TEST_P(LogLevelColorParamTest, Should_Expect_ValidFormat_When_Parameterized)
     {
         auto& transformer = QLogicaeCore::Transformer::get_instance();
@@ -141,8 +141,6 @@ namespace QLogicaeCoreTest
             QLogicaeCore::LogLevel::EXCEPTION,
             QLogicaeCore::LogLevel::SUCCESS
         ));
-
-    class OutputSizeParamTest : public ::testing::TestWithParam<size_t> {};
 
     TEST_P(OutputSizeParamTest, Should_Expect_ResultUnderSize_When_OutputSizeVaries)
     {

@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "thread_pool.hpp"
@@ -57,92 +55,74 @@ namespace QLogicaeCore
 
     bool ThreadPool::try_enqueue_to_worker(const std::size_t& worker_index,
         SmallTaskObject&& task,
-        const TaskPriority& priority)
+        const TaskPriority& priority
+    )
     {
-        std::unique_ptr<WorkerQueue>& queue = worker_queues[worker_index];
-        std::lock_guard<std::mutex> lock(queue->queue_mutex);
-
-        std::size_t queue_size = 0;
-        for (const auto& [_, priority_queue] : queue->priority_queues)
+        try
         {
-            queue_size += priority_queue.size();
+            std::unique_ptr<WorkerQueue>& queue = worker_queues[worker_index];
+            std::lock_guard<std::mutex> lock(queue->queue_mutex);
+
+            std::size_t queue_size = 0;
+            for (const auto& [_, priority_queue] : queue->priority_queues)
+            {
+                queue_size += priority_queue.size();
+            }
+
+            if (queue_size >= max_queue_capacity)
+            {
+                return false;
+            }
+
+            queue->priority_queues[priority].push(std::move(task));
+            ++total_enqueued_tasks;
+            queue->wake_signal.notify_one();
+            
+            return true;
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at ThreadPool::get_instance(): " + exception.what());
         }
 
-        if (queue_size >= max_queue_capacity)
-        {
-            return false;
-        }
-
-        queue->priority_queues[priority].push(std::move(task));
-        ++total_enqueued_tasks;
-        queue->wake_signal.notify_one();
-        return true;
     }
 
     void ThreadPool::worker_loop(const std::size_t& thread_index)
     {
-        current_thread_index = thread_index;
-
-        std::unique_ptr<WorkerQueue>& local_queue =
-            worker_queues[thread_index];
-        const std::size_t total_workers = worker_queues.size();
-
-        while (!should_stop)
+        try
         {
-            SmallTaskObject task_object;
-            bool task_found = false;
+            current_thread_index = thread_index;
 
+            std::unique_ptr<WorkerQueue>& local_queue =
+                worker_queues[thread_index];
+            const std::size_t total_workers = worker_queues.size();
+
+            while (!should_stop)
             {
-                std::unique_lock<std::mutex> lock(local_queue->queue_mutex);
+                SmallTaskObject task_object;
+                bool task_found = false;
 
-                local_queue->wake_signal.wait(lock, [&]()
-                    {
-                        for (const auto& [_, queue] : local_queue->priority_queues)
+                {
+                    std::unique_lock<std::mutex> lock(local_queue->queue_mutex);
+
+                    local_queue->wake_signal.wait(lock, [&]()
                         {
-                            if (!queue.empty())
+                            for (const auto& [_, queue] : local_queue->priority_queues)
                             {
-                                return true;
+                                if (!queue.empty())
+                                {
+                                    return true;
+                                }
                             }
-                        }
-                        return should_stop.load();
-                    });
+                            return should_stop.load();
+                        });
 
-                if (should_stop)
-                {
-                    return;
-                }
-
-                for (auto& [_, queue] : local_queue->priority_queues)
-                {
-                    if (!queue.empty())
+                    if (should_stop)
                     {
-                        task_object = std::move(queue.front());
-                        queue.pop();
-                        task_found = true;
-                        break;
-                    }
-                }
-            }
-
-            if (task_found)
-            {
-                task_object();
-            }
-            else
-            {
-                for (std::size_t i = 0; i < total_workers; ++i)
-                {
-                    if (i == thread_index)
-                    {
-                        continue;
+                        return;
                     }
 
-                    std::unique_ptr<WorkerQueue>& neighbor_queue =
-                        worker_queues[i];
-                    std::lock_guard<std::mutex> neighbor_lock(
-                        neighbor_queue->queue_mutex);
-
-                    for (auto& [_, queue] : neighbor_queue->priority_queues)
+                    for (auto& [_, queue] : local_queue->priority_queues)
                     {
                         if (!queue.empty())
                         {
@@ -152,11 +132,6 @@ namespace QLogicaeCore
                             break;
                         }
                     }
-
-                    if (task_found)
-                    {
-                        break;
-                    }
                 }
 
                 if (task_found)
@@ -165,30 +140,84 @@ namespace QLogicaeCore
                 }
                 else
                 {
-                    std::this_thread::yield();
+                    for (std::size_t i = 0; i < total_workers; ++i)
+                    {
+                        if (i == thread_index)
+                        {
+                            continue;
+                        }
+
+                        std::unique_ptr<WorkerQueue>& neighbor_queue =
+                            worker_queues[i];
+                        std::lock_guard<std::mutex> neighbor_lock(
+                            neighbor_queue->queue_mutex);
+
+                        for (auto& [_, queue] : neighbor_queue->priority_queues)
+                        {
+                            if (!queue.empty())
+                            {
+                                task_object = std::move(queue.front());
+                                queue.pop();
+                                task_found = true;
+                                break;
+                            }
+                        }
+
+                        if (task_found)
+                        {
+                            break;
+                        }
+                    }
+
+                    if (task_found)
+                    {
+                        task_object();
+                    }
+                    else
+                    {
+                        std::this_thread::yield();
+                    }
                 }
             }
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at ThreadPool::worker_loop(): " + exception.what());
         }
     }
 
     std::size_t ThreadPool::total_pending_tasks() const
     {
-        std::size_t total = 0;
-
-        for (const std::unique_ptr<WorkerQueue>& queue : worker_queues)
+        try
         {
-            std::lock_guard<std::mutex> lock(queue->queue_mutex);
-            for (const auto& [_, q] : queue->priority_queues)
-            {
-                total += q.size();
-            }
-        }
+            std::size_t total = 0;
 
-        return total;
+            for (const std::unique_ptr<WorkerQueue>& queue : worker_queues)
+            {
+                std::lock_guard<std::mutex> lock(queue->queue_mutex);
+                for (const auto& [_, q] : queue->priority_queues)
+                {
+                    total += q.size();
+                }
+            }
+
+            return total;
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at ThreadPool::total_pending_tasks(): " + exception.what());
+        }
     }
 
     std::size_t ThreadPool::worker_count() const
     {
-        return worker_queues.size();
+        try
+        {
+            return worker_queues.size();
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at ThreadPool::worker_count(): " + exception.what());
+        }
     }
 }

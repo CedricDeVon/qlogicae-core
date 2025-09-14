@@ -1,7 +1,5 @@
 #pragma once
 
-#include "pch.h"
-
 #include "abstract_result.hpp"
 
 namespace QLogicaeCore
@@ -11,21 +9,26 @@ namespace QLogicaeCore
     {
     public:
         GoodResult(
-            std::optional<ValueType> = std::nullopt,
-            std::optional<MetaDataType> = std::nullopt
+            std::optional<ValueType> value= std::nullopt,
+            std::optional<MetaDataType> metadata = std::nullopt
         );
 
-        GoodResult(const GoodResult&) = delete;
-        GoodResult(GoodResult&&) noexcept = default;
-        GoodResult& operator=(const GoodResult&) = delete;
-        GoodResult& operator=(GoodResult&&) noexcept = default;
+        GoodResult(const GoodResult& good_result) = delete;
+
+        GoodResult(GoodResult&& good_result) noexcept = default;
+
+        GoodResult& operator=(const GoodResult& good_result) = delete;
+
+        GoodResult& operator=(GoodResult&& good_result) noexcept = default;
     };
 
     template <typename ValueType, typename MetaDataType>
     QLogicaeCore::GoodResult<ValueType, MetaDataType>::GoodResult(
         std::optional<ValueType> value,
         std::optional<MetaDataType> metadata) :
-            AbstractResult<ValueType, MetaDataType>(true, value, metadata)
+            AbstractResult<ValueType, MetaDataType>(
+                true, value, metadata
+            )
     {
     }
 }

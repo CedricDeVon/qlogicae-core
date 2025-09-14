@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "toml_file_io.hpp"
@@ -41,15 +39,15 @@ namespace QLogicaeCore
 
     bool TomlFileIO::load()
     {
-        std::scoped_lock lock(_mutex);
-
-        if (_file_path.empty())
-        {
-            return false;
-        }
-
         try
         {
+            std::scoped_lock lock(_mutex);
+
+            if (_file_path.empty())
+            {
+                return false;
+            }
+
             toml::table parsed_table = toml::parse_file(_file_path);
             if (_toml_root.has_value())
             {
@@ -58,9 +56,9 @@ namespace QLogicaeCore
             _toml_root = new toml::table(std::move(parsed_table));
             return true;
         }
-        catch (...)
+        catch (const std::exception& exception)
         {
-            return false;
+            throw std::runtime_error(std::string() + "Exception at TomlFileIO::is_cancelled(): " + exception.what());
         }
     }
 
@@ -71,15 +69,15 @@ namespace QLogicaeCore
 
     bool TomlFileIO::save_as(const std::string_view& file_path)
     {
-        std::scoped_lock lock(_mutex);
-
-        if (file_path.empty() || !_toml_root.has_value())
-        {
-            return false;
-        }
-
         try
         {
+            std::scoped_lock lock(_mutex);
+
+            if (file_path.empty() || !_toml_root.has_value())
+            {
+                return false;
+            }
+
             std::ostringstream output_stream;
             output_stream << toml::default_formatter{ *(_toml_root.value()) };
             std::string output = output_stream.str();
@@ -96,45 +94,59 @@ namespace QLogicaeCore
 
             return true;
         }
-        catch (...)
+        catch (const std::exception& exception)
         {
-            return false;
+            throw std::runtime_error(std::string() + "Exception at TomlFileIO::save_as(): " + exception.what());
         }
     }
 
     bool TomlFileIO::remove_value(const std::vector<std::string>& key_path)
     {
-        std::scoped_lock lock(_mutex);
-
-        if (!_toml_root.has_value() || key_path.empty())
+        try
         {
-            return false;
-        }
+            std::scoped_lock lock(_mutex);
 
-        toml::table* root = static_cast<toml::table*>(_toml_root.value());
-        toml::node* current = root;
-
-        for (std::size_t index = 0; index < key_path.size() - 1; ++index)
-        {
-            current = current->as_table()->get(key_path[index]);
-            if (!current || !current->is_table())
+            if (!_toml_root.has_value() || key_path.empty())
             {
                 return false;
             }
-        }
 
-        return current->as_table()->erase(key_path.back());
+            toml::table* root = static_cast<toml::table*>(_toml_root.value());
+            toml::node* current = root;
+
+            for (std::size_t index = 0; index < key_path.size() - 1; ++index)
+            {
+                current = current->as_table()->get(key_path[index]);
+                if (!current || !current->is_table())
+                {
+                    return false;
+                }
+            }
+
+            return current->as_table()->erase(key_path.back());
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at TomlFileIO::remove_value(): " + exception.what());
+        }
     }
 
     bool TomlFileIO::remove_keys(
         const std::vector<std::vector<std::string>>& keys)
     {
-        bool success = true;
-        for (const std::vector<std::string>& path : keys)
+        try
         {
-            success &= remove_value(path);
+            bool success = true;
+            for (const std::vector<std::string>& path : keys)
+            {
+                success &= remove_value(path);
+            }
+            return success;
         }
-        return success;
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at TomlFileIO::remove_keys(): " + exception.what());
+        }
     }
 
     std::future<bool> TomlFileIO::load_async()

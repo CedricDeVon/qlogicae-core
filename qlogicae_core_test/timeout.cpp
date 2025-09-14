@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "timeout.hpp"
@@ -367,4 +365,3 @@ namespace QLogicaeCoreTest
         ::testing::Values(true, false)
     );
 }
-

@@ -1,24 +1,34 @@
 #pragma once
 
-#include "pch.h"
-
 namespace QLogicaeCore
 {
-    template <typename ValueType, typename MetaDataType = std::string>
+    template <typename ValueType,
+        typename MetaDataType = std::string>
     class AbstractResult
     {
-
     public:
         virtual ~AbstractResult() = default;
-        AbstractResult(const AbstractResult&) = delete;
-        AbstractResult(AbstractResult&&) noexcept = default;
-        AbstractResult& operator=(const AbstractResult&) = delete;
-        AbstractResult& operator=(AbstractResult&&) noexcept = default;
+
+        AbstractResult(
+            const AbstractResult& abstract_result) = delete;
+
+        AbstractResult(
+            AbstractResult&& abstract_result) noexcept = default;
+
+        AbstractResult& operator=(
+            const AbstractResult& abstract_result) = delete;
+
+        AbstractResult& operator=(
+            AbstractResult&& abstract_result) noexcept = default;
 
         bool has_value() const;
+
         bool has_metadata() const;
+
         bool is_status_good() const;
+
         const std::optional<ValueType>& get_value() const;
+
         const std::optional<MetaDataType>& get_metadata() const;
 
     protected:
@@ -26,9 +36,9 @@ namespace QLogicaeCore
         const std::optional<ValueType> _value;
         const std::optional<MetaDataType> _metadata;
 
-        AbstractResult(bool = false,
-            std::optional<ValueType> = std::nullopt,
-            std::optional<MetaDataType> = std::nullopt
+        AbstractResult(bool state = false,
+            std::optional<ValueType> value = std::nullopt,
+            std::optional<MetaDataType> metadata = std::nullopt
         );
     };
 

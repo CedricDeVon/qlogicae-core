@@ -1,36 +1,53 @@
 #pragma once
 
-#include "pch.h"
-
 namespace QLogicaeCore
 {
-    class Interval {
+    class Interval
+    {
     public:
         ~Interval();
+
         Interval() = default;
-        Interval(const Interval&) = delete;
-        Interval(Interval&&) noexcept = delete;
-        Interval& operator=(Interval&&) = delete;
-        Interval& operator=(const Interval&) = delete;
+
+        Interval(const Interval& interval) = delete;
+
+        Interval(Interval&& interval) noexcept = delete;
+
+        Interval& operator=(Interval&& interval) = delete;
+
+        Interval& operator=(const Interval& interval) = delete;
+
         Interval(const std::function<bool(size_t)>& callback,
             std::chrono::milliseconds interval,
             std::optional<size_t> max_count = std::nullopt,
-            bool execute_now = false);
+            bool execute_now = false
+        );
 
         void start();
+
         void stop();
+
         void pause();
+
         void resume();
+
         void cancel();
+
         void restart();
 
         bool is_paused() const;
+
         bool is_running() const;
+
         bool is_cancelled() const;
+
         size_t get_execution_count() const;
-        void set_interval(std::chrono::milliseconds);
-        void set_callback(std::function<bool(size_t)>);
+
         std::chrono::milliseconds get_interval() const;
+
+        void set_interval(std::chrono::milliseconds time);
+
+        void set_callback(std::function<bool(size_t)> callback);
 
     protected:
         std::thread _thread;

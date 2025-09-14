@@ -1,6 +1,4 @@
-﻿#pragma once
-
-#include "pch.h"
+﻿#include "pch.h"
 
 #include "string_builder.hpp"
 
@@ -24,7 +22,6 @@ namespace QLogicaeCoreTest
         explicit TrackingMemoryResource(MemoryTrackingStats* stats)
             : stats_pointer(stats) {
         }
-
     protected:
         void* do_allocate(std::size_t size, std::size_t alignment) override
         {

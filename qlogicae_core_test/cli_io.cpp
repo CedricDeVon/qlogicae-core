@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "cli_io.hpp"
@@ -7,6 +5,10 @@
 namespace QLogicaeCoreTest
 {
     class CliIOTest : public ::testing::Test {};
+
+    class ScanFlagParameterizedTest : public ::testing::TestWithParam<bool> {};
+
+    class PrintFlagParameterizedTest : public ::testing::TestWithParam<bool> {};
 
     TEST_F(CliIOTest, Should_Expect_DefaultEnabled_When_Initialized)
     {
@@ -163,8 +165,6 @@ namespace QLogicaeCoreTest
         EXPECT_LT(std::chrono::duration_cast<std::chrono::seconds>(end - start).count(), 2);
     }
 
-    class ScanFlagParameterizedTest : public ::testing::TestWithParam<bool> {};
-
     TEST_P(ScanFlagParameterizedTest, Should_Expect_CorrectScanFlag_When_Set)
     {
         QLogicaeCore::CliIO& cli = QLogicaeCore::CliIO::get_instance();
@@ -174,8 +174,6 @@ namespace QLogicaeCoreTest
 
     INSTANTIATE_TEST_CASE_P(AllStates, ScanFlagParameterizedTest,
         ::testing::Values(true, false));
-
-    class PrintFlagParameterizedTest : public ::testing::TestWithParam<bool> {};
 
     TEST_P(PrintFlagParameterizedTest, Should_Expect_CorrectPrintFlag_When_Set)
     {

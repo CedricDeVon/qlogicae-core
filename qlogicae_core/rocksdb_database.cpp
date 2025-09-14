@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "rocksdb_database.hpp"
@@ -328,7 +326,7 @@ namespace QLogicaeCore
         if (!status.ok())
         {
             throw std::runtime_error(
-                "Failed to open RocksDB: " + status.ToString());
+                "Exception at RocksDBDatabase::open_db(): Failed to open RocksDB: " + status.ToString());
         }
 
         _object = _transaction_db;

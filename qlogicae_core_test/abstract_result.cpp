@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "abstract_result.hpp"
@@ -16,7 +14,8 @@ namespace QLogicaeCoreTest
             bool state,
             std::optional<ValueType> value = std::nullopt,
             std::optional<MetaDataType> metadata = std::nullopt
-        ) : AbstractResult<ValueType, MetaDataType>(state, value, metadata) {
+        ) : AbstractResult<ValueType, MetaDataType>(state, value, metadata)
+        {
         }
 
         MockResult(MockResult&&) noexcept = default;

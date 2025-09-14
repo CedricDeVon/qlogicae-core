@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "transformer.hpp"
@@ -60,9 +58,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            CLI_IO.print_with_new_line_async(std::string("Exception at Transformer::color_type(): ") + exception.what());
-
-            return "";
+            throw std::runtime_error(std::string("Exception at Transformer::color_type(): ") + exception.what());
         }
     }
 
@@ -89,9 +85,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            CLI_IO.print_with_new_line_async(std::string("Exception at Transformer::to_log_format(): ") + exception.what());
-
-            return "";
+            throw std::runtime_error(std::string("Exception at Transformer::to_log_format(): ") + exception.what());
         }
     }
 
@@ -111,9 +105,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            CLI_IO.print_with_new_line_async(std::string("Exception at Transformer::to_log_level_color_format(): ") + exception.what());
-
-            return "";
+            throw std::runtime_error(std::string("Exception at Transformer::to_log_level_color_format(): ") + exception.what());
         }
     }
 
@@ -131,9 +123,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            CLI_IO.print_with_new_line_async(std::string("Exception at Transformer::to_none_format(): ") + exception.what());
-
-            return "";
+            throw std::runtime_error(std::string("Exception at Transformer::to_none_format(): ") + exception.what());
         }
     }
 
@@ -151,9 +141,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            CLI_IO.print_with_new_line_async(std::string("Exception at Transformer::to_na_format(): ") + exception.what());
-
-            return "";
+            throw std::runtime_error(std::string("Exception at Transformer::to_na_format(): ") + exception.what());
         }
     }
 
@@ -169,9 +157,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            CLI_IO.print_with_new_line_async(std::string("Exception at Transformer::split(): ") + exception.what());
-
-            return {};
+            throw std::runtime_error(std::string("Exception at Transformer::split(): ") + exception.what());
         }
     }
 }

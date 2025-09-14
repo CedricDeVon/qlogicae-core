@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "dot_env.hpp"
@@ -218,3 +216,4 @@ namespace QLogicaeCoreTest
         )
     );
 }
+

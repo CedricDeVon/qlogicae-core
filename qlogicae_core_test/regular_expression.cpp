@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "regular_expression.hpp"
@@ -205,3 +203,4 @@ namespace QLogicaeCoreTest
         ASSERT_TRUE(QLogicaeCore::RegularExpression::get_instance().match_direct(long_subject, long_pattern));
     }
 }
+

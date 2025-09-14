@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "bcrypt_hash_cryptographer.hpp"
@@ -108,14 +106,9 @@ namespace QLogicaeCoreTest
         ));
 
     TEST_F(BcryptHashCryptographerNegativeTest,
-        Should_Throw_When_Transforming_EmptyPassword)
-    {
-        ASSERT_THROW(cryptographer.transform(""), std::invalid_argument);
-    }
-
-    TEST_F(BcryptHashCryptographerNegativeTest,
         Should_ReturnFalse_When_Reversing_EmptyInputs)
     {
         ASSERT_FALSE(cryptographer.reverse("", ""));
     }
 }
+

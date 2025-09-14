@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "file_ios.hpp"
@@ -19,9 +17,9 @@ namespace QLogicaeCore
 		{
 			_instances[get_instance->get_name()] = std::move(get_instance);
 		}
-		catch (...)
+		catch (const std::exception& exception)
 		{
-			throw std::runtime_error("runtime_error");
+			throw std::runtime_error(std::string() + "Exception at FileIOs::set_file(): " + exception.what());
 		}
 	}
 
@@ -39,9 +37,9 @@ namespace QLogicaeCore
 				_instances[get_instance->get_name()] = std::move(get_instance);
 			}
 		}
-		catch (...)
+		catch (const std::exception& exception)
 		{
-			throw std::runtime_error("runtime_error");
+			throw std::runtime_error(std::string() + "Exception at FileIOs::set_file(): " + exception.what());
 		}
 	}
 }

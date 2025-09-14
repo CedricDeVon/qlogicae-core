@@ -1,6 +1,4 @@
-﻿#pragma once
-
-#include "pch.h"
+﻿#include "pch.h"
 
 #include "sqlite.hpp"
 
@@ -19,6 +17,30 @@ namespace QLogicaeCoreTest
         void TearDown() override
         {
             database.reset();
+        }
+
+        std::unique_ptr<QLogicaeCore::SQLiteDatabase> database;
+    };
+
+    class SQLiteStatementCoverageTest : public testing::Test
+    {
+    protected:
+        void SetUp() override
+        {
+            database = std::make_unique<QLogicaeCore::SQLiteDatabase>(":memory:");
+            database->prepare("CREATE TABLE items(id INT, name TEXT);").step();
+        }
+
+        std::unique_ptr<QLogicaeCore::SQLiteDatabase> database;
+    };
+
+    class SQLiteParameterizedSQLTest : public testing::TestWithParam<std::string>
+    {
+    protected:
+        void SetUp() override
+        {
+            database = std::make_unique<QLogicaeCore::SQLiteDatabase>(":memory:");
+            database->prepare("CREATE TABLE t(id INT);").step();
         }
 
         std::unique_ptr<QLogicaeCore::SQLiteDatabase> database;
@@ -129,18 +151,6 @@ namespace QLogicaeCoreTest
         SQLiteStatementTest,
         testing::Values("", "SELECT"));
 
-    class SQLiteStatementCoverageTest : public testing::Test
-    {
-    protected:
-        void SetUp() override
-        {
-            database = std::make_unique<QLogicaeCore::SQLiteDatabase>(":memory:");
-            database->prepare("CREATE TABLE items(id INT, name TEXT);").step();
-        }
-
-        std::unique_ptr<QLogicaeCore::SQLiteDatabase> database;
-    };
-
     TEST_F(SQLiteStatementCoverageTest, Should_Insert_ThousandRows_UnderTwoSeconds)
     {
         QLogicaeCore::SQLiteStatement insert =
@@ -210,18 +220,6 @@ namespace QLogicaeCoreTest
 
         EXPECT_FALSE(name.has_value());
     }
-
-    class SQLiteParameterizedSQLTest : public testing::TestWithParam<std::string>
-    {
-    protected:
-        void SetUp() override
-        {
-            database = std::make_unique<QLogicaeCore::SQLiteDatabase>(":memory:");
-            database->prepare("CREATE TABLE t(id INT);").step();
-        }
-
-        std::unique_ptr<QLogicaeCore::SQLiteDatabase> database;
-    };
 
     TEST_P(SQLiteParameterizedSQLTest, Should_Handle_ParameterSyntaxForms)
     {

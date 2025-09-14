@@ -21,9 +21,6 @@
     <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="files.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="abstract_file_io.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -93,9 +90,6 @@
     <ClInclude Include="network_ping.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="networks.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="placeholder_value_extractor.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -156,9 +150,6 @@
     <ClInclude Include="sqlite.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="excel_file_io.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="file_uri_io.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -172,9 +163,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sha256_hash_cryptographer.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="benchmarks.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="statistician.hpp">
@@ -327,9 +315,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="sha256_hash_cryptographer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="benchmarks.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="groq_cloud_client_api.cpp">

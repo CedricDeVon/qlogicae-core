@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "timeout.hpp"
@@ -34,7 +32,7 @@ namespace QLogicaeCore
                 }
                 catch (...)
                 {
-                    std::cerr << "Timeout exception\n";
+
                 }
             }
             else
@@ -48,7 +46,7 @@ namespace QLogicaeCore
                 }
                 catch (...)
                 {
-                    std::cerr << "Timeout exception\n";
+
                 }
             }
         });
@@ -56,29 +54,50 @@ namespace QLogicaeCore
 
     void Timeout::cancel()
     {
-        if (_thread.joinable())
+        try
         {
-            _stop_flag.store(true);
-            _thread.request_stop();
-            _thread.join();
-        }
+            if (_thread.joinable())
+            {
+                _stop_flag.store(true);
+                _thread.request_stop();
+                _thread.join();
+            }
 
-        _stop_flag.store(true);
-        _is_cancelled.store(true);
+            _stop_flag.store(true);
+            _is_cancelled.store(true);
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at Timeout::cancel(): " + exception.what());
+        }
     }
 
     void Timeout::restart()
     {
-        cancel();
+        try
+        {
+            cancel();
 
-        _stop_flag.store(false);
-        _is_cancelled.store(false);
+            _stop_flag.store(false);
+            _is_cancelled.store(false);
 
-        start_thread();
+            start_thread();
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at Timeout::restart(): " + exception.what());
+        }
     }
 
     bool Timeout::is_cancelled() const
     {
-        return _is_cancelled.load();
+        try
+        {
+            return _is_cancelled.load();
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at Timeout::is_cancelled(): " + exception.what());
+        }
     }
 }

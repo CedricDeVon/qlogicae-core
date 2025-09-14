@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "cli_io.hpp"

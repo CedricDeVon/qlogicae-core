@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "aes256_cipher_cryptographer.hpp"
@@ -41,14 +39,7 @@ namespace QLogicaeCore
 		return std::async(std::launch::async,
 			[this, va, vb, vc]() -> std::string
 			{
-				try
-				{
-					return reverse(va, vb, vc);
-				}
-				catch (...)
-				{
-					return "";
-				}
+				return reverse(va, vb, vc);				
 			});
 	}
 
@@ -60,14 +51,7 @@ namespace QLogicaeCore
 		return std::async(std::launch::async,
 			[this, va, vb, vc]() -> std::string
 			{
-				try
-				{
-					return transform(va, vb, vc);
-				}
-				catch (...)
-				{
-					return "";
-				}
+				return transform(va, vb, vc);				
 			});
 	}
 
@@ -102,13 +86,13 @@ namespace QLogicaeCore
 				vc, vb
 			);
 
-			return QLogicaeCore::Encoder::get_instance().from_bytes_to_base64(
+			return ENCODER.from_bytes_to_base64(
 				vh, vg
 			);
 		}
-		catch (...)
+		catch (const std::exception& exception)
 		{
-			return "";
+			throw std::runtime_error(std::string() + "Exception at AES256CipherCryptographer::transform(): " + exception.what());
 		}
 	}
 
@@ -127,7 +111,7 @@ namespace QLogicaeCore
 			}
 
 			std::vector<unsigned char> vf =
-				QLogicaeCore::Encoder::get_instance().from_base64_to_bytes(va);
+				ENCODER.from_base64_to_bytes(va);
 			unsigned long long vh, vi = vf.size();
 			std::vector<unsigned char> vg(vi);
 			unsigned char* vj = vg.data();
@@ -143,9 +127,9 @@ namespace QLogicaeCore
 				reinterpret_cast<const char*>(vj), vh
 			);
 		}
-		catch (...)
+		catch (const std::exception& exception)
 		{
-			return "";
+			throw std::runtime_error(std::string() + "Exception at AES256CipherCryptographer::reverse(): " + exception.what());
 		}
 	}
 
@@ -156,14 +140,7 @@ namespace QLogicaeCore
 	{
 		return std::async(std::launch::async, [this, va, vb, vc]() -> std::string
 		{
-			try
-			{
-				return reverse(va, vb, vc);
-			}
-			catch (...)
-			{
-				return "";
-			}
+			return reverse(va, vb, vc);			
 		});
 	}
 
@@ -174,14 +151,7 @@ namespace QLogicaeCore
 	{
 		return std::async(std::launch::async, [this, va, vb, vc]() -> std::string
 		{
-			try
-			{
-				return transform(va, vb, vc);
-			}
-			catch (...)
-			{
-				return "";
-			}
+			return transform(va, vb, vc);			
 		});
 	}
 }

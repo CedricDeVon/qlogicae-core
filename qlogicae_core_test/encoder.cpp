@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "encoder.hpp"
@@ -145,3 +143,4 @@ namespace QLogicaeCoreTest
         )
     );
 }
+

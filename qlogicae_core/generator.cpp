@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "generator.hpp"
@@ -11,7 +9,7 @@ namespace QLogicaeCore
         static const int status = sodium_init();
         if (status < 0)
         {
-            throw std::runtime_error("sodium_init failed");
+            throw std::runtime_error("Exception at: Generator::Generator(): Sodium initialization failed");
         }
     }
 
@@ -26,153 +24,239 @@ namespace QLogicaeCore
         const size_t& length,
         const std::string_view& character_set) const
     {
-        if (character_set.empty() || length < 1)
+        try
         {
-            return "";
-        }
+            if (character_set.empty() || length < 1)
+            {
+                return "";
+            }
 
-        const std::string raw = random_string(length, character_set);
-        return Encoder::get_instance().from_utf8_to_hex(raw);
+            const std::string raw = random_string(length, character_set);
+            return Encoder::get_instance().from_utf8_to_hex(raw);
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at Generator::random_hex(): " + exception.what());
+        }
     }
 
     std::string Generator::random_rgb_hex() const
     {
-        std::string result;
-        fmt::format_to(
-            std::back_inserter(result),
-            "#{}",
-            random_hex(6)
-        );
+        try
+        {
+            std::string result;
+            fmt::format_to(
+                std::back_inserter(result),
+                "#{}",
+                random_hex(6)
+            );
 
-        return result;
+            return result;
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at Generator::random_rgb_hex(): " + exception.what());
+        }
     }
 
     std::string Generator::random_rgba_hex() const
     {
-        std::string result;
-        fmt::format_to(
-            std::back_inserter(result),
-            "#{}",
-            random_hex(8)
-        );
+        try
+        {
+            std::string result;
+            fmt::format_to(
+                std::back_inserter(result),
+                "#{}",
+                random_hex(8)
+            );
 
-        return result;
+            return result;
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at Generator::random_rgba_hex(): " + exception.what());
+        }
     }
 
     std::string Generator::random_base64(
         const size_t& length,
         const std::string_view& character_set) const
     {
-        if (character_set.size() < 64 || length < 1)
+        try
         {
-            return "";
-        }
+            if (character_set.size() < 64 || length < 1)
+            {
+                return "";
+            }
 
-        const std::string raw = random_string(length, character_set);
-        return Encoder::get_instance().from_utf8_to_base64(raw);
+            const std::string raw = random_string(length, character_set);
+            return Encoder::get_instance().from_utf8_to_base64(raw);
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at Generator::random_base64(): " + exception.what());
+        }
     }
 
     std::string Generator::random_uuid4() const
     {
-        thread_local uuids::uuid_random_generator uuid_generator(
-            _random_m19937()
-        );
+        try
+        {
+            thread_local uuids::uuid_random_generator uuid_generator(
+                _random_m19937()
+            );
 
-        return uuids::to_string(uuid_generator());
+            return uuids::to_string(uuid_generator());
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at Generator::random_uuid4(): " + exception.what());
+        }
     }
 
     std::array<unsigned char, 16> Generator::random_salt() const
     {
-        std::array<unsigned char, 16> salt{};
-        randombytes_buf(salt.data(), salt.size());
-        return salt;
+        try
+        {
+            std::array<unsigned char, 16> salt{};
+            randombytes_buf(salt.data(), salt.size());
+            return salt;
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at Generator::random_salt(): " + exception.what());
+        }
     }
 
     bool Generator::random_bool(const double& true_probability) const
     {
-        if (true_probability < 1)
+        try
         {
-            return false;
-        }
+            if (true_probability < 1)
+            {
+                return false;
+            }
 
-        return std::bernoulli_distribution(
-            true_probability)(_random_m19937());
+            return std::bernoulli_distribution(
+                true_probability)(_random_m19937());
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at Generator::random_bool(): " + exception.what());
+        }
     }
 
     std::vector<std::string> Generator::random_string_vector(
         const size_t& size,
         const size_t& length) const
     {
-        size_t index;
-        std::vector<std::string> result;
-        result.reserve(size);
-
-        for (index = Constants::NUMBER_ZERO; index < size; ++index)
+        try
         {
-            result.emplace_back(random_string(length));
-        }
+            size_t index;
+            std::vector<std::string> result;
+            result.reserve(size);
 
-        return result;
+            for (index = Constants::NUMBER_ZERO; index < size; ++index)
+            {
+                result.emplace_back(random_string(length));
+            }
+
+            return result;
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at Generator::random_string_vector(): " + exception.what());
+        }
     }
 
     std::string Generator::random_string(
         const size_t& length,
         const std::string_view& character_set) const
     {
-        if (character_set.empty() || length < 1)
+        try
         {
-            return "";
+            if (character_set.empty() || length < 1)
+            {
+                return "";
+            }
+
+            std::string result;
+            result.reserve(length);
+
+            std::mt19937& random_engine = _random_m19937();
+
+            std::uniform_int_distribution<std::size_t> distribution(
+                0, character_set.size() - 1);
+
+            for (std::size_t index = 0; index < length; ++index)
+            {
+                result += character_set[distribution(random_engine)];
+            }
+
+            return result;
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at Generator::random_string(): " + exception.what());
         }
 
-        std::string result;
-        result.reserve(length);
-
-        std::mt19937& random_engine = _random_m19937();
-
-        std::uniform_int_distribution<std::size_t> distribution(
-            0, character_set.size() - 1);
-
-        for (std::size_t index = 0; index < length; ++index)
-        {
-            result += character_set[distribution(random_engine)];
-        }
-
-        return result;
     }
 
     int Generator::random_int(
         const int& minimum, const int& maximum) const
     {
-        if (maximum < minimum)
+        try
         {
-            throw std::invalid_argument("Invalid range");
-        }
+            if (maximum < minimum)
+            {
+                return 0;
+            }
 
-        return std::uniform_int_distribution<int>(
-            minimum, maximum)(_random_m19937());
+            return std::uniform_int_distribution<int>(
+                minimum, maximum)(_random_m19937());
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at Generator::random_int(): " + exception.what());
+        }
     }
 
     double Generator::random_double(
         const double& minimum, const double& maximum) const
     {
-        if (maximum < minimum)
+        try
         {
-            throw std::invalid_argument("Invalid range");
-        }
+            if (maximum < minimum)
+            {
+                return 0;
+            }
 
-        return std::uniform_real_distribution<double>(
-            minimum, maximum)(_random_m19937());
+            return std::uniform_real_distribution<double>(
+                minimum, maximum)(_random_m19937());
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at Generator::random_double(): " + exception.what());
+        }
     }
 
     void Generator::random_bytes(
         unsigned char* buffer, size_t size) const
     {
-        if (buffer == nullptr && size > 0)
-        {
-            throw std::invalid_argument("Null buffer with non-zero size");
-        }
 
-        randombytes_buf(buffer, size);
+        try
+        {
+            if (buffer == nullptr && size > 0)
+            {
+                return;
+            }
+
+            randombytes_buf(buffer, size);
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at Generator::random_bytes(): " + exception.what());
+        }
     }
 
 

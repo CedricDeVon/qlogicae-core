@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "string_memory_pool.hpp"
@@ -329,3 +327,4 @@ namespace QLogicaeCoreTest
         )
     );
 }
+

@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "argon2id_hash_cryptographer.hpp"

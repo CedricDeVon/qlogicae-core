@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "gmail_mailer.hpp"
@@ -13,28 +11,29 @@ namespace QLogicaeCore
         const std::vector<std::string>& cc_recipients,
         const std::vector<std::string>& bcc_recipients,
         const std::string& smtp_server)
-        : curl(nullptr),
-        mime_mixed(nullptr),
-        mime_related(nullptr),
-        html_part(nullptr),
-        plain_part(nullptr),
-        sender_address(sender_address),
-        password_provider(password_provider),
-        smtp_server(smtp_server),
-        recipients(nullptr),
-        headers(nullptr),
-        to_recipients(to_recipients),
-        cc_recipients(cc_recipients),
-        bcc_recipients(bcc_recipients)
+        : _curl(nullptr),
+        _mime_mixed(nullptr),
+        _mime_related(nullptr),
+        _html_part(nullptr),
+        _plain_part(nullptr),
+        _sender_address(sender_address),
+        _password_provider(password_provider),
+        _smtp_server(smtp_server),
+        _recipients(nullptr),
+        _headers(nullptr),
+        _to_recipients(to_recipients),
+        _cc_recipients(cc_recipients),
+        _bcc_recipients(bcc_recipients)
     {
         if (sender_address.empty() || !password_provider)
         {
-            throw std::invalid_argument("Sender and password provider required");
+            throw std::runtime_error("Exception at GmailMailer::GmailMailer(): Sender and password provider required");
         }
         if (to_recipients.empty())
         {
-            throw std::invalid_argument("At least one recipient required");
+            throw std::runtime_error("Exception at GmailMailer::GmailMailer(): At least one recipient required");
         }
+
         curl_global_init(CURL_GLOBAL_DEFAULT);
         initialize();
     }
@@ -42,118 +41,160 @@ namespace QLogicaeCore
     GmailMailer::~GmailMailer()
     {
         cleanup();
-        curl_global_cleanup();
+        curl_global_cleanup();        
     }
-
 
     void GmailMailer::initialize()
     {
-        curl = curl_easy_init();
-        if (curl == nullptr)
+        try
         {
-            throw std::runtime_error("CURL initialization failed");
+            _curl = curl_easy_init();
+            if (_curl == nullptr)
+            {
+                throw std::runtime_error("Exception at GmailMailer::initialize(): CURL initialization failed");
+            }
+
+            configure_smtp();
+            prepare_recipients();
+            _mime_mixed = curl_mime_init(_curl);
+            _mime_related = curl_mime_init(_curl);
         }
-        configure_smtp();
-        prepare_recipients();
-        mime_mixed = curl_mime_init(curl);
-        mime_related = curl_mime_init(curl);
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at GmailMailer::initialize(): " + exception.what());
+        }
     }
 
     void GmailMailer::configure_smtp()
     {
-        std::string full_url = "smtps://" + smtp_server;
-        curl_easy_setopt(curl, CURLOPT_URL, full_url.c_str());
-        curl_easy_setopt(curl, CURLOPT_USE_SSL, CURLUSESSL_ALL);
-        curl_easy_setopt(curl, CURLOPT_USERNAME, sender_address.c_str());
-        std::string password = password_provider();
-        curl_easy_setopt(curl, CURLOPT_PASSWORD, password.c_str());
-        curl_easy_setopt(curl, CURLOPT_MAIL_FROM,
-            ("<" + sender_address + ">").c_str());
-        curl_easy_setopt(curl, CURLOPT_VERBOSE, 0L);
-        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
-        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 2L);
+        try
+        {
+            std::string full_url = "smtps://" + _smtp_server;
+            curl_easy_setopt(_curl, CURLOPT_URL, full_url.c_str());
+            curl_easy_setopt(_curl, CURLOPT_USE_SSL, CURLUSESSL_ALL);
+            curl_easy_setopt(_curl, CURLOPT_USERNAME, _sender_address.c_str());
+            std::string password = _password_provider();
+            curl_easy_setopt(_curl, CURLOPT_PASSWORD, password.c_str());
+            curl_easy_setopt(_curl, CURLOPT_MAIL_FROM,
+                ("<" + _sender_address + ">").c_str());
+            curl_easy_setopt(_curl, CURLOPT_VERBOSE, 0L);
+            curl_easy_setopt(_curl, CURLOPT_SSL_VERIFYPEER, 1L);
+            curl_easy_setopt(_curl, CURLOPT_SSL_VERIFYHOST, 2L);
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at GmailMailer::configure_smtp(): " + exception.what());
+        }
     }
 
     void GmailMailer::prepare_recipients()
     {
-        auto append = [this](const std::vector<std::string>& list)
-            {
-                for (const std::string& item : list)
+        try
+        {
+            auto append = [this](const std::vector<std::string>& list)
                 {
-                    recipients = curl_slist_append(
-                        recipients,
-                        ("<" + item + ">").c_str());
-                }
-            };
-        append(to_recipients);
-        append(cc_recipients);
-        append(bcc_recipients);
-        curl_easy_setopt(curl, CURLOPT_MAIL_RCPT, recipients);
+                    for (const std::string& item : list)
+                    {
+                        _recipients = curl_slist_append(
+                            _recipients,
+                            ("<" + item + ">").c_str());
+                    }
+                };
+            append(_to_recipients);
+            append(_cc_recipients);
+            append(_bcc_recipients);
+            curl_easy_setopt(_curl, CURLOPT_MAIL_RCPT, _recipients);
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at GmailMailer::prepare_recipients(): " + exception.what());
+        }
     }
 
     void GmailMailer::prepare_headers()
     {
-        headers = curl_slist_append(
-            headers,
-            ("Subject: " + subject).c_str());
-        headers = curl_slist_append(
-            headers,
-            ("From: <" + sender_address + ">").c_str());
+        try
+        {
+            _headers = curl_slist_append(
+                _headers,
+                ("Subject: " + _subject).c_str());
+            _headers = curl_slist_append(
+                _headers,
+                ("From: <" + _sender_address + ">").c_str());
 
-        for (const std::string& recipient : to_recipients)
-        {
-            headers = curl_slist_append(
-                headers,
-                ("To: <" + recipient + ">").c_str());
+            for (const std::string& recipient : _to_recipients)
+            {
+                _headers = curl_slist_append(
+                    _headers,
+                    ("To: <" + recipient + ">").c_str());
+            }
+            for (const std::string& cc : _cc_recipients)
+            {
+                _headers = curl_slist_append(
+                    _headers,
+                    ("Cc: <" + cc + ">").c_str());
+            }
+            for (const auto& pair : _custom_headers)
+            {
+                _headers = curl_slist_append(
+                    _headers,
+                    (pair.first + ": " + pair.second).c_str());
+            }
+            curl_easy_setopt(_curl, CURLOPT_HTTPHEADER, _headers);
         }
-        for (const std::string& cc : cc_recipients)
+        catch (const std::exception& exception)
         {
-            headers = curl_slist_append(
-                headers,
-                ("Cc: <" + cc + ">").c_str());
+            throw std::runtime_error(std::string() + "Exception at GmailMailer::prepare_headers(): " + exception.what());
         }
-        for (const auto& pair : custom_headers)
-        {
-            headers = curl_slist_append(
-                headers,
-                (pair.first + ": " + pair.second).c_str());
-        }
-        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
     }
 
     void GmailMailer::finalize_body()
     {
-        if (!plain_body.empty())
+        try
         {
-            plain_part = curl_mime_addpart(mime_related);
-            curl_mime_data(plain_part, plain_body.c_str(), CURL_ZERO_TERMINATED);
-            curl_mime_type(plain_part, "text/plain");
+            if (!_plain_body.empty())
+            {
+                _plain_part = curl_mime_addpart(_mime_related);
+                curl_mime_data(_plain_part, _plain_body.c_str(), CURL_ZERO_TERMINATED);
+                curl_mime_type(_plain_part, "text/plain");
+            }
+            if (!_html_body.empty())
+            {
+                _html_part = curl_mime_addpart(_mime_related);
+                curl_mime_data(_html_part, _html_body.c_str(), CURL_ZERO_TERMINATED);
+                curl_mime_type(_html_part, "text/html");
+            }
+            curl_mimepart* part = curl_mime_addpart(_mime_mixed);
+            curl_mime_subparts(part, _mime_related);
+            curl_mime_type(part, "multipart/alternative");
+            curl_easy_setopt(_curl, CURLOPT_MIMEPOST, _mime_mixed);
         }
-        if (!html_body.empty())
+        catch (const std::exception& exception)
         {
-            html_part = curl_mime_addpart(mime_related);
-            curl_mime_data(html_part, html_body.c_str(), CURL_ZERO_TERMINATED);
-            curl_mime_type(html_part, "text/html");
+            throw std::runtime_error(std::string() + "Exception at GmailMailer::finalize_body(): " + exception.what());
         }
-        curl_mimepart* part = curl_mime_addpart(mime_mixed);
-        curl_mime_subparts(part, mime_related);
-        curl_mime_type(part, "multipart/alternative");
-        curl_easy_setopt(curl, CURLOPT_MIMEPOST, mime_mixed);
     }
 
     bool GmailMailer::send_email(std::string& error_message)
     {
-        std::scoped_lock lock(access_mutex);
-        reset_mime();
-        prepare_headers();
-        finalize_body();
-        CURLcode result = curl_easy_perform(curl);
-        if (result != CURLE_OK)
+        try
         {
-            error_message = curl_easy_strerror(result);
-            return false;
+            std::scoped_lock lock(_access_mutex);
+            reset_mime();
+            prepare_headers();
+            finalize_body();
+            CURLcode result = curl_easy_perform(_curl);
+            if (result != CURLE_OK)
+            {
+                error_message = curl_easy_strerror(result);
+                return false;
+            }
+            return true;
         }
-        return true;
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at GmailMailer::send_email(): " + exception.what());
+        }
     }
 
     std::future<bool> GmailMailer::send_email_async()
@@ -167,47 +208,68 @@ namespace QLogicaeCore
 
     void GmailMailer::reset_mime()
     {
-        if (mime_mixed)
+        try
         {
-            curl_mime_free(mime_mixed);
-            mime_mixed = curl_mime_init(curl);
+            if (_mime_mixed)
+            {
+                curl_mime_free(_mime_mixed);
+                _mime_mixed = curl_mime_init(_curl);
+            }
+            if (_mime_related)
+            {
+                curl_mime_free(_mime_related);
+                _mime_related = curl_mime_init(_curl);
+            }
         }
-        if (mime_related)
+        catch (const std::exception& exception)
         {
-            curl_mime_free(mime_related);
-            mime_related = curl_mime_init(curl);
+            throw std::runtime_error(std::string() + "Exception at GmailMailer::reset_mime(): " + exception.what());
         }
     }
 
     void GmailMailer::cleanup()
     {
-        if (headers)
+        try
         {
-            curl_slist_free_all(headers);
-            headers = nullptr;
-        }
+            if (_headers)
+            {
+                curl_slist_free_all(_headers);
+                _headers = nullptr;
+            }
 
-        if (recipients)
+            if (_recipients)
+            {
+                curl_slist_free_all(_recipients);
+                _recipients = nullptr;
+            }
+
+            if (_curl)
+            {
+                curl_easy_cleanup(_curl);
+                _curl = nullptr;
+            }
+
+            _mime_mixed = nullptr;
+            _mime_related = nullptr;
+        }
+        catch (const std::exception& exception)
         {
-            curl_slist_free_all(recipients);
-            recipients = nullptr;
+            throw std::runtime_error(std::string() + "Exception at GmailMailer::cleanup(): " + exception.what());
         }
-
-        if (curl)
-        {
-            curl_easy_cleanup(curl);
-            curl = nullptr;
-        }
-
-        mime_mixed = nullptr;
-        mime_related = nullptr;
     }
-
 
     void GmailMailer::set_subject(const std::string& subject)
     {
-        std::scoped_lock lock(access_mutex);
-        this->subject = subject;
+        try
+        {
+            std::scoped_lock lock(_access_mutex);
+
+            this->_subject = subject;
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at GmailMailer::set_subject(): " + exception.what());
+        }
     }
 
     std::future<void> GmailMailer::set_subject_async(
@@ -220,8 +282,16 @@ namespace QLogicaeCore
 
     void GmailMailer::set_html_body(const std::string& html)
     {
-        std::scoped_lock lock(access_mutex);
-        html_body = html;
+        try
+        {
+            std::scoped_lock lock(_access_mutex);
+
+            _html_body = html;
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at GmailMailer::set_html_body(): " + exception.what());
+        }
     }
 
     std::future<void> GmailMailer::set_html_body_async(
@@ -234,8 +304,16 @@ namespace QLogicaeCore
 
     void GmailMailer::set_plain_body(const std::string& plain)
     {
-        std::scoped_lock lock(access_mutex);
-        plain_body = plain;
+        try
+        {
+            std::scoped_lock lock(_access_mutex);
+
+            _plain_body = plain;
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at GmailMailer::set_plain_body(): " + exception.what());
+        }
     }
 
     std::future<void> GmailMailer::set_plain_body_async(
@@ -250,8 +328,15 @@ namespace QLogicaeCore
         const std::string& key,
         const std::string& value)
     {
-        std::scoped_lock lock(access_mutex);
-        custom_headers[key] = value;
+        try
+        {
+            std::scoped_lock lock(_access_mutex);
+            _custom_headers[key] = value;
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at GmailMailer::set_header(): " + exception.what());
+        }
     }
 
     std::future<void> GmailMailer::set_header_async(
@@ -268,22 +353,29 @@ namespace QLogicaeCore
         const std::string& content_id,
         const std::string& mime_type)
     {
-        std::scoped_lock lock(access_mutex);
-
-        if (!std::filesystem::exists(file_path))
+        try
         {
-            throw std::runtime_error("Inline image file not found: " + file_path);
+            std::scoped_lock lock(_access_mutex);
+
+            if (!std::filesystem::exists(file_path))
+            {
+                throw std::runtime_error("Exception at GmailMailer::attach_inline_image(): Inline image file not found: " + file_path);
+            }
+
+            curl_mimepart* part = curl_mime_addpart(_mime_related);
+            curl_mime_filedata(part, file_path.c_str());
+            curl_mime_type(part, mime_type.c_str());
+            curl_mime_encoder(part, "base64");
+            curl_mime_filename(part, file_path.c_str());
+
+            std::string header = "Content-ID: <" + content_id + ">";
+            struct curl_slist* header_list = curl_slist_append(nullptr, header.c_str());
+            curl_mime_headers(part, header_list, 1);
         }
-
-        curl_mimepart* part = curl_mime_addpart(mime_related);
-        curl_mime_filedata(part, file_path.c_str());
-        curl_mime_type(part, mime_type.c_str());
-        curl_mime_encoder(part, "base64");
-        curl_mime_filename(part, file_path.c_str());
-
-        std::string header = "Content-ID: <" + content_id + ">";
-        struct curl_slist* header_list = curl_slist_append(nullptr, header.c_str());
-        curl_mime_headers(part, header_list, 1);
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at GmailMailer::attach_inline_image(): " + exception.what());
+        }
     }
 
     std::future<void> GmailMailer::attach_inline_image_async(
@@ -301,23 +393,30 @@ namespace QLogicaeCore
         const std::string& mime_type,
         const std::string& filename)
     {
-        std::scoped_lock lock(access_mutex);
-
-        if (!std::filesystem::exists(file_path))
+        try
         {
-            throw std::runtime_error("Attachment file not found: " + file_path);
+            std::scoped_lock lock(_access_mutex);
+
+            if (!std::filesystem::exists(file_path))
+            {
+                throw std::runtime_error("Exception at GmailMailer::attach_file(): Attachment file not found: " + file_path);
+            }
+
+            curl_mimepart* part = curl_mime_addpart(_mime_mixed);
+            curl_mime_filedata(part, file_path.c_str());
+            curl_mime_type(part, mime_type.c_str());
+            curl_mime_encoder(part, "base64");
+            curl_mime_filename(part, filename.c_str());
+
+            std::string header =
+                "Content-Disposition: attachment; filename=\"" + filename + "\"";
+            struct curl_slist* header_list = curl_slist_append(nullptr, header.c_str());
+            curl_mime_headers(part, header_list, 1);
         }
-
-        curl_mimepart* part = curl_mime_addpart(mime_mixed);
-        curl_mime_filedata(part, file_path.c_str());
-        curl_mime_type(part, mime_type.c_str());
-        curl_mime_encoder(part, "base64");
-        curl_mime_filename(part, filename.c_str());
-
-        std::string header =
-            "Content-Disposition: attachment; filename=\"" + filename + "\"";
-        struct curl_slist* header_list = curl_slist_append(nullptr, header.c_str());
-        curl_mime_headers(part, header_list, 1);
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at GmailMailer::attach_file(): " + exception.what());
+        }
     }
 
     std::future<void> GmailMailer::attach_file_async(
@@ -327,7 +426,7 @@ namespace QLogicaeCore
     {
         return std::async(std::launch::async, [this, file_path, mime_type, filename]() {
             attach_file(file_path, mime_type, filename);
-            });
+        });
     }
 }
 

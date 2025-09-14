@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "jsonwebtoken_cryptographer.hpp"
@@ -142,7 +140,7 @@ namespace QLogicaeCoreTest
     {
         QLogicaeCore::JsonWebTokenTransformInput input;
         input.issuer = "auth0";
-        input.data = "subject";
+        input.data = "_subject";
         input.public_key = "";
         input.private_key = "";
         input.lifetime = std::chrono::minutes(10);
@@ -156,7 +154,7 @@ namespace QLogicaeCoreTest
     {
         QLogicaeCore::JsonWebTokenTransformInput input;
         input.issuer = "auth0";
-        input.data = "subject";
+        input.data = "_subject";
         input.public_key = "key";
         input.private_key = "key";
         input.lifetime = std::chrono::seconds(0);

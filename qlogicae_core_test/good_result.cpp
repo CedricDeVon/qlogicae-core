@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "good_result.hpp"
@@ -10,6 +8,10 @@ namespace QLogicaeCoreTest
 
     class GoodResultTest : public ::testing::TestWithParam<
         std::tuple<std::optional<int>, std::optional<std::string>>>
+    {
+    };
+
+    class GoodResultPerformanceTest : public ::testing::Test
     {
     };
 
@@ -79,10 +81,6 @@ namespace QLogicaeCoreTest
         EXPECT_NO_THROW((GoodResult<int>(100, std::nullopt)));
     }
 
-    class GoodResultPerformanceTest : public ::testing::Test
-    {
-    };
-
     TEST_F(GoodResultPerformanceTest, Should_Expect_CompleteUnderLimit_When_PerformanceTested)
     {
         auto start_time = std::chrono::high_resolution_clock::now();
@@ -98,4 +96,3 @@ namespace QLogicaeCoreTest
         ASSERT_LT(duration.count(), 2.0);
     }
 }
-

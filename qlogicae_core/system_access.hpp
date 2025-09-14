@@ -1,7 +1,5 @@
 #pragma once
 
-#include "pch.h"
-
 #include "encoder.hpp"
 
 namespace QLogicaeCore
@@ -10,21 +8,31 @@ namespace QLogicaeCore
     {
     public:
         bool has_admin_access() const;
+        
         std::string get_executable_dir() const;
+        
         void restart_with_admin_access() const;
-        std::string get_roaming_appdata_folder_path() const;
-        std::string get_local_appdata_folder_path() const;
+        
         std::string get_programdata_folder_path() const;
+        
+        std::string get_local_appdata_folder_path() const;
+        
+        std::string get_roaming_appdata_folder_path() const;
 
         static SystemAccess& get_instance();
 
     protected:
         SystemAccess() = default;
+        
         ~SystemAccess() = default;
-        SystemAccess(const SystemAccess&) = delete;
-        SystemAccess(SystemAccess&&) noexcept = delete;
-        SystemAccess& operator = (SystemAccess&&) = delete;
-        SystemAccess& operator = (const SystemAccess&) = delete;
+        
+        SystemAccess(const SystemAccess& system_access) = delete;
+        
+        SystemAccess(SystemAccess&& system_access) noexcept = delete;
+        
+        SystemAccess& operator = (SystemAccess&& system_access) = delete;
+        
+        SystemAccess& operator = (const SystemAccess& system_access) = delete;
     };
 
     inline static SystemAccess& SYSTEM_ACCESS =

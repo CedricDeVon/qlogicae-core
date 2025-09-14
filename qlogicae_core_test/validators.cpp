@@ -1,12 +1,9 @@
-﻿#pragma once
-
-#include "pch.h"
+﻿#include "pch.h"
 
 #include "validators.hpp"
 
 namespace QLogicaeCoreTest
 {
-
     class ValidatorsTest : public ::testing::TestWithParam<std::string>
     {
     protected:

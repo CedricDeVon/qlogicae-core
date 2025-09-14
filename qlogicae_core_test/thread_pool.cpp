@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 
 #include "globals.hpp"
@@ -609,3 +607,4 @@ namespace QLogicaeCoreTest
         EXPECT_EQ(counter.load(), 10);
     }
 }
+
