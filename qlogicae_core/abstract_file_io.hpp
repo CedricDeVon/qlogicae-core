@@ -39,11 +39,15 @@ namespace QLogicaeCore
 
         std::string get_file_path() const;
 
-        void set_file_path(const std::string_view& file_path);
+        void set_file_path(
+            const std::string_view& file_path
+        );
 
     protected:
         std::string _file_path;
+
         const std::string _name;
+
         mutable std::mutex _mutex;
     };
 }

@@ -7,7 +7,7 @@ namespace QLogicaeCore
 	Argon2idHashCryptographer::Argon2idHashCryptographer() :
 		Cryptographer()
 	{
-		_cryptographer_properties = QLogicaeCore::default_cryptographer_3_properties;
+		_cryptographer_properties = default_cryptographer_3_properties;
 	}
 
 	Argon2idHashCryptographer::Argon2idHashCryptographer(
@@ -44,7 +44,10 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
-			throw std::runtime_error(std::string() + "Exception at Argon2idHashCryptographer::transform(): " + exception.what());
+			throw std::runtime_error(
+				std::string("Exception at Argon2idHashCryptographer::transform(): ") +
+				exception.what()
+			);
 		}
 	}
 
@@ -71,7 +74,10 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
-			throw std::runtime_error(std::string() + "Exception at Argon2idHashCryptographer::reverse(): " + exception.what());
+			throw std::runtime_error(
+				std::string("Exception at Argon2idHashCryptographer::reverse(): ") +
+				exception.what()
+			);
 		}
 	}
 	
@@ -85,4 +91,3 @@ namespace QLogicaeCore
 		});
 	}
 }
-

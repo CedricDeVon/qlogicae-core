@@ -60,6 +60,30 @@ namespace QLogicaeCore
         }
     }
 
+    std::string SystemAccess::get_executed_folder() const
+    {
+        try
+        {
+            return std::filesystem::current_path().string();
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at SystemAccess::get_executed_folder(): " + exception.what());
+        }
+    }
+
+    std::string SystemAccess::get_executable_folder() const
+    {
+        try
+        {            
+            return get_executable_dir();
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at SystemAccess::get_executable_folder(): " + exception.what());
+        }
+    }
+
     void QLogicaeCore::SystemAccess::restart_with_admin_access() const
     {
         try

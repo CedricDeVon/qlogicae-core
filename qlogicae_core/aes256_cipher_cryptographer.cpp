@@ -4,7 +4,8 @@
 
 namespace QLogicaeCore
 {
-	AES256CipherCryptographer::AES256CipherCryptographer() : Cryptographer()
+	AES256CipherCryptographer::AES256CipherCryptographer() :
+		Cryptographer()
 	{
 
 	}
@@ -92,7 +93,10 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
-			throw std::runtime_error(std::string() + "Exception at AES256CipherCryptographer::transform(): " + exception.what());
+			throw std::runtime_error(
+				std::string("Exception at AES256CipherCryptographer::transform(): ") +
+				exception.what()
+			);
 		}
 	}
 
@@ -129,7 +133,10 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
-			throw std::runtime_error(std::string() + "Exception at AES256CipherCryptographer::reverse(): " + exception.what());
+			throw std::runtime_error(
+				std::string("Exception at AES256CipherCryptographer::reverse(): ") +
+				exception.what()
+			);
 		}
 	}
 
@@ -155,4 +162,3 @@ namespace QLogicaeCore
 		});
 	}
 }
-

@@ -7,9 +7,8 @@ namespace QLogicaeCore
     JsonFileIO::~JsonFileIO() {}
 
     JsonFileIO::JsonFileIO(const std::string_view& path)
-        : AbstractFileIO(path) {
-        std::cout << path << "\n";
-
+        : AbstractFileIO(path)
+    {        
         _is_formatting_allowed = false;
     }
 
@@ -18,8 +17,6 @@ namespace QLogicaeCore
         const bool& is_formatting_allowed)
             : AbstractFileIO(path)
     {
-        std::cout << path << "\n";
-
         _is_formatting_allowed = is_formatting_allowed;
     }
 
@@ -28,8 +25,6 @@ namespace QLogicaeCore
         const std::string_view& path)
             : AbstractFileIO(name, path)
     {
-        std::cout << path << "\n";
-
         _is_formatting_allowed = false;
     }
 

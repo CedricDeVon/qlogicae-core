@@ -33,7 +33,9 @@ namespace QLogicaeCore
 
     protected:
         const bool _state;
+
         const std::optional<ValueType> _value;
+
         const std::optional<MetaDataType> _metadata;
 
         AbstractResult(bool state = false,

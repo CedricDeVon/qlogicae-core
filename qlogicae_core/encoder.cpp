@@ -8,7 +8,9 @@ namespace QLogicaeCore
     {
         if (sodium_init() < 0)
         {
-            throw std::runtime_error("Exception at Encoder::Encoder(): Sodium package is not initialized");
+            throw std::runtime_error(
+                "Exception at Encoder::Encoder(): Sodium package is not initialized"
+            );
         }
     }
 
@@ -44,7 +46,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Encoder::from_bytes_to_base64(): " + exception.what());
+            throw std::runtime_error(
+                std::string("Exception at Encoder::from_bytes_to_base64(): ") +
+                exception.what()
+            );
         }
     }
 
@@ -77,7 +82,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Encoder::from_base64_to_bytes(): " + exception.what());
+            throw std::runtime_error(
+                std::string("Exception at Encoder::from_base64_to_bytes(): ") +
+                exception.what()
+            );
         }
     }
 
@@ -103,7 +111,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Encoder::from_bytes_to_hex(): " + exception.what());
+            throw std::runtime_error(
+                std::string("Exception at Encoder::from_bytes_to_hex(): ") +
+                exception.what()
+            );
         }
     }
 
@@ -132,7 +143,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Encoder::from_hex_to_bytes(): " + exception.what());
+            throw std::runtime_error(
+                std::string("Exception at Encoder::from_hex_to_bytes(): ") +
+                exception.what()
+            );
         }
     }
 
@@ -165,7 +179,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Encoder::from_utf16_to_utf8(): " + exception.what());
+            throw std::runtime_error(
+                std::string("Exception at Encoder::from_utf16_to_utf8(): ") +
+                exception.what()
+            );
         }
     }
 
@@ -196,7 +213,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Encoder::from_utf8_to_utf16(): " + exception.what());
+            throw std::runtime_error(
+                std::string("Exception at Encoder::from_utf8_to_utf16(): ") +
+                exception.what()
+            );
         }
     }
 
@@ -214,7 +234,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Encoder::from_utf8_to_hex(): " + exception.what());
+            throw std::runtime_error(
+                std::string("Exception at Encoder::from_utf8_to_hex(): ") +
+                exception.what()
+            );
         }
     }
 
@@ -232,7 +255,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Encoder::from_utf8_to_base64(): " + exception.what());
+            throw std::runtime_error(
+                std::string("Exception at Encoder::from_utf8_to_base64(): ") +
+                exception.what()
+            );
         }
     }
 
@@ -262,7 +288,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Encoder::from_hex_to_utf8(): " + exception.what());
+            throw std::runtime_error(
+                std::string("Exception at Encoder::from_hex_to_utf8(): ") +
+                exception.what()
+            );
         }
     }
 
@@ -280,7 +309,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Encoder::from_hex_to_base64(): " + exception.what());
+            throw std::runtime_error(
+                std::string("Exception at Encoder::from_hex_to_base64(): ") +
+                exception.what()
+            );
         }
     }
 
@@ -310,7 +342,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Encoder::from_base64_to_utf8(): " + exception.what());
+            throw std::runtime_error(
+                std::string("Exception at Encoder::from_base64_to_utf8(): ") +
+                exception.what()
+            );
         }
     }
 
@@ -328,7 +363,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Encoder::from_base64_to_hex(): " + exception.what());
+            throw std::runtime_error(
+                std::string("Exception at Encoder::from_base64_to_hex(): ") +
+                exception.what()
+            );
         }
     }
 
@@ -354,7 +392,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Encoder::_to_hex(): " + exception.what());
+            throw std::runtime_error(
+                std::string("Exception at Encoder::_to_hex(): ") +
+                exception.what()
+            );
         }
     }
 
@@ -384,7 +425,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Encoder::_to_base64(): " + exception.what());
+            throw std::runtime_error(
+                std::string("Exception at Encoder::_to_base64(): ") +
+                exception.what()
+            );
         }
     }
 }

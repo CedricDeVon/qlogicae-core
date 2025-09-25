@@ -30,7 +30,9 @@ namespace QLogicaeCore
 		return _file_path;
 	}
 
-	void AbstractFileIO::set_file_path(const std::string_view& file_path)
+	void AbstractFileIO::set_file_path(
+		const std::string_view& file_path
+	)
 	{
 		_file_path = file_path;
 	}

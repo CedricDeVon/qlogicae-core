@@ -79,3 +79,4 @@ namespace QLogicaeCore
 
     inline static Encoder& ENCODER = Encoder::get_instance();
 }
+

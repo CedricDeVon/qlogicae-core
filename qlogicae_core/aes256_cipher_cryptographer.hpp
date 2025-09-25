@@ -78,5 +78,3 @@ namespace QLogicaeCore
         ) const;
     };
 }
-
-

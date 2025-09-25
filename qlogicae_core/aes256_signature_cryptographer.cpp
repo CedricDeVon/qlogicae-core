@@ -84,7 +84,10 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
-			throw std::runtime_error(std::string() + "Exception at AES256SignatureCryptographer::transform(): " + exception.what());
+			throw std::runtime_error(
+				std::string("Exception at AES256SignatureCryptographer::transform(): ") +
+				exception.what()
+			);
 		}
 	}
 
@@ -116,7 +119,10 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
-			throw std::runtime_error(std::string() + "Exception at AES256SignatureCryptographer::reverse(): " + exception.what());
+			throw std::runtime_error(
+				std::string("Exception at AES256SignatureCryptographer::reverse(): ") +
+				exception.what()
+			);
 		}
 	}
 

@@ -47,3 +47,5 @@
 #include "sha256_hash_cryptographer.hpp"
 #include "statistician.hpp"
 #include "temperature.hpp"
+#include "utilities.hpp"
+#include "application.hpp"

@@ -10,6 +10,10 @@ namespace QLogicaeCore
         bool has_admin_access() const;
         
         std::string get_executable_dir() const;
+
+        std::string get_executable_folder() const;
+
+        std::string get_executed_folder() const;
         
         void restart_with_admin_access() const;
         

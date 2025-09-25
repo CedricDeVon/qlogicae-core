@@ -110,6 +110,46 @@ namespace QLogicaeCore
         INSENSITIVE
     };
 
+    enum class WindowsRegistryRootPath : uint8_t
+    {
+        HKCU,
+        HKLM
+    };
+
+    enum class UTF : uint8_t
+    {
+        T8,
+        T16
+    };
+
+    enum class EnvironmentVariable : uint8_t
+    {
+        USER,
+        SYSTEM
+    };
+
+    enum class VisualStudio2022BuildArchitecture : uint8_t
+    {
+        X64,
+        X86
+    };
+
+    enum class VisualStudio2022Build : uint8_t
+    {
+        RELEASE,
+        DEBUG
+    };
+
+    enum class SupportedIDE : uint8_t
+    {
+        VISUAL_STUDIO_2022
+    };
+
+    enum class SupportedInstaller : uint8_t
+    {
+        INNO_SETUP
+    };
+
     struct Constants
     {
         static constexpr unsigned int DEFAULT_MILLISECONDS_PER_CALLBACK = 1000;

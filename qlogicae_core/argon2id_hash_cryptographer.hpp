@@ -52,3 +52,4 @@ namespace QLogicaeCore
         CryptographerProperties _cryptographer_properties;
     };
 }
+
