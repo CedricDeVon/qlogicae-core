@@ -128,24 +128,24 @@ namespace QLogicaeCore
         SYSTEM
     };
 
-    enum class VisualStudio2022BuildArchitecture : uint8_t
+    enum class QLogicaeVisualStudio2022BuildArchitecture : uint8_t
     {
         X64,
         X86
     };
 
-    enum class VisualStudio2022Build : uint8_t
+    enum class QLogicaeVisualStudio2022Build : uint8_t
     {
         RELEASE,
         DEBUG
     };
 
-    enum class SupportedIDE : uint8_t
+    enum class SupportedQLogicaeIDE : uint8_t
     {
         VISUAL_STUDIO_2022
     };
 
-    enum class SupportedInstaller : uint8_t
+    enum class SupportedQLogicaeInstaller : uint8_t
     {
         INNO_SETUP
     };

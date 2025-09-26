@@ -339,28 +339,28 @@ namespace QLogicaeCore
             { TEMPERATURE_UNIT_TYPE_NONE, TemperatureUnitType::NONE }
         };
 
-        const std::unordered_map<VisualStudio2022BuildArchitecture, std::string_view> VISUAL_STUDIO_2022_BUILD_ARCHITECTURE_ENUMS =
+        const std::unordered_map<QLogicaeVisualStudio2022BuildArchitecture, std::string_view> VISUAL_STUDIO_2022_BUILD_ARCHITECTURE_ENUMS =
         {
-            { VisualStudio2022BuildArchitecture::X64, VISUAL_STUDIO_2022_X64_BUILD_ARCHITECTURE },
-            { VisualStudio2022BuildArchitecture::X86, VISUAL_STUDIO_2022_X86_BUILD_ARCHITECTURE }
+            { QLogicaeVisualStudio2022BuildArchitecture::X64, VISUAL_STUDIO_2022_X64_BUILD_ARCHITECTURE },
+            { QLogicaeVisualStudio2022BuildArchitecture::X86, VISUAL_STUDIO_2022_X86_BUILD_ARCHITECTURE }
         };
 
-        const std::unordered_map<std::string_view, VisualStudio2022BuildArchitecture> VISUAL_STUDIO_2022_BUILD_ARCHITECTURE_STRINGS =
+        const std::unordered_map<std::string_view, QLogicaeVisualStudio2022BuildArchitecture> VISUAL_STUDIO_2022_BUILD_ARCHITECTURE_STRINGS =
         {
-            { VISUAL_STUDIO_2022_X64_BUILD_ARCHITECTURE, VisualStudio2022BuildArchitecture::X64 },
-            { VISUAL_STUDIO_2022_X86_BUILD_ARCHITECTURE, VisualStudio2022BuildArchitecture::X86 },
+            { VISUAL_STUDIO_2022_X64_BUILD_ARCHITECTURE, QLogicaeVisualStudio2022BuildArchitecture::X64 },
+            { VISUAL_STUDIO_2022_X86_BUILD_ARCHITECTURE, QLogicaeVisualStudio2022BuildArchitecture::X86 },
         };
         
-        const std::unordered_map<VisualStudio2022Build, std::string_view> VISUAL_STUDIO_2022_BUILD_ENUMS =
+        const std::unordered_map<QLogicaeVisualStudio2022Build, std::string_view> VISUAL_STUDIO_2022_BUILD_ENUMS =
         {
-            { VisualStudio2022Build::RELEASE, VISUAL_STUDIO_2022_RELEASE_BUILD },
-            { VisualStudio2022Build::DEBUG, VISUAL_STUDIO_2022_DEBUG_BUILD }
+            { QLogicaeVisualStudio2022Build::RELEASE, VISUAL_STUDIO_2022_RELEASE_BUILD },
+            { QLogicaeVisualStudio2022Build::DEBUG, VISUAL_STUDIO_2022_DEBUG_BUILD }
         };
 
-        const std::unordered_map<std::string_view, VisualStudio2022Build> VISUAL_STUDIO_2022_BUILD_STRINGS =
+        const std::unordered_map<std::string_view, QLogicaeVisualStudio2022Build> VISUAL_STUDIO_2022_BUILD_STRINGS =
         {
-            { VISUAL_STUDIO_2022_RELEASE_BUILD, VisualStudio2022Build::RELEASE },
-            { VISUAL_STUDIO_2022_DEBUG_BUILD, VisualStudio2022Build::DEBUG },
+            { VISUAL_STUDIO_2022_RELEASE_BUILD, QLogicaeVisualStudio2022Build::RELEASE },
+            { VISUAL_STUDIO_2022_DEBUG_BUILD, QLogicaeVisualStudio2022Build::DEBUG },
         };
 
         const std::unordered_map<WindowsRegistryRootPath, std::string_view> WINDOWS_REGISTRY_ROOT_PATH_ENUMS =
@@ -387,24 +387,24 @@ namespace QLogicaeCore
             { ENVIRONMENT_VARIABLE_SYSTEM_1, EnvironmentVariable::SYSTEM },
         };
 
-        const std::unordered_map<SupportedIDE, std::string_view> SUPPORTED_IDE_ENUMS =
+        const std::unordered_map<SupportedQLogicaeIDE, std::string_view> SUPPORTED_IDE_ENUMS =
         {
-            { SupportedIDE::VISUAL_STUDIO_2022, VISUAL_STUDIO_2022_1 }
+            { SupportedQLogicaeIDE::VISUAL_STUDIO_2022, VISUAL_STUDIO_2022_1 }
         };
 
-        const std::unordered_map<std::string_view, SupportedIDE> SUPPORTED_IDE_STRINGS =
+        const std::unordered_map<std::string_view, SupportedQLogicaeIDE> SUPPORTED_IDE_STRINGS =
         {
-            { VISUAL_STUDIO_2022_1, SupportedIDE::VISUAL_STUDIO_2022 }
+            { VISUAL_STUDIO_2022_1, SupportedQLogicaeIDE::VISUAL_STUDIO_2022 }
         };
 
-        const std::unordered_map<SupportedInstaller, std::string_view> SUPPORTED_INSTALLER_ENUMS =
+        const std::unordered_map<SupportedQLogicaeInstaller, std::string_view> SUPPORTED_INSTALLER_ENUMS =
         {
-            { SupportedInstaller::INNO_SETUP, INNO_SETUP }
+            { SupportedQLogicaeInstaller::INNO_SETUP, INNO_SETUP }
         };
 
-        const std::unordered_map<std::string_view, SupportedInstaller> SUPPORTED_INSTALLER_STRINGS =
+        const std::unordered_map<std::string_view, SupportedQLogicaeInstaller> SUPPORTED_INSTALLER_STRINGS =
         {
-            { INNO_SETUP, SupportedInstaller::INNO_SETUP }
+            { INNO_SETUP, SupportedQLogicaeInstaller::INNO_SETUP }
         };       
 
 		const std::string FULL_EXECUTABLE_FOLDER_PATH =
