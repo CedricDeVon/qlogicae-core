@@ -36,21 +36,26 @@ namespace QLogicaeCore
 			std::scoped_lock lock(_mutex);
 
 			std::string result;
-			fast_io::io::scan(result);
 
+			std::getline(std::cin, result);
+			if (!result.empty() && result.back() == '\r')
+			{
+				result.pop_back();
+			}
+			
 			return result;
 		}
 		catch (const std::exception& exception)
 		{
 			std::cout << std::string("Exception at CliIO::scan(): ") + exception.what() << "\n";
 
-			return builtin_scan();
+			return "";
 		}
 		catch (...)
 		{
 			std::cout << "Exception at CliIO::scan(): " << "\n";
 
-			return builtin_scan();
+			return "";
 		}
 	}
 	
