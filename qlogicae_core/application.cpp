@@ -18,7 +18,7 @@ namespace QLogicaeCore
 
             return true;
         }
-        catch (const std::exception& exception)
+        catch (...)
         {
             return false;
         }        

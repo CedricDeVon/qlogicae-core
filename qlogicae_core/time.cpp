@@ -129,13 +129,24 @@ namespace QLogicaeCore
             case TimeFormat::ISO8601:
                 return _format_time(tm, fmt);
 
+            case TimeFormat::SECOND_LEVEL_TIMESTAMP:
+                return _format_time(tm, fmt);
+
+            case TimeFormat::MILLISECOND_LEVEL_TIMESTAMP:
+                return _format_time(tm, fmt) +
+                    "." + _format_millisecond_level(since_epoch, ":");
+
+            case TimeFormat::MICROSECOND_LEVEL_TIMESTAMP:
+                return _format_time(tm, fmt) +
+                    "." + _format_microsecond_level(since_epoch, ":");
+
             case TimeFormat::FULL_TIMESTAMP:
                 return _format_time(tm, fmt) +
-                    "." + _format_subseconds(since_epoch, ":");
+                    "." + _format_nanosecond_level(since_epoch, ":");
 
             case TimeFormat::FULL_DASHED_TIMESTAMP:
                 return _format_time(tm, fmt) + "-" +
-                    _format_subseconds(since_epoch, "-");
+                    _format_nanosecond_level(since_epoch, "-");
 
             case TimeFormat::HOUR_12:
             case TimeFormat::HOUR_24:
@@ -501,7 +512,44 @@ namespace QLogicaeCore
         }
     }
 
-    std::string Time::_format_subseconds(
+    std::string Time::_format_millisecond_level(
+        absl::Duration since_epoch, const std::string& sep) const
+    {
+        try
+        {
+            return absl::StrCat(
+                _pad3(static_cast<int>(
+                    absl::ToInt64Milliseconds(since_epoch) % 1000)),
+                sep
+            );
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at Time::_format_millisecond_level(): " + exception.what());
+        }
+    }
+
+    std::string Time::_format_microsecond_level(
+        absl::Duration since_epoch, const std::string& sep) const
+    {
+        try
+        {
+            return absl::StrCat(
+                _pad3(static_cast<int>(
+                    absl::ToInt64Milliseconds(since_epoch) % 1000)),
+                sep,
+                _pad3(static_cast<int>(
+                    absl::ToInt64Microseconds(since_epoch) % 1000)),
+                sep
+            );
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(std::string() + "Exception at Time::_format_microsecond_level(): " + exception.what());
+        }
+    }
+
+    std::string Time::_format_nanosecond_level(
         absl::Duration since_epoch, const std::string& sep) const
     {
         try
@@ -518,7 +566,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Time::_format_subseconds(): " + exception.what());
+            throw std::runtime_error(std::string() + "Exception at Time::_format_nanosecond_level(): " + exception.what());
         }
     }
 

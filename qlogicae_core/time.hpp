@@ -94,10 +94,21 @@ namespace QLogicaeCore
             const TimeFormat& time_format
         ) const;
         
-        std::string _format_subseconds(
+        std::string _format_millisecond_level(
             absl::Duration since_epoch,
             const std::string& sep
         ) const;
+
+        std::string _format_microsecond_level(
+            absl::Duration since_epoch,
+            const std::string& sep
+        ) const;
+
+        std::string _format_nanosecond_level(
+            absl::Duration since_epoch,
+            const std::string& sep
+        ) const;
+
     };
 
     inline Time& TIME = Time::get_instance();

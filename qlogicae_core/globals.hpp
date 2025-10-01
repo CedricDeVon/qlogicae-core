@@ -52,6 +52,9 @@ namespace QLogicaeCore
     {
         UNIX,
         ISO8601,
+        SECOND_LEVEL_TIMESTAMP,
+        MILLISECOND_LEVEL_TIMESTAMP,
+        MICROSECOND_LEVEL_TIMESTAMP,
         FULL_TIMESTAMP,
         FULL_DASHED_TIMESTAMP,
         HOUR_12,
