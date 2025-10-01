@@ -6,8 +6,22 @@ namespace QLogicaeCore
 {    
     Application::Application()
     {
-        _load_qlogicae_file();
-        _load_environment_file();
+        
+    }
+
+    bool Application::setup()
+    {
+        try
+        {
+            _load_qlogicae_file();
+            _load_environment_file();
+
+            return true;
+        }
+        catch (const std::exception& exception)
+        {
+            return false;
+        }        
     }
 
     Application& Application::get_instance()

@@ -37,6 +37,8 @@ namespace QLogicaeCore
 
         static Application& get_instance();
 
+        bool setup();
+
     protected:
         Application();
 
@@ -79,6 +81,8 @@ namespace QLogicaeCore
         void _load_qlogicae_file();
 
         void _load_environment_file();
-
     };    
+
+    inline static Application& APPLICATION =
+        Application::get_instance();
 }
