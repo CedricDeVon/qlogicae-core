@@ -32,7 +32,7 @@ namespace QLogicaeCore
             }
 
             const std::string raw = random_string(length, character_set);
-            return Encoder::get_instance().from_utf8_to_hex(raw);
+            return ENCODER.from_utf8_to_hex(raw);
         }
         catch (const std::exception& exception)
         {
@@ -90,7 +90,7 @@ namespace QLogicaeCore
             }
 
             const std::string raw = random_string(length, character_set);
-            return Encoder::get_instance().from_utf8_to_base64(raw);
+            return ENCODER.from_utf8_to_base64(raw);
         }
         catch (const std::exception& exception)
         {

@@ -78,5 +78,4 @@ namespace QLogicaeCore
                 return this->generate_data_uri();
             });
     }
-
 }

@@ -123,7 +123,7 @@ namespace QLogicaeCore
                 CoTaskMemFree(path);
             }
 
-            return QLogicaeCore::ENCODER.from_utf16_to_utf8(result);
+            return ENCODER.from_utf16_to_utf8(result);
         }
         catch (const std::exception& exception)
         {
@@ -143,7 +143,7 @@ namespace QLogicaeCore
                 CoTaskMemFree(path);
             }
 
-            return QLogicaeCore::ENCODER.from_utf16_to_utf8(result);
+            return ENCODER.from_utf16_to_utf8(result);
         }
         catch (const std::exception& exception)
         {
@@ -163,7 +163,7 @@ namespace QLogicaeCore
                 CoTaskMemFree(path);
             }
 
-            return QLogicaeCore::ENCODER.from_utf16_to_utf8(result);
+            return ENCODER.from_utf16_to_utf8(result);
         }
         catch (const std::exception& exception)
         {

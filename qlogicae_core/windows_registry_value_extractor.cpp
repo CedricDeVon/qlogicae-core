@@ -13,10 +13,8 @@ namespace QLogicaeCore
 
     WindowsRegistryValueExtractor::WindowsRegistryValueExtractor(
         const std::wstring& sub_key, const std::wstring& name_key) :
-            _sub_key(QLogicaeCore::Encoder::get_instance()
-                .from_utf16_to_utf8(sub_key)),
-            _name_key(QLogicaeCore::Encoder::get_instance()
-                .from_utf16_to_utf8(name_key))
+            _sub_key(ENCODER.from_utf16_to_utf8(sub_key)),
+            _name_key(ENCODER.from_utf16_to_utf8(name_key))
     {
 
     }
