@@ -97,7 +97,4 @@ namespace QLogicaeCore
         std::wstring _sub_key;
         std::wstring _name_key;
     };
-
-    inline static WindowsRegistry& WINDOWS_REGISTRY_HKCU = WindowsRegistry::hkcu();
-    inline static WindowsRegistry& WINDOWS_REGISTRY_HKLM = WindowsRegistry::hklm();
 }

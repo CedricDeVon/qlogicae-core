@@ -80,7 +80,7 @@ namespace QLogicaeCore
         const std::string& key
     )
     {
-        return WINDOWS_REGISTRY_HKCU.get_value_via_utf8(
+        return WindowsRegistry::hkcu().get_value_via_utf8(
             _get_full_windows_registry_sub_path(), key
         ).value();
     }
@@ -89,7 +89,7 @@ namespace QLogicaeCore
         const std::string& key
     )
     {
-        return WINDOWS_REGISTRY_HKLM.get_value_via_utf8(
+        return WindowsRegistry::hklm().get_value_via_utf8(
             _get_full_windows_registry_sub_path(), key
         ).value();
     }
