@@ -1,6 +1,6 @@
 #pragma once
 
-#include "globals.hpp"
+#include "utilities.hpp"
 #include "event_dispatcher.hpp"
 #include "abstract_value_extractor.hpp"
 

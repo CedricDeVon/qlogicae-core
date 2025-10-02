@@ -44,47 +44,47 @@ namespace QLogicaeCore
             {
             case TimeFormat::ISO8601:
             {
-                return Constants::TIME_FORMAT_ISO_8601;
+                return UTILITIES.TIME_FORMAT_ISO_8601;
             }
             case TimeFormat::FULL_TIMESTAMP:
             {
-                return Constants::TIME_FORMAT_FULL_TIMESTAMP;
+                return UTILITIES.TIME_FORMAT_FULL_TIMESTAMP;
             }
             case TimeFormat::FULL_DASHED_TIMESTAMP:
             {
-                return Constants::TIME_FORMAT_FULL_DASHED_TIMESTAMP;
+                return UTILITIES.TIME_FORMAT_FULL_DASHED_TIMESTAMP;
             }
             case TimeFormat::HOUR_12:
             {
-                return Constants::TIME_FORMAT_HOUR_12;
+                return UTILITIES.TIME_FORMAT_HOUR_12;
             }
             case TimeFormat::HOUR_24:
             {
-                return Constants::TIME_FORMAT_HOUR_24;
+                return UTILITIES.TIME_FORMAT_HOUR_24;
             }
             case TimeFormat::DATE_DASHED:
             {
-                return Constants::TIME_FORMAT_DATE_DASHED;
+                return UTILITIES.TIME_FORMAT_DATE_DASHED;
             }
             case TimeFormat::DATE_MDY_SLASHED:
             {
-                return Constants::TIME_FORMAT_DATE_MDY_SLASHED;
+                return UTILITIES.TIME_FORMAT_DATE_MDY_SLASHED;
             }
             case TimeFormat::DATE_DMY_SLASHED:
             {
-                return Constants::TIME_FORMAT_DATE_DMY_SLASHED;
+                return UTILITIES.TIME_FORMAT_DATE_DMY_SLASHED;
             }
             case TimeFormat::DATE_DMY_SPACED:
             {
-                return Constants::TIME_FORMAT_DATE_DMY_SPACED;
+                return UTILITIES.TIME_FORMAT_DATE_DMY_SPACED;
             }
             case TimeFormat::DATE_VERBOSE:
             {
-                return Constants::TIME_FORMAT_DATE_VERBOSE;
+                return UTILITIES.TIME_FORMAT_DATE_VERBOSE;
             }
             default:
             {
-                return Constants::TIME_FORMAT_DATE_VERBOSE;
+                return UTILITIES.TIME_FORMAT_DATE_VERBOSE;
             }
             }
         }
@@ -167,7 +167,7 @@ namespace QLogicaeCore
                     absl::ToInt64Nanoseconds(since_epoch));
 
             default:
-                return Constants::TIME_FORMAT_INVALID;
+                return UTILITIES.TIME_FORMAT_INVALID;
             }
         }
         catch (const std::exception& exception)
@@ -181,7 +181,7 @@ namespace QLogicaeCore
         try
         {
             return static_cast<double>(_get_time_zone(zone).tm_year) +
-                Constants::UNIX_START_YEAR_OFFSET;
+                UTILITIES.UNIX_START_YEAR_OFFSET;
         }
         catch (const std::exception& exception)
         {
@@ -194,7 +194,7 @@ namespace QLogicaeCore
         try
         {
             return static_cast<double>(_get_time_zone(zone).tm_mon) +
-                Constants::NUMBER_ONE;
+                1;
         }
         catch (const std::exception& exception)
         {
@@ -258,7 +258,7 @@ namespace QLogicaeCore
                 std::chrono::duration_cast<std::chrono::milliseconds>(
                     std::chrono::system_clock::now()
                     .time_since_epoch())
-                .count() % Constants::NUMBER_THOUSAND);
+                .count() % 1'000);
         }
         catch (const std::exception& exception)
         {
@@ -274,7 +274,7 @@ namespace QLogicaeCore
                 std::chrono::duration_cast<std::chrono::microseconds>(
                     std::chrono::system_clock::now()
                     .time_since_epoch())
-                .count() % Constants::NUMBER_MILLION);
+                .count() % 1'000'000);
         }
         catch (const std::exception& exception)
         {
@@ -290,7 +290,7 @@ namespace QLogicaeCore
                 std::chrono::duration_cast<std::chrono::nanoseconds>(
                     std::chrono::system_clock::now()
                     .time_since_epoch())
-                .count() % Constants::NUMBER_BILLION);
+                .count() % 1'000'000'000);
         }
         catch (const std::exception& exception)
         {
@@ -306,37 +306,37 @@ namespace QLogicaeCore
             switch (format)
             {
             case (TimeScaleUnit::NANOSECONDS):
-                return Constants::TIME_SCALE_UNIT_FULL_NAME_NANOSECONDS;
+                return UTILITIES.TIME_SCALE_UNIT_FULL_NAME_NANOSECONDS;
 
             case (TimeScaleUnit::MICROSECONDS):
-                return Constants::TIME_SCALE_UNIT_FULL_NAME_MICROSECONDS;
+                return UTILITIES.TIME_SCALE_UNIT_FULL_NAME_MICROSECONDS;
 
             case (TimeScaleUnit::MILLISECONDS):
-                return Constants::TIME_SCALE_UNIT_FULL_NAME_MILLISECONDS;
+                return UTILITIES.TIME_SCALE_UNIT_FULL_NAME_MILLISECONDS;
 
             case (TimeScaleUnit::SECONDS):
-                return Constants::TIME_SCALE_UNIT_FULL_NAME_SECONDS;
+                return UTILITIES.TIME_SCALE_UNIT_FULL_NAME_SECONDS;
 
             case (TimeScaleUnit::MINUTES):
-                return Constants::TIME_SCALE_UNIT_FULL_NAME_MINUTES;
+                return UTILITIES.TIME_SCALE_UNIT_FULL_NAME_MINUTES;
 
             case (TimeScaleUnit::HOURS):
-                return Constants::TIME_SCALE_UNIT_FULL_NAME_HOURS;
+                return UTILITIES.TIME_SCALE_UNIT_FULL_NAME_HOURS;
 
             case (TimeScaleUnit::DAYS):
-                return Constants::TIME_SCALE_UNIT_FULL_NAME_DAYS;
+                return UTILITIES.TIME_SCALE_UNIT_FULL_NAME_DAYS;
 
             case (TimeScaleUnit::WEEKS):
-                return Constants::TIME_SCALE_UNIT_FULL_NAME_WEEKS;
+                return UTILITIES.TIME_SCALE_UNIT_FULL_NAME_WEEKS;
 
             case (TimeScaleUnit::MONTHS):
-                return Constants::TIME_SCALE_UNIT_FULL_NAME_MONTHS;
+                return UTILITIES.TIME_SCALE_UNIT_FULL_NAME_MONTHS;
 
             case (TimeScaleUnit::YEARS):
-                return Constants::TIME_SCALE_UNIT_FULL_NAME_YEARS;
+                return UTILITIES.TIME_SCALE_UNIT_FULL_NAME_YEARS;
             }
 
-            return Constants::TIME_SCALE_UNIT_FULL_NAME_SECONDS;
+            return UTILITIES.TIME_SCALE_UNIT_FULL_NAME_SECONDS;
         }
         catch (const std::exception& exception)
         {
@@ -352,37 +352,37 @@ namespace QLogicaeCore
             switch (format)
             {
             case (TimeScaleUnit::NANOSECONDS):
-                return Constants::TIME_SCALE_UNIT_ABBREVIATION_NANOSECONDS;
+                return UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_NANOSECONDS;
 
             case (TimeScaleUnit::MICROSECONDS):
-                return Constants::TIME_SCALE_UNIT_ABBREVIATION_MICROSECONDS;
+                return UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_MICROSECONDS;
 
             case (TimeScaleUnit::MILLISECONDS):
-                return Constants::TIME_SCALE_UNIT_ABBREVIATION_MILLISECONDS;
+                return UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_MILLISECONDS;
 
             case (TimeScaleUnit::SECONDS):
-                return Constants::TIME_SCALE_UNIT_ABBREVIATION_SECONDS;
+                return UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_SECONDS;
 
             case (TimeScaleUnit::MINUTES):
-                return Constants::TIME_SCALE_UNIT_ABBREVIATION_MINUTES;
+                return UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_MINUTES;
 
             case (TimeScaleUnit::HOURS):
-                return Constants::TIME_SCALE_UNIT_ABBREVIATION_HOURS;
+                return UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_HOURS;
 
             case (TimeScaleUnit::DAYS):
-                return Constants::TIME_SCALE_UNIT_ABBREVIATION_DAYS;
+                return UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_DAYS;
 
             case (TimeScaleUnit::WEEKS):
-                return Constants::TIME_SCALE_UNIT_ABBREVIATION_WEEKS;
+                return UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_WEEKS;
 
             case (TimeScaleUnit::MONTHS):
-                return Constants::TIME_SCALE_UNIT_ABBREVIATION_MONTHS;
+                return UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_MONTHS;
 
             case (TimeScaleUnit::YEARS):
-                return Constants::TIME_SCALE_UNIT_ABBREVIATION_YEARS;
+                return UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_YEARS;
             }
 
-            return Constants::TIME_SCALE_UNIT_ABBREVIATION_SECONDS;
+            return UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_SECONDS;
         }
         catch (const std::exception& exception)
         {
@@ -394,8 +394,8 @@ namespace QLogicaeCore
     {
         try
         {
-            return (Constants::TIME_SCALE_UNIT_ABBREVIATION_STRINGS.contains(format)) ?
-                Constants::TIME_SCALE_UNIT_ABBREVIATION_STRINGS[format] :
+            return (UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_STRINGS.contains(format)) ?
+                UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_STRINGS.at(format) :
                 TimeScaleUnit::NANOSECONDS;
         }
         catch (const std::exception& exception)
@@ -412,34 +412,34 @@ namespace QLogicaeCore
             switch (format)
             {
             case (TimeScaleUnit::NANOSECONDS):
-                return time / Constants::SECONDS_OVER_NANOSECONDS;
+                return time / UTILITIES.SECONDS_OVER_NANOSECONDS;
 
             case (TimeScaleUnit::MICROSECONDS):
-                return time / Constants::SECONDS_OVER_MICROSECONDS;
+                return time / UTILITIES.SECONDS_OVER_MICROSECONDS;
 
             case (TimeScaleUnit::MILLISECONDS):
-                return time / Constants::SECONDS_OVER_MILLISECONDS;
+                return time / UTILITIES.SECONDS_OVER_MILLISECONDS;
 
             case (TimeScaleUnit::SECONDS):
                 return time;
 
             case (TimeScaleUnit::MINUTES):
-                return time * Constants::SECONDS_PER_MINUTE;
+                return time * UTILITIES.SECONDS_PER_MINUTE;
 
             case (TimeScaleUnit::HOURS):
-                return time * Constants::SECONDS_PER_HOUR;
+                return time * UTILITIES.SECONDS_PER_HOUR;
 
             case (TimeScaleUnit::DAYS):
-                return time * Constants::SECONDS_PER_DAY;
+                return time * UTILITIES.SECONDS_PER_DAY;
 
             case (TimeScaleUnit::WEEKS):
-                return time * Constants::SECONDS_PER_WEEK;
+                return time * UTILITIES.SECONDS_PER_WEEK;
 
             case (TimeScaleUnit::MONTHS):
-                return time * Constants::SECONDS_PER_MONTH;
+                return time * UTILITIES.SECONDS_PER_MONTH;
 
             case (TimeScaleUnit::YEARS):
-                return time * Constants::SECONDS_PER_YEAR;
+                return time * UTILITIES.SECONDS_PER_YEAR;
             }
 
             return time;
@@ -461,31 +461,31 @@ namespace QLogicaeCore
                 return time;
 
             case (TimeScaleUnit::MICROSECONDS):
-                return time / Constants::SECONDS_OVER_MILLISECONDS;
+                return time / UTILITIES.SECONDS_OVER_MILLISECONDS;
 
             case (TimeScaleUnit::MILLISECONDS):
-                return time / Constants::SECONDS_OVER_MICROSECONDS;
+                return time / UTILITIES.SECONDS_OVER_MICROSECONDS;
 
             case (TimeScaleUnit::SECONDS):
-                return time / Constants::SECONDS_OVER_NANOSECONDS;
+                return time / UTILITIES.SECONDS_OVER_NANOSECONDS;
 
             case (TimeScaleUnit::MINUTES):
-                return time / (Constants::SECONDS_OVER_NANOSECONDS * Constants::SECONDS_PER_MINUTE);
+                return time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_MINUTE);
 
             case (TimeScaleUnit::HOURS):
-                return time / (Constants::SECONDS_OVER_NANOSECONDS * Constants::SECONDS_PER_HOUR);
+                return time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_HOUR);
 
             case (TimeScaleUnit::DAYS):
-                return time / (Constants::SECONDS_OVER_NANOSECONDS * Constants::SECONDS_PER_DAY);
+                return time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_DAY);
 
             case (TimeScaleUnit::WEEKS):
-                return time / (Constants::SECONDS_OVER_NANOSECONDS * Constants::SECONDS_PER_WEEK);
+                return time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_WEEK);
 
             case (TimeScaleUnit::MONTHS):
-                return time / (Constants::SECONDS_OVER_NANOSECONDS * Constants::SECONDS_PER_MONTH);
+                return time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_MONTH);
 
             case (TimeScaleUnit::YEARS):
-                return time / (Constants::SECONDS_OVER_NANOSECONDS * Constants::SECONDS_PER_YEAR);
+                return time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_YEAR);
 
             }
 

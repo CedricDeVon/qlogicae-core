@@ -1,10 +1,160 @@
 #pragma once
 
-#include "globals.hpp"
+#include <sqlite3.h>
+#include <absl/time/time.h>
+#include <rapidjson/document.h>
+
+#include <ios>
+#include <map>
+#include <mutex>
+#include <queue>
+#include <chrono>
+#include <vector>
+#include <variant>
+#include <cstdint>
+#include <Windows.h>
+#include <functional>
+#include <string_view>
+#include <unordered_map>
+#include <condition_variable>
+
 #include "system_access.hpp"
 
 namespace QLogicaeCore
 {    
+    enum class EncodingType : uint8_t
+    {
+        HEX,
+        UTF8,
+        BASE64
+    };
+
+    enum class FileMode : uint8_t
+    {
+        READ,
+        WRITE,
+        APPEND
+    };
+
+    enum class TimeScaleUnit : uint8_t
+    {
+        NANOSECONDS,
+        MICROSECONDS,
+        MILLISECONDS,
+        SECONDS,
+        MINUTES,
+        HOURS,
+        DAYS,
+        WEEKS,
+        MONTHS,
+        YEARS
+    };
+
+    enum class TimeFormat : uint8_t
+    {
+        UNIX,
+        ISO8601,
+        SECOND_LEVEL_TIMESTAMP,
+        MILLISECOND_LEVEL_TIMESTAMP,
+        MICROSECOND_LEVEL_TIMESTAMP,
+        FULL_TIMESTAMP,
+        FULL_DASHED_TIMESTAMP,
+        HOUR_12,
+        HOUR_24,
+        MILLISECOND_MICROSECOND_NANOSECOND,
+        DATE_DASHED,
+        DATE_MDY_SLASHED,
+        DATE_DMY_SLASHED,
+        DATE_DMY_SPACED,
+        DATE_VERBOSE
+    };
+
+    enum class TimeZone : uint8_t
+    {
+        UTC,
+        LOCAL
+    };
+
+    enum class LogMedium : uint8_t
+    {
+        ALL,
+        FILE,
+        CONSOLE
+    };
+
+    enum class LogLevel : uint8_t
+    {
+        ALL,
+        INFO,
+        DEBUG,
+        WARNING,
+        SUCCESS,
+        CRITICAL,
+        EXCEPTION,
+        HIGHLIGHTED_INFO
+    };
+
+    enum class TaskPriority : uint8_t
+    {
+        HIGH = 0,
+        MEDIUM = 1,
+        LOW = 2
+    };
+
+    enum class TemperatureUnitType : uint8_t
+    {
+        CELSIUS,
+        FAHRENHEIT,
+        KELVIN,
+        NONE
+    };
+
+    enum class CaseSensitivity : uint8_t
+    {
+        SENSITIVE,
+        INSENSITIVE
+    };
+
+    enum class WindowsRegistryRootPath : uint8_t
+    {
+        HKCU,
+        HKLM
+    };
+
+    enum class UTF : uint8_t
+    {
+        T8,
+        T16
+    };
+
+    enum class EnvironmentVariable : uint8_t
+    {
+        USER,
+        SYSTEM
+    };
+
+    enum class QLogicaeVisualStudio2022BuildArchitecture : uint8_t
+    {
+        X64,
+        X86
+    };
+
+    enum class QLogicaeVisualStudio2022Build : uint8_t
+    {
+        RELEASE,
+        DEBUG
+    };
+
+    enum class SupportedQLogicaeIDE : uint8_t
+    {
+        VISUAL_STUDIO_2022
+    };
+
+    enum class SupportedQLogicaeInstaller : uint8_t
+    {
+        INNO_SETUP
+    };
+
 	class Utilities
 	{
 	public:
@@ -17,14 +167,8 @@ namespace QLogicaeCore
         const HKEY DEFAULT_HKEY =
             HKEY_CURRENT_USER;
         
-        const int HKEY_MAXIMUM_VALUE_SIZE =
+        const DWORD HKEY_MAXIMUM_VALUE_SIZE =
             1 << 16;
-        
-        const DWORD HKEY_MAXIMUM_VALUE_NAME_SIZE =
-            32767;
-        
-        const DWORD HKEY_MAXIMUM_VALUE_DATA_SIZE =
-            65535;
         
         const std::wstring DEFAULT_NAME_KEY =
             L"Data";
@@ -407,21 +551,6 @@ namespace QLogicaeCore
             { INNO_SETUP, SupportedQLogicaeInstaller::INNO_SETUP }
         };       
 
-		const std::string FULL_EXECUTABLE_FOLDER_PATH =
-			SYSTEM_ACCESS.get_executable_folder();
-
-		const std::string FULL_EXECUTED_FOLDER_PATH =
-			SYSTEM_ACCESS.get_executed_folder();
-
-		const std::string FULL_ROAMING_APPDATA_FOLDER_PATH =
-			SYSTEM_ACCESS.get_roaming_appdata_folder_path();
-
-		const std::string FULL_LOCAL_APPDATA_FOLDER_PATH =
-			SYSTEM_ACCESS.get_local_appdata_folder_path();
-
-		const std::string FULL_PROGRAMDATA_FOLDER_PATH =
-			SYSTEM_ACCESS.get_programdata_folder_path();
-
 		const std::string RELATIVE_DOT_QLOGICAE_FOLDER_PATH =
 			".qlogicae";
 
@@ -455,49 +584,38 @@ namespace QLogicaeCore
         const std::string RELATIVE_QLOGICAE_WINDOWS_REGISTRY_SUB_PATH =
             "Software\\QLogicae";
 
-		const std::string FULL_APPLICATION_QLOGICAE_FOLDER_PATH =
-			FULL_EXECUTABLE_FOLDER_PATH;
+        std::string FULL_EXECUTABLE_FOLDER_PATH;
 
-		const std::string FULL_APPLICATION_QLOGICAE_PRIVATE_FOLDER_PATH =
-			FULL_APPLICATION_QLOGICAE_FOLDER_PATH +
-			"\\" + RELATIVE_DOT_QLOGICAE_FOLDER_PATH;
+        std::string FULL_EXECUTED_FOLDER_PATH;
 
-		const std::string FULL_APPLICATION_QLOGICAE_PUBLIC_FOLDER_PATH =
-			FULL_APPLICATION_QLOGICAE_FOLDER_PATH +
-			"\\" + RELATIVE_QLOGICAE_FOLDER_PATH;
+        std::string FULL_ROAMING_APPDATA_FOLDER_PATH;
 
-		const std::string FULL_APPLICATION_QLOGICAE_PUBLIC_APPLICATION_FOLDER_PATH =
-			FULL_APPLICATION_QLOGICAE_PUBLIC_FOLDER_PATH +
-			"\\" + RELATIVE_APPLICATION_FOLDER_PATH;
+        std::string FULL_LOCAL_APPDATA_FOLDER_PATH;
 
-		const std::string FULL_APPLICATION_QLOGICAE_PUBLIC_APPLICATION_CONFIGURATIONS_FOLDER_PATH =
-			FULL_APPLICATION_QLOGICAE_PUBLIC_APPLICATION_FOLDER_PATH +
-			"\\" + RELATIVE_CONFIGURATIONS_FOLDER_PATH;
+        std::string FULL_PROGRAMDATA_FOLDER_PATH;
 
-		const std::string FULL_APPLICATION_QLOGICAE_PUBLIC_APPLICATION_CONFIGURATIONS_QLOGICAE_FILE_PATH =
-			FULL_APPLICATION_QLOGICAE_PUBLIC_APPLICATION_CONFIGURATIONS_FOLDER_PATH +
-			"\\" + RELATIVE_QLOGICAE_FILE_PATH;
+		std::string FULL_APPLICATION_QLOGICAE_FOLDER_PATH;
 
-		const std::string FULL_APPLICATION_QLOGICAE_PUBLIC_APPLICATION_CONFIGURATIONS_ENVIRONMENT_FILE_PATH =
-			FULL_APPLICATION_QLOGICAE_PUBLIC_APPLICATION_CONFIGURATIONS_FOLDER_PATH +
-			"\\" + RELATIVE_ENVIRONMENT_FILE_PATH;
+		std::string FULL_APPLICATION_QLOGICAE_PRIVATE_FOLDER_PATH;
 
-		const std::string FULL_APPLICATION_QLOGICAE_PUBLIC_APPLICATION_ASSETS_FOLDER_PATH =
-			FULL_APPLICATION_QLOGICAE_PUBLIC_APPLICATION_FOLDER_PATH +
-			"\\" + RELATIVE_ASSETS_FOLDER_PATH;
-
-		const std::string FULL_APPLICATION_QLOGICAE_PUBLIC_APPLICATION_ASSETS_APPLICATION_ICON_FILE_PATH =
-			FULL_APPLICATION_QLOGICAE_PUBLIC_APPLICATION_ASSETS_FOLDER_PATH +
-			"\\" + RELATIVE_APPLICATION_ICON_FILE_PATH;
-
-		const std::string FULL_APPLICATION_QLOGICAE_PUBLIC_APPLICATION_DOCUMENTATION_FOLDER_PATH =
-			FULL_APPLICATION_QLOGICAE_PUBLIC_APPLICATION_FOLDER_PATH +
-			"\\" + RELATIVE_DOCUMENTATION_FOLDER_PATH;
-
-		const std::string FULL_APPLICATION_QLOGICAE_PUBLIC_APPLICATION_DOCUMENTATION_LICENSE_FILE_PATH =
-			FULL_APPLICATION_QLOGICAE_PUBLIC_APPLICATION_DOCUMENTATION_FOLDER_PATH +
-			"\\" + RELATIVE_LICENSE_FILE_PATH;
-
+		std::string FULL_APPLICATION_QLOGICAE_PUBLIC_FOLDER_PATH;
+			
+		std::string FULL_APPLICATION_QLOGICAE_PUBLIC_APPLICATION_FOLDER_PATH;
+			
+		std::string FULL_APPLICATION_QLOGICAE_PUBLIC_APPLICATION_CONFIGURATIONS_FOLDER_PATH;
+			
+		std::string FULL_APPLICATION_QLOGICAE_PUBLIC_APPLICATION_CONFIGURATIONS_QLOGICAE_FILE_PATH;
+			
+		std::string FULL_APPLICATION_QLOGICAE_PUBLIC_APPLICATION_CONFIGURATIONS_ENVIRONMENT_FILE_PATH;
+			
+		std::string FULL_APPLICATION_QLOGICAE_PUBLIC_APPLICATION_ASSETS_FOLDER_PATH;
+			
+		std::string FULL_APPLICATION_QLOGICAE_PUBLIC_APPLICATION_ASSETS_APPLICATION_ICON_FILE_PATH;
+			
+		std::string FULL_APPLICATION_QLOGICAE_PUBLIC_APPLICATION_DOCUMENTATION_FOLDER_PATH;
+			
+		std::string FULL_APPLICATION_QLOGICAE_PUBLIC_APPLICATION_DOCUMENTATION_LICENSE_FILE_PATH;
+			
 		static Utilities& get_instance();
 
 	protected:
@@ -513,5 +631,415 @@ namespace QLogicaeCore
 
     inline static Utilities& UTILITIES =
         Utilities::get_instance();
+
+    struct ValueEnumKeyDeleteHandler
+    {
+        void operator()(HKEY handler) const
+        {
+            if (handler)
+            {
+                RegCloseKey(handler);
+            }
+        }
+    };
+
+    struct Json;
+
+    enum class JsonValueType : uint8_t
+    {
+        NONE,
+        NUMBER,
+        FLOAT,
+        STRING,
+        ARRAY,
+        OBJECT
+    };
+
+    bool convert_to_rapidjson_value(
+        const Json&, rapidjson::Value&,
+        rapidjson::Document::AllocatorType&);
+
+    using JsonValuePointer = std::shared_ptr<Json>;
+
+    using JsonValue = std::variant<
+        std::nullptr_t,
+        bool,
+        int64_t,
+        uint64_t,
+        double,
+        std::string,
+        std::vector<JsonValuePointer>,
+        std::map<std::string, JsonValuePointer>
+    >;
+
+    struct Json
+    {
+        JsonValue value;
+        using Array = std::vector<JsonValuePointer>;
+        using Object = std::map<std::string, JsonValuePointer>;
+
+    };
+
+    struct JsonVisitor
+    {
+        rapidjson::Value& target;
+        rapidjson::Document::AllocatorType& allocator;
+
+        void operator()(std::nullptr_t) const
+        {
+            target.SetNull();
+        }
+        void operator()(bool b) const
+        {
+            target.SetBool(b);
+        }
+        void operator()(int64_t i) const
+        {
+            target.SetInt64(i);
+        }
+        void operator()(uint64_t u) const
+        {
+            target.SetUint64(u);
+        }
+        void operator()(double d) const
+        {
+            target.SetDouble(d);
+        }
+        void operator()(const std::string& s) const
+        {
+            target.SetString(s.c_str(), static_cast<rapidjson::SizeType>(s.size()), allocator);
+        }
+        void operator()(const std::vector<std::shared_ptr<Json>>& items) const
+        {
+            target.SetArray();
+            for (const auto& item : items)
+            {
+                rapidjson::Value value;
+
+                convert_to_rapidjson_value(*item, value, allocator);
+                target.PushBack(std::move(value), allocator);
+            }
+        }
+        void operator()(const std::map<std::string, std::shared_ptr<Json>>& object) const
+        {
+            target.SetObject();
+            for (const auto& [key, value_pointer] : object)
+            {
+                rapidjson::Value json_key, json_val;
+
+                json_key.SetString(key.c_str(), static_cast<rapidjson::SizeType>(key.size()), allocator);
+                convert_to_rapidjson_value(*value_pointer, json_val, allocator);
+                target.AddMember(std::move(json_key), std::move(json_val), allocator);
+            }
+        }
+    };
+
+    struct CryptographerProperties
+    {
+        size_t size_t_1 = 0;
+        size_t size_t_2 = 0;
+        size_t size_t_3 = 0;
+        size_t size_t_4 = 0;
+        uint32_t uint32_t_1 = 0;
+        uint32_t uint32_t_2 = 0;
+        uint32_t uint32_t_3 = 0;
+        uint32_t uint32_t_4 = 0;
+    };
+
+    static CryptographerProperties default_cryptographer_3_properties
+    {
+        .size_t_1 = 32,
+        .size_t_2 = 16,
+        .uint32_t_1 = 3,
+        .uint32_t_2 = 1 << 16,
+        .uint32_t_3 = 2
+    };
+
+    struct SmallTaskObject
+    {
+        SmallTaskObject() = default;
+
+        template <typename Callable>
+        SmallTaskObject(Callable&& callable)
+        {
+            function_wrapper = [callable =
+                std::forward<Callable>(callable)]() mutable
+                {
+                    callable();
+                };
+        }
+
+        void operator()() const
+        {
+            function_wrapper();
+        }
+
+        std::function<void()> function_wrapper;
+    };
+
+    struct WorkerQueue
+    {
+        std::map<TaskPriority, std::queue<SmallTaskObject>> priority_queues;
+        std::mutex queue_mutex;
+        std::condition_variable wake_signal;
+    };
+
+    struct JsonWebTokenTransformInput
+    {
+        std::string issuer;
+        std::string data;
+        std::string public_key;
+        std::string private_key;
+        std::chrono::seconds lifetime;
+        std::map<std::string, std::string> claims;
+    };
+
+    struct JsonWebTokenReverseInput
+    {
+        std::string token;
+        std::string issuer;
+        std::string public_key;
+    };
+
+    struct JsonWebTokenReverseResult
+    {
+        bool is_successful = false;
+        std::string message;
+        std::string subject;
+        std::map<std::string, std::string> headers;
+        std::map<std::string, std::string> payloads;
+    };
+
+    struct VectorStringHash
+    {
+        std::size_t operator()(const std::vector<std::string>& vec) const noexcept
+        {
+            std::size_t seed = 0;
+            std::hash<std::string> string_hasher;
+            for (const auto& s : vec)
+            {
+                seed ^= string_hasher(s) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+            }
+            return seed;
+        }
+    };
+
+    struct VectorStringEqual
+    {
+        bool operator()(const std::vector<std::string>& lhs,
+            const std::vector<std::string>& rhs) const noexcept
+        {
+            return lhs == rhs;
+        }
+    };
+
+    struct ValidationPasswordRules
+    {
+        std::size_t minimum_length = 8;
+        std::size_t maximum_length = 128;
+        bool require_alpha_numerics = true;
+        bool require_unique_characters = false;
+        bool require_special_characters = true;
+        bool require_uppercase_characters = true;
+        bool require_lowercase_characters = true;
+    };
+
+    struct SQLiteBackend
+    {
+    public:
+        explicit SQLiteBackend(sqlite3* raw_database);
+        ~SQLiteBackend();
+
+        sqlite3* database_handle;
+    };
+
+    struct SQLiteStatementData
+    {
+    public:
+        explicit SQLiteStatementData(sqlite3_stmt* raw_statement);
+        ~SQLiteStatementData();
+
+        sqlite3_stmt* get() const noexcept;
+
+    protected:
+        sqlite3_stmt* statement_handle;
+    };
+
+    struct RocksDBConfig
+    {
+        size_t block_cache_size = 64 * 1024 * 1024;
+        size_t write_buffer_size = 64 * 1024 * 1024;
+        int max_background_jobs = 4;
+    };
+
+    struct OutlierRemovalOptions
+    {
+        double factor;
+        double threshold;
+        double proportion;
+        double significance_level;
+    };
+
+    struct CaseAwareHash
+    {
+        using is_transparent = void;
+
+        CaseSensitivity sensitivity;
+
+        explicit CaseAwareHash(CaseSensitivity s) : sensitivity(s) {}
+
+        std::size_t operator()(const std::string& s) const noexcept { return hash_impl(s); }
+        std::size_t operator()(const std::string_view& sv) const noexcept { return hash_impl(sv); }
+
+    private:
+        std::size_t hash_impl(std::string_view str) const noexcept
+        {
+            std::size_t hash = 14695981039346656037ull;
+            for (char c : str)
+            {
+                char x = (sensitivity == CaseSensitivity::SENSITIVE)
+                    ? c
+                    : static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+                hash = (hash ^ static_cast<unsigned char>(x)) * 1099511628211ull;
+            }
+            return hash;
+        }
+    };
+
+    struct CaseAwareEqual
+    {
+        using is_transparent = void;
+
+        CaseSensitivity sensitivity;
+
+        explicit CaseAwareEqual(CaseSensitivity s) : sensitivity(s) {}
+
+        bool operator()(const std::string& a, const std::string& b) const noexcept
+        {
+            return compare_impl(a, b);
+        }
+
+        bool operator()(const std::string_view& a, const std::string_view& b) const noexcept
+        {
+            return compare_impl(a, b);
+        }
+
+        bool operator()(const std::string& a, const std::string_view& b) const noexcept
+        {
+            return compare_impl(a, b);
+        }
+
+        bool operator()(const std::string_view& a, const std::string& b) const noexcept
+        {
+            return compare_impl(a, b);
+        }
+
+    private:
+        bool compare_impl(std::string_view a, std::string_view b) const noexcept
+        {
+            if (a.size() != b.size()) return false;
+            if (sensitivity == CaseSensitivity::SENSITIVE) return a == b;
+            for (size_t i = 0; i < a.size(); ++i) {
+                if (std::tolower(static_cast<unsigned char>(a[i])) !=
+                    std::tolower(static_cast<unsigned char>(b[i])))
+                    return false;
+            }
+            return true;
+        }
+    };
+
+    struct StringMemoryPoolSnapshot
+    {
+        std::size_t pool_hits = 0;
+        std::size_t bytes_used = 0;
+        std::size_t pool_misses = 0;
+        std::size_t interned_count = 0;
+    };
+
+    struct NetworkPingResponse
+    {
+        int64_t round_trip_time_in_milliseconds;
+    };
+
+    struct NetworkPingSettings
+    {
+        std::chrono::milliseconds milliseconds_per_callback
+        {
+            UTILITIES.DEFAULT_MILLISECONDS_PER_CALLBACK
+        };
+        std::string host_address
+        {
+            UTILITIES.DEFAULT_HOST_ADDRESS
+        };
+        bool is_listening
+        {
+            UTILITIES.DEFAULT_IS_LISTENING
+        };
+        std::string name;
+        std::function<void(const NetworkPingResponse&)> callback;
+    };
+
+    struct GroqCloudClientAPIPromptConfigurations
+    {
+        std::function<std::string()> api_key_extractor;
+        std::string model = UTILITIES.DEFAULT_GROQ_CLOUD_CLIENT_API_TYPE.data();
+        double top_p = 1.0;
+        double temperature = 0.7;
+        double frequency_penalty = 0.0;
+        double presence_penalty = 0.0;
+        uint32_t maximum_tokens = 1024;
+        std::vector<std::string> stop_sequences;
+        std::optional<std::string> system_prompt;
+        bool is_streaming_enabled = false;
+        uint8_t retry_count = 3;
+        std::chrono::milliseconds timeout_duration =
+            std::chrono::seconds(10);
+    };
+
+    struct GroqCloudClientAPIChatMessage
+    {
+        std::string role;
+        std::string content;
+    };
+
+    struct GroqCloudClientAPIRequest
+    {
+        std::vector<GroqCloudClientAPIChatMessage> messages;
+    };
+
+    struct GroqCloudClientAPIResponse
+    {
+        std::string id = "";
+        std::string object = "";
+        std::string model = "";
+        uint32_t timestamp_created = 0;
+        uint32_t total_tokens = 0;
+        uint32_t prompt_tokens = 0;
+        uint32_t completion_tokens = 0;
+        uint32_t index = 0;
+        std::string role = "";
+        std::string content = "";
+        std::string finish_reason = "";
+        uint32_t status_code = 0;
+        std::optional<std::string> error_type;
+        std::optional<std::string> error_message;
+    };
+    
+    constexpr std::string get_log_level_string(const LogLevel& level)
+    {
+        switch (level)
+        {
+        case LogLevel::ALL: return UTILITIES.LOG_LEVEL_INFO;
+        case LogLevel::INFO: return UTILITIES.LOG_LEVEL_INFO;
+        case LogLevel::DEBUG: return UTILITIES.LOG_LEVEL_DEBUG;
+        case LogLevel::SUCCESS: return UTILITIES.LOG_LEVEL_SUCCESS;
+        case LogLevel::WARNING: return UTILITIES.LOG_LEVEL_WARNING;
+        case LogLevel::CRITICAL: return UTILITIES.LOG_LEVEL_CRITICAL;
+        case LogLevel::EXCEPTION: return UTILITIES.LOG_LEVEL_EXCEPTION;
+        case LogLevel::HIGHLIGHTED_INFO: return UTILITIES.LOG_LEVEL_HIGHLIGHTED_INFO;
+        }
+        
+        return UTILITIES.LOG_LEVEL_INFO;
+    }
 }
 

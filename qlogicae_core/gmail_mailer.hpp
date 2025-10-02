@@ -1,6 +1,6 @@
 #pragma once
 
-#include "globals.hpp"
+#include "utilities.hpp"
 
 #include <curl/curl.h>
 
@@ -21,7 +21,7 @@ namespace QLogicaeCore
             const std::vector<std::string>& cc_recipients = {},
             const std::vector<std::string>& bcc_recipients = {},
             const std::string& smtp_server =
-                Constants::DEFAULT_GMAIL_MAILER_SMTP_SERVER.data()
+                UTILITIES.DEFAULT_GMAIL_MAILER_SMTP_SERVER
         );
 
         ~GmailMailer();

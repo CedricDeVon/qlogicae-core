@@ -1,6 +1,6 @@
 #pragma once
 
-#include "globals.hpp"
+#include "utilities.hpp"
 #include "regular_expression.hpp"
 
 #include <set>

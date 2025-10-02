@@ -16,8 +16,8 @@ struct RegularKeyDeleteHandler
 QLogicaeCore::WindowsRegistry::WindowsRegistry(const HKEY root_hkey)
 {
     _root_key = root_hkey;
-    _sub_key.assign(Constants::DEFAULT_SUB_KEY);
-    _name_key.assign(Constants::DEFAULT_NAME_KEY);
+    _sub_key.assign(UTILITIES.DEFAULT_SUB_KEY);
+    _name_key.assign(UTILITIES.DEFAULT_NAME_KEY);
 }
 
 QLogicaeCore::WindowsRegistry& QLogicaeCore::WindowsRegistry::hkcu()
@@ -63,7 +63,7 @@ std::optional<std::wstring> QLogicaeCore::WindowsRegistry::get_value_via_utf16(
 
     HKEY raw_key = nullptr;
     if (RegOpenKeyExW(_root_key, sub_key.data(),
-        0, Constants::REGULAR_ACCESS_FLAGS, &raw_key) != ERROR_SUCCESS)
+        0, UTILITIES.REGULAR_ACCESS_FLAGS, &raw_key) != ERROR_SUCCESS)
     {
         return L"";
     }
@@ -80,7 +80,7 @@ std::optional<std::wstring> QLogicaeCore::WindowsRegistry::get_value_via_utf16(
         return L"";
     }
 
-    if (hkey_value_size > Constants::HKEY_MAXIMUM_VALUE_SIZE)
+    if (hkey_value_size > UTILITIES.HKEY_MAXIMUM_VALUE_SIZE)
     {
         return L"";
     }
@@ -211,17 +211,17 @@ std::unordered_map<std::string, std::wstring> QLogicaeCore::WindowsRegistry::get
 
     std::unique_ptr<std::remove_pointer<HKEY>::type, ValueEnumKeyDeleteHandler> hkey(raw_key);
 
-    DWORD index = 0;
-    wchar_t value_name[Constants::HKEY_MAXIMUM_VALUE_NAME_SIZE] = { 0 };
-    DWORD value_name_size = Constants::HKEY_MAXIMUM_VALUE_NAME_SIZE;
+    DWORD index = 0;    
+    wchar_t value_name[32767] = { 0 };
+    DWORD value_name_size = 32767;
     DWORD value_type = 0;
-    BYTE value_data[Constants::HKEY_MAXIMUM_VALUE_DATA_SIZE] = { 0 };
-    DWORD value_data_size = Constants::HKEY_MAXIMUM_VALUE_DATA_SIZE;
+    BYTE value_data[65535] = { 0 };
+    DWORD value_data_size = 65535;
 
     while (true)
     {
-        value_name_size = Constants::HKEY_MAXIMUM_VALUE_NAME_SIZE;
-        value_data_size = Constants::HKEY_MAXIMUM_VALUE_DATA_SIZE;
+        value_name_size = 32767;
+        value_data_size = 65535;
 
         LONG enum_result = RegEnumValueW(
             hkey.get(),

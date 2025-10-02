@@ -4,7 +4,7 @@
 
 namespace QLogicaeCore
 {
-    bool QLogicaeCore::SystemAccess::has_admin_access() const
+    bool SystemAccess::has_admin_access() const
     {
         try
         {
@@ -84,7 +84,7 @@ namespace QLogicaeCore
         }
     }
 
-    void QLogicaeCore::SystemAccess::restart_with_admin_access() const
+    void SystemAccess::restart_with_admin_access() const
     {
         try
         {
@@ -171,7 +171,7 @@ namespace QLogicaeCore
         }
     }
 
-    QLogicaeCore::SystemAccess& QLogicaeCore::SystemAccess::get_instance()
+    SystemAccess& SystemAccess::get_instance()
     {
         static SystemAccess get_instance;
      

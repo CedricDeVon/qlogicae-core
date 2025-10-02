@@ -1,6 +1,6 @@
 #pragma once
 
-#include "globals.hpp"
+#include "utilities.hpp"
 #include "encoder.hpp"
 
 #include <windows.h>
@@ -85,7 +85,7 @@ namespace QLogicaeCore
         WindowsRegistry(
             WindowsRegistry&& windows_registry) noexcept = delete;
         
-        WindowsRegistry(const HKEY hkey = Constants::DEFAULT_HKEY);
+        WindowsRegistry(const HKEY hkey = UTILITIES.DEFAULT_HKEY);
         
         WindowsRegistry& operator = 
             (WindowsRegistry&& windows_registry) = delete;

@@ -156,7 +156,7 @@ namespace QLogicaeCore
             std::vector<std::string> result;
             result.reserve(size);
 
-            for (index = Constants::NUMBER_ZERO; index < size; ++index)
+            for (index = 0; index < size; ++index)
             {
                 result.emplace_back(random_string(length));
             }

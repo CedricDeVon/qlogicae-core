@@ -1,6 +1,6 @@
 #pragma once
 
-#include "globals.hpp"
+#include "utilities.hpp"
 #include "abstract_file_io.hpp"
 
 namespace QLogicaeCore
@@ -37,6 +37,6 @@ namespace QLogicaeCore
         std::future<std::string> generate_data_uri_async() const;
 
     private:
-        std::string_view _mimetype { Constants::DEFAULT_FILE_URI_IO_MIMETYPE.data()};
+        std::string_view _mimetype { UTILITIES.DEFAULT_FILE_URI_IO_MIMETYPE.data()};
     };
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "globals.hpp"
+#include "utilities.hpp"
 
 #include <rocksdb/db.h>
 #include <rocksdb/slice.h>

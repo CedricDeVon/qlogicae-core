@@ -116,7 +116,7 @@ namespace QLogicaeCore
         {
             if (text.empty())
             {
-                return Constants::STRING_NONE_1.data();
+                return UTILITIES.STRING_NONE_1;
             }
 
             return text;
@@ -134,7 +134,7 @@ namespace QLogicaeCore
         {
             if (text.empty())
             {
-                return Constants::STRING_NONE_2.data();
+                return UTILITIES.STRING_NONE_2;
             }
 
             return text;

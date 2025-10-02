@@ -95,7 +95,7 @@ namespace QLogicaeCore
     {
         try
         {
-            const char* hex_chars = Constants::HEXADECIMAL_CHARACTERS.data();
+            const char* hex_chars = UTILITIES.HEXADECIMAL_CHARACTERSET_1.c_str();
             std::string output;
             output.reserve(length * 2);
 

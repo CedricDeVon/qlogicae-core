@@ -104,7 +104,7 @@ namespace QLogicaeCore
             }
 
             const double mad = compute_median(deviations);
-            if (mad < Constants::EPSILON) return false;
+            if (mad < UTILITIES.EPSILON) return false;
 
             const double modified_z_threshold = options.threshold;
             std::vector<double> filtered;
@@ -145,7 +145,7 @@ namespace QLogicaeCore
         double q3 = compute_median(upper_half);
         double iqr = q3 - q1;
 
-        if (iqr < Constants::EPSILON) return false;
+        if (iqr < UTILITIES.EPSILON) return false;
 
         double lower_bound = q1 - options.factor * iqr;
         double upper_bound = q3 + options.factor * iqr;
@@ -175,7 +175,7 @@ namespace QLogicaeCore
         double mean = compute_mean(flat_data);
         double stddev = compute_standard_deviation(flat_data, mean);
 
-        if (stddev < Constants::EPSILON) return false;
+        if (stddev < UTILITIES.EPSILON) return false;
 
         std::vector<double> filtered;
         for (double value : flat_data)
@@ -262,7 +262,7 @@ namespace QLogicaeCore
         double original_mean = compute_mean(flat_data);
 
         if (!std::isfinite(trimmed_mean) ||
-            std::abs(trimmed_mean - original_mean) <= Constants::EPSILON)
+            std::abs(trimmed_mean - original_mean) <= UTILITIES.EPSILON)
         {
             return false;
         }
@@ -281,7 +281,7 @@ namespace QLogicaeCore
         double mean = compute_mean(flat_data);
         double stddev = compute_standard_deviation(flat_data, mean);
 
-        if (stddev < Constants::EPSILON) return false;
+        if (stddev < UTILITIES.EPSILON) return false;
 
         double max_deviation = 0.0;
         for (double value : flat_data)

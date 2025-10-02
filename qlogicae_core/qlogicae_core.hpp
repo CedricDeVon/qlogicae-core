@@ -1,9 +1,9 @@
 #pragma once
 
-#include "globals.hpp"
-#include "encoder.hpp"
 #include "system_access.hpp"
+#include "globals.hpp"
 #include "utilities.hpp"
+#include "encoder.hpp"
 #include "time.hpp"
 #include "cli_io.hpp"
 #include "logger.hpp"

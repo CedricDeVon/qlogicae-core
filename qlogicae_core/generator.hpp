@@ -1,6 +1,6 @@
 #pragma once
 
-#include "globals.hpp"
+#include "utilities.hpp"
 #include "encoder.hpp"
 
 #include <random>
@@ -23,30 +23,30 @@ namespace QLogicaeCore
         ) const;
 
         bool random_bool(
-            const double& = Constants::RANDOM_BOOLEAN_MAXIMUM
+            const double& = UTILITIES.RANDOM_BOOLEAN_MAXIMUM
         ) const;
 
         std::vector<std::string> random_string_vector(
             const size_t&,
-            const size_t& = Constants::RANDOM_SIZE_T_BITS
+            const size_t& = UTILITIES.RANDOM_SIZE_T_BITS
         ) const;
 
         std::string random_hex(
             const size_t&,
             const std::string_view & =
-                Constants::FULL_VISIBLE_ASCII_CHARACTERSET
+                UTILITIES.FULL_VISIBLE_ASCII_CHARACTERSET
         ) const;
 
         std::string random_string(
             const size_t&,
             const std::string_view& =
-                Constants::FULL_VISIBLE_ASCII_CHARACTERSET
+                UTILITIES.FULL_VISIBLE_ASCII_CHARACTERSET
         ) const;
 
         std::string random_base64(
             const size_t&,
             const std::string_view & =
-                Constants::FULL_VISIBLE_ASCII_CHARACTERSET
+                UTILITIES.FULL_VISIBLE_ASCII_CHARACTERSET
         ) const;
 
         int random_int(
@@ -55,8 +55,8 @@ namespace QLogicaeCore
         ) const;
 
         double random_double(
-            const double& = Constants::RANDOM_DOUBLE_MINIMUM,
-            const double& = Constants::RANDOM_DOUBLE_MAXIMUM
+            const double& = UTILITIES.RANDOM_DOUBLE_MINIMUM,
+            const double& = UTILITIES.RANDOM_DOUBLE_MAXIMUM
         ) const;
 
         static Generator& get_instance();
