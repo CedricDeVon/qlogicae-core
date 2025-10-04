@@ -27,6 +27,8 @@ namespace QLogicaeCore
 
         std::string get_environment_id();
 
+        std::string get_environment_name();
+
         std::string get_hkcu_windows_registry_value(
             const std::string& key
         );
@@ -71,6 +73,8 @@ namespace QLogicaeCore
         std::string _qlogicae_architecture;
 
         std::string _environment_id;
+
+        std::string _environment_name;
 
         QLogicaeCore::JsonFileIO _qlogicae_file;
 

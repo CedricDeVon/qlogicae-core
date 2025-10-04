@@ -76,6 +76,11 @@ namespace QLogicaeCore
         return _environment_id;
     }
 
+    std::string Application::get_environment_name()
+    {
+        return _environment_name;
+    }
+
     std::string Application::get_hkcu_windows_registry_value(
         const std::string& key
     )
@@ -150,6 +155,10 @@ namespace QLogicaeCore
 
         _environment_id = _environment_file.get_string({
             "id"
+        });
+
+        _environment_name = _environment_file.get_string({
+            "name"
         });
     }
 }
