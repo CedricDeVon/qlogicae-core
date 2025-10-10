@@ -2,6 +2,8 @@
 
 #include "qlogicae_core.hpp"
 
+#include <nanobench.h>
+
 #include <any>
 #include <map>
 #include <mutex>

@@ -8,6 +8,11 @@ namespace QLogicaeCore
     {
     public:
         virtual ~AbstractResult() = default;
+        
+        AbstractResult(bool state = false,
+            std::optional<ValueType> value = std::nullopt,
+            std::optional<MetaDataType> metadata = std::nullopt
+        );
 
         AbstractResult(
             const AbstractResult& abstract_result) = delete;
@@ -36,12 +41,7 @@ namespace QLogicaeCore
 
         const std::optional<ValueType> _value;
 
-        const std::optional<MetaDataType> _metadata;
-
-        AbstractResult(bool state = false,
-            std::optional<ValueType> value = std::nullopt,
-            std::optional<MetaDataType> metadata = std::nullopt
-        );
+        const std::optional<MetaDataType> _metadata;        
     };
 
     template <typename ValueType, typename MetaDataType>
