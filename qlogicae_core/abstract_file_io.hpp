@@ -39,6 +39,8 @@ namespace QLogicaeCore
 
         std::string get_file_path() const;
 
+        std::size_t get_line_count() const;
+
         void set_file_path(
             const std::string_view& file_path
         );

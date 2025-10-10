@@ -134,6 +134,7 @@
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
       <UndefinePreprocessorDefinitions>
       </UndefinePreprocessorDefinitions>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions101</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -159,7 +160,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/utf-8 /favor:INTEL64 %(AdditionalOptions)</AdditionalOptions>
       <DebugInformationFormat>None</DebugInformationFormat>
       <UseUnicodeForAssemblerListing>true</UseUnicodeForAssemblerListing>
       <AdditionalModuleDependencies>
@@ -170,6 +171,8 @@
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <UndefinePreprocessorDefinitions>
       </UndefinePreprocessorDefinitions>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions101</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
     </ClCompile>
     <Link>
       <SubSystem>
