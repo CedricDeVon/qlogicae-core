@@ -1,7 +1,7 @@
-#include "pch.h"
+#include "pch.hpp"
 
-#include "qlogicae_core/utilities.hpp"
-#include "qlogicae_core/windows_registry.hpp"
+#include "qlogicae/core/utilities.hpp"
+#include "qlogicae/core/windows_registry.hpp"
 
 namespace QLogicaeCoreTest
 {

@@ -1,6 +1,6 @@
-#include "pch.h"
+#include "pch.hpp"
 
-#include "qlogicae_core/windows_registry_value_extractor.hpp"
+#include "qlogicae/core/windows_registry_value_extractor.hpp"
 
 namespace QLogicaeCoreTest
 {

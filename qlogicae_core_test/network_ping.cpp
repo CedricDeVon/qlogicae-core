@@ -1,6 +1,6 @@
-#include "pch.h"
+#include "pch.hpp"
 
-#include "qlogicae_core/network_ping.hpp"
+#include "qlogicae/core/network_ping.hpp"
 
 using QLogicaeCore::NetworkPing;
 using QLogicaeCore::NetworkPingSettings;

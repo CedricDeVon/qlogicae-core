@@ -1,6 +1,6 @@
-#include "pch.h"
+#include "pch.hpp"
 
-#include "qlogicae_core/dot_env_value_extractor.hpp"
+#include "qlogicae/core/dot_env_value_extractor.hpp"
 
 namespace QLogicaeCoreTest
 {

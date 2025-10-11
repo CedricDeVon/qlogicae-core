@@ -1,6 +1,6 @@
-#include "pch.h"
+#include "pch.hpp"
 
-#include "qlogicae_core/string_memory_pool.hpp"
+#include "qlogicae/core/string_memory_pool.hpp"
 
 namespace QLogicaeCoreTest
 {

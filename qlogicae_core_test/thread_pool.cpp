@@ -1,6 +1,6 @@
-#include "pch.h"
+#include "pch.hpp"
 
-#include "qlogicae_core/thread_pool.hpp"
+#include "qlogicae/core/thread_pool.hpp"
 
 namespace QLogicaeCoreTest
 {

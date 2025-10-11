@@ -1,6 +1,6 @@
-﻿#include "pch.h"
+﻿#include "pch.hpp"
 
-#include "qlogicae_core/sqlite.hpp"
+#include "qlogicae/core/sqlite.hpp"
 
 namespace QLogicaeCoreTest
 {

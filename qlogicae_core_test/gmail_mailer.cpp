@@ -1,6 +1,6 @@
-#include "pch.h"
+#include "pch.hpp"
 
-#include "qlogicae_core/gmail_mailer.hpp"
+#include "qlogicae/core/gmail_mailer.hpp"
 
 namespace QLogicaeCoreTest
 {

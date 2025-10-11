@@ -1,6 +1,6 @@
-#include "pch.h"
+#include "pch.hpp"
 
-#include "qlogicae_core/statistician.hpp"
+#include "qlogicae/core/statistician.hpp"
 
 namespace QLogicaeCoreTest
 {

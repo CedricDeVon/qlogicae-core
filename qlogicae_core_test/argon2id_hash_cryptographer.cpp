@@ -1,6 +1,6 @@
-#include "pch.h"
+#include "pch.hpp"
 
-#include "qlogicae_core/argon2id_hash_cryptographer.hpp"
+#include "qlogicae/core/argon2id_hash_cryptographer.hpp"
 
 namespace QLogicaeCoreTest
 {

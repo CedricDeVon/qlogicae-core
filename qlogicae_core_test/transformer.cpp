@@ -1,6 +1,6 @@
-#include "pch.h"
+#include "pch.hpp"
 
-#include "qlogicae_core/transformer.hpp"
+#include "qlogicae/core/transformer.hpp"
 
 namespace QLogicaeCoreTest
 {

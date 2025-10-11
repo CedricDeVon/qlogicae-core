@@ -1,6 +1,6 @@
-#include "pch.h"
+#include "pch.hpp"
 
-#include "qlogicae_core/cryptographer.hpp"
+#include "qlogicae/core/cryptographer.hpp"
 
 namespace QLogicaeCoreTest
 {

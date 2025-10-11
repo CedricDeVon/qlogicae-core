@@ -1,6 +1,6 @@
-#include "pch.h"
+#include "pch.hpp"
 
-#include "qlogicae_core/interval.hpp"
+#include "qlogicae/core/interval.hpp"
 
 namespace QLogicaeCoreTest
 {

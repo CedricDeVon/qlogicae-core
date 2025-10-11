@@ -1,6 +1,6 @@
-#include "pch.h"
+#include "pch.hpp"
 
-#include "qlogicae_core/event_dispatcher.hpp"
+#include "qlogicae/core/event_dispatcher.hpp"
 
 namespace QLogicaeCoreTest
 {

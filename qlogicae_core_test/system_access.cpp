@@ -1,6 +1,6 @@
-#include "pch.h"
+#include "pch.hpp"
 
-#include "qlogicae_core/system_access.hpp"
+#include "qlogicae/core/system_access.hpp"
 
 namespace QLogicaeCoreTest
 {

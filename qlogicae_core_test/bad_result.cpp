@@ -1,6 +1,6 @@
-#include "pch.h"
+#include "pch.hpp"
 
-#include "qlogicae_core/bad_result.hpp"
+#include "qlogicae/core/bad_result.hpp"
 
 namespace QLogicaeCoreTest
 {

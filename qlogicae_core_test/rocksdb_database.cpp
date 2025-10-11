@@ -1,6 +1,6 @@
-#include "pch.h"
+#include "pch.hpp"
 
-#include "qlogicae_core/rocksdb_database.hpp"
+#include "qlogicae/core/rocksdb_database.hpp"
 
 namespace QLogicaeCoreTest
 {

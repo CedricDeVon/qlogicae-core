@@ -1,6 +1,6 @@
-#include "pch.h"
+#include "pch.hpp"
 
-#include "qlogicae_core/generator.hpp"
+#include "qlogicae/core/generator.hpp"
 
 namespace QLogicaeCoreTest
 {

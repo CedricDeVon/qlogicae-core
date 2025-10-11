@@ -1,6 +1,6 @@
-#include "pch.h"
+#include "pch.hpp"
 
-#include "qlogicae_core/toml_file_io.hpp"
+#include "qlogicae/core/toml_file_io.hpp"
 
 namespace QLogicaeCoreTest
 {

@@ -1,6 +1,6 @@
-#include "pch.h"
+#include "pch.hpp"
 
-#include "qlogicae_core/timeout.hpp"
+#include "qlogicae/core/timeout.hpp"
 
 namespace QLogicaeCoreTest
 {

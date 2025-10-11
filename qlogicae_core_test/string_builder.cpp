@@ -1,6 +1,6 @@
-﻿#include "pch.h"
+﻿#include "pch.hpp"
 
-#include "qlogicae_core/string_builder.hpp"
+#include "qlogicae/core/string_builder.hpp"
 
 namespace QLogicaeCoreTest
 {
