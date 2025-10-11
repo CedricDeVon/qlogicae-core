@@ -1,100 +1,143 @@
 #pragma once
 
 // System
-#include "qlogicae/core/system_access.hpp"
+#include "system_access.hpp"
 
 // Result
-#include "qlogicae/core/abstract_result.hpp"
-#include "qlogicae/core/bad_result.hpp"
-#include "qlogicae/core/good_result.hpp"
+#include "abstract_result.hpp"
+#include "bad_result.hpp"
+#include "good_result.hpp"
 
 // Core Utilities
-#include "qlogicae/core/globals.hpp"
-#include "qlogicae/core/utilities.hpp"
+#include "globals.hpp"
+#include "utf.hpp"
+#include "json.hpp"
+#include "log_level.hpp"
+#include "time_zone.hpp"
+#include "file_mode.hpp"
+#include "json_value.hpp"
+#include "log_medium.hpp"
+#include "time_format.hpp"
+#include "worker_queue.hpp"
+#include "json_visitor.hpp"
+#include "encoding_type.hpp"
+#include "task_priority.hpp"
+#include "rocksdb_config.hpp"
+#include "json_value_type.hpp"
+#include "case_aware_hash.hpp"
+#include "time_scale_unit.hpp"
+#include "case_sensitivity.hpp"
+#include "case_aware_equal.hpp"
+#include "small_task_object.hpp"
+#include "vector_string_hash.hpp"
+#include "json_value_pointer.hpp"
+#include "vector_string_equal.hpp"
+#include "environment_variable.hpp"
+#include "network_ping_response.hpp"
+#include "network_ping_settings.hpp"
+#include "temperature_unit_type.hpp"
+#include "supported_qlogicae_ide.hpp"
+#include "outlier_removal_options.hpp"
+#include "cryptographer_properties.hpp"
+#include "validation_password_rules.hpp"
+#include "windows_registry_root_path.hpp"
+#include "string_memory_pool_snapshot.hpp"
+#include "supported_qlogicae_installer.hpp"
+#include "json_web_token_reverse_input.hpp"
+#include "json_web_token_reverse_result.hpp"
+#include "value_enum_key_delete_handler.hpp"
+#include "groq_cloud_client_api_request.hpp"
+#include "json_web_token_transform_input.hpp"
+#include "groq_cloud_client_api_response.hpp"
+#include "qlogicae_visual_studio_2022_build.hpp"
+#include "groq_cloud_client_api_chat_message.hpp"
+#include "groq_cloud_client_api_prompt_configurations.hpp"
+#include "qlogicae_visual_studio_2022_build_architecture.hpp"
+#include "utilities.hpp"
 
 // Asynchronous
-#include "qlogicae/core/thread_pool.hpp"
-#include "qlogicae/core/event_dispatcher.hpp"
+#include "thread_pool.hpp"
+#include "event_dispatcher.hpp"
 
 // Input / Output
-#include "qlogicae/core/abstract_file_io.hpp"
-#include "qlogicae/core/cli_io.hpp"
-#include "qlogicae/core/file_ios.hpp"
-#include "qlogicae/core/csv_file_io.hpp"
-#include "qlogicae/core/file_uri_io.hpp"
-#include "qlogicae/core/xml_file_io.hpp"
-#include "qlogicae/core/toml_file_io.hpp"
-#include "qlogicae/core/json_file_io.hpp"
-#include "qlogicae/core/text_file_io.hpp"
-#include "qlogicae/core/binary_file_io.hpp"
+#include "abstract_file_io.hpp"
+#include "cli_io.hpp"
+#include "file_ios.hpp"
+#include "csv_file_io.hpp"
+#include "file_uri_io.hpp"
+#include "xml_file_io.hpp"
+#include "toml_file_io.hpp"
+#include "json_file_io.hpp"
+#include "text_file_io.hpp"
+#include "binary_file_io.hpp"
 
 // Logger
-#include "qlogicae/core/logger.hpp"
+#include "logger.hpp"
 
 // Time
-#include "qlogicae/core/time.hpp"
-#include "qlogicae/core/timeout.hpp"
-#include "qlogicae/core/interval.hpp"
+#include "time.hpp"
+#include "timeout.hpp"
+#include "interval.hpp"
 
 // String Memory Pool
-#include "qlogicae/core/string_memory_pool.hpp"
-#include "qlogicae/core/string_memory_pool_diagnostics.hpp"
-#include "qlogicae/core/string_memory_pool_character_pool.hpp"
-#include "qlogicae/core/string_memory_pool_character_pool_block.hpp"
+#include "string_memory_pool.hpp"
+#include "string_memory_pool_diagnostics.hpp"
+#include "string_memory_pool_character_pool.hpp"
+#include "string_memory_pool_character_pool_block.hpp"
 
 // Strings
-#include "qlogicae/core/encoder.hpp"
-#include "qlogicae/core/transformer.hpp"
-#include "qlogicae/core/string_builder.hpp"
-#include "qlogicae/core/regular_expression.hpp"
+#include "encoder.hpp"
+#include "transformer.hpp"
+#include "string_builder.hpp"
+#include "regular_expression.hpp"
 
 // Cryptographers
-#include "qlogicae/core/cryptographer.hpp"
-#include "qlogicae/core/bcrypt_hash_cryptographer.hpp"
-#include "qlogicae/core/sha256_hash_cryptographer.hpp"
-#include "qlogicae/core/jsonwebtoken_cryptographer.hpp"
-#include "qlogicae/core/aes256_cipher_cryptographer.hpp"
-#include "qlogicae/core/argon2id_hash_cryptographer.hpp"
-#include "qlogicae/core/aes256_signature_cryptographer.hpp"
-#include "qlogicae/core/xchacha20_poly1305_cipher_cryptographer.hpp"
+#include "cryptographer.hpp"
+#include "bcrypt_hash_cryptographer.hpp"
+#include "sha256_hash_cryptographer.hpp"
+#include "jsonwebtoken_cryptographer.hpp"
+#include "aes256_cipher_cryptographer.hpp"
+#include "argon2id_hash_cryptographer.hpp"
+#include "aes256_signature_cryptographer.hpp"
+#include "xchacha20_poly1305_cipher_cryptographer.hpp"
 
 // Mathematics
-#include "qlogicae/core/statistician.hpp"
+#include "statistician.hpp"
 
 // Networks
-#include "qlogicae/core/network_ping.hpp"
+#include "network_ping.hpp"
 
 // Environment Variables
-#include "qlogicae/core/dot_env.hpp"
+#include "dot_env.hpp"
 
 // Windows Registry
-#include "qlogicae/core/windows_registry.hpp"
+#include "windows_registry.hpp"
 
 // Miscellaneous
-#include "qlogicae/core/generator.hpp"
-#include "qlogicae/core/validators.hpp"
-#include "qlogicae/core/temperature.hpp"
+#include "generator.hpp"
+#include "validators.hpp"
+#include "temperature.hpp"
 
 // Value Extractors
-#include "qlogicae/core/placeholder_value_extractor.hpp"
-#include "qlogicae/core/dot_env_value_extractor.hpp"
-#include "qlogicae/core/windows_registry_value_extractor.hpp"
+#include "placeholder_value_extractor.hpp"
+#include "dot_env_value_extractor.hpp"
+#include "windows_registry_value_extractor.hpp"
 
 // Sqlite
-#include "qlogicae/core/sqlite.hpp"
-#include "qlogicae/core/sqlite_backend.hpp"
-#include "qlogicae/core/sqlite_exception.hpp"
-#include "qlogicae/core/sqlite_statement_data.hpp"
-#include "qlogicae/core/sqlite_row.hpp"
-#include "qlogicae/core/sqlite_database.hpp"
-#include "qlogicae/core/sqlite_statement.hpp"
-#include "qlogicae/core/sqlite_transaction.hpp"
+#include "sqlite.hpp"
+#include "sqlite_backend.hpp"
+#include "sqlite_exception.hpp"
+#include "sqlite_statement_data.hpp"
+#include "sqlite_row.hpp"
+#include "sqlite_database.hpp"
+#include "sqlite_statement.hpp"
+#include "sqlite_transaction.hpp"
 
 // Gmail
-#include "qlogicae/core/gmail_mailer.hpp"
+#include "gmail_mailer.hpp"
 
 // RocksDB
-#include "qlogicae/core/rocksdb_database.hpp"
+#include "rocksdb_database.hpp"
 
 // QLogicae Application
-#include "qlogicae/core/application.hpp"
+#include "application.hpp"
