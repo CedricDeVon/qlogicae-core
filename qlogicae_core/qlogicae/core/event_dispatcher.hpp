@@ -67,8 +67,7 @@ namespace QLogicaeCore
         std::function<void()> unsubscribe_callback
     )
         : _unsubscribe(std::move(unsubscribe_callback)), _active(true)
-    {
-    
+    {    
     }
 
     template <typename... EventTypes>

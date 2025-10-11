@@ -194,6 +194,7 @@
     <ClInclude Include="qlogicae\core\bad_result.hpp" />
     <ClInclude Include="qlogicae\core\bcrypt_hash_cryptographer.hpp" />
     <ClInclude Include="qlogicae\core\binary_file_io.hpp" />
+    <ClInclude Include="qlogicae\core\event_dispatcher_subscription_handle.hpp" />
     <ClInclude Include="qlogicae\core\groq_cloud_client_api.hpp" />
     <ClInclude Include="qlogicae\core\cli_io.hpp" />
     <ClInclude Include="qlogicae\core\cryptographer.hpp" />
@@ -204,6 +205,13 @@
     <ClInclude Include="qlogicae\core\pch.hpp" />
     <ClInclude Include="qlogicae\core\sha256_hash_cryptographer.hpp" />
     <ClInclude Include="qlogicae\core\sqlite.hpp" />
+    <ClInclude Include="qlogicae\core\sqlite_backend.hpp" />
+    <ClInclude Include="qlogicae\core\sqlite_database.hpp" />
+    <ClInclude Include="qlogicae\core\sqlite_exception.hpp" />
+    <ClInclude Include="qlogicae\core\sqlite_row.hpp" />
+    <ClInclude Include="qlogicae\core\sqlite_statement.hpp" />
+    <ClInclude Include="qlogicae\core\sqlite_statement_data.hpp" />
+    <ClInclude Include="qlogicae\core\sqlite_transaction.hpp" />
     <ClInclude Include="qlogicae\core\statistician.hpp" />
     <ClInclude Include="qlogicae\core\string_builder.hpp" />
     <ClInclude Include="qlogicae\core\temperature.hpp" />
@@ -253,6 +261,7 @@
     <ClCompile Include="qlogicae\core\binary_file_io.cpp" />
     <ClCompile Include="qlogicae\core\cli_io.cpp" />
     <ClCompile Include="qlogicae\core\cryptographer.cpp" />
+    <ClCompile Include="qlogicae\core\event_dispatcher_subscription_handle.cpp" />
     <ClCompile Include="qlogicae\core\file_uri_io.cpp" />
     <ClCompile Include="qlogicae\core\gmail_mailer.cpp" />
     <ClCompile Include="qlogicae\core\groq_cloud_client_api.cpp" />
@@ -260,6 +269,13 @@
     <ClCompile Include="qlogicae\core\application.cpp" />
     <ClCompile Include="qlogicae\core\sha256_hash_cryptographer.cpp" />
     <ClCompile Include="qlogicae\core\sqlite.cpp" />
+    <ClCompile Include="qlogicae\core\sqlite_backend.cpp" />
+    <ClCompile Include="qlogicae\core\sqlite_database.cpp" />
+    <ClCompile Include="qlogicae\core\sqlite_exception.cpp" />
+    <ClCompile Include="qlogicae\core\sqlite_row.cpp" />
+    <ClCompile Include="qlogicae\core\sqlite_statement.cpp" />
+    <ClCompile Include="qlogicae\core\sqlite_statement_data.cpp" />
+    <ClCompile Include="qlogicae\core\sqlite_transaction.cpp" />
     <ClCompile Include="qlogicae\core\statistician.cpp" />
     <ClCompile Include="qlogicae\core\string_builder.cpp">
       <UseUnicodeForAssemblerListing Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</UseUnicodeForAssemblerListing>
