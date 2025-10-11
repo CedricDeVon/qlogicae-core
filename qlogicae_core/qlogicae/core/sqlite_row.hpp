@@ -2,6 +2,8 @@
 
 #include "sqlite_exception.hpp"
 
+#include <sqlite3.h>
+
 namespace QLogicaeCore
 {
 	class SQLiteRow;

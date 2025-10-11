@@ -214,6 +214,9 @@
     <ClInclude Include="qlogicae\core\sqlite_transaction.hpp" />
     <ClInclude Include="qlogicae\core\statistician.hpp" />
     <ClInclude Include="qlogicae\core\string_builder.hpp" />
+    <ClInclude Include="qlogicae\core\string_memory_pool_character_pool.hpp" />
+    <ClInclude Include="qlogicae\core\string_memory_pool_character_pool_block.hpp" />
+    <ClInclude Include="qlogicae\core\string_memory_pool_diagnostics.hpp" />
     <ClInclude Include="qlogicae\core\temperature.hpp" />
     <ClInclude Include="qlogicae\core\thread_pool.hpp" />
     <ClInclude Include="qlogicae\core\utilities.hpp" />
@@ -281,6 +284,9 @@
       <UseUnicodeForAssemblerListing Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</UseUnicodeForAssemblerListing>
       <UseUnicodeForAssemblerListing Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</UseUnicodeForAssemblerListing>
     </ClCompile>
+    <ClCompile Include="qlogicae\core\string_memory_pool_character_pool.cpp" />
+    <ClCompile Include="qlogicae\core\string_memory_pool_character_pool_block.cpp" />
+    <ClCompile Include="qlogicae\core\string_memory_pool_diagnostics.cpp" />
     <ClCompile Include="qlogicae\core\temperature.cpp" />
     <ClCompile Include="qlogicae\core\thread_pool.cpp" />
     <ClCompile Include="qlogicae\core\utilities.cpp" />

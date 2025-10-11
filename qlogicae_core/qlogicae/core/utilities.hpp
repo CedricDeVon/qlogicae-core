@@ -8,6 +8,7 @@
 #include <map>
 #include <mutex>
 #include <queue>
+#include <future>
 #include <chrono>
 #include <vector>
 #include <variant>

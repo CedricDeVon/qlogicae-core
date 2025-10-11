@@ -1,5 +1,7 @@
 #pragma once
 
+#include <sqlite3.h>
+
 namespace QLogicaeCore
 {
     struct SQLiteBackend

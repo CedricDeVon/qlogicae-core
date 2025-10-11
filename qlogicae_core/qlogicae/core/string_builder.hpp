@@ -2,8 +2,10 @@
 
 #include "thread_pool.hpp"
 
+#include <array> 
 #include <string>
 #include <vector>
+#include <cstddef>
 #include <string_view>
 #include <memory_resource>
 

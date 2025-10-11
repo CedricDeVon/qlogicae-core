@@ -1,9 +1,14 @@
 #pragma once
 
+#include <map>             
+#include <mutex>
 #include <memory>
 #include <vector>
+#include <future> 
+#include <utility>         
 #include <typeindex>
-#include <functional>
+#include <functional>      
+#include <shared_mutex>    
 #include <unordered_map>
 
 namespace QLogicaeCore
