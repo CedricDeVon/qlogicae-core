@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "encoder.hpp"
+#include "qlogicae_core/encoder.hpp"
 
 namespace QLogicaeCoreTest
 {

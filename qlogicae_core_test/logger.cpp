@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "logger.hpp"
+#include "qlogicae_core/logger.hpp"
 
 namespace QLogicaeCoreTest
 {

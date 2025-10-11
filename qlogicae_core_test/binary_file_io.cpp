@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "binary_file_io.hpp"
+#include "qlogicae_core/binary_file_io.hpp"
 
 namespace QLogicaeCoreTest
 {

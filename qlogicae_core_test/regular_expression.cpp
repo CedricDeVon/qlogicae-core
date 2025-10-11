@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "regular_expression.hpp"
+#include "qlogicae_core/regular_expression.hpp"
 
 namespace QLogicaeCoreTest
 {

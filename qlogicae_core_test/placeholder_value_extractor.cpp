@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "placeholder_value_extractor.hpp"
+#include "qlogicae_core/placeholder_value_extractor.hpp"
 
 namespace QLogicaeCoreTest
 {

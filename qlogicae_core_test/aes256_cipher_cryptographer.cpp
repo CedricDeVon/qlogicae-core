@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "aes256_cipher_cryptographer.hpp"
+#include "qlogicae_core/aes256_cipher_cryptographer.hpp"
 
 namespace QLogicaeCoreTest
 {

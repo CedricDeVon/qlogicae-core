@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "jsonwebtoken_cryptographer.hpp"
+#include "qlogicae_core/jsonwebtoken_cryptographer.hpp"
 
 namespace QLogicaeCoreTest
 {

@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "json_file_io.hpp"
+#include "qlogicae_core/json_file_io.hpp"
 
 namespace QLogicaeCoreTest
 {

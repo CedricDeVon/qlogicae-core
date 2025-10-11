@@ -157,7 +157,7 @@
       <PreprocessorDefinitions>NOMINMAX;WIN32_LEAN_AND_MEAN;HASH_LEN=32;PCRE2_CODE_UNIT_WIDTH=8;SALT_LEN=crypto_pwhash_SALTBYTES;_WIN32_WINNT=0x0A00;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>pch.hpp</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <AdditionalOptions>/utf-8 /favor:INTEL64 %(AdditionalOptions)</AdditionalOptions>
@@ -187,123 +187,124 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="qlogicae_core\abstract_file_io.hpp" />
-    <ClInclude Include="qlogicae_core\abstract_result.hpp" />
-    <ClInclude Include="qlogicae_core\abstract_value_extractor.hpp" />
-    <ClInclude Include="qlogicae_core\bad_result.hpp" />
-    <ClInclude Include="qlogicae_core\bcrypt_hash_cryptographer.hpp" />
-    <ClInclude Include="qlogicae_core\binary_file_io.hpp" />
-    <ClInclude Include="qlogicae_core\groq_cloud_client_api.hpp" />
-    <ClInclude Include="qlogicae_core\cli_io.hpp" />
-    <ClInclude Include="qlogicae_core\cryptographer.hpp" />
-    <ClInclude Include="qlogicae_core\file_uri_io.hpp" />
-    <ClInclude Include="qlogicae_core\gmail_mailer.hpp" />
-    <ClInclude Include="qlogicae_core\jsonwebtoken_cryptographer.hpp" />
-    <ClInclude Include="qlogicae_core\application.hpp" />
-    <ClInclude Include="qlogicae_core\sha256_hash_cryptographer.hpp" />
-    <ClInclude Include="qlogicae_core\sqlite.hpp" />
-    <ClInclude Include="qlogicae_core\statistician.hpp" />
-    <ClInclude Include="qlogicae_core\string_builder.hpp" />
-    <ClInclude Include="qlogicae_core\temperature.hpp" />
-    <ClInclude Include="qlogicae_core\thread_pool.hpp" />
-    <ClInclude Include="qlogicae_core\utilities.hpp" />
-    <ClInclude Include="qlogicae_core\xchacha20_poly1305_cipher_cryptographer.hpp" />
-    <ClInclude Include="qlogicae_core\aes256_cipher_cryptographer.hpp" />
-    <ClInclude Include="qlogicae_core\argon2id_hash_cryptographer.hpp" />
-    <ClInclude Include="qlogicae_core\aes256_signature_cryptographer.hpp" />
-    <ClInclude Include="qlogicae_core\csv_file_io.hpp" />
-    <ClInclude Include="qlogicae_core\dot_env.hpp" />
-    <ClInclude Include="qlogicae_core\dot_env_value_extractor.hpp" />
-    <ClInclude Include="qlogicae_core\encoder.hpp" />
-    <ClInclude Include="qlogicae_core\event_dispatcher.hpp" />
-    <ClInclude Include="qlogicae_core\file_ios.hpp" />
-    <ClInclude Include="framework.h" />
-    <ClInclude Include="qlogicae_core\generator.hpp" />
-    <ClInclude Include="qlogicae_core\globals.hpp" />
-    <ClInclude Include="qlogicae_core\good_result.hpp" />
-    <ClInclude Include="qlogicae_core\interval.hpp" />
-    <ClInclude Include="qlogicae_core\json_file_io.hpp" />
-    <ClInclude Include="qlogicae_core\logger.hpp" />
-    <ClInclude Include="qlogicae_core\network_ping.hpp" />
-    <ClInclude Include="pch.h" />
-    <ClInclude Include="qlogicae_core\placeholder_value_extractor.hpp" />
+    <ClInclude Include="qlogicae\core\abstract_file_io.hpp" />
+    <ClInclude Include="qlogicae\core\abstract_result.hpp" />
+    <ClInclude Include="qlogicae\core\abstract_value_extractor.hpp" />
+    <ClInclude Include="qlogicae\core\bad_result.hpp" />
+    <ClInclude Include="qlogicae\core\bcrypt_hash_cryptographer.hpp" />
+    <ClInclude Include="qlogicae\core\binary_file_io.hpp" />
+    <ClInclude Include="qlogicae\core\groq_cloud_client_api.hpp" />
+    <ClInclude Include="qlogicae\core\cli_io.hpp" />
+    <ClInclude Include="qlogicae\core\cryptographer.hpp" />
+    <ClInclude Include="qlogicae\core\file_uri_io.hpp" />
+    <ClInclude Include="qlogicae\core\gmail_mailer.hpp" />
+    <ClInclude Include="qlogicae\core\jsonwebtoken_cryptographer.hpp" />
+    <ClInclude Include="qlogicae\core\application.hpp" />
+    <ClInclude Include="qlogicae\core\pch.hpp" />
+    <ClInclude Include="qlogicae\core\sha256_hash_cryptographer.hpp" />
+    <ClInclude Include="qlogicae\core\sqlite.hpp" />
+    <ClInclude Include="qlogicae\core\statistician.hpp" />
+    <ClInclude Include="qlogicae\core\string_builder.hpp" />
+    <ClInclude Include="qlogicae\core\temperature.hpp" />
+    <ClInclude Include="qlogicae\core\thread_pool.hpp" />
+    <ClInclude Include="qlogicae\core\utilities.hpp" />
+    <ClInclude Include="qlogicae\core\xchacha20_poly1305_cipher_cryptographer.hpp" />
+    <ClInclude Include="qlogicae\core\aes256_cipher_cryptographer.hpp" />
+    <ClInclude Include="qlogicae\core\argon2id_hash_cryptographer.hpp" />
+    <ClInclude Include="qlogicae\core\aes256_signature_cryptographer.hpp" />
+    <ClInclude Include="qlogicae\core\csv_file_io.hpp" />
+    <ClInclude Include="qlogicae\core\dot_env.hpp" />
+    <ClInclude Include="qlogicae\core\dot_env_value_extractor.hpp" />
+    <ClInclude Include="qlogicae\core\encoder.hpp" />
+    <ClInclude Include="qlogicae\core\event_dispatcher.hpp" />
+    <ClInclude Include="qlogicae\core\file_ios.hpp" />
+    <ClInclude Include="framework.hpp" />
+    <ClInclude Include="qlogicae\core\generator.hpp" />
+    <ClInclude Include="qlogicae\core\globals.hpp" />
+    <ClInclude Include="qlogicae\core\good_result.hpp" />
+    <ClInclude Include="qlogicae\core\interval.hpp" />
+    <ClInclude Include="qlogicae\core\json_file_io.hpp" />
+    <ClInclude Include="qlogicae\core\logger.hpp" />
+    <ClInclude Include="qlogicae\core\network_ping.hpp" />
+    <ClInclude Include="pch.hpp" />
+    <ClInclude Include="qlogicae\core\placeholder_value_extractor.hpp" />
     <ClInclude Include="qlogicae_core.hpp" />
-    <ClInclude Include="qlogicae_core\regular_expression.hpp" />
-    <ClInclude Include="qlogicae_core\rocksdb_database.hpp" />
-    <ClInclude Include="qlogicae_core\string_memory_pool.hpp" />
-    <ClInclude Include="qlogicae_core\system_access.hpp" />
-    <ClInclude Include="qlogicae_core\text_file_io.hpp" />
-    <ClInclude Include="qlogicae_core\time.hpp" />
-    <ClInclude Include="qlogicae_core\timeout.hpp" />
-    <ClInclude Include="qlogicae_core\toml_file_io.hpp" />
-    <ClInclude Include="qlogicae_core\transformer.hpp" />
-    <ClInclude Include="qlogicae_core\validators.hpp" />
-    <ClInclude Include="qlogicae_core\windows_registry.hpp" />
-    <ClInclude Include="qlogicae_core\windows_registry_value_extractor.hpp" />
-    <ClInclude Include="qlogicae_core\xml_file_io.hpp" />
+    <ClInclude Include="qlogicae\core\regular_expression.hpp" />
+    <ClInclude Include="qlogicae\core\rocksdb_database.hpp" />
+    <ClInclude Include="qlogicae\core\string_memory_pool.hpp" />
+    <ClInclude Include="qlogicae\core\system_access.hpp" />
+    <ClInclude Include="qlogicae\core\text_file_io.hpp" />
+    <ClInclude Include="qlogicae\core\time.hpp" />
+    <ClInclude Include="qlogicae\core\timeout.hpp" />
+    <ClInclude Include="qlogicae\core\toml_file_io.hpp" />
+    <ClInclude Include="qlogicae\core\transformer.hpp" />
+    <ClInclude Include="qlogicae\core\validators.hpp" />
+    <ClInclude Include="qlogicae\core\windows_registry.hpp" />
+    <ClInclude Include="qlogicae\core\windows_registry_value_extractor.hpp" />
+    <ClInclude Include="qlogicae\core\xml_file_io.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="qlogicae_core\abstract_file_io.cpp" />
-    <ClCompile Include="qlogicae_core\abstract_result.cpp" />
-    <ClCompile Include="qlogicae_core\abstract_value_extractor.cpp" />
-    <ClCompile Include="qlogicae_core\bad_result.cpp" />
-    <ClCompile Include="qlogicae_core\bcrypt_hash_cryptographer.cpp" />
-    <ClCompile Include="qlogicae_core\binary_file_io.cpp" />
-    <ClCompile Include="qlogicae_core\cli_io.cpp" />
-    <ClCompile Include="qlogicae_core\cryptographer.cpp" />
-    <ClCompile Include="qlogicae_core\file_uri_io.cpp" />
-    <ClCompile Include="qlogicae_core\gmail_mailer.cpp" />
-    <ClCompile Include="qlogicae_core\groq_cloud_client_api.cpp" />
-    <ClCompile Include="qlogicae_core\jsonwebtoken_cryptographer.cpp" />
-    <ClCompile Include="qlogicae_core\application.cpp" />
-    <ClCompile Include="qlogicae_core\sha256_hash_cryptographer.cpp" />
-    <ClCompile Include="qlogicae_core\sqlite.cpp" />
-    <ClCompile Include="qlogicae_core\statistician.cpp" />
-    <ClCompile Include="qlogicae_core\string_builder.cpp">
+    <ClCompile Include="qlogicae\core\abstract_file_io.cpp" />
+    <ClCompile Include="qlogicae\core\abstract_result.cpp" />
+    <ClCompile Include="qlogicae\core\abstract_value_extractor.cpp" />
+    <ClCompile Include="qlogicae\core\bad_result.cpp" />
+    <ClCompile Include="qlogicae\core\bcrypt_hash_cryptographer.cpp" />
+    <ClCompile Include="qlogicae\core\binary_file_io.cpp" />
+    <ClCompile Include="qlogicae\core\cli_io.cpp" />
+    <ClCompile Include="qlogicae\core\cryptographer.cpp" />
+    <ClCompile Include="qlogicae\core\file_uri_io.cpp" />
+    <ClCompile Include="qlogicae\core\gmail_mailer.cpp" />
+    <ClCompile Include="qlogicae\core\groq_cloud_client_api.cpp" />
+    <ClCompile Include="qlogicae\core\jsonwebtoken_cryptographer.cpp" />
+    <ClCompile Include="qlogicae\core\application.cpp" />
+    <ClCompile Include="qlogicae\core\sha256_hash_cryptographer.cpp" />
+    <ClCompile Include="qlogicae\core\sqlite.cpp" />
+    <ClCompile Include="qlogicae\core\statistician.cpp" />
+    <ClCompile Include="qlogicae\core\string_builder.cpp">
       <UseUnicodeForAssemblerListing Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</UseUnicodeForAssemblerListing>
       <UseUnicodeForAssemblerListing Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</UseUnicodeForAssemblerListing>
     </ClCompile>
-    <ClCompile Include="qlogicae_core\temperature.cpp" />
-    <ClCompile Include="qlogicae_core\thread_pool.cpp" />
-    <ClCompile Include="qlogicae_core\utilities.cpp" />
-    <ClCompile Include="qlogicae_core\xchacha20_poly1305_cipher_cryptographer.cpp" />
-    <ClCompile Include="qlogicae_core\aes256_cipher_cryptographer.cpp" />
-    <ClCompile Include="qlogicae_core\argon2id_hash_cryptographer.cpp" />
-    <ClCompile Include="qlogicae_core\aes256_signature_cryptographer.cpp" />
-    <ClCompile Include="qlogicae_core\csv_file_io.cpp" />
-    <ClCompile Include="qlogicae_core\dot_env.cpp" />
-    <ClCompile Include="qlogicae_core\dot_env_value_extractor.cpp" />
-    <ClCompile Include="qlogicae_core\encoder.cpp" />
-    <ClCompile Include="qlogicae_core\event_dispatcher.cpp" />
-    <ClCompile Include="qlogicae_core\file_ios.cpp" />
-    <ClCompile Include="qlogicae_core\generator.cpp" />
-    <ClCompile Include="qlogicae_core\globals.cpp" />
-    <ClCompile Include="qlogicae_core\good_result.cpp" />
-    <ClCompile Include="qlogicae_core\interval.cpp" />
-    <ClCompile Include="qlogicae_core\json_file_io.cpp" />
-    <ClCompile Include="qlogicae_core\logger.cpp" />
-    <ClCompile Include="qlogicae_core\network_ping.cpp" />
+    <ClCompile Include="qlogicae\core\temperature.cpp" />
+    <ClCompile Include="qlogicae\core\thread_pool.cpp" />
+    <ClCompile Include="qlogicae\core\utilities.cpp" />
+    <ClCompile Include="qlogicae\core\xchacha20_poly1305_cipher_cryptographer.cpp" />
+    <ClCompile Include="qlogicae\core\aes256_cipher_cryptographer.cpp" />
+    <ClCompile Include="qlogicae\core\argon2id_hash_cryptographer.cpp" />
+    <ClCompile Include="qlogicae\core\aes256_signature_cryptographer.cpp" />
+    <ClCompile Include="qlogicae\core\csv_file_io.cpp" />
+    <ClCompile Include="qlogicae\core\dot_env.cpp" />
+    <ClCompile Include="qlogicae\core\dot_env_value_extractor.cpp" />
+    <ClCompile Include="qlogicae\core\encoder.cpp" />
+    <ClCompile Include="qlogicae\core\event_dispatcher.cpp" />
+    <ClCompile Include="qlogicae\core\file_ios.cpp" />
+    <ClCompile Include="qlogicae\core\generator.cpp" />
+    <ClCompile Include="qlogicae\core\globals.cpp" />
+    <ClCompile Include="qlogicae\core\good_result.cpp" />
+    <ClCompile Include="qlogicae\core\interval.cpp" />
+    <ClCompile Include="qlogicae\core\json_file_io.cpp" />
+    <ClCompile Include="qlogicae\core\logger.cpp" />
+    <ClCompile Include="qlogicae\core\network_ping.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="qlogicae_core\placeholder_value_extractor.cpp" />
+    <ClCompile Include="qlogicae\core\placeholder_value_extractor.cpp" />
     <ClCompile Include="qlogicae_core.cpp" />
-    <ClCompile Include="qlogicae_core\regular_expression.cpp" />
-    <ClCompile Include="qlogicae_core\rocksdb_database.cpp" />
-    <ClCompile Include="qlogicae_core\string_memory_pool.cpp" />
-    <ClCompile Include="qlogicae_core\system_access.cpp" />
-    <ClCompile Include="qlogicae_core\text_file_io.cpp" />
-    <ClCompile Include="qlogicae_core\time.cpp" />
-    <ClCompile Include="qlogicae_core\timeout.cpp" />
-    <ClCompile Include="qlogicae_core\toml_file_io.cpp" />
-    <ClCompile Include="qlogicae_core\transformer.cpp" />
-    <ClCompile Include="qlogicae_core\validators.cpp" />
-    <ClCompile Include="qlogicae_core\windows_registry.cpp" />
-    <ClCompile Include="qlogicae_core\windows_registry_value_extractor.cpp" />
-    <ClCompile Include="qlogicae_core\xml_file_io.cpp" />
+    <ClCompile Include="qlogicae\core\regular_expression.cpp" />
+    <ClCompile Include="qlogicae\core\rocksdb_database.cpp" />
+    <ClCompile Include="qlogicae\core\string_memory_pool.cpp" />
+    <ClCompile Include="qlogicae\core\system_access.cpp" />
+    <ClCompile Include="qlogicae\core\text_file_io.cpp" />
+    <ClCompile Include="qlogicae\core\time.cpp" />
+    <ClCompile Include="qlogicae\core\timeout.cpp" />
+    <ClCompile Include="qlogicae\core\toml_file_io.cpp" />
+    <ClCompile Include="qlogicae\core\transformer.cpp" />
+    <ClCompile Include="qlogicae\core\validators.cpp" />
+    <ClCompile Include="qlogicae\core\windows_registry.cpp" />
+    <ClCompile Include="qlogicae\core\windows_registry_value_extractor.cpp" />
+    <ClCompile Include="qlogicae\core\xml_file_io.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "file_uri_io.hpp"
+#include "qlogicae_core/file_uri_io.hpp"
 
 namespace QLogicaeCoreTest
 {
