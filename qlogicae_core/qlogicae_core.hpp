@@ -13,6 +13,7 @@
 #include "globals.hpp"
 #include "utf.hpp"
 #include "json.hpp"
+#include "byte_size.hpp"
 #include "log_level.hpp"
 #include "time_zone.hpp"
 #include "file_mode.hpp"
@@ -139,6 +140,7 @@
 
 // RocksDB
 #include "rocksdb_database.hpp"
+#include "boost_interprocess_cache.hpp"
 
 // QLogicae Application
 #include "application.hpp"

@@ -4,6 +4,24 @@
 
 #include <nanobench.h>
 
+#include <boost/interprocess/managed_mapped_file.hpp>
+#include <boost/interprocess/allocators/allocator.hpp>
+#include <boost/interprocess/containers/string.hpp>
+#include <boost/interprocess/containers/map.hpp>
+#include <boost/interprocess/sync/scoped_lock.hpp>
+#include <boost/interprocess/containers/string.hpp>
+#include <boost/interprocess/allocators/allocator.hpp>
+#include <boost/interprocess/managed_shared_memory.hpp>
+#include <boost/interprocess/sync/interprocess_mutex.hpp>
+
+#include <nanobench.h>
+#include <rocksdb/db.h>
+#include <rapidjson/document.h>
+#include <rapidjson/writer.h>
+#include <rapidjson/stringbuffer.h>
+#include <string>
+#include <iostream>
+
 #include <any>
 #include <map>
 #include <mutex>

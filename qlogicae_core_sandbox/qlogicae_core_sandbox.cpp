@@ -2,76 +2,182 @@
 
 #include "pch.h"
 
+static std::string make_large_string(std::size_t len)
+{
+    std::string s;
+    s.reserve(len);
+    static const char charset[] =
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    for (std::size_t i = 0; i < len; ++i)
+        s.push_back(charset[i % (sizeof(charset) - 1)]);
+    return s;
+}
 
-#include <boost/interprocess/managed_mapped_file.hpp>
-#include <boost/interprocess/allocators/allocator.hpp>
-#include <boost/interprocess/containers/string.hpp>
+static void benchmark_boost_cache()
+{
+    try
+    {
+        using namespace ankerl::nanobench;
+    
+        QLogicaeCore::BoostInterprocessCache cache("BoostInterprocessCache", QLogicaeCore::BytesSize::MB_4);
+        QLogicaeCore::RocksDBDatabase db;
+        db.setup("rocks_bench_db");
 
-#include <nanobench.h>
-#include <rocksdb/db.h>
-#include <rapidjson/document.h>
-#include <rapidjson/writer.h>
-#include <rapidjson/stringbuffer.h>
-#include <string>
-#include <iostream>
 
-namespace bip = boost::interprocess;
+        std::string key = "test_key";
+        std::string value = make_large_string(1'000'000);
+        const char* key_1 = key.c_str();
+        const char* value_1 = value.c_str();
 
-using namespace QLogicaeCore;
+        QLogicaeCore::Result<void> write_result;
+        QLogicaeCore::Result<const char*> read_result;
+
+        Bench bench;
+        bench.title("BoostInterprocessCache Benchmark")
+            .unit("ops")
+            .minEpochIterations(1'000);
+    
+        bench.run("Boost: Write", [&] {
+            cache.write(key_1, value_1, write_result);
+            });
+
+        bench.run("Boost: Read", [&] {
+            cache.read(key_1, read_result);
+            });
+
+        bench.run("RocksDB: write", [&]
+            {
+                db.begin_batch();
+                db.batch_set_value(key, value);
+                db.batch_execute();
+            });
+
+        bench.run("RocksDB: read", [&]
+            {
+                db.get_value<std::string>(key);
+            });
+
+    }
+    catch (const std::exception& e)
+    {
+        std::cout << e.what() << "\n";
+    }
+
+    // boost::interprocess::shared_memory_object::remove("BoostInterprocessCache");
+    // std::cout << "\n[Benchmark] Boost.Interprocess BoostInterprocessCache write_batch()\n";
+
+    /*
+    
+    */
+
+
+    /*
+
+    cache.write_one(key, value, result);
+    cache.read_one(key, read_result);
+
+    std::cout << read_result.get_is_successful() << " " << read_result.get_data() << "\n";
+
+
+    BoostInterprocessCache cache("BenchCache"); // 64MB shared mem
+    Result<void> result;
+    Result<void> load_result;
+    Result<std::string> read_result;
+
+    const char* key = "key";
+    const char* value = make_large_string(1'000'000).c_str();
+
+    ankerl::nanobench::Bench bench;
+    bench.title("Boost.Interprocess Cache Benchmark");
+    bench.unit("ops");
+    bench.minEpochIterations(1);
+    
+    bench.run("Boost.Interprocess: write", [&]
+    {
+        cache.write_one(key, value, result);
+    });
+
+    bench.run("Boost.Interprocess: read", [&]
+    {
+        cache.read_one(key, read_result);
+    });
+    
+    */
+   
+}
+
+static void benchmark_rocksdb()
+{
+    
+}
 
 int main()
 {
-    using namespace std;
-    using namespace ankerl::nanobench;
+    benchmark_boost_cache();
+    benchmark_rocksdb();
 
-    // Clean up any old mapped file
-    const char* filename = "boost_cache.dat";
-    std::filesystem::remove(filename);
+    bool ea;
 
-    // Create a 256 MB memory-mapped cache file
-    bip::managed_mapped_file mfile(bip::create_only, filename, 256ull * 1024ull * 1024ull);
+    std::cin >> ea;
 
-    // Define allocator and string type inside the mapped region
-    using CharAllocator = bip::allocator<char, bip::managed_mapped_file::segment_manager>;
-    using MappedString = bip::basic_string<char, std::char_traits<char>, CharAllocator>;
+    return 0;
+}
 
-    CharAllocator alloc_inst(mfile.get_segment_manager());
-    MappedString* stored_str = mfile.construct<MappedString>("CacheValue")(alloc_inst);
+/*
+const char* filename = "boost_cache.dat";
+bip::shared_memory_object::remove(filename);
 
-    const std::string key = "sample_key";
-    const std::string value(10, 'X'); // 1 million characters
+bip::managed_mapped_file mfile(bip::create_only, filename, 256ull * 1024ull * 1024ull);
 
-    // --- Benchmark WRITE ---
-    {
-        Bench bench;
-        bench.title("Boost Interprocess (Single Key-Value)");
-        bench.relative(true);
-        bench.minEpochIterations(482434);
+using CharAllocator = bip::allocator<char, bip::managed_mapped_file::segment_manager>;
+using MappedString = bip::basic_string<char, std::char_traits<char>, CharAllocator>;
 
-        bench.run("Boost Write", [&] {
-            stored_str->assign(value.begin(), value.end());
-            });
-    }
+CharAllocator alloc_inst(mfile.get_segment_manager());
+MappedString* stored_str = mfile.construct<MappedString>("CacheValue")(alloc_inst);
 
-    // --- Benchmark READ ---
-    {
-        Bench bench;
-        bench.title("Boost Interprocess (Single Key-Value)");
-        bench.relative(true);
-        bench.minEpochIterations(1);
+const std::string key = "sample_key";
+const std::string value(1'000, 'X');
 
-        std::string read_buffer;
-        read_buffer.reserve(301942);
+{
+    Bench bench;
+    bench.title("Boost Interprocess (Single Key-Value)");
+    bench.relative(true);
+    bench.minEpochIterations(1);
 
-        bench.run("Boost Read", [&] {
-            read_buffer.assign(stored_str->begin(), stored_str->end());
-            });
-    }
+    bench.run("Boost Write", [&] {
+        stored_str->assign(value.begin(), value.end());
+        });
+}
 
+{
+    Bench bench;
+    bench.title("Boost Interprocess (Single Key-Value)");
+    bench.relative(true);
+    bench.minEpochIterations(1);
+
+    std::string read_buffer;
+    read_buffer.reserve(1'000);
+
+    bench.run("Boost Read", [&] {
+        read_buffer.assign(stored_str->begin(), stored_str->end());
+        });
+}
+
+*/
     // Cleanup
-    // bip::shared_memory_object::remove(filename);
+    // 
 
     /*
+    
+
+int main()
+{
+   
+
+    
+    follow these requirements:
+
+    
     using namespace QLogicaeCore;
     using namespace ankerl::nanobench;
 
@@ -215,14 +321,6 @@ int main()
         }
     );
     */
-
-
-    bool ea;
-
-    std::cin >> ea;
-
-    return 0;
-}
 
 
 /*
@@ -456,4 +554,81 @@ QLogicaeCore::AbstractResult<double> test_c_a(double a, double b)
     }
 }
 
+*/
+
+
+/*
+
+ class BoostInterprocessCache
+    {
+    public:
+        using segment_t = boost::interprocess::managed_shared_memory;
+        using manager_t = segment_t::segment_manager;
+        using char_allocator_t = boost::interprocess::allocator<char, manager_t>;
+        using string_t = boost::interprocess::basic_string<char, std::char_traits<char>, char_allocator_t>;
+        using value_allocator_t = boost::interprocess::allocator<std::pair<const string_t, string_t>, manager_t>;
+        using map_t = boost::interprocess::map<string_t, string_t, std::less<string_t>, value_allocator_t>;
+
+    private:
+        struct BoostInterprocessCacheSharedData
+        {
+            boost::interprocess::interprocess_mutex mutex;
+            map_t map;
+
+            BoostInterprocessCacheSharedData(const value_allocator_t& alloc)
+                : map(std::less<string_t>(), alloc)
+            {
+            }
+        };
+
+        segment_t _segment;
+        BoostInterprocessCacheSharedData* _data = nullptr;
+
+    public:
+        explicit BoostInterprocessCache(const char* name = "BoostInterprocessCache", const std::size_t& size = 65536)
+            : _segment(boost::interprocess::open_or_create, name, size)
+        {
+            boost::interprocess::shared_memory_object::remove(name);
+
+            _data = _segment.find_or_construct<BoostInterprocessCacheSharedData>("BoostInterprocessCacheSharedData")(
+                value_allocator_t(_segment.get_segment_manager()));
+        }
+
+        void write(const char* key, const char* value, Result<void>& result)
+        {
+            boost::interprocess::scoped_lock lock(_data->mutex);
+
+            string_t shm_key(key, _segment.get_segment_manager());
+            string_t shm_value(value, _segment.get_segment_manager());
+
+            auto& map = _data->map;
+            auto it = map.find(shm_key);
+            if (it != map.end())
+            {
+                it->second = shm_value;
+            }
+            else
+            {
+                map.emplace(std::move(shm_key), std::move(shm_value));
+            }
+
+            result.set_to_success();
+        }
+
+        void read(const char* key, Result<const char*>& result)
+        {
+            boost::interprocess::scoped_lock lock(_data->mutex);
+
+            auto it = _data->map.find(string_t(key, _segment.get_segment_manager()));
+
+            if (it != _data->map.end())
+            {
+                result.set_to_success(it->second.c_str());
+            }
+            else
+            {
+                result.set_to_failure("Key not found");
+            }
+        }
+    };
 */

@@ -117,4 +117,20 @@ namespace QLogicaeCore
         set_is_successful_to_false();
         set_data(value);
     }
+
+    template <>
+    struct Result<void>
+    {
+    public:
+        bool get_is_successful() const { return _is_successful; }
+
+        void set_is_successful_to_true() { _is_successful = true; }
+        void set_is_successful_to_false() { _is_successful = false; }
+
+        void set_to_success() { _is_successful = true; }
+        void set_to_failure() { _is_successful = false; }
+
+    private:
+        bool _is_successful = true;
+    };
 }
