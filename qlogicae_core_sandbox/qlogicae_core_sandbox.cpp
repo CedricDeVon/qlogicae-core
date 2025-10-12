@@ -2,10 +2,124 @@
 
 #include "pch.h"
 
+
+#include <boost/interprocess/managed_mapped_file.hpp>
+#include <boost/interprocess/allocators/allocator.hpp>
+#include <boost/interprocess/containers/string.hpp>
+
+#include <nanobench.h>
+#include <rocksdb/db.h>
+#include <rapidjson/document.h>
+#include <rapidjson/writer.h>
+#include <rapidjson/stringbuffer.h>
+#include <string>
+#include <iostream>
+
+namespace bip = boost::interprocess;
+
 using namespace QLogicaeCore;
 
 int main()
 {
+    using namespace std;
+    using namespace ankerl::nanobench;
+
+    // Clean up any old mapped file
+    const char* filename = "boost_cache.dat";
+    std::filesystem::remove(filename);
+
+    // Create a 256 MB memory-mapped cache file
+    bip::managed_mapped_file mfile(bip::create_only, filename, 256ull * 1024ull * 1024ull);
+
+    // Define allocator and string type inside the mapped region
+    using CharAllocator = bip::allocator<char, bip::managed_mapped_file::segment_manager>;
+    using MappedString = bip::basic_string<char, std::char_traits<char>, CharAllocator>;
+
+    CharAllocator alloc_inst(mfile.get_segment_manager());
+    MappedString* stored_str = mfile.construct<MappedString>("CacheValue")(alloc_inst);
+
+    const std::string key = "sample_key";
+    const std::string value(10, 'X'); // 1 million characters
+
+    // --- Benchmark WRITE ---
+    {
+        Bench bench;
+        bench.title("Boost Interprocess (Single Key-Value)");
+        bench.relative(true);
+        bench.minEpochIterations(482434);
+
+        bench.run("Boost Write", [&] {
+            stored_str->assign(value.begin(), value.end());
+            });
+    }
+
+    // --- Benchmark READ ---
+    {
+        Bench bench;
+        bench.title("Boost Interprocess (Single Key-Value)");
+        bench.relative(true);
+        bench.minEpochIterations(1);
+
+        std::string read_buffer;
+        read_buffer.reserve(301942);
+
+        bench.run("Boost Read", [&] {
+            read_buffer.assign(stored_str->begin(), stored_str->end());
+            });
+    }
+
+    // Cleanup
+    // bip::shared_memory_object::remove(filename);
+
+    /*
+    using namespace QLogicaeCore;
+    using namespace ankerl::nanobench;
+
+    const std::string key = "sample_key";
+    const std::string value(1'000'000, 'X');
+
+    std::string json_str;
+    std::string parsed_value;
+
+    Bench().title("RapidJSON (Single Key-Value)")
+        .minEpochIterations(325631)
+        .run("RapidJSON Write", [&] {
+        rapidjson::Document doc;
+        doc.SetObject();
+        auto& alloc = doc.GetAllocator();
+        doc.AddMember(
+            rapidjson::Value(key.c_str(), alloc),
+            rapidjson::Value(value.c_str(), alloc),
+            alloc
+        );
+        rapidjson::StringBuffer buffer;
+        rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+        doc.Accept(writer);
+        json_str = buffer.GetString();
+            })
+        .run("RapidJSON Read", [&] {
+        rapidjson::Document doc;
+        doc.Parse(json_str.c_str());
+        parsed_value = doc[key.c_str()].GetString();
+            });
+
+    RocksDBDatabase db;
+    db.setup("rocks_bench_single", RocksDBConfig{});
+
+    Bench().title("RocksDB (Single Key-Value)")
+        .minEpochIterations(1090)
+        .run("RocksDB Write (sync)", [&] {
+        db.begin_batch();
+        db.batch_set_value<std::string>(key, value);
+        db.batch_execute();
+        })
+        .run("RocksDB Read (sync)", [&] {
+        auto result = db.get_value<std::string>(key);
+            });
+ 
+    */
+
+    /*
     ankerl::nanobench::Bench bench;
     bench.title("Addition Test Performance")
         .unit("op")
@@ -45,8 +159,6 @@ int main()
             res.set_to_failure(101);
         }
     );
-
-    /*
 
     bench.run("QLogicaeCore::Result.set_data() 1", [&]
         {

@@ -13,6 +13,7 @@ namespace QLogicaeCore
         _file_path(""),
         _config({})
     {
+        setup_db();
     }
 
     RocksDBDatabase::RocksDBDatabase(
@@ -20,6 +21,7 @@ namespace QLogicaeCore
         const RocksDBConfig& config)
             : _file_path(path), _config(config)
     {
+        setup_db();
         open_db();
     }
 
@@ -37,22 +39,16 @@ namespace QLogicaeCore
         _file_path = path;
         _config = config;
 
+        setup_db();
         open_db();
     }
 
     bool RocksDBDatabase::is_path_found(
         const std::string_view& path) const
     {
-        try
-        {
-            std::shared_lock lock(_mutex);
+        std::shared_lock lock(_mutex);
 
-            return std::filesystem::exists(path);
-        }
-        catch (...)
-        {
-            return false;
-        }
+        return std::filesystem::exists(path);
     }
 
     bool RocksDBDatabase::is_key_found(
@@ -76,7 +72,7 @@ namespace QLogicaeCore
         std::unique_lock lock(_mutex);
 
         auto string = _object->Delete(
-            rocksdb::WriteOptions(), key.data());
+            _write_options, key.data());
 
         return string.ok();
     }
@@ -86,7 +82,7 @@ namespace QLogicaeCore
         std::unique_lock lock(_mutex);
 
         auto string = _object->Write(
-            rocksdb::WriteOptions(), &_write_batch);
+            _write_options, &_write_batch);
         _write_batch.Clear();
 
         return string.ok();
@@ -107,9 +103,9 @@ namespace QLogicaeCore
     std::future<bool> RocksDBDatabase::batch_execute_async()
     {
         return std::async(std::launch::async, [this]()
-        {
-            return batch_execute();
-        });
+            {
+                return batch_execute();
+            });
     }
 
     bool RocksDBDatabase::create_column_family(
@@ -264,7 +260,7 @@ namespace QLogicaeCore
             return false;
         }
         _transaction = _transaction_db->BeginTransaction(
-            rocksdb::WriteOptions());
+            _write_options);
 
         return _transaction != nullptr;
     }
@@ -299,6 +295,72 @@ namespace QLogicaeCore
         return string.ok();
     }
 
+    void RocksDBDatabase::setup_db()
+    {
+        _options.create_if_missing = true;
+        _options.compression = rocksdb::kNoCompression;
+        _options.max_open_files = -1;
+        _options.use_fsync = false;
+        _options.IncreaseParallelism(std::thread::hardware_concurrency());
+        _options.OptimizeLevelStyleCompaction();
+        _options.bytes_per_sync = 1 << 20;
+        _options.level0_file_num_compaction_trigger = 10;
+        _options.level0_slowdown_writes_trigger = 20;
+        _options.level0_stop_writes_trigger = 40;
+        _options.write_buffer_size = 128 * 1024 * 1024;
+        _options.target_file_size_base = 64 * 1024 * 1024;
+        _options.max_bytes_for_level_base = 512 * 1024 * 1024;
+        _options.max_write_buffer_number = 6;
+        _options.min_write_buffer_number_to_merge = 2;
+        _options.compaction_style = rocksdb::kCompactionStyleLevel;
+        _options.use_direct_reads = true;
+        _options.use_direct_io_for_flush_and_compaction = true;
+        _options.max_background_flushes = 1;
+        _options.env->SetBackgroundThreads(4);
+        
+        _write_options.sync = false;
+        _write_options.disableWAL = true;
+
+        _table_options.no_block_cache = true;
+        _table_options.block_restart_interval = 4;
+        _table_options.block_size = 4 * 1024;
+        _table_options.filter_policy.reset(
+            rocksdb::NewBloomFilterPolicy(10));
+
+        _options.table_factory.reset(
+            rocksdb::NewBlockBasedTableFactory(_table_options));
+    }
+
+    /*
+        // _table_options.index_type = rocksdb::BlockBasedTableOptions::kHashSearch;
+     _options.create_if_missing = true;
+     _options.allow_mmap_reads = true;
+        _options.allow_mmap_writes = false;
+        _options.compression = rocksdb::kLZ4Compression;
+        _options.use_fsync = false;
+        _options.IncreaseParallelism(std::thread::hardware_concurrency());
+        _options.compaction_style = rocksdb::kCompactionStyleLevel;
+        _options.OptimizeLevelStyleCompaction();
+        _options.bytes_per_sync = 1 << 20;
+        _options.bytes_per_sync = 1 << 20;
+        _options.write_buffer_size = 64 * 1024 * 1024;
+        _options.max_write_buffer_number = 6;
+        _options.min_write_buffer_number_to_merge = 2;
+        _options.max_background_compactions = 1;
+        _options.compaction_style = rocksdb::kCompactionStyleLevel;
+        _options.use_direct_reads = true;
+        _options.use_direct_io_for_flush_and_compaction = true;
+
+        _write_options.sync = false;
+        _write_options.disableWAL = true;
+
+        _table_options.filter_policy.reset(
+            rocksdb::NewBloomFilterPolicy(10, true));
+
+        _options.table_factory.reset(
+            rocksdb::NewBlockBasedTableFactory(_table_options));
+    */
+
     void RocksDBDatabase::open_db()
     {
         if (!std::filesystem::exists(_file_path))
@@ -306,27 +368,13 @@ namespace QLogicaeCore
             std::filesystem::create_directories(_file_path);
         }
 
-        _options.create_if_missing = true;
-        _options.max_background_jobs =
-            static_cast<int>(_config.max_background_jobs);
-        _options.write_buffer_size =
-            static_cast<size_t>(_config.write_buffer_size);
+        _status = rocksdb::TransactionDB::Open(
+            _options, _txn_db_options, _file_path, &_transaction_db);
 
-        rocksdb::BlockBasedTableOptions table_options;
-        table_options.filter_policy.reset(
-            rocksdb::NewBloomFilterPolicy(10));
-
-        _options.table_factory.reset(
-            rocksdb::NewBlockBasedTableFactory(table_options));
-
-        rocksdb::TransactionDBOptions txn_db_options;
-        rocksdb::Status status = rocksdb::TransactionDB::Open(
-            _options, txn_db_options, _file_path, &_transaction_db);
-
-        if (!status.ok())
+        if (!_status.ok())
         {
             throw std::runtime_error(
-                "Exception at RocksDBDatabase::open_db(): Failed to open RocksDB: " + status.ToString());
+                "Exception at RocksDBDatabase::open_db(): Failed to open RocksDB: " + _status.ToString());
         }
 
         _object = _transaction_db;

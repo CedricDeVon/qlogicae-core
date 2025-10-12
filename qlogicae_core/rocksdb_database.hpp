@@ -109,6 +109,10 @@ namespace QLogicaeCore
         rocksdb::DB* _object{};
         std::string _file_path;
         rocksdb::Options _options;
+        rocksdb::WriteOptions _write_options;
+        rocksdb::BlockBasedTableOptions _table_options;
+        rocksdb::TransactionDBOptions _txn_db_options;
+        rocksdb::Status _status;
         mutable std::shared_mutex _mutex;
         rocksdb::WriteBatch _write_batch;
         std::vector<std::string> _cf_names;
@@ -122,6 +126,8 @@ namespace QLogicaeCore
         void open_db();
         
         void close_db();
+        
+        void setup_db();
 
         rocksdb::ColumnFamilyHandle* get_cf_handle(const std::string& name) const;
 
