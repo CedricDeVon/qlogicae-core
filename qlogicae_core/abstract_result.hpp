@@ -1,7 +1,7 @@
 #pragma once
 
 namespace QLogicaeCore
-{
+{    
     template <typename ValueType,
         typename MetaDataType = std::string>
     class AbstractResult

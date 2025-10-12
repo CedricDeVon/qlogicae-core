@@ -468,6 +468,9 @@
     <ClInclude Include="worker_queue.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="result.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="qlogicae_core.cpp">
@@ -660,6 +663,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="string_memory_pool_diagnostics.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="result.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

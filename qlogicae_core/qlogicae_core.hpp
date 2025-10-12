@@ -3,7 +3,8 @@
 // System
 #include "system_access.hpp"
 
-// Result
+// Results
+#include "result.hpp"
 #include "abstract_result.hpp"
 #include "bad_result.hpp"
 #include "good_result.hpp"
