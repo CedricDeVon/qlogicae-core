@@ -1,5 +1,6 @@
 #pragma once
 
+#include "result.hpp"
 #include "utilities.hpp"
 #include "encoder.hpp"
 
@@ -15,6 +16,13 @@ namespace QLogicaeCore
         );
 
         static Temperature& get_instance();
+
+        void convert(Result<double>& result,
+            const double& value,
+            const TemperatureUnitType& from_unit,
+            const TemperatureUnitType& to_unit);
+
+        static void get_instance(Result<Temperature*>& result);
 
     protected:
         Temperature() = default;
@@ -33,5 +41,3 @@ namespace QLogicaeCore
     inline static Temperature& TEMPERATURE =
         Temperature::get_instance();
 }
-
-

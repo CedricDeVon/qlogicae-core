@@ -734,17 +734,17 @@ namespace QLogicaeCore
     {
         switch (format)
         {
-        case TimeScaleUnit::NANOSECONDS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_NANOSECONDS); break;
-        case TimeScaleUnit::MICROSECONDS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_MICROSECONDS); break;
-        case TimeScaleUnit::MILLISECONDS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_MILLISECONDS); break;
-        case TimeScaleUnit::SECONDS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_SECONDS); break;
-        case TimeScaleUnit::MINUTES: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_MINUTES); break;
-        case TimeScaleUnit::HOURS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_HOURS); break;
-        case TimeScaleUnit::DAYS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_DAYS); break;
-        case TimeScaleUnit::WEEKS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_WEEKS); break;
-        case TimeScaleUnit::MONTHS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_MONTHS); break;
-        case TimeScaleUnit::YEARS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_YEARS); break;
-        default: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_SECONDS); break;
+            case TimeScaleUnit::NANOSECONDS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_NANOSECONDS); break;
+            case TimeScaleUnit::MICROSECONDS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_MICROSECONDS); break;
+            case TimeScaleUnit::MILLISECONDS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_MILLISECONDS); break;
+            case TimeScaleUnit::SECONDS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_SECONDS); break;
+            case TimeScaleUnit::MINUTES: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_MINUTES); break;
+            case TimeScaleUnit::HOURS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_HOURS); break;
+            case TimeScaleUnit::DAYS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_DAYS); break;
+            case TimeScaleUnit::WEEKS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_WEEKS); break;
+            case TimeScaleUnit::MONTHS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_MONTHS); break;
+            case TimeScaleUnit::YEARS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_YEARS); break;
+            default: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_SECONDS); break;
         }
     }
 
@@ -753,17 +753,17 @@ namespace QLogicaeCore
     {
         switch (format)
         {
-        case TimeScaleUnit::NANOSECONDS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_NANOSECONDS); break;
-        case TimeScaleUnit::MICROSECONDS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_MICROSECONDS); break;
-        case TimeScaleUnit::MILLISECONDS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_MILLISECONDS); break;
-        case TimeScaleUnit::SECONDS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_SECONDS); break;
-        case TimeScaleUnit::MINUTES: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_MINUTES); break;
-        case TimeScaleUnit::HOURS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_HOURS); break;
-        case TimeScaleUnit::DAYS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_DAYS); break;
-        case TimeScaleUnit::WEEKS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_WEEKS); break;
-        case TimeScaleUnit::MONTHS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_MONTHS); break;
-        case TimeScaleUnit::YEARS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_YEARS); break;
-        default: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_SECONDS); break;
+            case TimeScaleUnit::NANOSECONDS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_NANOSECONDS); break;
+            case TimeScaleUnit::MICROSECONDS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_MICROSECONDS); break;
+            case TimeScaleUnit::MILLISECONDS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_MILLISECONDS); break;
+            case TimeScaleUnit::SECONDS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_SECONDS); break;
+            case TimeScaleUnit::MINUTES: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_MINUTES); break;
+            case TimeScaleUnit::HOURS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_HOURS); break;
+            case TimeScaleUnit::DAYS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_DAYS); break;
+            case TimeScaleUnit::WEEKS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_WEEKS); break;
+            case TimeScaleUnit::MONTHS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_MONTHS); break;
+            case TimeScaleUnit::YEARS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_YEARS); break;
+            default: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_SECONDS); break;
         }
     }
 
@@ -782,17 +782,17 @@ namespace QLogicaeCore
     {
         switch (format)
         {
-        case TimeScaleUnit::NANOSECONDS: result.set_to_success(time / UTILITIES.SECONDS_OVER_NANOSECONDS); break;
-        case TimeScaleUnit::MICROSECONDS: result.set_to_success(time / UTILITIES.SECONDS_OVER_MICROSECONDS); break;
-        case TimeScaleUnit::MILLISECONDS: result.set_to_success(time / UTILITIES.SECONDS_OVER_MILLISECONDS); break;
-        case TimeScaleUnit::SECONDS: result.set_to_success(time); break;
-        case TimeScaleUnit::MINUTES: result.set_to_success(time * UTILITIES.SECONDS_PER_MINUTE); break;
-        case TimeScaleUnit::HOURS: result.set_to_success(time * UTILITIES.SECONDS_PER_HOUR); break;
-        case TimeScaleUnit::DAYS: result.set_to_success(time * UTILITIES.SECONDS_PER_DAY); break;
-        case TimeScaleUnit::WEEKS: result.set_to_success(time * UTILITIES.SECONDS_PER_WEEK); break;
-        case TimeScaleUnit::MONTHS: result.set_to_success(time * UTILITIES.SECONDS_PER_MONTH); break;
-        case TimeScaleUnit::YEARS: result.set_to_success(time * UTILITIES.SECONDS_PER_YEAR); break;
-        default: result.set_to_success(time); break;
+            case TimeScaleUnit::NANOSECONDS: result.set_to_success(time / UTILITIES.SECONDS_OVER_NANOSECONDS); break;
+            case TimeScaleUnit::MICROSECONDS: result.set_to_success(time / UTILITIES.SECONDS_OVER_MICROSECONDS); break;
+            case TimeScaleUnit::MILLISECONDS: result.set_to_success(time / UTILITIES.SECONDS_OVER_MILLISECONDS); break;
+            case TimeScaleUnit::SECONDS: result.set_to_success(time); break;
+            case TimeScaleUnit::MINUTES: result.set_to_success(time * UTILITIES.SECONDS_PER_MINUTE); break;
+            case TimeScaleUnit::HOURS: result.set_to_success(time * UTILITIES.SECONDS_PER_HOUR); break;
+            case TimeScaleUnit::DAYS: result.set_to_success(time * UTILITIES.SECONDS_PER_DAY); break;
+            case TimeScaleUnit::WEEKS: result.set_to_success(time * UTILITIES.SECONDS_PER_WEEK); break;
+            case TimeScaleUnit::MONTHS: result.set_to_success(time * UTILITIES.SECONDS_PER_MONTH); break;
+            case TimeScaleUnit::YEARS: result.set_to_success(time * UTILITIES.SECONDS_PER_YEAR); break;
+            default: result.set_to_success(time); break;
         }
     }
 
@@ -802,17 +802,17 @@ namespace QLogicaeCore
     {
         switch (format)
         {
-        case TimeScaleUnit::NANOSECONDS: result.set_to_success(time); break;
-        case TimeScaleUnit::MICROSECONDS: result.set_to_success(time / UTILITIES.SECONDS_OVER_MILLISECONDS); break;
-        case TimeScaleUnit::MILLISECONDS: result.set_to_success(time / UTILITIES.SECONDS_OVER_MICROSECONDS); break;
-        case TimeScaleUnit::SECONDS: result.set_to_success(time / UTILITIES.SECONDS_OVER_NANOSECONDS); break;
-        case TimeScaleUnit::MINUTES: result.set_to_success(time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_MINUTE)); break;
-        case TimeScaleUnit::HOURS: result.set_to_success(time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_HOUR)); break;
-        case TimeScaleUnit::DAYS: result.set_to_success(time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_DAY)); break;
-        case TimeScaleUnit::WEEKS: result.set_to_success(time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_WEEK)); break;
-        case TimeScaleUnit::MONTHS: result.set_to_success(time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_MONTH)); break;
-        case TimeScaleUnit::YEARS: result.set_to_success(time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_YEAR)); break;
-        default: result.set_to_success(time); break;
+            case TimeScaleUnit::NANOSECONDS: result.set_to_success(time); break;
+            case TimeScaleUnit::MICROSECONDS: result.set_to_success(time / UTILITIES.SECONDS_OVER_MILLISECONDS); break;
+            case TimeScaleUnit::MILLISECONDS: result.set_to_success(time / UTILITIES.SECONDS_OVER_MICROSECONDS); break;
+            case TimeScaleUnit::SECONDS: result.set_to_success(time / UTILITIES.SECONDS_OVER_NANOSECONDS); break;
+            case TimeScaleUnit::MINUTES: result.set_to_success(time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_MINUTE)); break;
+            case TimeScaleUnit::HOURS: result.set_to_success(time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_HOUR)); break;
+            case TimeScaleUnit::DAYS: result.set_to_success(time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_DAY)); break;
+            case TimeScaleUnit::WEEKS: result.set_to_success(time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_WEEK)); break;
+            case TimeScaleUnit::MONTHS: result.set_to_success(time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_MONTH)); break;
+            case TimeScaleUnit::YEARS: result.set_to_success(time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_YEAR)); break;
+            default: result.set_to_success(time); break;
         }
     }
 

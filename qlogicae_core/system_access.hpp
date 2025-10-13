@@ -1,5 +1,6 @@
 #pragma once
 
+#include "result.hpp"
 #include "encoder.hpp"
 
 namespace QLogicaeCore
@@ -25,6 +26,24 @@ namespace QLogicaeCore
 
         static SystemAccess& get_instance();
 
+        void has_admin_access(Result<void>& result) const;
+
+        void get_executable_dir(Result<std::string>& result) const;
+
+        void get_executable_folder(Result<std::string>& result) const;
+
+        void get_executed_folder(Result<std::string>& result) const;
+
+        void restart_with_admin_access(Result<void>& result) const;
+
+        void get_programdata_folder_path(Result<std::string>& result) const;
+
+        void get_local_appdata_folder_path(Result<std::string>& result) const;
+
+        void get_roaming_appdata_folder_path(Result<std::string>& result) const;
+
+        static void get_instance(Result<SystemAccess*>& results);
+
     protected:
         SystemAccess() = default;
         
@@ -42,5 +61,3 @@ namespace QLogicaeCore
     inline static SystemAccess& SYSTEM_ACCESS =
         SystemAccess::get_instance();
 }
-
-

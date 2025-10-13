@@ -1,5 +1,7 @@
 #pragma once
 
+#include "result.hpp"
+
 namespace QLogicaeCore
 {
     class Timeout
@@ -9,9 +11,11 @@ namespace QLogicaeCore
         
         Timeout() = default;
         
-        Timeout(std::function<void()>,
+        Timeout(
+            std::function<void()>,
             std::chrono::milliseconds,
-            bool = false);
+            bool = false
+        );
         
         Timeout(const Timeout&) = delete;
         
@@ -27,15 +31,26 @@ namespace QLogicaeCore
         
         bool is_cancelled() const;
 
+        void cancel(Result<void>& result);
+
+        void restart(Result<void>& result);
+
+        void is_cancelled(Result<bool>& result) const;
+
     protected:
         std::jthread _thread;
+        
         std::function<void()> _function;
+        
         std::chrono::milliseconds _delay;
+        
         std::atomic<bool> _stop_flag{ false };
+        
         std::atomic<bool> _is_cancelled{ false };
+
         std::atomic<bool> _execute_immediately{ false };
         
-        void start_thread();
+        void _start_thread();
     };
 }
 

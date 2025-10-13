@@ -6,33 +6,33 @@ namespace QLogicaeCore
 {
     ThreadPool::ThreadPool(std::size_t thread_count,
         std::size_t max_queue_size)
-        : max_queue_capacity(max_queue_size)
+        : _max_queue_capacity(max_queue_size)
     {
         thread_count = std::max<std::size_t>(1, thread_count);
-        worker_queues.reserve(thread_count);
-        worker_threads.reserve(thread_count);
+        _worker_queues.reserve(thread_count);
+        _worker_threads.reserve(thread_count);
 
         for (std::size_t i = 0; i < thread_count; ++i)
         {
-            worker_queues.emplace_back(std::make_unique<WorkerQueue>());
-            worker_threads.emplace_back([this, i]()
+            _worker_queues.emplace_back(std::make_unique<WorkerQueue>());
+            _worker_threads.emplace_back([this, i]()
                 {
-                    worker_loop(i);
+                    _worker_loop(i);
                 });
         }
     }
 
     ThreadPool::~ThreadPool()
     {
-        should_stop = true;
+        _should_stop = true;
 
-        for (std::unique_ptr<WorkerQueue>& queue : worker_queues)
+        for (std::unique_ptr<WorkerQueue>& queue : _worker_queues)
         {
             std::lock_guard<std::mutex> lock(queue->queue_mutex);
             queue->wake_signal.notify_all();
         }
 
-        for (std::thread& thread : worker_threads)
+        for (std::thread& thread : _worker_threads)
         {
             if (thread.joinable())
             {
@@ -53,14 +53,14 @@ namespace QLogicaeCore
         return current_thread_index;
     }
 
-    bool ThreadPool::try_enqueue_to_worker(const std::size_t& worker_index,
+    bool ThreadPool::_try_enqueue_to_worker(const std::size_t& worker_index,
         SmallTaskObject&& task,
         const TaskPriority& priority
     )
     {
         try
         {
-            std::unique_ptr<WorkerQueue>& queue = worker_queues[worker_index];
+            std::unique_ptr<WorkerQueue>& queue = _worker_queues[worker_index];
             std::lock_guard<std::mutex> lock(queue->queue_mutex);
 
             std::size_t queue_size = 0;
@@ -69,13 +69,13 @@ namespace QLogicaeCore
                 queue_size += priority_queue.size();
             }
 
-            if (queue_size >= max_queue_capacity)
+            if (queue_size >= _max_queue_capacity)
             {
                 return false;
             }
 
             queue->priority_queues[priority].push(std::move(task));
-            ++total_enqueued_tasks;
+            ++_total_enqueued_tasks;
             queue->wake_signal.notify_one();
             
             return true;
@@ -87,17 +87,17 @@ namespace QLogicaeCore
 
     }
 
-    void ThreadPool::worker_loop(const std::size_t& thread_index)
+    void ThreadPool::_worker_loop(const std::size_t& thread_index)
     {
         try
         {
             current_thread_index = thread_index;
 
             std::unique_ptr<WorkerQueue>& local_queue =
-                worker_queues[thread_index];
-            const std::size_t total_workers = worker_queues.size();
+                _worker_queues[thread_index];
+            const std::size_t total_workers = _worker_queues.size();
 
-            while (!should_stop)
+            while (!_should_stop)
             {
                 SmallTaskObject task_object;
                 bool task_found = false;
@@ -114,10 +114,10 @@ namespace QLogicaeCore
                                     return true;
                                 }
                             }
-                            return should_stop.load();
+                            return _should_stop.load();
                         });
 
-                    if (should_stop)
+                    if (_should_stop)
                     {
                         return;
                     }
@@ -148,7 +148,7 @@ namespace QLogicaeCore
                         }
 
                         std::unique_ptr<WorkerQueue>& neighbor_queue =
-                            worker_queues[i];
+                            _worker_queues[i];
                         std::lock_guard<std::mutex> neighbor_lock(
                             neighbor_queue->queue_mutex);
 
@@ -182,7 +182,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at ThreadPool::worker_loop(): " + exception.what());
+            throw std::runtime_error(std::string() + "Exception at ThreadPool::_worker_loop(): " + exception.what());
         }
     }
 
@@ -192,7 +192,7 @@ namespace QLogicaeCore
         {
             std::size_t total = 0;
 
-            for (const std::unique_ptr<WorkerQueue>& queue : worker_queues)
+            for (const std::unique_ptr<WorkerQueue>& queue : _worker_queues)
             {
                 std::lock_guard<std::mutex> lock(queue->queue_mutex);
                 for (const auto& [_, q] : queue->priority_queues)
@@ -213,11 +213,44 @@ namespace QLogicaeCore
     {
         try
         {
-            return worker_queues.size();
+            return _worker_queues.size();
         }
         catch (const std::exception& exception)
         {
             throw std::runtime_error(std::string() + "Exception at ThreadPool::worker_count(): " + exception.what());
         }
+    }
+
+    void ThreadPool::worker_count(Result<std::size_t>& result) const
+    {
+        result.set_to_success(_worker_queues.size());
+    }
+
+    void ThreadPool::total_pending_tasks(Result<std::size_t>& result) const
+    {
+        std::size_t total = 0;
+
+        for (const std::unique_ptr<WorkerQueue>& queue : _worker_queues)
+        {
+            std::lock_guard<std::mutex> lock(queue->queue_mutex);
+            for (const auto& [_, q] : queue->priority_queues)
+            {
+                total += q.size();
+            }
+        }
+
+        result.set_to_success(total);
+    }
+
+    void ThreadPool::get_instance(Result<ThreadPool*>& result)
+    {
+        static ThreadPool global_thread_pool(
+            std::thread::hardware_concurrency(), 4096);
+        result.set_to_success(&global_thread_pool);
+    }
+
+    void ThreadPool::current_worker_index(Result<std::size_t>& result)
+    {
+        result.set_to_success(current_thread_index);
     }
 }

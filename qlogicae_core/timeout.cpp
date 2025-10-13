@@ -11,7 +11,7 @@ namespace QLogicaeCore
         _delay(delay),
         _execute_immediately(execute_immediately)
     {
-        start_thread();
+        _start_thread();
     }
 
     Timeout::~Timeout()
@@ -19,7 +19,7 @@ namespace QLogicaeCore
         cancel();
     }
 
-    void Timeout::start_thread()
+    void Timeout::_start_thread()
     {
         _thread = std::jthread([this](std::stop_token stop_token)
         {
@@ -81,7 +81,7 @@ namespace QLogicaeCore
             _stop_flag.store(false);
             _is_cancelled.store(false);
 
-            start_thread();
+            _start_thread();
         }
         catch (const std::exception& exception)
         {
@@ -99,5 +99,42 @@ namespace QLogicaeCore
         {
             throw std::runtime_error(std::string() + "Exception at Timeout::is_cancelled(): " + exception.what());
         }
+    }
+
+    void Timeout::cancel(
+        Result<void>& result)
+    {
+        if (_thread.joinable())
+        {
+            _stop_flag.store(true);
+            _thread.request_stop();
+            _thread.join();
+        }
+
+        _stop_flag.store(true);
+        _is_cancelled.store(true);
+
+        result.set_to_success();
+    }
+
+    void Timeout::restart(
+        Result<void>& result)
+    {
+        cancel();
+
+        _stop_flag.store(false);
+        _is_cancelled.store(false);
+
+        _start_thread();
+
+        result.set_to_success();
+    }
+
+    void Timeout::is_cancelled(
+        Result<bool>& result) const
+    {
+        result.set_to_success(
+            _is_cancelled.load()
+        );
     }
 }
