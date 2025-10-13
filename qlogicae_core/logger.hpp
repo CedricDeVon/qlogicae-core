@@ -1,5 +1,6 @@
 #pragma once
 
+#include "result.hpp"
 #include "utilities.hpp"
 #include "cli_io.hpp"
 #include "log_medium.hpp"
@@ -50,11 +51,48 @@ namespace QLogicaeCore
 			const LogLevel& log_level = LogLevel::INFO,
 			const bool is_simplified = false) const;
 
+		void get_medium(
+			Result<LogMedium>& result
+		) const;
+
+		void get_name(
+			Result<std::string>& result
+		) const;
+
+		void get_is_simplified(
+			Result<void>& result
+		) const;
+
+		void set_is_simplified(
+			Result<void>& result,
+			const bool& value
+		);
+
+		void get_output_paths(
+			Result<std::vector<std::string>>& result
+		) const;
+
+		void log(
+			Result<void>& result,
+			const std::string& message,
+			const LogLevel& log_level = LogLevel::INFO,
+			const bool is_simplified = false) const;
+
+		void log_async(
+			Result<std::future<void>>& result,
+			const std::string& message,
+			const LogLevel& log_level = LogLevel::INFO,
+			const bool is_simplified = false) const;
+
 	protected:
 		LogMedium _medium;
+		
 		std::string _name;
+		
 		bool _is_simplified;
+		
 		mutable std::shared_mutex _mutex;
+
 		std::vector<std::string> _output_paths;
 	};
 }

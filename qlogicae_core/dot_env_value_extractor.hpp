@@ -1,5 +1,6 @@
 #pragma once
 
+#include "result.hpp"
 #include "encoder.hpp"
 #include "dot_env.hpp"
 #include "abstract_value_extractor.hpp"
@@ -36,7 +37,12 @@ namespace QLogicaeCore
 
         std::optional<std::string> get_value() const;
 
+        void get_key(Result<std::optional<std::wstring>>& result) const;
+
+        void get_value(Result<std::optional<std::string>>& result) const;
+
     protected:
         const std::wstring _key;
     };
 }
+

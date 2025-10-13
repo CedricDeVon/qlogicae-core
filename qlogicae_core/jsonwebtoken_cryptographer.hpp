@@ -64,6 +64,26 @@ namespace QLogicaeCore
             JsonWebTokenReverseInput options
         ) const;
         
+        void transform(
+            Result<std::string>& result,
+            JsonWebTokenTransformInput options
+        ) const;
+
+        void reverse(
+            Result<JsonWebTokenReverseResult>& result,
+            JsonWebTokenReverseInput options
+        ) const;
+
+        void transform_async(
+            Result<std::future<std::string>>& result,
+            JsonWebTokenTransformInput options
+        ) const;
+
+        void reverse_async(
+            Result<std::future<JsonWebTokenReverseResult>>& result,
+            JsonWebTokenReverseInput options
+        ) const;
+
     protected:
         const jwt::algorithm::es256k& _get_es256k_signer(
             const std::string& public_key,
@@ -75,3 +95,4 @@ namespace QLogicaeCore
         ) const;
     };
 }
+

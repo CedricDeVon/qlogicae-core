@@ -1,5 +1,6 @@
 #pragma once
 
+#include "result.hpp"
 #include "encoder.hpp"
 #include "generator.hpp"
 #include "cryptographer.hpp"
@@ -51,5 +52,28 @@ namespace QLogicaeCore
             const std::string& cipher,
             const std::string& key
         ) const;
+
+        void transform(
+            Result<std::string> result,
+            const std::string& text
+        ) const;
+
+        void reverse(
+            Result<void> result,
+            const std::string& cipher,
+            const std::string& key
+        ) const;
+
+        void transform_async(
+            Result<std::future<std::string>> result,
+            const std::string& text
+        ) const;
+
+        void reverse_async(
+            Result<std::future<void>> result,
+            const std::string& cipher,
+            const std::string& key
+        ) const;
     };
+
 }

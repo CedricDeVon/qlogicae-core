@@ -62,9 +62,13 @@ namespace QLogicaeCore
         > _data;
 
         Allocator _allocator;
+        
         CaseSensitivity _sensitivity;
+        
         CharacterPool _character_pool;
+        
         mutable std::shared_mutex _mutex;
+
         StringMemoryPoolDiagnostics _diagnostics;
     };
 }

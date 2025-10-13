@@ -90,4 +90,99 @@ namespace QLogicaeCore
 			return reverse(va, vb);			
 		});
 	}
+
+	void Argon2idHashCryptographer::transform(
+		Result<std::string>& result,
+		const std::string& text) const
+	{
+		std::scoped_lock lock(_mutex);
+
+		std::array<char, 512> buffer{};
+		int status = argon2id_hash_encoded(
+			_cryptographer_properties.uint32_t_1,
+			_cryptographer_properties.uint32_t_2,
+			_cryptographer_properties.uint32_t_3,
+			text.data(),
+			text.size(),
+			GENERATOR.random_salt().data(),
+			_cryptographer_properties.size_t_2,
+			_cryptographer_properties.size_t_1,
+			buffer.data(),
+			buffer.size()
+		);
+
+		if (status != ARGON2_OK)
+		{
+			result.set_to_failure();
+			return;
+		}
+
+		result.set_to_success(
+			buffer.data()
+		);
+	}
+
+	void Argon2idHashCryptographer::reverse(
+		Result<bool>& result,
+		const std::string_view& hash,
+		const std::string_view& key) const
+	{
+		std::scoped_lock lock(_mutex);
+
+		bool verified = argon2id_verify(
+			hash.data(),
+			key.data(),
+			key.size()
+		) == ARGON2_OK;
+
+		result.set_to_success(verified);
+	}
+
+	void Argon2idHashCryptographer::transform_async(
+		Result<std::future<std::string>>& result,
+		const std::string& text) const
+	{
+		result.set_to_success(std::async(std::launch::async, [this, text]() -> std::string
+			{
+				std::scoped_lock lock(_mutex);
+
+				std::array<char, 512> buffer{};
+				int status = argon2id_hash_encoded(
+					_cryptographer_properties.uint32_t_1,
+					_cryptographer_properties.uint32_t_2,
+					_cryptographer_properties.uint32_t_3,
+					text.data(),
+					text.size(),
+					GENERATOR.random_salt().data(),
+					_cryptographer_properties.size_t_2,
+					_cryptographer_properties.size_t_1,
+					buffer.data(),
+					buffer.size()
+				);
+
+				if (status != ARGON2_OK)
+				{
+					return "";
+				}
+
+				return buffer.data();
+			})
+		);
+	}
+
+	void Argon2idHashCryptographer::reverse_async(
+		Result<std::future<bool>>& result,
+		const std::string_view& hash,
+		const std::string_view& key) const
+	{
+		result.set_to_success(std::async(std::launch::async, [this, hash, key]() -> bool
+			{
+				std::scoped_lock lock(_mutex);
+				return argon2id_verify(
+					hash.data(),
+					key.data(),
+					key.size()
+				) == ARGON2_OK;
+			}));
+	}
 }

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "result.hpp"
+
 #define PCRE2_CODE_UNIT_WIDTH 8
 #include <pcre2.h>
 
@@ -52,6 +54,53 @@ namespace QLogicaeCore
 
 		static RegularExpression& get_instance();
 
+		void clear_all_patterns(
+			Result<void>& result
+		);
+
+		void remove_pattern(
+			Result<void>& result,
+			const std::string& name
+		);
+
+		void has_pattern(Result<void>& result,
+			const std::string& name
+		) const;
+
+		void get_patterrn(
+			Result<std::string>& result,
+			const std::string& value
+		) const;
+
+		void add_pattern(Result<void>& result,
+			const std::string& name,
+			const std::string& pattern
+		);
+
+		void match_named(Result<void>& result,
+			const std::string& name,
+			const std::string& pattern
+		);
+
+		void match_direct(Result<void>& result,
+			const std::string& name,
+			const std::string& pattern
+		);
+
+		void match_named_async(
+			Result<std::future<void>>& result,
+			const std::string& name,
+			const std::string& pattern
+		);
+
+		void match_direct_async(
+			Result<std::future<void>>& result,
+			const std::string& name,
+			const std::string& pattern
+		);
+
+		void get_instance(Result<RegularExpression*>& result);
+
 	protected:
 		~RegularExpression();
 		
@@ -66,6 +115,7 @@ namespace QLogicaeCore
 		RegularExpression& operator = (RegularExpression&&) noexcept = default;
 
 		mutable std::shared_mutex _mutex;
+
 		std::unordered_map<std::string, std::pair<std::string, pcre2_code*>>
 			_compiled_patterns;
 

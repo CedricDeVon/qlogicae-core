@@ -159,4 +159,137 @@ namespace QLogicaeCore
                 return this->reverse(options);
             });
     }
+
+    void JsonWebTokenCryptographer::transform(
+        Result<std::string>& result,
+        JsonWebTokenTransformInput options
+    ) const
+    {
+        if (options.issuer.empty() ||
+            options.data.empty())
+        {
+            result.set_to_failure("");
+            return;
+        }
+
+        if (options.public_key.empty() ||
+            options.private_key.empty())
+        {
+            result.set_to_failure("");
+            return;
+        }
+
+        if (options.lifetime < std::chrono::seconds{ 1 } ||
+            options.lifetime > std::chrono::hours{ 24 * 30 })
+        {
+            result.set_to_failure("");
+            return;
+        }
+
+        auto now = std::chrono::system_clock::now();
+
+        auto builder = jwt::create()
+            .set_type("JWT")
+            .set_issuer(options.issuer)
+            .set_subject(options.data)
+            .set_issued_at(now);
+
+        if (options.lifetime.count() > 0)
+            builder.set_expires_at(now + options.lifetime);
+
+        for (const auto& [k, v] : options.claims)
+            builder.set_payload_claim(k, jwt::claim(v));
+
+        result.set_to_success(builder.sign(_get_es256k_signer(
+            options.public_key, options.private_key))
+        );
+    }
+
+    void JsonWebTokenCryptographer::reverse(
+        Result<JsonWebTokenReverseResult>& result,
+        JsonWebTokenReverseInput options
+    ) const
+    {
+        JsonWebTokenReverseResult& json_result = result.get_data();
+        if (options.token.empty())
+        {
+            json_result.message = "Exception at JsonWebTokenCryptographer::reverse(): Token input is empty";
+            result.set_is_successful_to_false();
+            return;
+        }
+
+        if (options.issuer.empty())
+        {
+            json_result.message = "Exception at JsonWebTokenCryptographer::reverse(): Expected issuer is empty";
+            result.set_is_successful_to_false();
+            return;
+        }
+
+        if (options.public_key.empty())
+        {
+            json_result.message = "Exception at JsonWebTokenCryptographer::reverse(): Public key is empty";
+            result.set_is_successful_to_false();
+            return;
+        }
+
+        auto decoded = jwt::decode(options.token);
+
+        if (decoded.get_issuer() != options.issuer)
+        {
+            json_result.message = "Exception at JsonWebTokenCryptographer::reverse(): Invalid issuer";
+            result.set_is_successful_to_false();
+            return;
+        }
+
+        jwt::verify()
+            .allow_algorithm(_get_es256k_verifier(options.public_key))
+            .with_issuer(options.issuer)
+            .leeway(30)
+            .verify(decoded);
+
+        json_result.is_successful = true;
+        json_result.subject = decoded.get_subject();
+
+        for (const auto& [k, v] : decoded.get_header_json())
+        {
+            json_result.headers[k] = v.serialize();
+        }
+
+        for (const auto& [k, v] : decoded.get_payload_json())
+        {
+            json_result.payloads[k] = v.serialize();
+        }
+
+        result.set_is_successful_to_true();
+    }
+
+    void JsonWebTokenCryptographer::transform_async(
+        Result<std::future<std::string>>& result,
+        JsonWebTokenTransformInput options
+    ) const
+    {
+        result.set_to_success(std::async(std::launch::async, [this, options]()
+            {
+                Result<std::string> result;
+                transform(result, options);
+
+                return result.get_data();
+            })
+        );
+    }
+
+    void JsonWebTokenCryptographer::reverse_async(
+        Result<std::future<JsonWebTokenReverseResult>>& result,
+        JsonWebTokenReverseInput options
+    ) const
+    {
+        result.set_to_success(std::async(std::launch::async, [this, options]()
+            {
+                Result<JsonWebTokenReverseResult> result;
+                reverse(result, options);
+
+                return result.get_data();
+            })
+        );
+    }
 }

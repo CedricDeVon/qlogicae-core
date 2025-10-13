@@ -47,6 +47,28 @@ namespace QLogicaeCore
         
         bool continue_listening();
 
+        void get_is_listening(Result<bool>& result) const;
+
+        void set_is_listening(Result<void>& result, const bool&);
+
+        void get_name(Result<std::string_view>& result) const;
+
+        void set_name(Result<void>& result, const std::string_view& value);
+
+        void get_host_address(Result<std::string_view>& result) const;
+
+        void set_host_address(Result<void>& result, const std::string_view& value);
+
+        void get_milliseconds_per_callback(Result<std::chrono::milliseconds>& result) const;
+
+        void set_milliseconds_per_callback(Result<void>& result, 
+            const std::chrono::milliseconds& value
+        );
+
+        void pause_listening(Result<void>& result);
+
+        void continue_listening(Result<void>& result);
+
     protected:
         Interval _interval;
         NetworkPingSettings _settings;

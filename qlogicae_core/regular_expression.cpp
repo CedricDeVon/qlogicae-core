@@ -212,5 +212,176 @@ namespace QLogicaeCore
             throw std::runtime_error(std::string() + "Exception at RegularExpression::_do_match(): " + exception.what());
         }
     }
+
+    void RegularExpression::clear_all_patterns(
+        Result<void>& result
+    )
+    {
+        std::unique_lock lock(_mutex);
+
+        for (auto& [_, pair] : _compiled_patterns)
+        {
+            pcre2_code_free(pair.second);
+        }
+
+        _compiled_patterns.clear();
+    }
+
+    void RegularExpression::remove_pattern(
+        Result<void>& result,
+        const std::string& name
+    )
+    {
+
+    }
+
+    void RegularExpression::has_pattern(
+        Result<void>& result,
+        const std::string& name
+    ) const
+    {
+        std::shared_lock lock(_mutex);
+
+        result.set_is_successful(
+            _compiled_patterns.find(name) != _compiled_patterns.end()
+        );
+    }
+
+    void RegularExpression::get_patterrn(
+        Result<std::string>& result,
+        const std::string& value
+    ) const
+    {
+        std::shared_lock lock(_mutex);
+
+        auto pair = _compiled_patterns.find(value);
+        result.set_to_success(
+            (pair != _compiled_patterns.end()) ?
+                pair->second.first : ""
+        );
+    }
+
+    void RegularExpression::add_pattern(
+        Result<void>& result,
+        const std::string& name,
+        const std::string& pattern
+    )
+    {
+        int error_number;
+        PCRE2_SIZE error_offset;
+
+        pcre2_code* regular_expression = pcre2_compile(
+            (PCRE2_SPTR)pattern.c_str(),
+            PCRE2_ZERO_TERMINATED,
+            0,
+            &error_number,
+            &error_offset,
+            nullptr
+        );
+
+        if (!regular_expression)
+        {
+            result.set_to_failure();
+            return;
+        }
+
+        std::unique_lock lock(_mutex);
+
+        if (_compiled_patterns.contains(name))
+        {
+            pcre2_code_free(_compiled_patterns[name].second);
+        }
+
+        _compiled_patterns[name] = { pattern, regular_expression };
+        result.set_to_success();
+    }
+
+    void RegularExpression::match_named(
+        Result<void>& result,
+        const std::string& subject,
+        const std::string& pattern_name
+    )
+    {
+        std::shared_lock lock(_mutex);
+
+        auto content = _compiled_patterns.find(pattern_name);
+        if (content == _compiled_patterns.end())
+        {
+            result.set_to_failure();
+            return;
+        }
+
+        result.set_is_successful(
+            _do_match(subject, content->second.second)
+        );
+    }
+
+    void RegularExpression::match_direct(
+        Result<void>& result,
+        const std::string& subject,
+        const std::string& pattern)
+    {
+        int error_number;
+        PCRE2_SIZE error_offset;
+
+        pcre2_code* regular_expression = pcre2_compile(
+            (PCRE2_SPTR)pattern.c_str(),
+            PCRE2_ZERO_TERMINATED,
+            0,
+            &error_number,
+            &error_offset,
+            nullptr
+        );
+
+        if (!regular_expression)
+        {
+            result.set_to_failure();
+            return;
+        }
+
+        result.set_is_successful(
+            _do_match(subject, regular_expression)
+        );
+        pcre2_code_free(regular_expression);
+    }
+
+    void RegularExpression::match_named_async(
+        Result<std::future<void>>& result,
+        const std::string& name,
+        const std::string& pattern
+    )
+    {
+        result.set_to_success(std::async(std::launch::async,
+            [this, name, pattern]() -> void
+            {
+                Result<void> result;
+
+                match_named(result, name, pattern);                
+            }
+        ));
+    }
+
+    void RegularExpression::match_direct_async(
+        Result<std::future<void>>& result,
+        const std::string& name,
+        const std::string& pattern
+    )
+    {
+        result.set_to_success(std::async(std::launch::async,
+            [this, name, pattern]() -> void
+            {
+                Result<void> result;
+
+                match_direct(result, name, pattern);
+            }
+        ));
+    }
+
+    void RegularExpression::get_instance(Result<RegularExpression*>& result)
+    {
+        static RegularExpression instance;
+
+        result.set_to_success(&instance);
+    }
 }
 

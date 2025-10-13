@@ -156,4 +156,175 @@ namespace QLogicaeCore
             return transform(va, vb, vc);            
         });
     }
+
+    void XChaCha20Poly1305CipherCryptographer::reverse(
+        Result<std::string>& result,
+        const std::string_view& cipher,
+        const unsigned char* key,
+        const unsigned char* nonce
+    ) const
+    {
+        std::scoped_lock lock(_mutex);
+
+        if (!key || !nonce ||
+            cipher.size() < crypto_aead_xchacha20poly1305_ietf_ABYTES)
+        {
+            result.set_to_failure("");
+        }
+
+        unsigned long long ve = 0;
+        std::vector<unsigned char> vd =
+            ENCODER.from_base64_to_bytes(cipher);
+        size_t vf = vd.size();
+        std::vector<unsigned char> decrypted(
+            vf - crypto_aead_xchacha20poly1305_ietf_ABYTES
+        );
+
+        if (crypto_aead_xchacha20poly1305_ietf_decrypt(
+            decrypted.data(), &ve,
+            nullptr,
+            vd.data(), vf,
+            nullptr, 0, nonce, key) != 0)
+        {
+            result.set_to_failure("");
+        }
+
+        result.set_to_success(std::string(
+            reinterpret_cast<char*>(decrypted.data()), ve
+        ));
+        
+    }
+
+    void XChaCha20Poly1305CipherCryptographer::transform(
+        Result<std::string>& result,
+        const std::string_view& text,
+        const unsigned char* key,
+        const unsigned char* nonce
+    ) const
+    {
+        std::scoped_lock lock(_mutex);
+
+        if (!key || !nonce)
+        {
+            result.set_to_failure("");
+        }
+
+        unsigned long long ve = 0, vg = text.size();
+        std::vector<unsigned char> vd(
+            vg + crypto_aead_xchacha20poly1305_ietf_ABYTES
+        );
+        unsigned char* vf = vd.data();
+
+        if (crypto_aead_xchacha20poly1305_ietf_encrypt(
+            vf, &ve,
+            reinterpret_cast<const unsigned char*>(text.data()), vg,
+            nullptr, 0, nullptr, nonce, key) != 0)
+        {
+            result.set_to_failure("");
+        }
+
+        result.set_to_success(ENCODER
+            .from_bytes_to_base64(vf, ve)
+        );
+    }
+
+    void XChaCha20Poly1305CipherCryptographer::reverse(
+        Result<std::string>& result,
+        const std::string_view& cipher,
+        const std::string_view& key,
+        const std::string_view& nonce
+    ) const
+    {
+        result.set_to_success(reverse(cipher,
+            reinterpret_cast<const unsigned char*>(key.data()),
+            reinterpret_cast<const unsigned char*>(nonce.data())
+        ));
+    }
+
+    void XChaCha20Poly1305CipherCryptographer::transform(
+        Result<std::string>& result,
+        const std::string_view& text,
+        const std::string_view& key,
+        const std::string_view& nonce
+    ) const
+    {
+        result.set_to_success(transform(text,
+            reinterpret_cast<const unsigned char*>(key.data()),
+            reinterpret_cast<const unsigned char*>(nonce.data())
+        ));
+    }
+
+    void XChaCha20Poly1305CipherCryptographer::reverse_async(
+        Result<std::future<std::string>>& result,
+        const std::string_view& cipher,
+        const unsigned char* key,
+        const unsigned char* nonce
+    ) const
+    {
+        result.set_to_success(
+            std::async(std::launch::async,
+                [this, cipher, key, nonce]() -> std::string
+                {
+                    Result<std::string> result;
+                    reverse(result, cipher, key, nonce);
+
+                    return result.get_data();
+                })
+        );
+    }
+
+    void XChaCha20Poly1305CipherCryptographer::transform_async(
+        Result<std::future<std::string>>& result,
+        const std::string_view& text,
+        const unsigned char* key,
+        const unsigned char* nonce
+    ) const
+    {
+        result.set_to_success(
+            std::async(std::launch::async,
+                [this, text, key, nonce]() -> std::string
+                {
+                    Result<std::string> result;
+                    transform(result, text, key, nonce);
+
+                    return result.get_data();
+                })
+        );
+    }
+
+    void XChaCha20Poly1305CipherCryptographer::reverse_async(
+        Result<std::future<std::string>>& result,
+        const std::string_view& cipher,
+        const std::string_view& key,
+        const std::string_view& nonce
+    ) const
+    {
+        result.set_to_success(
+            std::async(std::launch::async, [this, cipher, key, nonce]() -> std::string
+                {
+                    Result<std::string> result;
+                    reverse(result, cipher, key, nonce);
+
+                    return result.get_data();
+                })
+        );
+    }
+
+    void XChaCha20Poly1305CipherCryptographer::transform_async(
+        Result<std::future<std::string>>& result,
+        const std::string_view& text,
+        const std::string_view& key,
+        const std::string_view& nonce
+    ) const
+    {
+        result.set_to_success(
+            std::async(std::launch::async, [this, text, key, nonce]() -> std::string
+            {
+                    Result<std::string> result;
+                    transform(result, text, key, nonce);
+
+                    return result.get_data();
+            })
+        );
+    }
 }

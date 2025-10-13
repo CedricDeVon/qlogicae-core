@@ -61,7 +61,8 @@ namespace QLogicaeCore
 	void Logger::log(
 		const std::string& message,
 		const LogLevel& log_level,
-		const bool is_simplified) const
+		const bool is_simplified
+	) const
 	{
 		try
 		{
@@ -71,7 +72,8 @@ namespace QLogicaeCore
 				(is_simplified) ?
 				message :
 				TRANSFORMER
-					.to_log_format(message, log_level));
+					.to_log_format(message, log_level)
+			);
 		}
 		catch (const std::exception& exception)
 		{
@@ -82,7 +84,8 @@ namespace QLogicaeCore
 	std::future<void> Logger::log_async(
 		const std::string& message,
 		const LogLevel& log_level,
-		const bool is_simplified) const
+		const bool is_simplified
+	) const
 	{
 		return std::async(std::launch::async,
 			[this, message, log_level, is_simplified]()
@@ -97,5 +100,77 @@ namespace QLogicaeCore
 			}
 		});
 	}
-}
 
+	void Logger::get_medium(
+		Result<LogMedium>& result
+	) const
+	{
+		result.set_to_success(_medium);
+	}
+
+	void Logger::get_name(
+		Result<std::string>& result
+	) const
+	{
+		result.set_to_success(_name);
+	}
+
+	void Logger::get_is_simplified(
+		Result<void>& result
+	) const
+	{
+		result.set_is_successful(_is_simplified);
+	}
+
+	void Logger::set_is_simplified(
+		Result<void>& result,
+		const bool& value
+	)
+	{
+		_is_simplified = value;
+
+		result.set_to_success();
+	}
+
+	void Logger::get_output_paths(
+		Result<std::vector<std::string>>& result
+	) const
+	{
+		result.set_to_success(_output_paths);
+	}
+
+	void Logger::log(
+		Result<void>& result,
+		const std::string& message,
+		const LogLevel& log_level,
+		const bool is_simplified) const
+	{
+		std::scoped_lock lock(_mutex);
+
+		CLI_IO.print(
+			(is_simplified) ?
+			message :
+			TRANSFORMER
+			.to_log_format(message, log_level)
+		);
+
+		result.set_to_success();
+	}
+
+	void Logger::log_async(
+		Result<std::future<void>>& result,
+		const std::string& message,
+		const LogLevel& log_level,
+		const bool is_simplified) const
+	{
+		result.set_to_success(std::async(std::launch::async,
+			[this, message, log_level, is_simplified]()
+				{
+					Result<void> result;
+
+					log(result, message, log_level, is_simplified);
+				}
+			)
+		);
+	}
+}

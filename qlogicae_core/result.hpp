@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 namespace QLogicaeCore
 {   
     template <
@@ -20,6 +22,8 @@ namespace QLogicaeCore
 
         void get_data(DataType& value);
 
+        void set_is_successful(const bool& value);
+
         void set_is_successful_to_true();
 
         void set_is_successful_to_false();
@@ -28,6 +32,10 @@ namespace QLogicaeCore
             const DataType& value
         );
         
+        void set_data(
+            DataType&& value
+        );
+
         void set_message(
             const std::string& value
         );
@@ -38,10 +46,18 @@ namespace QLogicaeCore
             const DataType& value
         );
 
+        void set_to_success(
+            DataType&& value
+        );
+
         void set_to_failure();
 
         void set_to_failure(
             const DataType& value
+        );
+
+        void set_to_failure(
+            DataType&& value
         );
 
     private:
@@ -103,6 +119,14 @@ namespace QLogicaeCore
     template <
         typename DataType
     >
+    void Result<DataType>::set_is_successful(const bool& value)
+    {
+        _is_successful = value;
+    }
+
+    template <
+        typename DataType
+    >
     void Result<DataType>::set_is_successful_to_true()
     {
         _is_successful = true;
@@ -123,7 +147,7 @@ namespace QLogicaeCore
         const DataType& value
     )
     {
-        _data = value;
+        _data = std::move(value);
     }
 
     template <
@@ -152,7 +176,7 @@ namespace QLogicaeCore
     )
     {
         set_is_successful_to_true();
-        set_data(value);
+        set_data(std::move(value));
     }
 
     template <
@@ -171,39 +195,47 @@ namespace QLogicaeCore
     )
     {
         set_is_successful_to_false();
-        set_data(value);
+        set_data(std::move(value));
+    }
+
+    template <typename DataType>
+    void Result<DataType>::set_data(DataType&& value)
+    {
+        _data = std::move(value);
+    }
+
+    template <typename DataType>
+    void Result<DataType>::set_to_success(DataType&& value)
+    {
+        set_is_successful_to_true();
+        set_data(std::move(value));
+    }
+
+    template <typename DataType>
+    void Result<DataType>::set_to_failure(DataType&& value)
+    {
+        set_is_successful_to_false();
+        set_data(std::move(value));
     }
 
     template <>
     struct Result<void>
     {
     public:
-        bool get_is_successful() const
-        {
-            return _is_successful;
-        }
-
-        void set_is_successful_to_true()
-        {
-            _is_successful = true;
-        }
+        bool get_is_successful() const;
         
-        void set_is_successful_to_false()
-        {
-            _is_successful = false;
-        }
+        void set_is_successful(const bool& value);
 
-        void set_to_success()
-        {
-            _is_successful = true;
-        }
+        void set_is_successful_to_true();
+        
+        void set_is_successful_to_false();
+        
+        void set_to_success();
 
-        void set_to_failure()
-        {
-            _is_successful = false;
-        }
+        void set_to_failure();
 
     private:
         bool _is_successful = true;
     };
+
 }

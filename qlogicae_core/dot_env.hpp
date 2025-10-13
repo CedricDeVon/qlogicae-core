@@ -1,5 +1,7 @@
 #pragma once
 
+#include "result.hpp"
+
 namespace QLogicaeCore
 {
 	class DotEnv
@@ -12,6 +14,14 @@ namespace QLogicaeCore
 		std::optional<std::wstring> get(const wchar_t* key);
 		
 		static DotEnv& get_instance();
+
+		void remove(Result<bool> result, const wchar_t* key);
+
+		void set(Result<bool> result, const wchar_t* key, const wchar_t* value);
+
+		void get(Result<std::optional<std::wstring>> result, const wchar_t* key);
+
+		static void get_instance(Result<DotEnv*> result);
 
 	protected:
 		DotEnv();
@@ -29,4 +39,3 @@ namespace QLogicaeCore
 
 	inline static DotEnv& DOT_ENV = DotEnv::get_instance();
 }
-

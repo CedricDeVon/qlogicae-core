@@ -161,4 +161,158 @@ namespace QLogicaeCore
 			return transform(va, vb, vc);			
 		});
 	}
+
+	void AES256CipherCryptographer::reverse(
+		Result<std::string>& result,
+		const std::string_view& cipher,
+		const std::string_view& key,
+		const std::string_view& nonce
+	) const
+	{
+		result.set_to_success(reverse(
+			cipher,
+			reinterpret_cast<const unsigned char*>(key.data()),
+			reinterpret_cast<const unsigned char*>(nonce.data())
+		));
+	}
+
+	void AES256CipherCryptographer::transform(
+		Result<std::string>& result,
+		const std::string_view& text,
+		const std::string_view& key,
+		const std::string_view& nonce
+	) const
+	{
+		result.set_to_success(transform(
+			text,
+			reinterpret_cast<const unsigned char*>(key.data()),
+			reinterpret_cast<const unsigned char*>(nonce.data())
+		));
+	}
+
+	void AES256CipherCryptographer::reverse_async(
+		Result<std::future<std::string>>& result,
+		const std::string_view& cipher,
+		const unsigned char* key,
+		const unsigned char* nonce
+	) const
+	{
+		result.set_to_success(std::async(std::launch::async, [this, cipher, key, nonce]() -> std::string
+			{
+				return reverse(cipher, key, nonce);
+			}));
+	}
+
+	void AES256CipherCryptographer::transform_async(
+		Result<std::future<std::string>>& result,
+		const std::string_view& text,
+		const unsigned char* key,
+		const unsigned char* nonce
+	) const
+	{
+		result.set_to_success(std::async(std::launch::async, [this, text, key, nonce]() -> std::string
+			{
+				return transform(text, key, nonce);
+			}));
+	}
+
+	void AES256CipherCryptographer::reverse_async(
+		Result<std::future<std::string>>& result,
+		const std::string_view& cipher,
+		const std::string_view& key,
+		const std::string_view& nonce
+	) const
+	{
+		result.set_to_success(std::async(std::launch::async, [this, cipher, key, nonce]() -> std::string
+			{
+				return reverse(
+					cipher,
+					reinterpret_cast<const unsigned char*>(key.data()),
+					reinterpret_cast<const unsigned char*>(nonce.data())
+				);
+			}));
+	}
+
+	void AES256CipherCryptographer::transform_async(
+		Result<std::future<std::string>>& result,
+		const std::string_view& text,
+		const std::string_view& key,
+		const std::string_view& nonce
+	) const
+	{
+		result.set_to_success(std::async(std::launch::async, [this, text, key, nonce]() -> std::string
+			{
+				return transform(
+					text,
+					reinterpret_cast<const unsigned char*>(key.data()),
+					reinterpret_cast<const unsigned char*>(nonce.data())
+				);
+			})
+		);
+	}
+
+	void AES256CipherCryptographer::reverse(
+		Result<std::string>& result,
+		const std::string_view& cipher,
+		const unsigned char* key,
+		const unsigned char* nonce
+	) const
+	{
+		std::scoped_lock lock(_mutex);
+
+		if (!key || !nonce)
+		{
+			result.set_to_failure("");
+			return;
+		}
+
+		std::vector<unsigned char> bytes =
+			ENCODER.from_base64_to_bytes(cipher);
+		unsigned long long out_len, in_len = bytes.size();
+		std::vector<unsigned char> decrypted(in_len);
+		unsigned char* out_ptr = decrypted.data();
+
+		if (crypto_aead_aes256gcm_decrypt(
+			out_ptr, &out_len, nullptr,
+			bytes.data(), in_len,
+			nullptr, 0, nonce, key) != 0)
+		{
+			result.set_to_failure("");
+			return;
+		}
+
+		result.set_to_success(
+			std::string(reinterpret_cast<const char*>(out_ptr), out_len)
+		);
+	}
+
+	void AES256CipherCryptographer::transform(
+		Result<std::string>& result,
+		const std::string_view& text,
+		const unsigned char* key,
+		const unsigned char* nonce
+	) const
+	{
+		std::scoped_lock lock(_mutex);
+
+		if (!key || !nonce)
+		{
+			result.set_to_failure("");
+			return;
+		}
+
+		unsigned long long text_len = text.size(), cipher_len;
+		const unsigned char* text_ptr = reinterpret_cast<const unsigned char*>(text.data());
+		std::vector<unsigned char> cipher_buf(text_len + crypto_aead_aes256gcm_ABYTES);
+		unsigned char* cipher_ptr = cipher_buf.data();
+
+		crypto_aead_aes256gcm_encrypt(
+			cipher_ptr, &cipher_len,
+			text_ptr, text_len,
+			nullptr, 0, nullptr,
+			nonce, key
+		);
+
+		result.set_to_success(ENCODER.from_bytes_to_base64(cipher_ptr, cipher_len));
+	}
 }

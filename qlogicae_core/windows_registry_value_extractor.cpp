@@ -44,4 +44,27 @@ namespace QLogicaeCore
             throw std::runtime_error(std::string("Exception at WindowsRegistryValueExtractor::get_value(): ") + exception.what());
         }
     }
+
+    void WindowsRegistryValueExtractor::get_sub_key(
+        Result<std::optional<std::string>>& result
+    ) const
+    {
+        result.set_to_success(_sub_key);
+    }
+
+    void WindowsRegistryValueExtractor::get_name_key(
+        Result<std::optional<std::string>>& result
+    ) const
+    {
+        result.set_to_success(_name_key);
+    }
+
+    void WindowsRegistryValueExtractor::get_value(
+        Result<std::optional<std::string>>& result
+    ) const
+    {
+        result.set_to_success(WindowsRegistry::hkcu()
+            .get_value_via_utf8(_sub_key, _name_key).value()
+        );        
+    }
 }

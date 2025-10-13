@@ -146,5 +146,177 @@ namespace QLogicaeCore
 			return transform(va, vb, vc);			
 		});
 	}
+
+    void AES256SignatureCryptographer::reverse(
+        Result<std::string>& result,
+        const std::string_view& cipher,
+        unsigned char* public_key
+    ) const
+    {
+        std::scoped_lock lock(_mutex);
+
+        if (!public_key)
+        {
+            result.set_to_failure("");
+            return;
+        }
+
+        std::vector<unsigned char> decoded =
+            ENCODER.from_base64_to_bytes(cipher);
+        unsigned long long message_len, cipher_len = decoded.size();
+        std::vector<unsigned char> message(cipher_len);
+        unsigned char* message_ptr = message.data();
+
+        if (crypto_sign_open(
+            message_ptr, &message_len,
+            decoded.data(), cipher_len,
+            public_key
+        ) != 0)
+        {
+            result.set_to_failure("");
+            return;
+        }
+
+        result.set_to_success(std::string(
+            reinterpret_cast<const char*>(message_ptr), message_len
+        ));
+    }
+
+    void AES256SignatureCryptographer::reverse(
+        Result<std::string>& result,
+        const std::string_view& cipher,
+        const std::string_view& public_key
+    ) const
+    {
+        reverse(
+            result,
+            cipher,
+            reinterpret_cast<unsigned char*>(
+                const_cast<char*>(public_key.data())
+                )
+        );
+    }
+
+    void AES256SignatureCryptographer::transform(
+        Result<std::string>& result,
+        const std::string_view& text,
+        unsigned char* public_key,
+        unsigned char* private_key
+    ) const
+    {
+        std::scoped_lock lock(_mutex);
+
+        if (!public_key || !private_key)
+        {
+            result.set_to_failure("");
+            return;
+        }
+
+        crypto_sign_keypair(public_key, private_key);
+
+        const unsigned char* text_ptr =
+            reinterpret_cast<const unsigned char*>(text.data());
+        unsigned long long text_len = text.size(), signed_len;
+
+        std::vector<unsigned char> signed_data(
+            text_len + crypto_sign_BYTES
+        );
+        unsigned char* signed_ptr = signed_data.data();
+
+        crypto_sign(
+            signed_ptr, &signed_len,
+            text_ptr, text_len,
+            private_key
+        );
+
+        result.set_to_success(
+            ENCODER.from_bytes_to_base64(signed_ptr, signed_len)
+        );
+    }
+
+    void AES256SignatureCryptographer::transform(
+        Result<std::string>& result,
+        const std::string_view& text,
+        const std::string_view& public_key,
+        const std::string_view& private_key
+    ) const
+    {
+        transform(
+            result,
+            text,
+            reinterpret_cast<unsigned char*>(
+                const_cast<char*>(public_key.data())
+                ),
+            reinterpret_cast<unsigned char*>(
+                const_cast<char*>(private_key.data())
+                )
+        );
+    }
+
+    void AES256SignatureCryptographer::reverse_async(
+        Result<std::future<std::string>>& result,
+        const std::string_view& cipher,
+        unsigned char* public_key
+    ) const
+    {
+        result.set_to_success(
+            std::async(std::launch::async, [this, cipher, public_key]() -> std::string
+            {
+                Result<std::string> inner_result;
+                reverse(inner_result, cipher, public_key);
+                return inner_result.get_data();
+            })
+        );
+    }
+
+    void AES256SignatureCryptographer::reverse_async(
+        Result<std::future<std::string>>& result,
+        const std::string_view& cipher,
+        const std::string_view& public_key
+    ) const
+    {
+        result.set_to_success(
+            std::async(std::launch::async, [this, cipher, public_key]() -> std::string
+                {
+                    Result<std::string> inner_result;
+                    reverse(inner_result, cipher, public_key);
+                    return inner_result.get_data();
+                })
+        );
+    }
+
+    void AES256SignatureCryptographer::transform_async(
+        Result<std::future<std::string>>& result,
+        const std::string_view& text,
+        unsigned char* public_key,
+        unsigned char* private_key
+    ) const
+    {
+        result.set_to_success(
+            std::async(std::launch::async, [this, text, public_key, private_key]() -> std::string
+                {
+                    Result<std::string> inner_result;
+                    transform(inner_result, text, public_key, private_key);
+                    return inner_result.get_data();
+                })
+        );
+    }
+
+    void AES256SignatureCryptographer::transform_async(
+        Result<std::future<std::string>>& result,
+        const std::string_view& text,
+        const std::string_view& public_key,
+        const std::string_view& private_key
+    ) const
+    {
+        result.set_to_success(
+            std::async(std::launch::async, [this, text, public_key, private_key]() -> std::string
+                {
+                    Result<std::string> inner_result;
+                    transform(inner_result, text, public_key, private_key);
+                    return inner_result.get_data();
+                })
+        );
+    }
 }
 

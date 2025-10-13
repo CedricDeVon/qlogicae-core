@@ -120,4 +120,80 @@ namespace QLogicaeCore
             return std::nullopt;
         }
     }
+
+    void NetworkPing::get_is_listening(Result<bool>& result) const
+    {
+        result.set_to_success(_settings.is_listening);
+    }
+
+    void NetworkPing::set_is_listening(Result<void>& result, const bool& is_listening)
+    {
+        _settings.is_listening = is_listening;
+        is_listening ? _interval.resume() : _interval.pause();
+
+        result.set_to_success();
+    }
+
+    void NetworkPing::get_name(Result<std::string_view>& result) const
+    {
+        result.set_to_success(_settings.name);
+    }
+
+    void NetworkPing::set_name(Result<void>& result, const std::string_view& value)
+    {
+        _settings.name = std::string(value);
+        result.set_to_success();
+    }
+
+    void NetworkPing::get_host_address(Result<std::string_view>& result) const
+    {
+        result.set_to_success(_settings.host_address);
+    }
+
+    void NetworkPing::set_host_address(Result<void>& result, const std::string_view& value)
+    {
+        _settings.host_address = std::string(value);
+        result.set_to_success();
+    }
+
+    void NetworkPing::get_milliseconds_per_callback(Result<std::chrono::milliseconds>& result) const
+    {
+        result.set_to_success(_settings.milliseconds_per_callback);
+    }
+
+    void NetworkPing::set_milliseconds_per_callback(Result<void>& result,
+        const std::chrono::milliseconds& value
+    )
+    {
+        _settings.milliseconds_per_callback = value;
+        _interval.set_interval(value);
+
+        result.set_to_success();
+    }
+
+    void NetworkPing::pause_listening(Result<void>& result)
+    {
+        if (_settings.is_listening)
+        {
+            _settings.is_listening = false;
+            _interval.pause();
+
+            result.set_to_success();
+        }
+
+        result.set_to_failure();
+    }
+
+    void NetworkPing::continue_listening(Result<void>& result)
+    {
+        if (!_settings.is_listening)
+        {
+            _settings.is_listening = true;
+            _interval.resume();
+
+            result.set_to_success();
+        }
+
+        result.set_to_failure();
+    }
 }

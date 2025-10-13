@@ -1,5 +1,6 @@
 #pragma once
 
+#include "result.hpp"
 #include "encoder.hpp"
 #include "cryptographer.hpp"
 
@@ -72,5 +73,41 @@ namespace QLogicaeCore
             const std::string_view& public_key,
             const std::string_view& private_key
         ) const;
+
+        void reverse(Result<std::string>& result,
+            const std::string_view& cipher,
+            unsigned char* public_key) const;
+
+        void reverse(Result<std::string>& result,
+            const std::string_view& cipher,
+            const std::string_view& public_key) const;
+
+        void transform(Result<std::string>& result,
+            const std::string_view& text,
+            unsigned char* public_key,
+            unsigned char* private_key) const;
+
+        void transform(Result<std::string>& result,
+            const std::string_view& text,
+            const std::string_view& public_key,
+            const std::string_view& private_key) const;
+
+        void reverse_async(Result<std::future<std::string>>& result,
+            const std::string_view& cipher,
+            unsigned char* public_key) const;
+
+        void reverse_async(Result<std::future<std::string>>& result,
+            const std::string_view& cipher,
+            const std::string_view& public_key) const;
+
+        void transform_async(Result<std::future<std::string>>& result,
+            const std::string_view& text,
+            unsigned char* public_key,
+            unsigned char* private_key) const;
+
+        void transform_async(Result<std::future<std::string>>& result,
+            const std::string_view& text,
+            const std::string_view& public_key,
+            const std::string_view& private_key) const;
     };
 }

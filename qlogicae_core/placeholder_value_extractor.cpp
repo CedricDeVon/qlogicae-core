@@ -22,5 +22,12 @@ namespace QLogicaeCore
             throw std::runtime_error(std::string() + "Exception at PlaceholderValueExtractor::get_value(): " + exception.what());
         }
     }
+
+    void PlaceholderValueExtractor::get_value(
+        Result<std::string>& result
+    ) const
+    {
+        result.set_to_success(_value);
+    }
 }
 
