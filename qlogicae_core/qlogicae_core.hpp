@@ -140,6 +140,9 @@
 
 // RocksDB
 #include "rocksdb_database.hpp"
+
+// Boost Interprocess Cache
+#include "boost_interprocess_cache_shared_data.hpp"
 #include "boost_interprocess_cache.hpp"
 
 // QLogicae Application

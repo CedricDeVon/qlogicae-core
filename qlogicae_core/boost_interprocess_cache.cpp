@@ -4,28 +4,19 @@
 
 namespace QLogicaeCore
 {
-    BoostInterprocessCache::BoostInterprocessCacheSharedData
-            ::BoostInterprocessCacheSharedData(
-                const value_allocator_t& alloc
-            )
-        : map(std::less<string_t>(), alloc)
-    {
-
-    }
-
     BoostInterprocessCache::BoostInterprocessCache(
-            const char* name,
-            const BytesSize& size
+            const std::string& name,
+            const BytesSize& size_in_bytes
     )
         : _segment(
             boost::interprocess::open_or_create,
-            name,
-            static_cast<std::size_t>(size)
+            name.c_str(),
+            static_cast<std::size_t>(size_in_bytes)
         )
     {
-        boost::interprocess::shared_memory_object::remove(name);
+        boost::interprocess::shared_memory_object::remove(name.c_str());
         _data = _segment.find_or_construct<BoostInterprocessCacheSharedData>(
-            "BoostInterprocessCacheSharedData")(
+            UTILITIES.DEFAULT_BOOST_INTERPROCESS_CACHE_SEGMENT_NAME.c_str())(
                 value_allocator_t(_segment.get_segment_manager()));
     }
 
@@ -35,18 +26,24 @@ namespace QLogicaeCore
         Result<void>& result
     )
     {
-        boost::interprocess::scoped_lock lock(_data->mutex);
+        boost::interprocess::scoped_lock lock(_data->_mutex);
         string_t shm_key(key, _segment.get_segment_manager());
         string_t shm_value(value, _segment.get_segment_manager());
 
-        auto it = _data->map.find(shm_key);
-        if (it != _data->map.end())
+        auto iterative = _data->map.find(shm_key);
+        if (iterative != _data->map.end())
         {
-            it->second.assign(shm_value.c_str(), shm_value.size());
+            iterative->second.assign(
+                shm_value.c_str(),
+                shm_value.size()
+            );
         }
         else
         {
-            _data->map.emplace(std::move(shm_key), std::move(shm_value));
+            _data->map.emplace(
+                std::move(shm_key),
+                std::move(shm_value)
+            );
         }
 
         result.set_to_success();
@@ -70,14 +67,14 @@ namespace QLogicaeCore
         Result<const char*>& result
     )
     {
-        boost::interprocess::scoped_lock lock(_data->mutex);
+        boost::interprocess::scoped_lock lock(_data->_mutex);
     
-        auto it = _data->map.find(
+        auto iterative = _data->map.find(
             string_t(key, _segment.get_segment_manager())
         );
-        if (it != _data->map.end())
+        if (iterative != _data->map.end())
         {
-            result.set_to_success(it->second.c_str());
+            result.set_to_success(iterative->second.c_str());
         }
         else
         {
@@ -99,7 +96,7 @@ namespace QLogicaeCore
 
     bool BoostInterprocessCache::is_key_found(const char* key)
     {
-        boost::interprocess::scoped_lock lock(_data->mutex);
+        boost::interprocess::scoped_lock lock(_data->_mutex);
 
         return _data->map.find(
             string_t(key, _segment.get_segment_manager())
@@ -122,7 +119,7 @@ namespace QLogicaeCore
         Result<void>& result
     )
     {
-        boost::interprocess::scoped_lock lock(_data->mutex);
+        boost::interprocess::scoped_lock lock(_data->_mutex);
     
         auto count = _data->map.erase(
             string_t(key, _segment.get_segment_manager())
@@ -151,7 +148,7 @@ namespace QLogicaeCore
 
     void BoostInterprocessCache::clear(Result<void>& result)
     {
-        boost::interprocess::scoped_lock lock(_data->mutex);
+        boost::interprocess::scoped_lock lock(_data->_mutex);
         
         _data->map.clear();
         result.set_to_success();
@@ -173,25 +170,25 @@ namespace QLogicaeCore
         Result<void>& result
     )
     {
-        std::vector<std::pair<string_t, string_t>> temp;
-        temp.reserve(items.size());
+        std::vector<std::pair<string_t, string_t>> temporaries;
+        temporaries.reserve(items.size());
 
-        for (const auto& [k, v] : items)
+        for (const auto& [key, value] : items)
         {
-            temp.emplace_back(
-                string_t(k, _segment.get_segment_manager()),
-                string_t(v, _segment.get_segment_manager())
-            );s
+            temporaries.emplace_back(
+                string_t(key, _segment.get_segment_manager()),
+                string_t(value, _segment.get_segment_manager())
+            );
         }
 
         {
-            boost::interprocess::scoped_lock lock(_data->mutex);
-            for (auto& [shm_key, shm_value] : temp)
+            boost::interprocess::scoped_lock lock(_data->_mutex);
+            for (auto& [shm_key, shm_value] : temporaries)
             {
-                auto it = _data->map.find(shm_key);
-                if (it != _data->map.end())
+                auto iterative = _data->map.find(shm_key);
+                if (iterative != _data->map.end())
                 {
-                    it->second.assign(
+                    iterative->second.assign(
                         shm_value.c_str(),
                         shm_value.size()
                     );
@@ -227,15 +224,18 @@ namespace QLogicaeCore
         Result<void>& result
     )
     {
-        boost::interprocess::scoped_lock lock(_data->mutex);
+        boost::interprocess::scoped_lock lock(_data->_mutex);
         for (const auto& key : keys)
         {
-            auto it = _data->map.find(
-                string_t(key, _segment.get_segment_manager())
+            auto iterative = _data->map.find(
+                    string_t(
+                        key,
+                        _segment.get_segment_manager()
+                    )
             );
-            if (it != _data->map.end())
+            if (iterative != _data->map.end())
             {
-                out[key] = it->second.c_str();
+                out[key] = iterative->second.c_str();
             }
         }
         result.set_to_success();
@@ -258,11 +258,16 @@ namespace QLogicaeCore
         const std::vector<const char*>& keys, Result<void>& result
     )
     {
-        boost::interprocess::scoped_lock lock(_data->mutex);
+        boost::interprocess::scoped_lock lock(_data->_mutex);
     
         for (const auto& key : keys)
         {
-            _data->map.erase(string_t(key, _segment.get_segment_manager()));
+            _data->map.erase(
+                string_t(
+                    key,
+                    _segment.get_segment_manager()
+                )
+            );
         }
 
         result.set_to_success();

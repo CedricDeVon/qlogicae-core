@@ -426,7 +426,13 @@ namespace QLogicaeCore
         const std::unordered_map<std::string_view, SupportedQLogicaeInstaller> SUPPORTED_INSTALLER_STRINGS =
         {
             { INNO_SETUP, SupportedQLogicaeInstaller::INNO_SETUP }
-        };       
+        };  
+
+        const std::string DEFAULT_BOOST_INTERPROCESS_CACHE =
+            "BoostInterprocessCache";
+
+        const std::string DEFAULT_BOOST_INTERPROCESS_CACHE_SEGMENT_NAME =
+            "BoostInterprocessCacheSharedData";
 
 		const std::string RELATIVE_DOT_QLOGICAE_FOLDER_PATH =
 			".qlogicae";

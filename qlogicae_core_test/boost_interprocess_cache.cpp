@@ -5,10 +5,10 @@
 
 namespace QLogicaeCoreTest
 {
-    class SharedMemoryCacheTest : public ::testing::Test
+    class BoostInterprocessCacheTest : public ::testing::Test
     {
     protected:
-        SharedMemoryCacheTest()
+        BoostInterprocessCacheTest()
             : cache("TestCache", QLogicaeCore::BytesSize::KB_1)
         {
         }
@@ -16,13 +16,13 @@ namespace QLogicaeCoreTest
         QLogicaeCore::BoostInterprocessCache cache;
     };
 
-    class SharedMemoryCacheParameterizedTest
-        : public SharedMemoryCacheTest
+    class BoostInterprocessCacheSharedDataTest
+        : public BoostInterprocessCacheTest
         , public ::testing::WithParamInterface<const char*>
     {
     };
 
-    TEST_F(SharedMemoryCacheTest, Should_WriteAndRead_SingleKey)
+    TEST_F(BoostInterprocessCacheTest, Should_WriteAndRead_SingleKey)
     {
         QLogicaeCore::Result<void> write_result;
         cache.write("key1", "value1", write_result);
@@ -34,12 +34,12 @@ namespace QLogicaeCoreTest
         EXPECT_STREQ(read_result.get_data(), "value1");
     }
 
-    TEST_F(SharedMemoryCacheTest, Should_ReturnFalseForNonexistentKey)
+    TEST_F(BoostInterprocessCacheTest, Should_ReturnFalseForNonexistentKey)
     {
         EXPECT_FALSE(cache.is_key_found("nonexistent"));
     }
 
-    TEST_F(SharedMemoryCacheTest, Should_RemoveKeySuccessfully)
+    TEST_F(BoostInterprocessCacheTest, Should_RemoveKeySuccessfully)
     {
         QLogicaeCore::Result<void> write_result;
         cache.write("remove_key", "temp", write_result);
@@ -50,7 +50,7 @@ namespace QLogicaeCoreTest
         EXPECT_FALSE(cache.is_key_found("remove_key"));
     }
 
-    TEST_F(SharedMemoryCacheTest, Should_ClearAllKeys)
+    TEST_F(BoostInterprocessCacheTest, Should_ClearAllKeys)
     {
         QLogicaeCore::Result<void> result;
         cache.write("k1", "v1", result);
@@ -62,7 +62,7 @@ namespace QLogicaeCoreTest
         EXPECT_FALSE(cache.is_key_found("k2"));
     }
 
-    TEST_F(SharedMemoryCacheTest, Should_WriteAndReadBatch)
+    TEST_F(BoostInterprocessCacheTest, Should_WriteAndReadBatch)
     {
         std::unordered_map<const char*, const char*> items{
             {"a", "1"},
@@ -81,7 +81,7 @@ namespace QLogicaeCoreTest
         EXPECT_STREQ(out["c"], "3");
     }
 
-    TEST_F(SharedMemoryCacheTest, Should_RemoveBatchKeys)
+    TEST_F(BoostInterprocessCacheTest, Should_RemoveBatchKeys)
     {
         QLogicaeCore::Result<void> result;
         cache.write("x", "10", result);
@@ -93,7 +93,7 @@ namespace QLogicaeCoreTest
         EXPECT_FALSE(cache.is_key_found("y"));
     }
 
-    TEST_F(SharedMemoryCacheTest, Should_HandleAsyncOperations)
+    TEST_F(BoostInterprocessCacheTest, Should_HandleAsyncOperations)
     {
         QLogicaeCore::Result<void> write_result;
         auto write_future = cache.write_async("async_key", "async_val", write_result);
@@ -110,7 +110,7 @@ namespace QLogicaeCoreTest
         EXPECT_TRUE(found_future.get());
     }
 
-    TEST_F(SharedMemoryCacheTest, Should_HandleMultithreadedWrites)
+    TEST_F(BoostInterprocessCacheTest, Should_HandleMultithreadedWrites)
     {
         QLogicaeCore::Result<void> result1;
         QLogicaeCore::Result<void> result2;
@@ -128,10 +128,7 @@ namespace QLogicaeCoreTest
         EXPECT_TRUE(val == "val1" || val == "val2");
     }
 
-    INSTANTIATE_TEST_CASE_P(EmptyAndValidKeys, SharedMemoryCacheParameterizedTest,
-        ::testing::Values("", "param_key"));
-
-    TEST_P(SharedMemoryCacheParameterizedTest, Should_HandleEdgeCaseKeys)
+    TEST_P(BoostInterprocessCacheSharedDataTest, Should_HandleEdgeCaseKeys)
     {
         const char* key = GetParam();
         QLogicaeCore::Result<void> write_result;
@@ -144,4 +141,6 @@ namespace QLogicaeCoreTest
         EXPECT_STREQ(read_result.get_data(), "param_val");
     }
 
+    INSTANTIATE_TEST_CASE_P(EmptyAndValidKeys, BoostInterprocessCacheSharedDataTest,
+        ::testing::Values("", "param_key"));
 }

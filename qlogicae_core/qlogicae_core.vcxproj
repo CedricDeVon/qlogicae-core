@@ -195,6 +195,7 @@
     <ClInclude Include="bcrypt_hash_cryptographer.hpp" />
     <ClInclude Include="binary_file_io.hpp" />
     <ClInclude Include="boost_interprocess_cache.hpp" />
+    <ClInclude Include="boost_interprocess_cache_shared_data.hpp" />
     <ClInclude Include="byte_size.hpp" />
     <ClInclude Include="case_aware_equal.hpp" />
     <ClInclude Include="case_aware_hash.hpp" />
@@ -351,6 +352,7 @@
     <ClCompile Include="bcrypt_hash_cryptographer.cpp" />
     <ClCompile Include="binary_file_io.cpp" />
     <ClCompile Include="boost_interprocess_cache.cpp" />
+    <ClCompile Include="boost_interprocess_cache_shared_data.cpp" />
     <ClCompile Include="byte_size.cpp" />
     <ClCompile Include="cli_io.cpp" />
     <ClCompile Include="cryptographer.cpp" />
