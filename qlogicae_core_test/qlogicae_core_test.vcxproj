@@ -173,6 +173,7 @@
     </ClCompile>
     <ClCompile Include="placeholder_value_extractor.cpp" />
     <ClCompile Include="regular_expression.cpp" />
+    <ClCompile Include="result.cpp" />
     <ClCompile Include="rocksdb_database.cpp" />
     <ClCompile Include="sha256_hash_cryptographer.cpp" />
     <ClCompile Include="sqlite.cpp" />

@@ -1,11 +1,12 @@
 #pragma once
 
+#include "result.hpp"
+
 namespace QLogicaeCore
 {
     class AbstractFileIO
     {
     public:
-
         AbstractFileIO() = default;
 
         virtual ~AbstractFileIO() = default;

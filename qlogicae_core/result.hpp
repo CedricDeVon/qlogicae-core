@@ -10,7 +10,15 @@ namespace QLogicaeCore
     public:
         bool get_is_successful();
 
+        void get_is_successful(bool& value);
+        
+        std::string get_message();
+
+        void get_message(std::string& value);
+
         DataType& get_data();
+
+        void get_data(DataType& value);
 
         void set_is_successful_to_true();
 
@@ -18,6 +26,10 @@ namespace QLogicaeCore
 
         void set_data(
             const DataType& value
+        );
+        
+        void set_message(
+            const std::string& value
         );
 
         void set_to_success();
@@ -33,9 +45,11 @@ namespace QLogicaeCore
         );
 
     private:
+        DataType _data;
+
         bool _is_successful = true;
 
-        DataType _data;
+        std::string _message = "";
     };
 
     template <
@@ -45,6 +59,14 @@ namespace QLogicaeCore
     {
         return _is_successful;
     }
+    
+    template <
+        typename DataType
+    >
+    void Result<DataType>::get_is_successful(bool& value)
+    {
+        value = _is_successful;
+    }
 
     template <
         typename DataType
@@ -52,6 +74,30 @@ namespace QLogicaeCore
     DataType& Result<DataType>::get_data()
     {
         return _data;
+    }
+
+    template <
+        typename DataType
+    >
+    void Result<DataType>::get_data(DataType& value)
+    {
+        value = _data;
+    }
+
+    template <
+        typename DataType
+    >
+    std::string Result<DataType>::get_message()
+    {
+        return _message;
+    }
+
+    template <
+        typename DataType
+    >
+    void Result<DataType>::get_message(std::string& value)
+    {
+        value = _message;
     }
 
     template <
@@ -78,6 +124,16 @@ namespace QLogicaeCore
     )
     {
         _data = value;
+    }
+
+    template <
+        typename DataType
+    >
+    void Result<DataType>::set_message(
+        const std::string& value
+    )
+    {
+        _message = value;
     }
 
     template <
@@ -122,13 +178,30 @@ namespace QLogicaeCore
     struct Result<void>
     {
     public:
-        bool get_is_successful() const { return _is_successful; }
+        bool get_is_successful() const
+        {
+            return _is_successful;
+        }
 
-        void set_is_successful_to_true() { _is_successful = true; }
-        void set_is_successful_to_false() { _is_successful = false; }
+        void set_is_successful_to_true()
+        {
+            _is_successful = true;
+        }
+        
+        void set_is_successful_to_false()
+        {
+            _is_successful = false;
+        }
 
-        void set_to_success() { _is_successful = true; }
-        void set_to_failure() { _is_successful = false; }
+        void set_to_success()
+        {
+            _is_successful = true;
+        }
+
+        void set_to_failure()
+        {
+            _is_successful = false;
+        }
 
     private:
         bool _is_successful = true;
