@@ -588,4 +588,238 @@ namespace QLogicaeCore
             throw std::runtime_error(std::string() + "Exception at Time::_format_time(): " + exception.what());
         }
     }
+
+    void Time::now(Result<double>& result) const
+    {
+        result.set_to_success(
+            static_cast<double>(
+                std::chrono::duration_cast<std::chrono::nanoseconds>(
+                    std::chrono::high_resolution_clock::now()
+                    .time_since_epoch())
+                .count()));
+    }
+
+    void Time::nanosecond(Result<double>& result) const
+    {
+        result.set_to_success(
+            static_cast<double>(
+                std::chrono::duration_cast<std::chrono::nanoseconds>(
+                    std::chrono::system_clock::now()
+                    .time_since_epoch())
+                .count() % 1'000'000'000));
+    }
+
+    void Time::millisecond(Result<double>& result) const
+    {
+        result.set_to_success(
+            static_cast<double>(
+                std::chrono::duration_cast<std::chrono::milliseconds>(
+                    std::chrono::system_clock::now()
+                    .time_since_epoch())
+                .count() % 1'000));
+    }
+
+    void Time::microsecond(Result<double>& result) const
+    {
+        result.set_to_success(
+            static_cast<double>(
+                std::chrono::duration_cast<std::chrono::microseconds>(
+                    std::chrono::system_clock::now()
+                    .time_since_epoch())
+                .count() % 1'000'000));
+    }
+
+    void Time::day(Result<double>& result,
+        const TimeZone& zone) const
+    {
+        result.set_to_success(static_cast<double>(_get_time_zone(zone).tm_mday));
+    }
+
+    void Time::hour(Result<double>& result,
+        const TimeZone& zone) const
+    {
+        result.set_to_success(static_cast<double>(_get_time_zone(zone).tm_hour));
+    }
+
+    void Time::year(Result<double>& result,
+        const TimeZone& zone) const
+    {
+        result.set_to_success(static_cast<double>(_get_time_zone(zone).tm_year) +
+            UTILITIES.UNIX_START_YEAR_OFFSET);
+    }
+
+    void Time::month(Result<double>& result,
+        const TimeZone& zone) const
+    {
+        result.set_to_success(static_cast<double>(_get_time_zone(zone).tm_mon) + 1);
+    }
+
+    void Time::second(Result<double>& result,
+        const TimeZone& zone) const
+    {
+        result.set_to_success(static_cast<double>(_get_time_zone(zone).tm_sec));
+    }
+
+    void Time::minute(Result<double>& result,
+        const TimeZone& zone) const
+    {
+        result.set_to_success(static_cast<double>(_get_time_zone(zone).tm_min));
+    }
+
+    void Time::now(Result<std::string>& result,
+        const TimeFormat& format,
+        const TimeZone& zone) const
+    {
+        absl::Time now_time = absl::Now();
+        absl::Duration since_epoch = now_time - absl::UnixEpoch();
+        std::tm tm = _get_time_zone(zone);
+        const char* fmt = _get_format_string(format);
+        std::string str;
+
+        switch (format)
+        {
+        case TimeFormat::UNIX:
+            str = absl::StrCat(absl::ToUnixSeconds(now_time));
+            break;
+
+        case TimeFormat::ISO8601:
+        case TimeFormat::SECOND_LEVEL_TIMESTAMP:
+        case TimeFormat::HOUR_12:
+        case TimeFormat::HOUR_24:
+        case TimeFormat::DATE_DASHED:
+        case TimeFormat::DATE_MDY_SLASHED:
+        case TimeFormat::DATE_DMY_SLASHED:
+        case TimeFormat::DATE_DMY_SPACED:
+        case TimeFormat::DATE_VERBOSE:
+            str = _format_time(tm, fmt);
+            break;
+
+        case TimeFormat::MILLISECOND_LEVEL_TIMESTAMP:
+            str = _format_time(tm, fmt) + "." +
+                _format_millisecond_level(since_epoch, ":");
+            break;
+
+        case TimeFormat::MICROSECOND_LEVEL_TIMESTAMP:
+            str = _format_time(tm, fmt) + "." +
+                _format_microsecond_level(since_epoch, ":");
+            break;
+
+        case TimeFormat::FULL_TIMESTAMP:
+            str = _format_time(tm, fmt) + "." +
+                _format_nanosecond_level(since_epoch, ":");
+            break;
+
+        case TimeFormat::FULL_DASHED_TIMESTAMP:
+            str = _format_time(tm, fmt) + "-" +
+                _format_nanosecond_level(since_epoch, "-");
+            break;
+
+        case TimeFormat::MILLISECOND_MICROSECOND_NANOSECOND:
+            str = absl::StrCat(
+                "ms: ", absl::ToInt64Milliseconds(since_epoch),
+                ", us: ", absl::ToInt64Microseconds(since_epoch),
+                ", ns: ", absl::ToInt64Nanoseconds(since_epoch));
+            break;
+
+        default:
+            str = UTILITIES.TIME_FORMAT_INVALID;
+            break;
+        }
+
+        result.set_to_success(str);
+    }
+
+    void Time::get_time_unit_full_name(Result<std::string>& result,
+        const TimeScaleUnit& format) const
+    {
+        switch (format)
+        {
+        case TimeScaleUnit::NANOSECONDS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_NANOSECONDS); break;
+        case TimeScaleUnit::MICROSECONDS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_MICROSECONDS); break;
+        case TimeScaleUnit::MILLISECONDS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_MILLISECONDS); break;
+        case TimeScaleUnit::SECONDS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_SECONDS); break;
+        case TimeScaleUnit::MINUTES: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_MINUTES); break;
+        case TimeScaleUnit::HOURS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_HOURS); break;
+        case TimeScaleUnit::DAYS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_DAYS); break;
+        case TimeScaleUnit::WEEKS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_WEEKS); break;
+        case TimeScaleUnit::MONTHS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_MONTHS); break;
+        case TimeScaleUnit::YEARS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_YEARS); break;
+        default: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_SECONDS); break;
+        }
+    }
+
+    void Time::get_time_unit_abbreviation(Result<std::string>& result,
+        const TimeScaleUnit& format) const
+    {
+        switch (format)
+        {
+        case TimeScaleUnit::NANOSECONDS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_NANOSECONDS); break;
+        case TimeScaleUnit::MICROSECONDS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_MICROSECONDS); break;
+        case TimeScaleUnit::MILLISECONDS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_MILLISECONDS); break;
+        case TimeScaleUnit::SECONDS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_SECONDS); break;
+        case TimeScaleUnit::MINUTES: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_MINUTES); break;
+        case TimeScaleUnit::HOURS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_HOURS); break;
+        case TimeScaleUnit::DAYS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_DAYS); break;
+        case TimeScaleUnit::WEEKS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_WEEKS); break;
+        case TimeScaleUnit::MONTHS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_MONTHS); break;
+        case TimeScaleUnit::YEARS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_YEARS); break;
+        default: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_SECONDS); break;
+        }
+    }
+
+    void Time::get_time_unit_abbreviation(Result<TimeScaleUnit>& result,
+        const std::string& format) const
+    {
+        if (UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_STRINGS.contains(format))
+            result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_STRINGS.at(format));
+        else
+            result.set_to_success(TimeScaleUnit::NANOSECONDS);
+    }
+
+    void Time::convert_seconds(Result<double>& result,
+        const double& time,
+        const TimeScaleUnit& format) const
+    {
+        switch (format)
+        {
+        case TimeScaleUnit::NANOSECONDS: result.set_to_success(time / UTILITIES.SECONDS_OVER_NANOSECONDS); break;
+        case TimeScaleUnit::MICROSECONDS: result.set_to_success(time / UTILITIES.SECONDS_OVER_MICROSECONDS); break;
+        case TimeScaleUnit::MILLISECONDS: result.set_to_success(time / UTILITIES.SECONDS_OVER_MILLISECONDS); break;
+        case TimeScaleUnit::SECONDS: result.set_to_success(time); break;
+        case TimeScaleUnit::MINUTES: result.set_to_success(time * UTILITIES.SECONDS_PER_MINUTE); break;
+        case TimeScaleUnit::HOURS: result.set_to_success(time * UTILITIES.SECONDS_PER_HOUR); break;
+        case TimeScaleUnit::DAYS: result.set_to_success(time * UTILITIES.SECONDS_PER_DAY); break;
+        case TimeScaleUnit::WEEKS: result.set_to_success(time * UTILITIES.SECONDS_PER_WEEK); break;
+        case TimeScaleUnit::MONTHS: result.set_to_success(time * UTILITIES.SECONDS_PER_MONTH); break;
+        case TimeScaleUnit::YEARS: result.set_to_success(time * UTILITIES.SECONDS_PER_YEAR); break;
+        default: result.set_to_success(time); break;
+        }
+    }
+
+    void Time::convert_nanoseconds(Result<double>& result,
+        const double& time,
+        const TimeScaleUnit& format) const
+    {
+        switch (format)
+        {
+        case TimeScaleUnit::NANOSECONDS: result.set_to_success(time); break;
+        case TimeScaleUnit::MICROSECONDS: result.set_to_success(time / UTILITIES.SECONDS_OVER_MILLISECONDS); break;
+        case TimeScaleUnit::MILLISECONDS: result.set_to_success(time / UTILITIES.SECONDS_OVER_MICROSECONDS); break;
+        case TimeScaleUnit::SECONDS: result.set_to_success(time / UTILITIES.SECONDS_OVER_NANOSECONDS); break;
+        case TimeScaleUnit::MINUTES: result.set_to_success(time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_MINUTE)); break;
+        case TimeScaleUnit::HOURS: result.set_to_success(time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_HOUR)); break;
+        case TimeScaleUnit::DAYS: result.set_to_success(time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_DAY)); break;
+        case TimeScaleUnit::WEEKS: result.set_to_success(time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_WEEK)); break;
+        case TimeScaleUnit::MONTHS: result.set_to_success(time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_MONTH)); break;
+        case TimeScaleUnit::YEARS: result.set_to_success(time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_YEAR)); break;
+        default: result.set_to_success(time); break;
+        }
+    }
+
+    void Time::get_instance(Result<Time*>& result)
+    {
+        static Time singleton;
+
+        result.set_to_success(&singleton);
+    }
 } 

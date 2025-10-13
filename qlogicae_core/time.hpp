@@ -1,5 +1,6 @@
 #pragma once
 
+#include "result.hpp"
 #include "utilities.hpp"
 #include "time_zone.hpp"
 #include "time_format.hpp"
@@ -69,6 +70,55 @@ namespace QLogicaeCore
         ) const;
 
         static Time& get_instance();
+
+        void now(Result<double>& result) const;
+
+        void nanosecond(Result<double>& result) const;        
+
+        void millisecond(Result<double>& result) const;
+
+        void microsecond(Result<double>& result) const;
+
+        void day(Result<double>& result,
+            const TimeZone& time_zone_type = TimeZone::LOCAL) const;
+
+        void hour(Result<double>& result,
+            const TimeZone& time_zone_type = TimeZone::LOCAL) const;
+
+        void year(Result<double>& result,
+            const TimeZone& time_zone_type = TimeZone::LOCAL) const;
+
+        void month(Result<double>& result,
+            const TimeZone& time_zone_type = TimeZone::LOCAL) const;
+
+        void second(Result<double>& result,
+            const TimeZone& time_zone_type = TimeZone::LOCAL) const;
+
+        void minute(Result<double>& result,
+            const TimeZone& time_zone_type = TimeZone::LOCAL) const;
+
+        void now(Result<std::string>& result,
+            const TimeFormat& time_format,
+            const TimeZone& time_zone_type = TimeZone::LOCAL) const;
+
+        void get_time_unit_full_name(Result<std::string>& result,
+            const TimeScaleUnit& format) const;
+
+        void get_time_unit_abbreviation(Result<std::string>& result,
+            const TimeScaleUnit& format) const;
+
+        void get_time_unit_abbreviation(Result<TimeScaleUnit>& result,
+            const std::string& format) const;
+
+        void convert_seconds(Result<double>& result,
+            const double& time,
+            const TimeScaleUnit& format) const;
+
+        void convert_nanoseconds(Result<double>& result,
+            const double& time,
+            const TimeScaleUnit& format) const;
+
+        static void get_instance(Result<Time*>& result);
 
     protected:
         Time() = default;
