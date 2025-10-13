@@ -259,7 +259,6 @@ namespace QLogicaeCore
         }
     }
 
-
     std::mt19937& Generator::_random_m19937()
     {
         static thread_local std::mt19937 generator
@@ -268,6 +267,224 @@ namespace QLogicaeCore
         };
 
         return generator;
+    }
+
+    void Generator::random_uuid4(
+        Result<std::string>& result
+    ) const
+    {
+        thread_local uuids::uuid_random_generator uuid_generator(
+            _random_m19937()
+        );
+
+        result.set_to_success(
+            uuids::to_string(uuid_generator())
+        );
+    }
+
+    void Generator::random_rgb_hex(
+        Result<std::string>& result
+    ) const
+    {
+        std::string content;
+        fmt::format_to(
+            std::back_inserter(content),
+            "#{}",
+            random_hex(6)
+        );
+
+        result.set_to_success(
+            content
+        );
+    }
+
+    void Generator::random_rgba_hex(
+        Result<std::string>& result
+    ) const
+    {
+        std::string content;
+        fmt::format_to(
+            std::back_inserter(content),
+            "#{}",
+            random_hex(8)
+        );
+
+        result.set_to_success(
+            content
+        );
+    }
+
+    void Generator::random_salt(
+        Result<std::array<unsigned char, 16>>& result
+    ) const
+    {
+        std::array<unsigned char, 16> salt{};
+        randombytes_buf(salt.data(), salt.size());
+        
+        result.set_to_success(
+            salt
+        );
+    }
+
+    void Generator::random_bytes(
+        Result<void>& result,
+        unsigned char* buffer,
+        size_t size
+    ) const
+    {
+        if (buffer == nullptr && size > 0)
+        {
+            result.set_to_failure();
+            return;
+        }
+
+        randombytes_buf(buffer, size);
+        result.set_to_success();
+    }
+
+    void Generator::random_bool(
+        Result<bool>& result,
+        const double& true_probability
+    ) const
+    {
+        if (true_probability < 1)
+        {
+            result.set_to_failure();
+            return;
+        }
+
+        result.set_to_success(
+            std::bernoulli_distribution(
+                true_probability
+            )(_random_m19937())
+        );
+    }
+
+    void Generator::random_string_vector(
+        Result<std::vector<std::string>>& result,
+        const size_t& size,
+        const size_t& length
+    ) const
+    {
+        size_t index;
+        std::vector<std::string> content;
+        content.reserve(size);
+
+        for (index = 0; index < size; ++index)
+        {
+            content.emplace_back(random_string(length));
+        }
+
+        result.set_to_success(content);
+    }
+
+    void Generator::random_hex(
+        Result<std::string>& result,
+        const size_t& length,
+        const std::string_view& character_set
+    ) const
+    {
+        if (character_set.empty() || length < 1)
+        {
+            result.set_to_failure();
+            return;
+        }
+
+        result.set_to_success(
+            ENCODER.from_utf8_to_hex(
+                random_string(length, character_set)
+            )
+        );
+    }
+
+    void Generator::random_string(
+        Result<std::string>& result,
+        const size_t& length,
+        const std::string_view& character_set
+    ) const
+    {
+        if (character_set.empty() || length < 1)
+        {
+            result.set_to_failure();
+            return;
+        }
+
+        std::string content;
+        content.reserve(length);
+
+        std::mt19937& random_engine = _random_m19937();
+
+        std::uniform_int_distribution<std::size_t> distribution(
+            0, character_set.size() - 1);
+
+        for (std::size_t index = 0; index < length; ++index)
+        {
+            content += character_set[distribution(random_engine)];
+        }
+
+        result.set_to_success(content);
+    }
+
+    void Generator::random_base64(
+        Result<std::string>& result,
+        const size_t& length,
+        const std::string_view& character_set
+    ) const
+    {
+        if (character_set.size() < 64 || length < 1)
+        {
+            result.set_to_failure();
+            return;
+        }
+
+        const std::string raw = random_string(length, character_set);
+        result.set_to_success(
+            ENCODER.from_utf8_to_base64(raw)
+        );
+    }
+
+    void Generator::random_int(
+        Result<int>& result,
+        const int& minimum,
+        const int& maximum
+    ) const
+    {
+        if (maximum < minimum)
+        {
+            result.set_to_failure();
+            return;
+        }
+
+        result.set_to_success(std::uniform_int_distribution<int>(
+            minimum, maximum)(_random_m19937())
+        );
+    }
+
+    void Generator::random_double(
+        Result<double>& result,
+        const double& minimum,
+        const double& maximum
+    ) const
+    {
+        if (maximum < minimum)
+        {
+            result.set_to_failure();
+            return;
+        }
+
+        result.set_to_success(
+            std::uniform_real_distribution<double>(
+                minimum, maximum)(_random_m19937())
+        );
+    }
+
+    void Generator::get_instance(
+        Result<Generator*>& result
+    )
+    {
+        static Generator instance;
+
+        result.set_to_success(&instance);
     }
 }
 

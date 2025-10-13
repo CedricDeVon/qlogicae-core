@@ -33,6 +33,7 @@ namespace QLogicaeCore
 	std::size_t AbstractFileIO::get_line_count() const
 	{
 		std::ifstream file(_file_path);
+		
 		if (!file.is_open())
 		{
 			return 0;
@@ -54,6 +55,52 @@ namespace QLogicaeCore
 	)
 	{
 		_file_path = file_path;
+	}
+
+
+	void AbstractFileIO::get_name(
+		Result<std::string>& result
+	) const
+	{
+		result.set_to_success(_name);
+	}
+
+	void AbstractFileIO::get_file_path(
+		Result<std::string>& result
+	) const
+	{
+		result.set_to_success(_file_path);
+	}
+
+	void AbstractFileIO::get_line_count(
+		Result<std::size_t>& result
+	) const
+	{
+		std::ifstream file(_file_path);
+
+		if (!file.is_open())
+		{
+			result.set_to_success(0);
+		}
+
+		std::size_t count = 0;
+		std::string line;
+
+		while (std::getline(file, line))
+		{
+			++count;
+		}
+
+		result.set_to_success(count);
+	}
+
+	void AbstractFileIO::set_file_path(
+		Result<bool>& result,
+		const std::string_view& file_path
+	)
+	{
+		_file_path = file_path;
+		result.set_is_successful(true);
 	}
 }
 

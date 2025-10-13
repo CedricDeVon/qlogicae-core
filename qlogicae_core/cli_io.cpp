@@ -218,5 +218,192 @@ namespace QLogicaeCore
 
 		return singleton;
 	}
+
+	void CliIO::is_scan_enabled(
+		Result<bool>& result) const
+	{
+		result.set_to_success(_is_scan_enabled);
+	}
+
+	void CliIO::is_print_enabled(
+		Result<bool>& result) const
+	{
+		result.set_to_success(_is_print_enabled);
+	}
+
+	void CliIO::set_scan_enabled(
+		Result<void>& result,
+		const bool& value
+	)
+	{
+		_is_scan_enabled = value;
+
+		result.set_to_success();
+	}
+
+	void CliIO::set_print_enabled(
+		Result<void>& result,
+		const bool& value
+	)
+	{
+		_is_print_enabled = value;
+
+		result.set_to_success();
+	}
+
+	void CliIO::scan(Result<std::string>& result)
+	{
+		std::scoped_lock lock(_mutex);
+
+		std::string content;
+
+		std::getline(std::cin, content);
+		if (!content.empty() && content.back() == '\r')
+		{
+			content.pop_back();
+		}
+
+		result.set_to_success(content);
+	}
+
+	void CliIO::builtin_scan(Result<std::string>& result)
+	{
+		std::string content;
+		std::cin >> content;
+
+		result.set_to_success(content);
+	}
+
+	void CliIO::print(Result<void>& result,
+		const std::string_view& text
+	)
+	{
+		std::scoped_lock lock(_mutex);
+
+		fast_io::io::print(fast_io::out(), text);
+	}
+
+	void CliIO::builtin_print(
+		Result<void>& result,
+		const std::string_view& text
+	)
+	{
+		std::cout << text;
+
+		result.set_to_success();
+	}
+
+	void CliIO::print_with_new_line(
+		Result<void>& result,
+		const std::string_view& text
+	)
+	{
+		std::scoped_lock lock(_mutex);
+
+		fast_io::io::println(fast_io::out(), text);
+	}
+
+	void CliIO::builtin_print_with_new_line(
+		Result<void>& result,
+		const std::string_view& text
+	)
+	{
+		std::scoped_lock lock(_mutex);
+
+		std::cout << text;
+	}
+
+	void CliIO::scan_async(
+		Result<std::future<std::string>>& result)
+	{
+		result.set_to_success(std::async(
+			std::launch::async, [this]() -> std::string
+			{
+				Result<std::string> result;
+				scan(result);
+
+				return result.get_data();
+			}
+		));
+	}
+
+	void CliIO::builtin_scan_async(
+		Result<std::future<std::string>>& result)
+	{
+		result.set_to_success(
+			std::async(std::launch::async,
+			[this]() -> std::string
+			{
+				Result<std::string> result;
+				builtin_scan(result);
+
+				return result.get_data();
+			}
+		));
+	}
+
+	void CliIO::print_async(
+		Result<std::future<void>>& result,
+		const std::string_view& text
+	)
+	{
+		result.set_to_success(std::async(std::launch::async,
+			[this, text]() -> void
+			{
+				Result<void> result;
+				print(result, text);				
+			}
+		));
+	}
+
+	void CliIO::builtin_print_async(
+		Result<std::future<void>>& result,
+		const std::string_view& text
+	)
+	{
+		result.set_to_success(std::async(std::launch::async,
+			[this, text]() -> void
+			{
+				Result<void> result;
+				builtin_print(result, text);
+			}
+		));
+	
+	}
+
+	void CliIO::print_with_new_line_async(
+		Result<std::future<void>>& result,
+		const std::string_view& text
+	)
+	{
+		result.set_to_success(std::async(std::launch::async,
+			[this, text]() -> void
+			{
+				print_with_new_line(text);
+			}
+		));
+	}
+
+	void CliIO::builtin_print_with_new_line_async(
+		Result<std::future<void>>& result,
+		const std::string_view& text
+	)
+	{
+		result.set_to_success(std::async(std::launch::async,
+			[this, text]() -> void
+			{
+				builtin_print_with_new_line(text);
+			}
+		));
+	}
+
+	void CliIO::get_instance(Result<CliIO*>& result)
+	{
+		static CliIO singleton;
+
+		result.set_to_success(
+			&singleton
+		);
+	}
 }
 
