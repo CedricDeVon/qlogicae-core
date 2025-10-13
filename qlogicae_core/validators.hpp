@@ -213,8 +213,8 @@ namespace QLogicaeCore
         bool is_empty(const std::vector<Type>& values);
         
         template<typename Type>
-        bool is_found(const std::vector<Type>& values, std::function<bool(const Type&)> predicate);
-       
+        bool is_found(const std::vector<Type>& values, std::function<bool(const Type&)> predicate);       
+
         static Validators& get_instance();
 
     protected:
