@@ -30,84 +30,94 @@ namespace QLogicaeCore
             const AES256SignatureCryptographer&
                 aes_256_signature_cryptographer) = delete;
 
+        void setup(Result<bool>& result);
+
         std::string reverse(
-            const std::string_view& cipher,
+            const std::string& cipher,
             unsigned char* public_key
         ) const;
 
         std::string reverse(
-            const std::string_view& cipher,
-            const std::string_view& public_key
+            const std::string& cipher,
+            const std::string& public_key
         ) const;
 
         std::string transform(
-            const std::string_view& text,
+            const std::string& text,
             unsigned char* public_key,
             unsigned char* private_key
         ) const;
 
         std::string transform(
-            const std::string_view& text,
-            const std::string_view& public_key,
-            const std::string_view& private_key
+            const std::string& text,
+            const std::string& public_key,
+            const std::string& private_key
         ) const;
 
         std::future<std::string> reverse_async(
-            const std::string_view& cipher,
+            const std::string& cipher,
             unsigned char* public_key
         ) const;
 
         std::future<std::string> reverse_async(
-            const std::string_view& cipher,
-            const std::string_view& public_key
+            const std::string& cipher,
+            const std::string& public_key
         ) const;
 
         std::future<std::string> transform_async(
-            const std::string_view& text,
+            const std::string& text,
             unsigned char* public_key,
             unsigned char* private_key
         ) const;
 
         std::future<std::string> transform_async(
-            const std::string_view& text,
-            const std::string_view& public_key,
-            const std::string_view& private_key
+            const std::string& text,
+            const std::string& public_key,
+            const std::string& private_key
         ) const;
 
-        void reverse(Result<std::string>& result,
-            const std::string_view& cipher,
+        void reverse(
+            Result<std::string>& result,
+            const std::string& cipher,
             unsigned char* public_key) const;
 
-        void reverse(Result<std::string>& result,
-            const std::string_view& cipher,
-            const std::string_view& public_key) const;
+        void reverse(
+            Result<std::string>& result,
+            const std::string& cipher,
+            const std::string& public_key) const;
 
-        void transform(Result<std::string>& result,
-            const std::string_view& text,
+        void transform(
+            Result<std::string>& result,
+            const std::string& text,
             unsigned char* public_key,
             unsigned char* private_key) const;
 
-        void transform(Result<std::string>& result,
-            const std::string_view& text,
-            const std::string_view& public_key,
-            const std::string_view& private_key) const;
+        void transform(
+            Result<std::string>& result,
+            const std::string& text,
+            const std::string& public_key,
+            const std::string& private_key) const;
 
-        void reverse_async(Result<std::future<std::string>>& result,
-            const std::string_view& cipher,
+        void reverse_async(
+            Result<std::future<std::string>>& result,
+            const std::string& cipher,
             unsigned char* public_key) const;
 
-        void reverse_async(Result<std::future<std::string>>& result,
-            const std::string_view& cipher,
-            const std::string_view& public_key) const;
+        void reverse_async(
+            Result<std::future<std::string>>& result,
+            const std::string& cipher,
+            const std::string& public_key) const;
 
-        void transform_async(Result<std::future<std::string>>& result,
-            const std::string_view& text,
+        void transform_async(
+            Result<std::future<std::string>>& result,
+            const std::string& text,
             unsigned char* public_key,
             unsigned char* private_key) const;
 
-        void transform_async(Result<std::future<std::string>>& result,
-            const std::string_view& text,
-            const std::string_view& public_key,
-            const std::string_view& private_key) const;
+        void transform_async(
+            Result<std::future<std::string>>& result,
+            const std::string& text,
+            const std::string& public_key,
+            const std::string& private_key) const;
     };
 }

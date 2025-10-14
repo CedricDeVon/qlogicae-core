@@ -9,10 +9,15 @@ namespace QLogicaeCore
 	{
 
 	}
+    
+    void AES256SignatureCryptographer::setup(Result<bool>& result)
+    {
+        result.set_to_success();
+    }
 
 	std::string AES256SignatureCryptographer::reverse(
-		const std::string_view& va,
-		const std::string_view& vb) const
+		const std::string& va,
+		const std::string& vb) const
 	{
 		return reverse(
 			va,
@@ -21,9 +26,9 @@ namespace QLogicaeCore
 	}
 
 	std::string AES256SignatureCryptographer::transform(
-		const std::string_view& va,
-		const std::string_view& vb,
-		const std::string_view& vc) const
+		const std::string& va,
+		const std::string& vb,
+		const std::string& vc) const
 	{
 		return transform(
 			va,
@@ -33,8 +38,8 @@ namespace QLogicaeCore
 	}
 
 	std::future<std::string> AES256SignatureCryptographer::reverse_async(
-		const std::string_view& va,
-		const std::string_view& vb) const
+		const std::string& va,
+		const std::string& vb) const
 	{
 		return std::async(std::launch::async,
 			[this, va, vb]() -> std::string
@@ -44,9 +49,9 @@ namespace QLogicaeCore
 	}
 
 	std::future<std::string> AES256SignatureCryptographer::transform_async(
-		const std::string_view& va,
-		const std::string_view& vb,
-		const std::string_view& vc) const
+		const std::string& va,
+		const std::string& vb,
+		const std::string& vc) const
 	{
 		return std::async(std::launch::async,
 			[this, va, vb, vc]() -> std::string
@@ -56,7 +61,7 @@ namespace QLogicaeCore
 	}
 
 	std::string AES256SignatureCryptographer::transform(
-		const std::string_view& va,
+		const std::string& va,
 		unsigned char* vb,
 		unsigned char* vc) const
 	{
@@ -92,7 +97,7 @@ namespace QLogicaeCore
 	}
 
 	std::string AES256SignatureCryptographer::reverse(
-		const std::string_view& va,
+		const std::string& va,
 		unsigned char* vb) const
 	{
 		try
@@ -127,7 +132,7 @@ namespace QLogicaeCore
 	}
 
 	std::future<std::string> AES256SignatureCryptographer::reverse_async(
-		const std::string_view& va,
+		const std::string& va,
 		unsigned char* vb) const
 	{
 		return std::async(std::launch::async, [this, va, vb]() -> std::string
@@ -137,7 +142,7 @@ namespace QLogicaeCore
 	}
 
 	std::future<std::string> AES256SignatureCryptographer::transform_async(
-		const std::string_view& va,
+		const std::string& va,
 		unsigned char* vb,
 		unsigned char* vc) const
 	{
@@ -149,7 +154,7 @@ namespace QLogicaeCore
 
     void AES256SignatureCryptographer::reverse(
         Result<std::string>& result,
-        const std::string_view& cipher,
+        const std::string& cipher,
         unsigned char* public_key
     ) const
     {
@@ -157,7 +162,7 @@ namespace QLogicaeCore
 
         if (!public_key)
         {
-            result.set_to_failure("");
+            result.set_to_failure();
             return;
         }
 
@@ -173,7 +178,7 @@ namespace QLogicaeCore
             public_key
         ) != 0)
         {
-            result.set_to_failure("");
+            result.set_to_failure();
             return;
         }
 
@@ -184,8 +189,8 @@ namespace QLogicaeCore
 
     void AES256SignatureCryptographer::reverse(
         Result<std::string>& result,
-        const std::string_view& cipher,
-        const std::string_view& public_key
+        const std::string& cipher,
+        const std::string& public_key
     ) const
     {
         reverse(
@@ -199,7 +204,7 @@ namespace QLogicaeCore
 
     void AES256SignatureCryptographer::transform(
         Result<std::string>& result,
-        const std::string_view& text,
+        const std::string& text,
         unsigned char* public_key,
         unsigned char* private_key
     ) const
@@ -208,7 +213,7 @@ namespace QLogicaeCore
 
         if (!public_key || !private_key)
         {
-            result.set_to_failure("");
+            result.set_to_failure();
             return;
         }
 
@@ -236,9 +241,9 @@ namespace QLogicaeCore
 
     void AES256SignatureCryptographer::transform(
         Result<std::string>& result,
-        const std::string_view& text,
-        const std::string_view& public_key,
-        const std::string_view& private_key
+        const std::string& text,
+        const std::string& public_key,
+        const std::string& private_key
     ) const
     {
         transform(
@@ -255,7 +260,7 @@ namespace QLogicaeCore
 
     void AES256SignatureCryptographer::reverse_async(
         Result<std::future<std::string>>& result,
-        const std::string_view& cipher,
+        const std::string& cipher,
         unsigned char* public_key
     ) const
     {
@@ -263,7 +268,9 @@ namespace QLogicaeCore
             std::async(std::launch::async, [this, cipher, public_key]() -> std::string
             {
                 Result<std::string> inner_result;
+                
                 reverse(inner_result, cipher, public_key);
+
                 return inner_result.get_data();
             })
         );
@@ -271,15 +278,17 @@ namespace QLogicaeCore
 
     void AES256SignatureCryptographer::reverse_async(
         Result<std::future<std::string>>& result,
-        const std::string_view& cipher,
-        const std::string_view& public_key
+        const std::string& cipher,
+        const std::string& public_key
     ) const
     {
         result.set_to_success(
             std::async(std::launch::async, [this, cipher, public_key]() -> std::string
                 {
                     Result<std::string> inner_result;
+                    
                     reverse(inner_result, cipher, public_key);
+
                     return inner_result.get_data();
                 })
         );
@@ -287,7 +296,7 @@ namespace QLogicaeCore
 
     void AES256SignatureCryptographer::transform_async(
         Result<std::future<std::string>>& result,
-        const std::string_view& text,
+        const std::string& text,
         unsigned char* public_key,
         unsigned char* private_key
     ) const
@@ -296,7 +305,9 @@ namespace QLogicaeCore
             std::async(std::launch::async, [this, text, public_key, private_key]() -> std::string
                 {
                     Result<std::string> inner_result;
+                    
                     transform(inner_result, text, public_key, private_key);
+
                     return inner_result.get_data();
                 })
         );
@@ -304,16 +315,18 @@ namespace QLogicaeCore
 
     void AES256SignatureCryptographer::transform_async(
         Result<std::future<std::string>>& result,
-        const std::string_view& text,
-        const std::string_view& public_key,
-        const std::string_view& private_key
+        const std::string& text,
+        const std::string& public_key,
+        const std::string& private_key
     ) const
     {
         result.set_to_success(
             std::async(std::launch::async, [this, text, public_key, private_key]() -> std::string
                 {
                     Result<std::string> inner_result;
+                    
                     transform(inner_result, text, public_key, private_key);
+
                     return inner_result.get_data();
                 })
         );
