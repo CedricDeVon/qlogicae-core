@@ -219,6 +219,18 @@ namespace QLogicaeCore
 		return singleton;
 	}
 
+	void CliIO::setup(
+		Result<void>& result,
+		const bool& is_scan_enabled,
+		const bool& is_print_enabled
+	)
+	{
+		_is_scan_enabled = is_scan_enabled;
+		_is_print_enabled = is_print_enabled;
+
+		result.set_to_success();
+	}
+
 	void CliIO::is_scan_enabled(
 		Result<bool>& result) const
 	{
@@ -351,6 +363,7 @@ namespace QLogicaeCore
 			[this, text]() -> void
 			{
 				Result<void> result;
+				
 				print(result, text);				
 			}
 		));
@@ -365,6 +378,7 @@ namespace QLogicaeCore
 			[this, text]() -> void
 			{
 				Result<void> result;
+				
 				builtin_print(result, text);
 			}
 		));
@@ -379,7 +393,9 @@ namespace QLogicaeCore
 		result.set_to_success(std::async(std::launch::async,
 			[this, text]() -> void
 			{
-				print_with_new_line(text);
+				Result<void> result;
+
+				print_with_new_line(result, text);
 			}
 		));
 	}
@@ -392,7 +408,9 @@ namespace QLogicaeCore
 		result.set_to_success(std::async(std::launch::async,
 			[this, text]() -> void
 			{
-				builtin_print_with_new_line(text);
+				Result<void> result;
+				
+				builtin_print_with_new_line(result, text);
 			}
 		));
 	}

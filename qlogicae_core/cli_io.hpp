@@ -60,51 +60,81 @@ namespace QLogicaeCore
 
 		static CliIO& get_instance();
 
-		void is_scan_enabled(Result<bool>& result) const;
+		void setup(
+			Result<void>& result,
+			const bool& is_scan_enabled = true,
+			const bool& is_print_enabled = true
+		);
 
-		void is_print_enabled(Result<bool>& result) const;
+		void is_scan_enabled(
+			Result<bool>& result
+		) const;
 
-		void set_scan_enabled(Result<void>& result,const bool& value);
+		void is_print_enabled(
+			Result<bool>& result
+		) const;
 
-		void set_print_enabled(Result<void>& result,const bool& value);
+		void set_scan_enabled(
+			Result<void>& result,
+			const bool& value
+		);
 
-		void scan(Result<std::string>& result);
+		void set_print_enabled(
+			Result<void>& result,
+			const bool& value
+		);
 
-		void builtin_scan(Result<std::string>& result);
+		void scan(
+			Result<std::string>& result);
 
-		void print(Result<void>& result,
+		void builtin_scan(
+			Result<std::string>& result);
+
+		void print(
+			Result<void>& result,
 			const std::string_view& text = ""
 		);
 
-		void builtin_print(Result<void>& result,
+		void builtin_print(
+			Result<void>& result,
 			const std::string_view& text = ""
 		);
 
-		void print_with_new_line(Result<void>& result,
+		void print_with_new_line(
+			Result<void>& result,
 			const std::string_view& text = ""
 		);
 
-		void builtin_print_with_new_line(Result<void>& result,
+		void builtin_print_with_new_line(
+			Result<void>& result,
 			const std::string_view& text = ""
 		);
 
-		void scan_async(Result<std::future<std::string>>& result);
+		void scan_async(
+			Result<std::future<std::string>>& result
+		);
 
-		void builtin_scan_async(Result<std::future<std::string>>& result);
+		void builtin_scan_async(
+			Result<std::future<std::string>>& result
+		);
 
-		void print_async(Result< std::future<void>>& result,
+		void print_async(
+			Result< std::future<void>>& result,
 			const std::string_view& text = ""
 		);
 
-		void builtin_print_async(Result<std::future<void>>& result,
+		void builtin_print_async(
+			Result<std::future<void>>& result,
 			const std::string_view& text = ""
 		);
 
-		void print_with_new_line_async(Result<std::future<void>>& result,
+		void print_with_new_line_async(
+			Result<std::future<void>>& result,
 			const std::string_view& text = ""
 		);
 
-		void builtin_print_with_new_line_async(Result<std::future<void>>& result,
+		void builtin_print_with_new_line_async(
+			Result<std::future<void>>& result,
 			const std::string_view& text = ""
 		);
 
