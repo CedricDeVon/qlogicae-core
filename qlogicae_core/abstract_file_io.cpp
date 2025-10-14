@@ -103,4 +103,3 @@ namespace QLogicaeCore
 		result.set_is_successful(true);
 	}
 }
-

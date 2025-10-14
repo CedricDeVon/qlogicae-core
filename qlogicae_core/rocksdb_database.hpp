@@ -1,5 +1,6 @@
 #pragma once
 
+#include "result.hpp"
 #include "utilities.hpp"
 #include "rocksdb_config.hpp"
 
@@ -104,23 +105,101 @@ namespace QLogicaeCore
         
         bool rollback_transaction();
 
+
+
+        void get_file_path(Result<std::string>& result) const;
+
+        void setup(Result<void>& result, const std::string& path, const RocksDBConfig& config = {});
+
+        void is_path_found(Result<bool>& result, const std::string&) const;
+
+        void is_key_found(Result<bool>& result, const std::string&) const;
+
+        void remove_value(Result<bool>& result, const std::string&);
+
+        void batch_execute(Result<bool>& result);
+
+        void create_column_family(Result<bool>& result, const std::string&);
+
+        void drop_column_family(Result<bool>& result, const std::string&);
+
+        void use_column_family(Result<bool>& result, const std::string&);
+
+        void begin_batch(Result<bool>& result);
+
+        void commit_batch(Result<bool>& result);
+
+        void create_backup(Result<bool>& result, const std::string&) const;
+
+        void restore_backup(Result<bool>& result, const std::string&);
+
+        void create_checkpoint(Result<bool>& result, const std::string&) const;
+
+        void get_with_bounds(
+            Result<std::optional<std::string>>& result,
+            const std::string&, uint64_t, uint64_t);
+
+        void begin_transaction(Result<bool>& result);
+
+        void commit_transaction(Result<bool>& result);
+
+        void rollback_transaction(Result<bool>& result);
+
+        void remove_value_async(Result<std::future<bool>>& result, const std::string&);
+
+        void batch_execute_async(Result<std::future<bool>>& result);
+
+        template <typename Type>
+        void get_value(Result<Type>& result, const std::string&);
+
+        template <typename Type>
+        void set_value(Result<void>& result, const std::string&, const Type&);
+
+        template <typename Type>
+        void batch_set_value(Result<void>& result, const std::string&, const Type&);
+
+        template <typename Type>
+        void batch_remove_value(Result<void>& result, const std::string&, const Type&);
+
+        template <typename Type>
+        void get_value_async(Result<std::future<Type>>& result, const std::string&);
+
+        template <typename Type>
+        void set_value_async(Result<std::future<void>>& result, const std::string&, const Type&);
+
     protected:
         RocksDBConfig _config;
+        
         rocksdb::DB* _object{};
+        
         std::string _file_path;
+        
         rocksdb::Options _options;
+        
         rocksdb::WriteOptions _write_options;
+        
         rocksdb::BlockBasedTableOptions _table_options;
+        
         rocksdb::TransactionDBOptions _txn_db_options;
+        
         rocksdb::Status _status;
+        
         mutable std::shared_mutex _mutex;
+        
         rocksdb::WriteBatch _write_batch;
+        
         std::vector<std::string> _cf_names;
+        
         rocksdb::ReadOptions _read_options;
+        
         rocksdb::Transaction* _transaction{};
+        
         rocksdb::TransactionDB* _transaction_db{};
+        
         rocksdb::TransactionDBOptions _txn_options;
+        
         std::unique_ptr<const rocksdb::FilterPolicy> _bloom_filter;
+
         std::unordered_map<std::string, rocksdb::ColumnFamilyHandle*> _column_families;
 
         void open_db();
@@ -169,6 +248,7 @@ namespace QLogicaeCore
     inline void RocksDBDatabase::batch_set_value(const std::string_view& key, const T& value)
     {
         std::unique_lock lock(_mutex);
+
         _write_batch.Put(key.data(), serialize(value));
     }
 
@@ -176,6 +256,7 @@ namespace QLogicaeCore
     inline void RocksDBDatabase::batch_remove_value(const std::string_view& key, const T&)
     {
         std::unique_lock lock(_mutex);
+
         _write_batch.Delete(key.data());
     }
 
@@ -213,13 +294,123 @@ namespace QLogicaeCore
     }
 
     template <>
-    inline std::string RocksDBDatabase::serialize<std::string>(const std::string& value) {
+    inline std::string RocksDBDatabase::serialize<std::string>(const std::string& value)
+    {
         return value;
     }
 
     template <>
-    inline std::string RocksDBDatabase::deserialize<std::string>(const std::string& data) {
+    inline std::string RocksDBDatabase::deserialize<std::string>(const std::string& data)
+    {
         return data;
     }
-}
 
+
+
+
+
+    template <typename Type>
+    void RocksDBDatabase::get_value(
+        Result<Type>& result,
+        const std::string& key
+    )
+    {
+        std::shared_lock lock(_mutex);
+
+        std::string value;
+        auto s = _object->Get(_read_options, key, &value);
+        if (!s.ok())
+        {
+            result.set_to_failure();
+            return;
+        }
+            
+        result.set_to_success(
+            deserialize<Type>(value)
+        );
+    }
+
+    template <typename Type>
+    void RocksDBDatabase::set_value(
+        Result<void>& result,
+        const std::string& key,
+        const Type& value
+    )
+    {
+        std::unique_lock lock(_mutex);
+
+        auto serialized = serialize(value);
+        auto s = _object->Put(_options, key, serialized);
+        if (!s.ok())
+        {
+            result.set_to_failure();
+            return;
+        }
+
+        result.set_to_success();
+    }
+
+    template <typename Type>
+    void RocksDBDatabase::batch_set_value(
+        Result<void>& result,
+        const std::string& key,
+        const Type& value
+    )
+    {
+        std::unique_lock lock(_mutex);
+
+        _write_batch.Put(key, serialize(value));
+
+        result.set_to_success();
+    }
+
+    template <typename Type>
+    void RocksDBDatabase::batch_remove_value(
+        Result<void>& result,
+        const std::string& key,
+        const Type& value
+    )
+    {
+        std::unique_lock lock(_mutex);
+        
+        _write_batch.Delete(key);
+
+        result.set_to_success();
+    }
+
+    template <typename Type>
+    void RocksDBDatabase::get_value_async(
+        Result<std::future<Type>>& result,
+        const std::string& key
+    )
+    {
+        result.set_to_success(
+            std::async(std::launch::async, [this, key = std::move(key)]()
+            {
+                Result<Type> result;
+
+                get_value<Type>(result, key);
+
+                return result.get_data();
+            })
+        );
+    }
+
+    template <typename Type>
+    void RocksDBDatabase::set_value_async(
+        Result<std::future<void>>& result,
+        const std::string& key,
+        const Type& value
+    )
+    {
+        result.set_to_success(
+            std::async(std::launch::async,
+                [this, key = std::move(key), value = std::move(value)]()
+            {
+                    Result<Type> result;
+
+                    set_value<Type>(key, value);
+            })
+        );
+    }
+}

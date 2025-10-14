@@ -144,3 +144,4 @@ namespace QLogicaeCore
         rapidjson::Value make_value(const std::unordered_map<std::string, std::any>&, rapidjson::Document::AllocatorType&);
     };
 }
+

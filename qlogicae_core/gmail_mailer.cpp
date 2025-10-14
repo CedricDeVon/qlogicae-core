@@ -35,7 +35,7 @@ namespace QLogicaeCore
         }
 
         curl_global_init(CURL_GLOBAL_DEFAULT);
-        initialize();
+        setup();
     }
 
     GmailMailer::~GmailMailer()
@@ -44,14 +44,14 @@ namespace QLogicaeCore
         curl_global_cleanup();        
     }
 
-    void GmailMailer::initialize()
+    void GmailMailer::setup()
     {
         try
         {
             _curl = curl_easy_init();
             if (_curl == nullptr)
             {
-                throw std::runtime_error("Exception at GmailMailer::initialize(): CURL initialization failed");
+                throw std::runtime_error("Exception at GmailMailer::setup(): CURL initialization failed");
             }
 
             configure_smtp();
@@ -61,7 +61,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at GmailMailer::initialize(): " + exception.what());
+            throw std::runtime_error(std::string() + "Exception at GmailMailer::setup(): " + exception.what());
         }
     }
 
@@ -428,5 +428,195 @@ namespace QLogicaeCore
             attach_file(file_path, mime_type, filename);
         });
     }
-}
 
+
+
+    void GmailMailer::set_subject(
+        Result<void>& result,
+        const std::string& subject
+    )
+    {
+        std::scoped_lock lock(_access_mutex);
+
+        this->_subject = subject;
+
+        result.set_to_success();
+    }
+
+    void GmailMailer::set_subject_async(
+        Result<std::future<void>>& result,
+        const std::string& subject
+    )
+    {
+        result.set_to_success(std::async(std::launch::async, [this, subject]()
+            {
+                Result<void> result;
+
+                set_subject(result, subject);
+            })
+        );
+    }
+
+    void GmailMailer::set_html_body(
+        Result<void>& result,
+        const std::string& html
+    )
+    {
+        std::scoped_lock lock(_access_mutex);
+
+        _html_body = html;
+
+        result.set_to_success();
+    }
+
+    void GmailMailer::set_html_body_async(
+        Result<std::future<void>>& result,
+        const std::string& html
+    )
+    {
+        result.set_to_success(std::async(std::launch::async, [this, html]()
+            {
+                Result<void> result;
+
+                set_html_body(result, html);
+            })
+        );
+    }
+
+    void GmailMailer::set_plain_body(
+        Result<void>& result,
+        const std::string& plain
+    )
+    {
+        std::scoped_lock lock(_access_mutex);
+
+        _plain_body = plain;
+
+        result.set_to_success();
+    }
+
+    void GmailMailer::set_plain_body_async(
+        Result<std::future<void>>& result,
+        const std::string& plain
+    )
+    {
+        result.set_to_success(std::async(std::launch::async, [this, plain]()
+            {
+                Result<void> result;
+
+                set_plain_body(result, plain);
+            })
+        );
+    }
+
+    void GmailMailer::set_header(
+        Result<void>& result,
+        const std::string& key,
+        const std::string& value)
+    {
+        std::scoped_lock lock(_access_mutex);
+
+        _custom_headers[key] = value;
+
+        result.set_to_success();
+    }
+
+    void GmailMailer::set_header_async(
+        Result<std::future<void>>& result,
+        const std::string& key,
+        const std::string& value)
+    {
+        result.set_to_success(std::async(std::launch::async, [this, key, value]()
+            {
+                Result<void> result;
+
+                set_header(result, key, value);
+            })
+        );
+    }
+
+    void GmailMailer::attach_inline_image(
+        Result<void>& result,
+        const std::string& file_path,
+        const std::string& content_id,
+        const std::string& mime_type)
+    {
+        std::scoped_lock lock(_access_mutex);
+
+        if (!std::filesystem::exists(file_path))
+        {
+            result.set_to_failure();
+            return;
+        }
+
+        curl_mimepart* part = curl_mime_addpart(_mime_related);
+        curl_mime_filedata(part, file_path.c_str());
+        curl_mime_type(part, mime_type.c_str());
+        curl_mime_encoder(part, "base64");
+        curl_mime_filename(part, file_path.c_str());
+
+        std::string header = "Content-ID: <" + content_id + ">";
+        struct curl_slist* header_list = curl_slist_append(nullptr, header.c_str());
+        curl_mime_headers(part, header_list, 1);
+
+        result.set_to_success();
+    }
+
+    void GmailMailer::attach_inline_image_async(
+        Result<std::future<void>>& result,
+        const std::string& file_path,
+        const std::string& content_id,
+        const std::string& mime_type)
+    {
+        result.set_to_success(std::async(std::launch::async, [this, file_path, content_id, mime_type]()
+            {
+                Result<void> result;
+
+                attach_inline_image(result, file_path, content_id, mime_type);
+            })
+        );
+    }
+
+    void GmailMailer::attach_file(
+        Result<void>& result,
+        const std::string& file_path,
+        const std::string& mime_type,
+        const std::string& filename)
+    {
+        std::scoped_lock lock(_access_mutex);
+
+        if (!std::filesystem::exists(file_path))
+        {
+            result.set_to_failure();
+            return;
+        }
+
+        curl_mimepart* part = curl_mime_addpart(_mime_mixed);
+        curl_mime_filedata(part, file_path.c_str());
+        curl_mime_type(part, mime_type.c_str());
+        curl_mime_encoder(part, "base64");
+        curl_mime_filename(part, filename.c_str());
+
+        std::string header =
+            "Content-Disposition: attachment; filename=\"" + filename + "\"";
+        struct curl_slist* header_list = curl_slist_append(nullptr, header.c_str());
+        curl_mime_headers(part, header_list, 1);
+
+        result.set_to_success();
+    }
+
+    void GmailMailer::attach_file_async(
+        Result<std::future<void>>& result,
+        const std::string& file_path,
+        const std::string& mime_type,
+        const std::string& filename)
+    {
+        result.set_to_success(std::async(std::launch::async, [this, file_path, mime_type, filename]()
+            {
+                Result<void> result;
+
+                attach_file(result, file_path, mime_type, filename);
+            })
+        );
+    }
+}

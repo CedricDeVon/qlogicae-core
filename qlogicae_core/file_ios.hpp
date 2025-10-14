@@ -71,3 +71,4 @@ namespace QLogicaeCore
     inline static FileIOs& FILE_IOS = FileIOs::get_instance();
 }
 
+

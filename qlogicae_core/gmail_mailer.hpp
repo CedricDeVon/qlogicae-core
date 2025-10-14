@@ -1,5 +1,6 @@
 #pragma once
 
+#include "result.hpp"
 #include "utilities.hpp"
 
 #include <curl/curl.h>
@@ -84,31 +85,127 @@ namespace QLogicaeCore
 
         std::future<bool> send_email_async();
 
+        void set_subject(
+            Result<void>& result,
+            const std::string& subject
+        );
+
+        void set_subject_async(
+            Result<std::future<void>>& result,
+            const std::string& subject
+        );
+
+        void set_html_body(
+            Result<void>& result,
+            const std::string& html
+        );
+
+        void set_html_body_async(
+            Result<std::future<void>>& result,
+            const std::string& html
+        );
+
+        void set_plain_body(
+            Result<void>& result,
+            const std::string& plain
+        );
+
+        void set_plain_body_async(
+            Result<std::future<void>>& result,
+            const std::string& plain
+        );
+
+        void set_header(
+            Result<void>& result,             
+            const std::string& key,
+            const std::string& value
+        );
+
+        void set_header_async(
+            Result<std::future<void>>& result,
+            const std::string& key,
+            const std::string& value
+        );
+
+        void attach_inline_image(
+            Result<void>& result, 
+            const std::string& file_path,
+            const std::string& content_id,
+            const std::string& mime_type
+        );
+
+        void attach_inline_image_async(
+            Result<std::future<void>>& result,
+            const std::string& file_path,
+            const std::string& content_id,
+            const std::string& mime_type
+        );
+
+        void attach_file(
+            Result<void>& result, 
+            const std::string& file_path,
+            const std::string& mime_type,
+            const std::string& filename
+        );
+
+        void attach_file_async(
+            Result<std::future<void>>& result,
+            const std::string& file_path,
+            const std::string& mime_type,
+            const std::string& filename
+        );
+
+        void send_email(
+            Result<bool>& result,
+            std::string& error_message
+        );
+
+        void send_email_async(
+            Result<std::future<bool>>& result
+        );
+
     protected:
         CURL* _curl;
+
         std::string _subject;
+
         curl_mime* _mime_mixed;
+
         std::string _html_body;
+
         std::string _plain_body;
+
         std::string _smtp_server;
+
         std::mutex _access_mutex;
+
         curl_mime* _mime_related;
+
         curl_mimepart* _html_part;
+
         curl_mimepart* _plain_part;
+
         std::string _sender_address;
+
         struct curl_slist* _headers;
+
         struct curl_slist* _recipients;
+
         std::vector<std::string> _to_recipients;
+
         std::vector<std::string> _cc_recipients;
+
         std::vector<std::string> _bcc_recipients;
+
         std::function<std::string()> _password_provider;
+
         std::map<std::string, std::string> _custom_headers;
 
         void cleanup();
 
         void reset_mime();
 
-        void initialize();
+        void setup();
 
         void finalize_body();
 
@@ -119,3 +216,4 @@ namespace QLogicaeCore
         void prepare_recipients();
     };
 }
+

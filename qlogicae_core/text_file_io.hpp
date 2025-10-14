@@ -75,4 +75,3 @@ namespace QLogicaeCore
         std::optional<fast_io::native_file_loader> _read_file;
     };
 }
-

@@ -331,36 +331,6 @@ namespace QLogicaeCore
             rocksdb::NewBlockBasedTableFactory(_table_options));
     }
 
-    /*
-        // _table_options.index_type = rocksdb::BlockBasedTableOptions::kHashSearch;
-     _options.create_if_missing = true;
-     _options.allow_mmap_reads = true;
-        _options.allow_mmap_writes = false;
-        _options.compression = rocksdb::kLZ4Compression;
-        _options.use_fsync = false;
-        _options.IncreaseParallelism(std::thread::hardware_concurrency());
-        _options.compaction_style = rocksdb::kCompactionStyleLevel;
-        _options.OptimizeLevelStyleCompaction();
-        _options.bytes_per_sync = 1 << 20;
-        _options.bytes_per_sync = 1 << 20;
-        _options.write_buffer_size = 64 * 1024 * 1024;
-        _options.max_write_buffer_number = 6;
-        _options.min_write_buffer_number_to_merge = 2;
-        _options.max_background_compactions = 1;
-        _options.compaction_style = rocksdb::kCompactionStyleLevel;
-        _options.use_direct_reads = true;
-        _options.use_direct_io_for_flush_and_compaction = true;
-
-        _write_options.sync = false;
-        _write_options.disableWAL = true;
-
-        _table_options.filter_policy.reset(
-            rocksdb::NewBloomFilterPolicy(10, true));
-
-        _options.table_factory.reset(
-            rocksdb::NewBlockBasedTableFactory(_table_options));
-    */
-
     void RocksDBDatabase::open_db()
     {
         if (!std::filesystem::exists(_file_path))
@@ -413,6 +383,7 @@ namespace QLogicaeCore
         const std::string& name) const
     {
         std::string name_key(name);
+
         auto iterator = _column_families.find(name_key);
         if (iterator != _column_families.end())
         {
@@ -424,4 +395,360 @@ namespace QLogicaeCore
         }
         return nullptr;
     }
+
+    void RocksDBDatabase::get_file_path(
+        Result<std::string>& result
+    ) const
+    {
+        result.set_to_success(
+            _file_path
+        );
+    }
+
+    void RocksDBDatabase::setup(
+        Result<void>& result,
+        const std::string& path,
+        const RocksDBConfig& config
+    )
+    {
+        close_db();
+
+        _file_path = path;
+        _config = config;
+
+        setup_db();
+        open_db();
+
+        result.set_to_success();
+    }
+
+    void RocksDBDatabase::is_path_found(
+        Result<bool>& result,
+        const std::string& path
+    ) const
+    {
+        std::shared_lock lock(_mutex);
+
+        result.set_to_success(
+            std::filesystem::exists(path)
+        );
+    }
+
+    void RocksDBDatabase::is_key_found(
+        Result<bool>& result,
+        const std::string& key
+    ) const
+    {
+        std::shared_lock lock(_mutex);
+
+        if (_object == nullptr)
+        {
+            result.set_to_failure();
+            return;
+        }
+        std::string value;
+        auto s = _object->Get(_read_options, std::string(key), &value);
+
+        result.set_to_success(
+            s.ok()
+        );
+    }
+
+    void RocksDBDatabase::remove_value(
+        Result<bool>& result,
+        const std::string& key
+    )
+    {
+        std::unique_lock lock(_mutex);
+
+        auto string = _object->Delete(
+            _write_options, key.data());
+
+        result.set_to_success(
+            string.ok()
+        );
+    }
+
+    void RocksDBDatabase::batch_execute(
+        Result<bool>& result
+    )
+    {
+        std::unique_lock lock(_mutex);
+
+        auto string = _object->Write(
+            _write_options, &_write_batch);
+        _write_batch.Clear();
+
+        result.set_to_success(
+            string.ok()
+        );
+    }
+
+    void RocksDBDatabase::create_column_family(
+        Result<bool>& result,
+        const std::string& name
+    )
+    {
+        std::unique_lock lock(_mutex);
+
+        std::string name_key(name);
+        rocksdb::ColumnFamilyHandle* handle = nullptr;
+        auto s = _object->CreateColumnFamily(
+            rocksdb::ColumnFamilyOptions(), name_key, &handle);
+        if (s.ok())
+        {
+            _column_families.emplace(std::move(name_key), handle);
+        }
+
+        result.set_to_success(
+            s.ok()
+        );
+    }
+
+    void RocksDBDatabase::drop_column_family(
+        Result<bool>& result,
+        const std::string& name
+    )
+    {
+        std::unique_lock lock(_mutex);
+
+        std::string name_key(name);
+        auto iterator = _column_families.find(name_key);
+        if (iterator == _column_families.end())
+        {
+            result.set_to_failure();
+            return;
+        }
+        auto s = _object->DropColumnFamily(iterator->second);
+        if (s.ok())
+        {
+            _object->DestroyColumnFamilyHandle(iterator->second);
+            _column_families.erase(iterator);
+        }
+        result.set_to_success(
+            s.ok()
+        );
+    }
+
+    void RocksDBDatabase::use_column_family(
+        Result<bool>& result,
+        const std::string& name
+    )
+    {
+        result.set_to_success(
+            _column_families.contains(name.data())
+        );
+    }
+
+    void RocksDBDatabase::begin_batch(
+        Result<bool>& result
+    )
+    {
+        std::unique_lock lock(_mutex);
+
+        _write_batch.Clear();
+    }
+
+    void RocksDBDatabase::commit_batch(
+        Result<bool>& result
+    )
+    {
+        batch_execute(result);
+    }
+
+    void RocksDBDatabase::create_backup(
+        Result<bool>& result,
+        const std::string& path
+    ) const
+    {
+        std::shared_lock lock(_mutex);
+
+        rocksdb::BackupEngine* backup;
+        rocksdb::BackupEngineOptions options(path.data());
+        auto string = rocksdb::BackupEngine::Open(
+            rocksdb::Env::Default(), options, &backup);
+        if (!string.ok())
+        {
+            result.set_to_failure();
+            return;
+        }
+        string = backup->CreateNewBackup(_object);
+        delete backup;
+
+        result.set_to_success(
+            string.ok()
+        );
+    }
+
+    void RocksDBDatabase::restore_backup(
+        Result<bool>& result,
+        const std::string& path
+    )
+    {
+        std::unique_lock lock(_mutex);
+
+        close_db();
+        rocksdb::BackupEngineReadOnly* backup;
+        rocksdb::BackupEngineOptions options(path.data());
+        auto string = rocksdb::BackupEngineReadOnly::Open(
+            rocksdb::Env::Default(),
+            options, &backup
+        );
+        if (!string.ok())
+        {
+            result.set_to_failure();
+            return;
+        }
+        string = backup->RestoreDBFromLatestBackup(_file_path, _file_path);
+        delete backup;
+        if (!string.ok())
+        {
+            result.set_to_failure();
+            return;
+        }
+        open_db();
+
+        result.set_to_success(
+            true
+        );
+    }
+
+    void RocksDBDatabase::create_checkpoint(
+        Result<bool>& result,
+        const std::string& path
+    ) const
+    {
+        std::shared_lock lock(_mutex);
+
+        rocksdb::Checkpoint* checkpoint;
+        auto string = rocksdb::Checkpoint::Create(_object, &checkpoint);
+        if (!string.ok())
+        {
+            result.set_to_failure();
+            return;
+        }
+        string = checkpoint->CreateCheckpoint(path.data());
+        delete checkpoint;
+
+        result.set_to_success(
+            string.ok()
+        );
+    }
+
+    void RocksDBDatabase::get_with_bounds(
+        Result<std::optional<std::string>>& result,
+        const std::string& key,
+        uint64_t offset,
+        uint64_t size
+    )
+    {
+        std::shared_lock lock(_mutex);
+
+        if (_object == nullptr)
+        {
+            result.set_to_failure();
+            return;
+        }
+
+        rocksdb::PinnableSlice pvalue;
+        rocksdb::ReadOptions options;
+        options.verify_checksums = true;
+        auto s = _object->Get(options, _object->DefaultColumnFamily(),
+            std::string(key), &pvalue);
+        if (!s.ok())
+        {
+            result.set_to_failure();
+            return;
+        }
+        const uint64_t psize = static_cast<uint64_t>(pvalue.size());
+        if (offset >= psize)
+        {
+            result.set_to_failure();
+            return;
+        }
+        const uint64_t max_size = psize - offset;
+        const size_t use_size = static_cast<size_t>(std::min<uint64_t>(size, max_size));
+
+        result.set_to_success(
+            std::string(pvalue.data() + static_cast<size_t>(offset), use_size)
+        );
+    }
+
+    void RocksDBDatabase::begin_transaction(
+        Result<bool>& result
+    )
+    {
+        std::unique_lock lock(_mutex);
+
+        if (_transaction)
+        {
+            result.set_to_failure();
+            return;
+        }
+        _transaction = _transaction_db->BeginTransaction(
+            _write_options);
+
+        result.set_to_success(
+            _transaction != nullptr
+        );
+    }
+
+    void RocksDBDatabase::commit_transaction(
+        Result<bool>& result
+    )
+    {
+        std::unique_lock lock(_mutex);
+
+        if (!_transaction)
+        {
+            result.set_to_failure();
+            return;
+        }
+        auto string = _transaction->Commit();
+        delete _transaction;
+        _transaction = nullptr;
+
+        result.set_to_success(
+            string.ok()
+        );
+    }
+
+    void RocksDBDatabase::rollback_transaction(
+        Result<bool>& result
+    )
+    {
+        std::unique_lock lock(_mutex);
+
+        if (!_transaction)
+        {
+            result.set_to_failure();
+            return;
+        }
+        auto string = _transaction->Rollback();
+        delete _transaction;
+        _transaction = nullptr;
+
+        result.set_to_success(
+            string.ok()
+        );
+    }
+
+    void RocksDBDatabase::remove_value_async(
+        Result<std::future<bool>>& result,
+        const std::string& key
+    )
+    {
+        result.set_to_success();
+    }
+
+    void RocksDBDatabase::batch_execute_async(
+        Result<std::future<bool>>& result
+    )
+    {
+        result.set_to_success();
+    }
 }
+
+/*
+
+*/

@@ -629,3 +629,4 @@ namespace QLogicaeCore
             });
     }
 }
+

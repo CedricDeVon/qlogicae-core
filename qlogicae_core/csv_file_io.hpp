@@ -259,3 +259,4 @@ namespace QLogicaeCore
         std::optional<rapidcsv::Document> _temporary_csv_document_1;
     };
 }
+

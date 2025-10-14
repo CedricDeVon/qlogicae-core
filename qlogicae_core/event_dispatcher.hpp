@@ -1,5 +1,7 @@
 #pragma once
 
+#include "result.hpp"
+
 #include <map>             
 #include <mutex>
 #include <memory>
@@ -38,6 +40,7 @@ namespace QLogicaeCore
 
         private:
             std::atomic<bool> _active;
+
             std::function<void()> _unsubscribe;
         };
 
@@ -56,11 +59,31 @@ namespace QLogicaeCore
         void dispatch_async(const EventT& event);
         
         template <typename EventT>
-        SubscriptionHandle subscribe(std::function<void(const EventT&)> callback);
+        SubscriptionHandle subscribe(
+            std::function<void(const EventT&)> callback
+        );
+
+        template <typename EventT>
+        void dispatch(
+            Result<void>& result,
+            const EventT& event
+        );
+
+        template <typename EventT>
+        void dispatch_async(
+            Result<std::future<void>>& result,
+            const EventT& event
+        );
+
+        template <typename EventT>
+        void subscribe(
+            Result<SubscriptionHandle>& result,
+            std::function<void(const EventT&)> callback
+        );
 
     private:
         template <typename T>
-        static constexpr bool is_event_type();
+        static constexpr bool _is_event_type();
 
         mutable std::shared_mutex _mutex;
         using CallbackPtr = std::shared_ptr<void>;
@@ -129,7 +152,7 @@ namespace QLogicaeCore
     auto EventDispatcher<EventTypes...>::subscribe(
         std::function<void(const EventT&)> callback) -> SubscriptionHandle
     {
-        static_assert(is_event_type<EventT>(), "Exception at EventDispatcher::subscribe(): EventT must be a valid EventType");
+        static_assert(_is_event_type<EventT>(), "Exception at EventDispatcher::subscribe(): EventT must be a valid EventType");
 
         const std::type_index index = typeid(EventT);
         auto callback_ptr =
@@ -157,9 +180,11 @@ namespace QLogicaeCore
 
     template <typename... EventTypes>
     template <typename EventT>
-    void EventDispatcher<EventTypes...>::dispatch(const EventT& event)
+    void EventDispatcher<EventTypes...>::dispatch(
+        const EventT& event
+    )
     {
-        static_assert(is_event_type<EventT>(), "Exception at EventDispatcher::dispatch(): EventT must be a valid EventType");
+        static_assert(_is_event_type<EventT>(), "Exception at EventDispatcher::dispatch(): EventT must be a valid EventType");
 
         const std::type_index index = typeid(EventT);
         std::vector<std::shared_ptr<std::function<void(const EventT&)>>> callbacks_copy;
@@ -190,7 +215,7 @@ namespace QLogicaeCore
     template <typename EventT>
     void EventDispatcher<EventTypes...>::dispatch_async(const EventT& event)
     {
-        static_assert(is_event_type<EventT>(), "Exception at EventDispatcher::dispatch_async(): EventT must be a valid EventType");
+        static_assert(_is_event_type<EventT>(), "Exception at EventDispatcher::dispatch_async(): EventT must be a valid EventType");
 
         std::thread([this, event]()
             {
@@ -201,8 +226,90 @@ namespace QLogicaeCore
 
     template <typename... EventTypes>
     template <typename T>
-    constexpr bool EventDispatcher<EventTypes...>::is_event_type()
+    constexpr bool EventDispatcher<EventTypes...>::_is_event_type()
     {
         return (std::is_same_v<T, EventTypes> || ...);
+
     }
+
+    template <typename... EventTypes>
+    template <typename EventT>
+    void EventDispatcher<EventTypes...>::subscribe(
+        Result<SubscriptionHandle>& result,
+        std::function<void(const EventT&)> callback)
+    {        
+        const std::type_index index = typeid(EventT);
+        auto callback_ptr =
+            std::make_shared<std::function<void(const EventT&)>>(
+                std::move(callback
+                )
+            );
+
+        {
+            std::unique_lock lock(_mutex);
+            auto& listeners = _listeners[index];
+            listeners.emplace_back(callback_ptr);
+        }
+
+        result.set_to_success(SubscriptionHandle([this, callback_ptr, index]()
+            {
+                std::unique_lock lock(_mutex);
+                auto& listeners = _listeners[index];
+                listeners.erase(std::remove_if(listeners.begin(), listeners.end(),
+                    [&](const auto& ptr) { return ptr == callback_ptr; }),
+                    listeners.end());
+            }
+        ));
+    }
+
+    template <typename... EventTypes>
+    template <typename EventT>
+    void EventDispatcher<EventTypes...>::dispatch(
+        Result<void>& result,
+        const EventT& event
+    )
+    {        
+        const std::type_index index = typeid(EventT);
+        std::vector<std::shared_ptr<std::function<void(const EventT&)>>> callbacks_copy;
+
+        {
+            std::shared_lock lock(_mutex);
+
+            auto listener = _listeners.find(index);
+            if (listener != _listeners.end())
+            {
+                for (const auto& function_pointer : listener->second)
+                {
+                    callbacks_copy.push_back(
+                        std::static_pointer_cast<std::function<void(
+                            const EventT&)>>(function_pointer)
+                    );
+                }
+            }
+        }
+
+        for (const auto& callback : callbacks_copy)
+        {
+            (*callback)(event);
+        }
+
+        result.set_to_success();
+    }
+
+    template <typename... EventTypes>
+    template <typename EventT>
+    void EventDispatcher<EventTypes...>::dispatch_async(
+        Result<std::future<void>>& result,
+        const EventT& event
+    )
+    {
+        result.set_to_success(std::thread([this, event]()
+            {
+                dispatch(event);
+            }
+        ).detach());        
+    }
+
+
 }
+
