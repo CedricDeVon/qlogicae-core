@@ -10,6 +10,13 @@ namespace QLogicaeCore
 
 	}
 
+	void DotEnv::setup(
+		Result<void>& result
+	)
+	{
+		result.set_to_success();
+	}
+
 	bool DotEnv::set(const wchar_t* key, const wchar_t* value)
 	{
 		try
@@ -88,36 +95,37 @@ namespace QLogicaeCore
 		return singleton;
 	}
 
-	void DotEnv::remove(Result<bool> result, const wchar_t* key)
+	void DotEnv::remove(Result<void> result, const wchar_t* key)
 	{
-		
-
 		if (key == nullptr ||
 			key[0] == L'\0')
 		{
 			result.set_to_failure();
+			return;
 		}
 
 		result.set_is_successful(SetEnvironmentVariableW(key, nullptr) != 0);
 	}
 
-	void DotEnv::set(Result<bool> result, const wchar_t* key, const wchar_t* value)
+	void DotEnv::set(Result<void> result, const wchar_t* key, const wchar_t* value)
 	{
 		if (key == nullptr ||
 			key[0] == L'\0' ||
 			value == nullptr)
 		{
 			result.set_to_failure();
+			return;
 		}
 
 		result.set_is_successful(SetEnvironmentVariableW(key, value) != 0);
 	}
 
-	void DotEnv::get(Result<std::optional<std::wstring>> result, const wchar_t* key)
+	void DotEnv::get(Result<std::wstring> result, const wchar_t* key)
 	{
 		if (key == nullptr || key[0] == L'\0')
 		{
 			result.set_to_failure(L"");
+			return;
 		}
 
 		DWORD size = GetEnvironmentVariableW(key, nullptr, 0);
@@ -126,15 +134,18 @@ namespace QLogicaeCore
 			if (GetLastError() == ERROR_ENVVAR_NOT_FOUND)
 			{
 				result.set_to_failure(L"");
+				return;
 			}
 
 			result.set_to_failure(L"");
+			return;
 		}
 
 		std::wstring content(size - 1, L'\0');
 		if (GetEnvironmentVariableW(key, &content[0], size) == 0)
 		{
 			result.set_to_failure(L"");
+			return;
 		}
 
 		result.set_to_success(content);

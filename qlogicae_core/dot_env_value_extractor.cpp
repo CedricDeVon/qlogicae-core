@@ -45,7 +45,7 @@ namespace QLogicaeCore
         result.set_to_success(_key);
     }
 
-    void DotEnvValueExtractor::get_value(Result<std::optional<std::string>>& result) const
+    void DotEnvValueExtractor::get_value(Result<std::string>& result) const
     {
         result.set_to_success(ENCODER
             .from_utf16_to_utf8(
@@ -53,5 +53,25 @@ namespace QLogicaeCore
                 ).value()
             )
         );
+    }
+
+    void DotEnvValueExtractor::setup(
+        Result<void>& result,
+        const std::string key
+    )
+    {
+        _key = ENCODER.from_utf8_to_utf16(key);
+
+        result.set_to_success();
+    }
+
+    void DotEnvValueExtractor::setup(
+        Result<void>& result,
+        const std::wstring key
+    )
+    {
+        _key = key;
+
+        result.set_to_success();
     }
 }

@@ -39,10 +39,20 @@ namespace QLogicaeCore
 
         void get_key(Result<std::optional<std::wstring>>& result) const;
 
-        void get_value(Result<std::optional<std::string>>& result) const;
+        void get_value(Result<std::string>& result) const;
+
+        void setup(
+            Result<void>& result,
+            const std::string key
+        );
+
+        void setup(
+            Result<void>& result,
+            const std::wstring key
+        );
 
     protected:
-        const std::wstring _key;
+        std::wstring _key;
     };
 }
 

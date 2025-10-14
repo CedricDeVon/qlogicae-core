@@ -48,15 +48,28 @@ namespace QLogicaeCore
         
         std::optional<std::string> get_name_key() const;
 
-        void get_value(Result<std::optional<std::string>>& result) const;
+        void get_value(Result<std::string>& result) const;
 
         void get_sub_key(Result<std::optional<std::string>>& result) const;
 
         void get_name_key(Result<std::optional<std::string>>& result) const;
 
+        void setup(
+            Result<void>& result,
+            const std::string sub_key,
+            const std::string name_key
+        );
+
+        void setup(
+            Result<void>& result,
+            const std::wstring sub_key,
+            const std::wstring name_key
+        );
+
     protected:
-        const std::string _sub_key;
-        const std::string _name_key;
+        std::string _sub_key;
+
+        std::string _name_key;
     };
 }
 

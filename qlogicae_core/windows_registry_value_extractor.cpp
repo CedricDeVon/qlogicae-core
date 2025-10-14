@@ -60,11 +60,39 @@ namespace QLogicaeCore
     }
 
     void WindowsRegistryValueExtractor::get_value(
-        Result<std::optional<std::string>>& result
+        Result<std::string>& result
     ) const
     {
         result.set_to_success(WindowsRegistry::hkcu()
             .get_value_via_utf8(_sub_key, _name_key).value()
         );        
+    }
+
+    void WindowsRegistryValueExtractor::setup(
+        Result<void>& result,
+        const std::string sub_key,
+        const std::string name_key
+    )
+    {
+        _sub_key = sub_key;
+        _name_key = name_key;
+
+        result.set_to_success();
+    }
+
+    void WindowsRegistryValueExtractor::setup(
+        Result<void>& result,
+        const std::wstring sub_key,
+        const std::wstring name_key
+    )
+    {
+        Result<std::string> string_result;
+        ENCODER.from_utf16_to_utf8(string_result, sub_key);
+        _sub_key = string_result.get_data();
+        
+        ENCODER.from_utf16_to_utf8(string_result, name_key);
+        _name_key = string_result.get_data();
+
+        result.set_to_success();
     }
 }

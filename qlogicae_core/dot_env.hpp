@@ -7,21 +7,44 @@ namespace QLogicaeCore
 	class DotEnv
 	{
 	public:
-		bool remove(const wchar_t* key);
+		bool remove(
+			const wchar_t* key
+		);
 
-		bool set(const wchar_t* key, const wchar_t* value);
+		bool set(
+			const wchar_t* key,
+			const wchar_t* value
+		);
 
-		std::optional<std::wstring> get(const wchar_t* key);
+		std::optional<std::wstring> get(
+			const wchar_t* key
+		);
 		
 		static DotEnv& get_instance();
 
-		void remove(Result<bool> result, const wchar_t* key);
+		void remove(
+			Result<void> result,
+			const wchar_t* key
+		);
 
-		void set(Result<bool> result, const wchar_t* key, const wchar_t* value);
+		void set(
+			Result<void> result,
+			const wchar_t* key,
+			const wchar_t* value
+		);
 
-		void get(Result<std::optional<std::wstring>> result, const wchar_t* key);
+		void get(
+			Result<std::wstring> result,
+			const wchar_t* key
+		);
 
-		static void get_instance(Result<DotEnv*> result);
+		void setup(
+			Result<void>& result
+		);
+
+		static void get_instance(
+			Result<DotEnv*> result
+		);
 
 	protected:
 		DotEnv();

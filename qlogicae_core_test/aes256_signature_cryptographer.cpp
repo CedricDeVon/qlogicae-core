@@ -21,7 +21,7 @@ namespace QLogicaeCoreTest
     TEST_F(AES256SignatureCryptographerTest,
         Should_Expect_Encoded_When_TransformValidInput)
     {
-        std::string_view input = "message";
+        std::string input = "message";
         std::string result = cryptographer.transform(
             input, public_key.data(), secret_key.data());
         EXPECT_FALSE(result.empty());
@@ -30,7 +30,7 @@ namespace QLogicaeCoreTest
     TEST_F(AES256SignatureCryptographerTest,
         Should_Expect_Empty_When_NullKeysUsed)
     {
-        std::string_view input = "nullkeys";
+        std::string input = "nullkeys";
         std::string result = cryptographer.transform(input, nullptr, nullptr);
         EXPECT_TRUE(result.empty());
     }
@@ -38,7 +38,7 @@ namespace QLogicaeCoreTest
     TEST_F(AES256SignatureCryptographerTest,
         Should_Expect_Original_When_ReverseValidSignature)
     {
-        std::string_view input = "signed";
+        std::string input = "signed";
         std::string signed_data = cryptographer.transform(
             input, public_key.data(), secret_key.data());
         std::string result = cryptographer.reverse(
@@ -49,7 +49,7 @@ namespace QLogicaeCoreTest
     TEST_F(AES256SignatureCryptographerTest,
         Should_Expect_Empty_When_ReverseFailsDueToBadKey)
     {
-        std::string_view input = "invalid";
+        std::string input = "invalid";
         std::string signed_data = cryptographer.transform(
             input, public_key.data(), secret_key.data());
 
@@ -72,7 +72,7 @@ namespace QLogicaeCoreTest
     TEST_F(AES256SignatureCryptographerTest,
         Should_Expect_ValidSignature_When_TransformAsync)
     {
-        std::string_view input = "async";
+        std::string input = "async";
         std::future<std::string> future_result =
             cryptographer.transform_async(input,
                 public_key.data(), secret_key.data());
@@ -82,7 +82,7 @@ namespace QLogicaeCoreTest
     TEST_F(AES256SignatureCryptographerTest,
         Should_Expect_Original_When_ReverseAsyncMatches)
     {
-        std::string_view input = "parallel";
+        std::string input = "parallel";
         std::string signed_data = cryptographer.transform(
             input, public_key.data(), secret_key.data());
         std::future<std::string> future_result =
@@ -93,7 +93,7 @@ namespace QLogicaeCoreTest
     TEST_F(AES256SignatureCryptographerTest,
         Should_Expect_Correct_When_MultipleConcurrentTransformCallsMade)
     {
-        std::string_view input = "multisign";
+        std::string input = "multisign";
         std::vector<std::future<std::string>> futures;
 
         for (int index = 0; index < 10; ++index)
@@ -114,7 +114,7 @@ namespace QLogicaeCoreTest
     TEST_F(AES256SignatureCryptographerTest,
         Should_Expect_Correct_When_MultipleConcurrentReverseCallsMade)
     {
-        std::string_view input = "verifymany";
+        std::string input = "verifymany";
         std::string signed_data = cryptographer.transform(
             input, public_key.data(), secret_key.data());
         std::vector<std::future<std::string>> futures;
@@ -136,7 +136,7 @@ namespace QLogicaeCoreTest
     TEST_F(AES256SignatureCryptographerTest,
         Should_Expect_CompleteUnder2Seconds_When_StressTestTransform)
     {
-        std::string_view input = "load";
+        std::string input = "load";
         auto start = std::chrono::steady_clock::now();
 
         for (int index = 0; index < 100; ++index)
@@ -153,7 +153,7 @@ namespace QLogicaeCoreTest
     TEST_F(AES256SignatureCryptographerTest,
         Should_Expect_CompleteUnder1Millisecond_When_ShortMessage)
     {
-        std::string_view input = "x";
+        std::string input = "x";
         auto start = std::chrono::high_resolution_clock::now();
         cryptographer.transform(input,
             public_key.data(), secret_key.data());
@@ -165,7 +165,7 @@ namespace QLogicaeCoreTest
     TEST_P(AES256SignatureCryptographerTest,
         Should_Expect_ValidTransform_When_VariousInputsUsed)
     {
-        std::string_view input = GetParam();
+        std::string input = GetParam();
         std::string signed_data = cryptographer.transform(
             input, public_key.data(), secret_key.data());
         std::string result = cryptographer.reverse(
@@ -195,7 +195,7 @@ namespace QLogicaeCoreTest
     TEST_F(AES256SignatureCryptographerTest,
         Should_Expect_Empty_When_SignatureTampered)
     {
-        std::string_view input = "payload";
+        std::string input = "payload";
         std::string signed_data = cryptographer.transform(
             input, public_key.data(), secret_key.data());
         signed_data[10] ^= 0xFF;
@@ -218,7 +218,7 @@ namespace QLogicaeCoreTest
     TEST_F(AES256SignatureCryptographerTest,
         Should_Expect_Correct_When_UsingStringViewKeyOverloads)
     {
-        std::string_view input = "abc123";
+        std::string input = "abc123";
         std::string pub_key(reinterpret_cast<char*>(public_key.data()),
             public_key.size());
         std::string sec_key(reinterpret_cast<char*>(secret_key.data()),
@@ -233,7 +233,7 @@ namespace QLogicaeCoreTest
     TEST_F(AES256SignatureCryptographerTest,
         Should_Expect_Correct_When_ReverseAsyncWithStringViewKey)
     {
-        std::string_view input = "verifyview";
+        std::string input = "verifyview";
         std::string public_key_string(
             reinterpret_cast<char*>(public_key.data()),
             public_key.size());
