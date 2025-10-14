@@ -23,16 +23,27 @@
 namespace QLogicaeCore
 {    
     using segment_t = boost::interprocess::managed_shared_memory;
+    
     using manager_t = segment_t::segment_manager;
+    
     using char_allocator_t = boost::interprocess::allocator<char, manager_t>;
+    
     using string_t = boost::interprocess::basic_string<char, std::char_traits<char>, char_allocator_t>;
+    
     using value_allocator_t = boost::interprocess::allocator<std::pair<const string_t, string_t>, manager_t>;
+
     using map_t = boost::interprocess::map<string_t, string_t, std::less<string_t>, value_allocator_t>;
 
     class BoostInterprocessCache
     {
     public:
         explicit BoostInterprocessCache(
+            const std::string& name = UTILITIES.DEFAULT_BOOST_INTERPROCESS_CACHE,
+            const BytesSize& size = BytesSize::KB_4
+        );
+
+        void setup(
+            Result<void>& result,
             const std::string& name = UTILITIES.DEFAULT_BOOST_INTERPROCESS_CACHE,
             const BytesSize& size = BytesSize::KB_4
         );
@@ -118,6 +129,7 @@ namespace QLogicaeCore
     
     private:
         segment_t _segment;
+
         BoostInterprocessCacheSharedData* _data = nullptr;
     };
 }

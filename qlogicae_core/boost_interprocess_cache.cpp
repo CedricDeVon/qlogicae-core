@@ -20,6 +20,28 @@ namespace QLogicaeCore
                 value_allocator_t(_segment.get_segment_manager()));
     }
 
+    void BoostInterprocessCache::setup(
+        Result<void>& result,
+        const std::string& name,
+        const BytesSize& size_in_bytes
+    )
+    {
+        _segment = segment_t(
+            boost::interprocess::open_or_create,
+            name.c_str(),
+            static_cast<std::size_t>(size_in_bytes)
+        );void setup(
+            Result<void>& result,
+            const std::string& name,
+            const BytesSize& size_in_bytes
+        );
+
+        boost::interprocess::shared_memory_object::remove(name.c_str());
+        _data = _segment.find_or_construct<BoostInterprocessCacheSharedData>(
+            UTILITIES.DEFAULT_BOOST_INTERPROCESS_CACHE_SEGMENT_NAME.c_str())(
+                value_allocator_t(_segment.get_segment_manager()));
+    }
+
     void BoostInterprocessCache::write(
         const char* key,
         const char* value,
@@ -285,3 +307,4 @@ namespace QLogicaeCore
         );
     }
 }
+
