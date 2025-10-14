@@ -536,9 +536,9 @@ namespace QLogicaeCoreTest
         Should_Expect_Success_When_InitializedWithCustomConfig)
     {
         QLogicaeCore::RocksDBConfig config;
-        config.block_cache_size = 128 * 1024 * 1024;
-        config.write_buffer_size = 32 * 1024 * 1024;
-        config.max_background_jobs = 8;
+        config.base_block_cache_size = 128 * 1024 * 1024;
+        config.base_write_buffer_size = 32 * 1024 * 1024;
+        config.base_max_background_jobs = 8;
 
         {
             QLogicaeCore::RocksDBDatabase custom_database("custom_config_path", config);

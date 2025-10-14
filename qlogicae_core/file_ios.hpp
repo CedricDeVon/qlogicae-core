@@ -1,5 +1,6 @@
 #pragma once
 
+#include "result.hpp"
 #include "abstract_file_io.hpp"
 
 namespace QLogicaeCore
@@ -21,6 +22,26 @@ namespace QLogicaeCore
         );
 
         static FileIOs& get_instance();
+
+        void set_file(
+            Result<void>& result,
+            std::shared_ptr<AbstractFileIO> abstract_file_io
+        );
+
+        template <typename Type>
+        void get_file(
+            Result<Type&>& result,
+            const std::string& file_name
+        );
+
+        void set_file(
+            Result<void>& result,
+            const std::vector<std::shared_ptr<AbstractFileIO>>& abstract_file_ios
+        );
+
+        static void get_instance(
+            Result<FileIOs*>& result
+        );
 
     protected:
         FileIOs() = default;
@@ -68,7 +89,34 @@ namespace QLogicaeCore
         }
     }
 
+
+    template <typename Type>
+    void FileIOs::get_file(
+        Result<Type&>& result,
+        const std::string& file_name
+    )
+    {
+        std::lock_guard lock(_mutex);
+
+        auto it = _instances.find(file_name);
+        if (it == _instances.end())
+        {
+            result.set_is_failure();
+            return;
+        }
+
+        auto derived_pointer = std::dynamic_pointer_cast<Type>(
+            it->second
+        );
+        if (!derived_pointer)
+        {
+            result.set_is_failure();
+            return;
+        }
+
+        result.set_to_success(*derived_pointer);
+    }
+
     inline static FileIOs& FILE_IOS = FileIOs::get_instance();
 }
-
 

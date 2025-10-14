@@ -297,35 +297,46 @@ namespace QLogicaeCore
 
     void RocksDBDatabase::setup_db()
     {
-        _options.create_if_missing = true;
-        _options.compression = rocksdb::kNoCompression;
-        _options.max_open_files = -1;
-        _options.use_fsync = false;
-        _options.IncreaseParallelism(std::thread::hardware_concurrency());
-        _options.OptimizeLevelStyleCompaction();
-        _options.bytes_per_sync = 1 << 20;
-        _options.level0_file_num_compaction_trigger = 10;
-        _options.level0_slowdown_writes_trigger = 20;
-        _options.level0_stop_writes_trigger = 40;
-        _options.write_buffer_size = 128 * 1024 * 1024;
-        _options.target_file_size_base = 64 * 1024 * 1024;
-        _options.max_bytes_for_level_base = 512 * 1024 * 1024;
-        _options.max_write_buffer_number = 6;
-        _options.min_write_buffer_number_to_merge = 2;
-        _options.compaction_style = rocksdb::kCompactionStyleLevel;
-        _options.use_direct_reads = true;
-        _options.use_direct_io_for_flush_and_compaction = true;
-        _options.max_background_flushes = 1;
-        _options.env->SetBackgroundThreads(4);
-        
-        _write_options.sync = false;
-        _write_options.disableWAL = true;
+        _options.create_if_missing = _config.create_if_missing;
+        _options.max_open_files = _config.max_open_files;
+        _options.use_fsync = _config.use_fsync;
+        _options.use_direct_reads = _config.use_direct_reads;
+        _options.use_direct_io_for_flush_and_compaction =
+            _config.use_direct_io_for_flush_and_compaction;
+        _options.max_background_flushes = _config.max_background_flushes;
+        _options.compression = _config.compression;
 
-        _table_options.no_block_cache = true;
-        _table_options.block_restart_interval = 4;
-        _table_options.block_size = 4 * 1024;
+        _options.compaction_style = _config.compaction_style;
+        _options.level0_file_num_compaction_trigger =
+            _config.level0_file_num_compaction_trigger;
+        _options.level0_slowdown_writes_trigger =
+            _config.level0_slowdown_writes_trigger;
+        _options.level0_stop_writes_trigger =
+            _config.level0_stop_writes_trigger;
+
+        _options.write_buffer_size = _config.write_buffer_size;
+        _options.max_write_buffer_number = _config.max_write_buffer_number;
+        _options.min_write_buffer_number_to_merge =
+            _config.min_write_buffer_number_to_merge;
+        _options.target_file_size_base = _config.target_file_size_base;
+        _options.max_bytes_for_level_base = _config.max_bytes_for_level_base;
+        _options.bytes_per_sync = _config.bytes_per_sync;
+
+        _write_options.sync = _config.write_sync;
+        _write_options.disableWAL = _config.write_disable_wal;
+
+        _table_options.no_block_cache = _config.no_block_cache;
+        _table_options.block_restart_interval = _config.block_restart_interval;
+        _table_options.block_size = _config.block_size;
+
+        _options.IncreaseParallelism(static_cast<int>(
+            std::thread::hardware_concurrency()));
+        _options.OptimizeLevelStyleCompaction();
+        _options.env->SetBackgroundThreads(static_cast<int>(
+            _config.background_threads));
+
         _table_options.filter_policy.reset(
-            rocksdb::NewBloomFilterPolicy(10));
+            rocksdb::NewBloomFilterPolicy(_config.new_bloom_filter_policy));
 
         _options.table_factory.reset(
             rocksdb::NewBlockBasedTableFactory(_table_options));

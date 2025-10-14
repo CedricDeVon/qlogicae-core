@@ -12,17 +12,25 @@ namespace QLogicaeCore
     public:
         bool get_is_successful();
 
-        void get_is_successful(bool& value);
+        void get_is_successful(
+            bool& value
+        );
         
         std::string get_message();
 
-        void get_message(std::string& value);
+        void get_message(
+            std::string& value
+        );
 
         DataType& get_data();
 
-        void get_data(DataType& value);
+        void get_data(
+            DataType& value
+        );
 
-        void set_is_successful(const bool& value);
+        void set_is_successful(
+            const bool& value
+        );
 
         void set_is_successful_to_true();
 
@@ -60,7 +68,35 @@ namespace QLogicaeCore
             DataType&& value
         );
 
-    private:
+        void set_to_success_with_message(
+            const std::string& message
+        );
+
+        void set_to_success_with_message(
+            const DataType& value,
+            const std::string& message
+        );
+
+        void set_to_success_with_message(
+            DataType&& value,
+            const std::string& message
+        );
+
+        void set_to_failure_with_message(
+            const std::string& message
+        );
+
+        void set_to_failure_with_message(
+            const DataType& value,
+            const std::string& message
+        );
+
+        void set_to_failure_with_message(
+            DataType&& value,
+            const std::string& message
+        );
+
+    protected:
         DataType _data;
 
         bool _is_successful = true;
@@ -111,7 +147,9 @@ namespace QLogicaeCore
     template <
         typename DataType
     >
-    void Result<DataType>::get_message(std::string& value)
+    void Result<DataType>::get_message(
+        std::string& value
+    )
     {
         value = _message;
     }
@@ -119,7 +157,9 @@ namespace QLogicaeCore
     template <
         typename DataType
     >
-    void Result<DataType>::set_is_successful(const bool& value)
+    void Result<DataType>::set_is_successful(
+        const bool& value
+    )
     {
         _is_successful = value;
     }
@@ -147,7 +187,7 @@ namespace QLogicaeCore
         const DataType& value
     )
     {
-        _data = std::move(value);
+        _data = value;
     }
 
     template <
@@ -176,7 +216,7 @@ namespace QLogicaeCore
     )
     {
         set_is_successful_to_true();
-        set_data(std::move(value));
+        set_data(value);
     }
 
     template <
@@ -195,7 +235,7 @@ namespace QLogicaeCore
     )
     {
         set_is_successful_to_false();
-        set_data(std::move(value));
+        set_data(value);
     }
 
     template <typename DataType>
@@ -218,13 +258,86 @@ namespace QLogicaeCore
         set_data(std::move(value));
     }
 
+
+    template <typename DataType>
+    void Result<DataType>::set_to_success_with_message(
+        const std::string& message
+    )
+    {
+        set_is_successful_to_true();
+        set_message(message);
+    }
+
+    template <typename DataType>
+    void Result<DataType>::set_to_success_with_message(
+        const DataType& value,
+        const std::string& message
+    )
+    {
+        set_is_successful_to_true();
+        set_data(value);
+        set_message(message);
+    }
+
+    template <typename DataType>
+    void Result<DataType>::set_to_success_with_message(
+        DataType&& value,
+        const std::string& message
+    )
+    {
+        set_is_successful_to_true();
+        set_data(std::move(value));
+        set_message(message);
+    }
+
+    template <typename DataType>
+    void Result<DataType>::set_to_failure_with_message(
+        const std::string& message
+    )
+    {
+        set_is_successful_to_false();
+        set_message(message);
+    }
+
+    template <typename DataType>
+    void Result<DataType>::set_to_failure_with_message(
+        const DataType& value,
+        const std::string& message
+    )
+    {
+        set_is_successful_to_false();
+        set_data(value);
+        set_message(message);
+    }   
+
+    template <typename DataType>
+    void Result<DataType>::set_to_failure_with_message(
+        DataType&& value,
+        const std::string& message
+    )
+    {
+        set_is_successful_to_false();
+        set_data(std::move(value));
+        set_message(message);
+    }
+
     template <>
     struct Result<void>
     {
     public:
         bool get_is_successful() const;
+
+        void get_is_successful(
+            bool& value
+        ) const;
         
-        void set_is_successful(const bool& value);
+        void set_is_successful(
+            const bool& value
+        );
+
+        void set_message(
+            const std::string& value
+        );
 
         void set_is_successful_to_true();
         
@@ -234,8 +347,18 @@ namespace QLogicaeCore
 
         void set_to_failure();
 
+        void set_to_success_with_message(
+            const std::string& message
+        );
+
+        void set_to_failure_with_message(
+            const std::string& message
+        );
+
     private:
         bool _is_successful = true;
+
+        std::string _message = "";
     };
 
 }

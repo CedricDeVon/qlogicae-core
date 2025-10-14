@@ -37,15 +37,15 @@ namespace QLogicaeCore
         
         JsonFileIO(const std::string_view&, const std::string_view&);
 
+        std::string read();
+        
+        bool write(const std::string_view&);
+
         bool get_is_formatting_allowed();
         
         bool is_key_path_valid(const JsonPath&);
         
         void set_is_formatting_allowed(const bool&);
-
-        std::string read();
-        
-        bool write(const std::string_view&);
 
         bool get_bool(const JsonPath&);
         
@@ -82,6 +82,8 @@ namespace QLogicaeCore
         bool update_array(const JsonPath&, const std::vector<std::any>&);
         
         bool update_object(const JsonPath&, const std::unordered_map<std::string, std::any>&);
+
+
 
         std::future<std::string> read_async();
         
