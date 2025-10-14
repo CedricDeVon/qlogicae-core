@@ -30,7 +30,7 @@ namespace QLogicaeCore
             const AES256CipherCryptographer&
                 aes256_cipher_cryptographer) = delete;
 
-        void setup(Result<bool>& result);
+        void setup(Result<void>& result);
 
         std::string reverse(
             const std::string& cipher,

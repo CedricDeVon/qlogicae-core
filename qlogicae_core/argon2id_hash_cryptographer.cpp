@@ -11,10 +11,19 @@ namespace QLogicaeCore
 	}
 
 	Argon2idHashCryptographer::Argon2idHashCryptographer(
-		const CryptographerProperties& va) :
+		const CryptographerProperties& properties) :
 			Cryptographer()
 	{
-		_cryptographer_properties = va;
+		_cryptographer_properties = properties;
+	}
+
+	void Argon2idHashCryptographer::setup(
+		Result<void>& result,
+		const CryptographerProperties& properties)
+	{
+		_cryptographer_properties = properties;
+
+		result.set_to_success();
 	}
 
 	std::string Argon2idHashCryptographer::transform(
@@ -61,8 +70,8 @@ namespace QLogicaeCore
 	}
 
 	bool Argon2idHashCryptographer::reverse(
-		const std::string_view& va,
-		const std::string_view& vb) const
+		const std::string& va,
+		const std::string& vb) const
 	{
 		try
 		{
@@ -82,8 +91,8 @@ namespace QLogicaeCore
 	}
 	
 	std::future<bool> Argon2idHashCryptographer::reverse_async(
-		const std::string_view& va,
-		const std::string_view& vb) const
+		const std::string& va,
+		const std::string& vb) const
 	{
 		return std::async(std::launch::async, [this, va, vb]() -> bool
 		{
@@ -124,8 +133,8 @@ namespace QLogicaeCore
 
 	void Argon2idHashCryptographer::reverse(
 		Result<bool>& result,
-		const std::string_view& hash,
-		const std::string_view& key) const
+		const std::string& hash,
+		const std::string& key) const
 	{
 		std::scoped_lock lock(_mutex);
 
@@ -144,45 +153,27 @@ namespace QLogicaeCore
 	{
 		result.set_to_success(std::async(std::launch::async, [this, text]() -> std::string
 			{
-				std::scoped_lock lock(_mutex);
+				Result<std::string> result;
 
-				std::array<char, 512> buffer{};
-				int status = argon2id_hash_encoded(
-					_cryptographer_properties.uint32_t_1,
-					_cryptographer_properties.uint32_t_2,
-					_cryptographer_properties.uint32_t_3,
-					text.data(),
-					text.size(),
-					GENERATOR.random_salt().data(),
-					_cryptographer_properties.size_t_2,
-					_cryptographer_properties.size_t_1,
-					buffer.data(),
-					buffer.size()
-				);
+				transform(result, text);
 
-				if (status != ARGON2_OK)
-				{
-					return "";
-				}
-
-				return buffer.data();
+				return result.get_data();
 			})
 		);
 	}
 
 	void Argon2idHashCryptographer::reverse_async(
 		Result<std::future<bool>>& result,
-		const std::string_view& hash,
-		const std::string_view& key) const
+		const std::string& hash,
+		const std::string& key) const
 	{
 		result.set_to_success(std::async(std::launch::async, [this, hash, key]() -> bool
 			{
-				std::scoped_lock lock(_mutex);
-				return argon2id_verify(
-					hash.data(),
-					key.data(),
-					key.size()
-				) == ARGON2_OK;
+				Result<bool> result;
+
+				reverse(result, hash, key);
+
+				return result.get_data();
 			}));
 	}
 }

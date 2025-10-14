@@ -10,7 +10,7 @@ namespace QLogicaeCore
 
 	}
 
-	void AES256CipherCryptographer::setup(Result<bool>& result)
+	void AES256CipherCryptographer::setup(Result<void>& result)
 	{
 		result.set_to_success();
 	}

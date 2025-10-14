@@ -36,33 +36,46 @@ namespace QLogicaeCore
             const Argon2idHashCryptographer&
                 argon2id_hash_cryptographer) = delete;
 
-        std::string transform(const std::string& text) const;
+        void setup(
+            Result<void>& result,
+            const CryptographerProperties& va
+        );
+
+        std::string transform(
+            const std::string& text
+        ) const;
+
         bool reverse(
-            const std::string_view& hash,
-            const std::string_view& key
+            const std::string& hash,
+            const std::string& key
         ) const;
 
         std::future<std::string> transform_async(
             const std::string& text
         ) const;
+        
         std::future<bool> reverse_async(
-            const std::string_view& hash,
-            const std::string_view& key
+            const std::string& hash,
+            const std::string& key
         ) const;
 
-        void transform(Result<std::string>& result,
+        void transform(
+            Result<std::string>& result,
             const std::string& text) const;
 
-        void reverse(Result<bool>& result,
-            const std::string_view& hash,
-            const std::string_view& key) const;
+        void reverse(
+            Result<bool>& result,
+            const std::string& hash,
+            const std::string& key) const;
 
-        void transform_async(Result<std::future<std::string>>& result,
+        void transform_async(
+            Result<std::future<std::string>>& result,
             const std::string& text) const;
 
-        void reverse_async(Result<std::future<bool>>& result,
-            const std::string_view& hash,
-            const std::string_view& key) const;
+        void reverse_async(
+            Result<std::future<bool>>& result,
+            const std::string& hash,
+            const std::string& key) const;
 
     protected:
         CryptographerProperties _cryptographer_properties;
