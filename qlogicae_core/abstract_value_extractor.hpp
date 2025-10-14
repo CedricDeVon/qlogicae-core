@@ -1,5 +1,7 @@
 #pragma once
 
+#include "result.hpp"
+
 namespace QLogicaeCore
 {
     class AbstractValueExtractor
@@ -26,5 +28,7 @@ namespace QLogicaeCore
                 abstract_value_extractor) = delete;
 
         virtual std::optional<std::string> get_value() const = 0;
+
+        virtual void get_value(Result<std::string>& result) const = 0;
     };
 }

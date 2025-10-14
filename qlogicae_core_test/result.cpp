@@ -671,7 +671,6 @@ namespace QLogicaeCoreTest
         ::testing::Values(std::string())
     );
 
-
     INSTANTIATE_TEST_CASE_P(
         IntegerParameterizedCases,
         ResultIntParamTest,

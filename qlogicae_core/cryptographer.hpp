@@ -28,6 +28,4 @@ namespace QLogicaeCore
     protected:
         mutable std::shared_mutex _mutex;
     };
-
 }
-
