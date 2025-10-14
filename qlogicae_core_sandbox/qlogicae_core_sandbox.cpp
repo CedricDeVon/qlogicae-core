@@ -66,8 +66,28 @@ static void benchmark_boost_cache()
 
 int main()
 {
-    benchmark_boost_cache();
+    using namespace ankerl;
 
+    std::string template_str(1'000'000, 'x');
+
+    nanobench::Bench bench;
+    bench.minEpochIterations(1000).warmup(3);
+
+    bench.run("copy assignment", [&] {
+        std::string src = template_str;
+        std::string dst;
+        ankerl::nanobench::doNotOptimizeAway(dst);
+        dst = src;
+        ankerl::nanobench::doNotOptimizeAway(dst);
+        });
+
+    bench.run("move assignment", [&] {
+        std::string src = template_str;
+        std::string dst;
+        ankerl::nanobench::doNotOptimizeAway(dst);
+        dst = std::move(src);
+        ankerl::nanobench::doNotOptimizeAway(dst);
+        });
     bool ea;
 
     std::cin >> ea;

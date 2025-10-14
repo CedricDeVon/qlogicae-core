@@ -10,6 +10,13 @@ namespace QLogicaeCore
 		
 	}
 
+    void BcryptHashCryptographer::setup(
+        Result<void>& result
+    )
+    {        
+        result.set_to_success();
+    }
+
 	std::string BcryptHashCryptographer::transform(
 		const std::string& va) const
 	{
@@ -73,6 +80,8 @@ namespace QLogicaeCore
         Result<std::string>& result,
         const std::string& text) const
     {
+		std::scoped_lock lock(_mutex);
+
         std::string hash;
         hash.resize(crypto_pwhash_STRBYTES);
 
@@ -84,14 +93,7 @@ namespace QLogicaeCore
             crypto_pwhash_MEMLIMIT_MODERATE
         ) == 0;
 
-        if (is_successful)
-        {
-            result.set_to_success(hash.c_str());
-        }
-        else
-        {
-            result.set_to_failure("");
-        }
+        result.set_to_success((is_successful) ? hash.c_str() : "");
     }
 
     void BcryptHashCryptographer::reverse(
@@ -99,20 +101,15 @@ namespace QLogicaeCore
         const std::string& hash,
         const std::string& key) const
     {
+		std::scoped_lock lock(_mutex);
+
         bool verified = crypto_pwhash_str_verify(
             key.c_str(),
             hash.c_str(),
             hash.size()
         ) == 0;
 
-        if (verified)
-        {
-            result.set_to_success(true);
-        }
-        else
-        {
-            result.set_to_failure(false);
-        }
+        result.set_to_success(verified);
     }
 
     void BcryptHashCryptographer::transform_async(
@@ -121,24 +118,13 @@ namespace QLogicaeCore
     {
         result.set_to_success(std::async(std::launch::async, [this, text]() -> std::string
             {
-                std::string hash;
-                hash.resize(crypto_pwhash_STRBYTES);
+                Result<std::string> result;
 
-                bool is_successful = crypto_pwhash_str(
-                    hash.data(),
-                    text.c_str(),
-                    text.size(),
-                    crypto_pwhash_OPSLIMIT_MODERATE,
-                    crypto_pwhash_MEMLIMIT_MODERATE
-                ) == 0;
+                transform(result, text);
 
-                if (is_successful)
-                {
-                    return hash.c_str();
-                }
-
-                return "";
-            }));
+                return result.get_data();
+            })
+        );
     }
 
     void BcryptHashCryptographer::reverse_async(
@@ -148,11 +134,12 @@ namespace QLogicaeCore
     {
         result.set_to_success(std::async(std::launch::async, [this, hash, key]() -> bool
             {
-                return crypto_pwhash_str_verify(
-                    key.c_str(),
-                    hash.c_str(),
-                    hash.size()
-                ) == 0;
-            }));
+                Result<bool> result;
+
+                reverse(result, hash, key);
+
+                return result.get_data();
+            })
+        );
     }
 }

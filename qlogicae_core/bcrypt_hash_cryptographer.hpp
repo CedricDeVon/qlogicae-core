@@ -31,6 +31,10 @@ namespace QLogicaeCore
             const BcryptHashCryptographer&
                 bcrypt_hash_cryptographer) = delete;
 
+        void setup(
+            Result<void>& result
+        );
+
         std::string transform(
             const std::string& text
         ) const;
@@ -56,10 +60,12 @@ namespace QLogicaeCore
             const std::string& hash,
             const std::string& key) const;
 
-        void transform_async(Result<std::future<std::string>>& result,
+        void transform_async(
+            Result<std::future<std::string>>& result,
             const std::string& text) const;
 
-        void reverse_async(Result<std::future<bool>>& result,
+        void reverse_async(
+            Result<std::future<bool>>& result,
             const std::string& hash,
             const std::string& key) const;
     };
