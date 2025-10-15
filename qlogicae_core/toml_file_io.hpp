@@ -1,5 +1,6 @@
 #pragma once
 
+#include "result.hpp"
 #include "utilities.hpp"
 #include "abstract_file_io.hpp"
 #include "vector_string_hash.hpp"
@@ -88,6 +89,17 @@ namespace QLogicaeCore
         
         std::future<bool> remove_keys_async(
             const std::vector<std::vector<std::string>>& keys);
+
+        void setup(
+            Result<void>& result,
+            const std::string& file_path
+        );
+
+        void setup(
+            Result<void>& result,
+            const std::string& name,
+            const std::string& file_path
+        );
 
     private:
         std::optional<toml::table*> _toml_root;

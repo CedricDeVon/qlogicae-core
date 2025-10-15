@@ -1,5 +1,6 @@
 #pragma once
 
+#include "result.hpp"
 #include "json.hpp"
 #include "abstract_file_io.hpp"
 
@@ -124,6 +125,23 @@ namespace QLogicaeCore
         std::future<bool> update_array_async(const JsonPath&, const std::vector<std::any>&);
 
         std::future<bool> update_object_async(const JsonPath&, const std::unordered_map<std::string, std::any>&);
+
+        void setup(
+            Result<void>& result,
+            const std::string& file_path
+        );
+
+        void setup(
+            Result<void>& result,
+            const std::string& file_path,
+            const bool& is_formatting_allowed
+        );
+
+        void setup(
+            Result<void>& result,
+            const std::string& name,
+            const std::string& file_path
+        );
 
     protected:
         std::mutex _mutex;

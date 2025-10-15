@@ -1,5 +1,6 @@
 #pragma once
 
+#include "result.hpp"
 #include "utilities.hpp"
 #include "file_mode.hpp"
 #include "abstract_file_io.hpp"
@@ -68,6 +69,17 @@ namespace QLogicaeCore
         std::future<bool> write_async(const std::string& text);
         
         std::future<bool> append_async(const std::string& text);
+
+        void setup(
+            Result<void>& result,
+            const std::string& file_path
+        );
+
+        void setup(
+            Result<void>& result,
+            const std::string& name,
+            const std::string& file_path
+        );
 
     protected:
         std::optional<fast_io::obuf_file> _write_file;

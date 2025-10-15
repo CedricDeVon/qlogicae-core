@@ -1131,5 +1131,27 @@ namespace QLogicaeCore
             return this->import_from_json(json);
         });
     }
+
+    void CsvFileIO::setup(
+        Result<void>& result,
+        const std::string& file_path
+    )
+    {
+        _file_path = file_path;
+
+        result.set_to_success();
+    }
+
+    void CsvFileIO::setup(
+        Result<void>& result,
+        const std::string& name,
+        const std::string& file_path
+    )
+    {
+        _name = name;
+        _file_path = file_path;
+
+        result.set_to_success();
+    }
 }
 

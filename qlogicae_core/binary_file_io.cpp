@@ -26,6 +26,28 @@ namespace QLogicaeCore
         close(FileMode::APPEND);
     }
 
+    void BinaryFileIO::setup(
+        Result<void>& result,
+        const std::string& file_path
+    )
+    {
+        _file_path = file_path;
+
+        result.set_to_success();
+    }
+
+    void BinaryFileIO::setup(
+        Result<void>& result,
+        const std::string& name,
+        const std::string& file_path
+    )
+    {        
+        _name = name;
+        _file_path = file_path;
+
+        result.set_to_success();
+    }
+
     bool BinaryFileIO::open(const FileMode& file_mode)
     {
         try

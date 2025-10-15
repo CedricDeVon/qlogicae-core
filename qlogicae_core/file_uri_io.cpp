@@ -78,4 +78,40 @@ namespace QLogicaeCore
                 return this->generate_data_uri();
             });
     }
+
+    void FileUriIO::setup(
+        Result<void>& result,
+        const std::string& file_path
+    )
+    {
+        _file_path = file_path;
+
+        result.set_to_success();
+    }
+
+    void FileUriIO::setup(
+        Result<void>& result,
+        const std::string& file_path,
+        const std::string& mimetype
+    )
+    {
+        _file_path = file_path;
+        _mimetype = mimetype;
+
+        result.set_to_success();
+    }
+
+    void FileUriIO::setup(
+        Result<void>& result,
+        const std::string& file_path,
+        const std::string& mimetype,
+        const std::string& name
+    )
+    {
+        _file_path = file_path;
+        _mimetype = mimetype;
+        _name = name;
+
+        result.set_to_success();
+    }
 }

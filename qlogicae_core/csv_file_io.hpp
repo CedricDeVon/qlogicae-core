@@ -1,5 +1,6 @@
 #pragma once
 
+#include "result.hpp"
 #include "abstract_file_io.hpp"
 
 #include <rapidcsv.h>
@@ -249,6 +250,17 @@ namespace QLogicaeCore
             const std::vector<
                 std::string>&,
             const std::string& values
+        );
+
+        void setup(
+            Result<void>& result,
+            const std::string& file_path
+        );
+
+        void setup(
+            Result<void>& result,
+            const std::string& name,
+            const std::string& file_path
         );
 
     protected:

@@ -46,11 +46,17 @@ namespace QLogicaeCore
             const std::string& file_path
         );
         
-        void get_name(Result<std::string>& result) const;
+        void get_name(
+            Result<std::string>& result
+        ) const;
 
-        void get_file_path(Result<std::string>& result) const;
+        void get_file_path(
+            Result<std::string>& result
+        ) const;
 
-        void get_line_count(Result<std::size_t>& result) const;
+        void get_line_count(
+            Result<std::size_t>& result
+        ) const;
 
         void set_file_path(
             Result<bool>& result,
@@ -60,7 +66,7 @@ namespace QLogicaeCore
     protected:
         std::string _file_path;
 
-        const std::string _name;
+        std::string _name;
 
         mutable std::mutex _mutex;
     };

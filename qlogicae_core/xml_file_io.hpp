@@ -1,5 +1,6 @@
 #pragma once
 
+#include "result.hpp"
 #include "utilities.hpp"
 #include "abstract_file_io.hpp" 
 #include "vector_string_hash.hpp"
@@ -196,6 +197,17 @@ namespace QLogicaeCore
         );
         
         std::future<bool> set_root_async(const std::string& tag_name);
+
+        void setup(
+            Result<void>& result,
+            const std::string& file_path
+        );
+
+        void setup(
+            Result<void>& result,
+            const std::string& name,
+            const std::string& file_path
+        );
 
     protected:
         pugi::xml_document _xml_document;

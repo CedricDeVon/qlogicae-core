@@ -6,7 +6,8 @@ namespace QLogicaeCore
 {
     JsonFileIO::~JsonFileIO() {}
 
-    JsonFileIO::JsonFileIO(const std::string& path)
+    JsonFileIO::JsonFileIO(const std::string& path
+    )
         : AbstractFileIO(path)
     {        
         _is_formatting_allowed = false;
@@ -14,7 +15,8 @@ namespace QLogicaeCore
 
     JsonFileIO::JsonFileIO(
         const std::string& path,
-        const bool& is_formatting_allowed)
+        const bool& is_formatting_allowed
+    )
             : AbstractFileIO(path)
     {
         _is_formatting_allowed = is_formatting_allowed;
@@ -22,7 +24,8 @@ namespace QLogicaeCore
 
     JsonFileIO::JsonFileIO(
         const std::string& name,
-        const std::string& path)
+        const std::string& path
+    )
             : AbstractFileIO(name, path)
     {
         _is_formatting_allowed = false;
@@ -902,6 +905,40 @@ namespace QLogicaeCore
         return std::async(std::launch::async, [this, content]() {
             return this->write(content);
             });
+    }
+
+    void JsonFileIO::setup(
+        Result<void>& result,
+        const std::string& file_path
+    )
+    {
+        _file_path = file_path;
+
+        result.set_to_success();
+    }
+
+    void JsonFileIO::setup(
+        Result<void>& result,
+        const std::string& file_path,
+        const bool& is_formatting_allowed
+    )
+    {
+        _file_path = file_path;
+        _is_formatting_allowed = is_formatting_allowed;
+
+        result.set_to_success();
+    }
+
+    void JsonFileIO::setup(
+        Result<void>& result,
+        const std::string& name,
+        const std::string& file_path
+    )
+    {
+        _name = name;
+        _file_path = file_path;
+
+        result.set_to_success();
     }
 }
 
