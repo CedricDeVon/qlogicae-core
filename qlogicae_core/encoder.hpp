@@ -122,6 +122,10 @@ namespace QLogicaeCore
             const std::string_view& text
         ) const;
 
+        void setup(
+            Result<void>& result
+        );
+
         static void get_instance(Result<Encoder*>& result);
 
     protected:

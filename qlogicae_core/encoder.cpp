@@ -722,6 +722,13 @@ namespace QLogicaeCore
         );
     }
 
+    void Encoder::setup(
+        Result<void>& result
+    )
+    {
+        result.set_to_success();
+    }
+
     void Encoder::_to_base64(
         Result<std::string>& result,
         const std::string_view& text) const
