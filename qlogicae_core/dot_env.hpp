@@ -22,6 +22,10 @@ namespace QLogicaeCore
 		
 		static DotEnv& get_instance();
 
+		void setup(
+			Result<void>& result
+		);
+
 		void remove(
 			Result<void> result,
 			const wchar_t* key
@@ -36,10 +40,6 @@ namespace QLogicaeCore
 		void get(
 			Result<std::wstring> result,
 			const wchar_t* key
-		);
-
-		void setup(
-			Result<void>& result
 		);
 
 		static void get_instance(

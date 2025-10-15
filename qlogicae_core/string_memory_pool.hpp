@@ -21,14 +21,18 @@
 
 namespace QLogicaeCore
 {   
-    template<typename Allocator = std::pmr::polymorphic_allocator<std::string>>
+    template<typename Allocator =
+        std::pmr::polymorphic_allocator<std::string>>
     class StringMemoryPool
     {
     public:
         StringMemoryPool(
-            CaseSensitivity sensitivity = CaseSensitivity::SENSITIVE,
-            std::size_t character_pool_block_size = 4096,
-            std::pmr::memory_resource* resource = std::pmr::get_default_resource()
+            CaseSensitivity sensitivity =
+                CaseSensitivity::SENSITIVE,
+            std::size_t character_pool_block_size =
+                4096,
+            std::pmr::memory_resource* resource =
+                std::pmr::get_default_resource()
         );
 
         std::size_t get_size() const;
@@ -37,21 +41,29 @@ namespace QLogicaeCore
         
         StringMemoryPoolSnapshot get_diagnostics_snapshot() const;
         
-        bool is_found(const std::string_view& string) const;
+        bool is_found(
+            const std::string_view& string
+        ) const;
         
         void clear();
         
-        const std::string* get_internal(const std::string_view& string);
+        const std::string* get_internal(
+            const std::string_view& string
+        );
 
         std::future<std::size_t> get_size_async() const;
         
         std::future<StringMemoryPoolSnapshot> get_diagnostics_async() const;
         
-        std::future<bool> is_found_async(const std::string_view& string) const;
+        std::future<bool> is_found_async(
+            const std::string_view& string
+        ) const;
         
         std::future<void> clear_async();
         
-        std::future<const std::string*> get_internal_async(const std::string_view& string);
+        std::future<const std::string*> get_internal_async(
+            const std::string_view& string
+        );
 
     private:
         std::unordered_set<
@@ -72,4 +84,3 @@ namespace QLogicaeCore
         StringMemoryPoolDiagnostics _diagnostics;
     };
 }
-

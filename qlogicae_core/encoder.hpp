@@ -60,6 +60,10 @@ namespace QLogicaeCore
 
         static Encoder& get_instance();
 
+        void setup(
+            Result<void>& result
+        );
+
         void from_utf8_to_hex(
             Result<std::string>& result,
             const std::string_view& text
@@ -121,10 +125,6 @@ namespace QLogicaeCore
             Result<std::vector<unsigned char>>& result,
             const std::string_view& text
         ) const;
-
-        void setup(
-            Result<void>& result
-        );
 
         static void get_instance(Result<Encoder*>& result);
 

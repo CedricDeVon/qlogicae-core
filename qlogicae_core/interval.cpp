@@ -270,4 +270,130 @@ namespace QLogicaeCore
             throw std::runtime_error(std::string() + "Exception at Interval::get_execution_count(): " + exception.what());
         }
     }
+
+    void Interval::setup(
+        Result<void>& result,
+        const std::function<bool(size_t)>& callback,
+        std::chrono::milliseconds interval,
+        std::optional<size_t> max_count,
+        bool execute_now
+    )
+    {
+        _callback = callback;
+        _interval = interval;
+        _max_count = max_count;
+        _execute_now = execute_now;
+
+        result.set_to_success();
+    }
+
+    void Interval::start(Result<void>& result)
+    {
+        if (_thread.joinable())
+        {
+            result.set_to_failure();
+            return;
+        }
+
+        _cancelled.store(false);
+        _paused.store(false);
+        _running.store(true);
+        _count.store(0);
+
+        _thread = std::thread(&Interval::run, this);
+
+        result.set_to_success();
+    }
+
+    void Interval::stop(Result<void>& result)
+    {
+        _running.store(false);
+        _paused.store(false);
+        _cv.notify_all();
+
+        result.set_to_success();
+    }
+
+    void Interval::pause(Result<void>& result)
+    {
+        _paused.store(true);
+
+        result.set_to_success();
+    }
+
+    void Interval::resume(Result<void>& result)
+    {
+        if (_paused.load())
+        {
+            _paused.store(false);
+            _cv.notify_all();
+        }
+
+        result.set_to_success();
+    }
+
+    void Interval::cancel(Result<void>& result)
+    {
+        _cancelled.store(true);
+        _cv.notify_all();
+
+        result.set_to_success();
+    }
+
+    void Interval::restart(Result<void>& result)
+    {
+        cancel();
+        if (_thread.joinable())
+        {
+            _thread.join();
+        }
+        start();
+
+        result.set_to_success();
+    }
+
+    void Interval::is_paused(Result<bool>& result) const
+    {
+        result.set_to_success(_paused.load());
+    }
+
+    void Interval::is_running(Result<bool>& result) const
+    {
+        result.set_to_success(_running.load());
+    }
+
+    void Interval::is_cancelled(Result<bool>& result) const
+    {
+        result.set_to_success(_cancelled.load());
+    }
+
+    void Interval::get_execution_count(Result<size_t>& result) const
+    {
+        result.set_to_success(_count.load());
+    }
+
+    void Interval::get_interval(Result<std::chrono::milliseconds>& result) const
+    {
+        std::lock_guard lock(_mutex);
+
+        result.set_to_success(_interval);        
+    }
+
+    void Interval::set_interval(Result<void>& result, std::chrono::milliseconds interval)
+    {
+        std::lock_guard lock(_mutex);
+
+        _interval = interval;
+
+        result.set_to_success();
+    }
+
+    void Interval::set_callback(Result<void>& result, std::function<bool(size_t)> callback)
+    {
+        std::lock_guard lock(_mutex);
+
+        _callback = std::move(callback);
+
+        result.set_to_success();
+    }
 }

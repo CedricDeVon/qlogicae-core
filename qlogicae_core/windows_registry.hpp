@@ -154,21 +154,29 @@ namespace QLogicaeCore
         ~WindowsRegistry() = default;
         
         WindowsRegistry(
-            const WindowsRegistry& windows_registry) = delete;
+            const WindowsRegistry& windows_registry
+        ) = delete;
         
         WindowsRegistry(
-            WindowsRegistry&& windows_registry) noexcept = delete;
+            WindowsRegistry&& windows_registry
+        ) noexcept = delete;
         
-        WindowsRegistry(const HKEY hkey = UTILITIES.DEFAULT_HKEY);
+        WindowsRegistry(
+            const HKEY hkey = UTILITIES.DEFAULT_HKEY
+        );
         
         WindowsRegistry& operator = 
-            (WindowsRegistry&& windows_registry) = delete;
+            (WindowsRegistry&& windows_registry
+        ) = delete;
         
         WindowsRegistry& operator = (
-            const WindowsRegistry& windows_registry) = delete;
+            const WindowsRegistry& windows_registry
+        ) = delete;
 
         HKEY _root_key;
+
         std::wstring _sub_key;
+
         std::wstring _name_key;
     };
 }

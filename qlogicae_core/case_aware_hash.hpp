@@ -12,13 +12,27 @@ namespace QLogicaeCore
 
         CaseSensitivity sensitivity;
 
-        explicit CaseAwareHash(CaseSensitivity s) : sensitivity(s) {}
+        explicit CaseAwareHash(CaseSensitivity s) :
+            sensitivity(s) {}
 
-        std::size_t operator()(const std::string& s) const noexcept { return hash_impl(s); }
-        std::size_t operator()(const std::string_view& sv) const noexcept { return hash_impl(sv); }
+        std::size_t operator()(
+            const std::string& s
+        ) const noexcept
+        {
+            return hash_impl(s);
+        }
+
+        std::size_t operator()(
+            const std::string_view& sv
+        ) const noexcept
+        {
+            return hash_impl(sv);
+        }
 
     private:
-        std::size_t hash_impl(std::string_view str) const noexcept
+        std::size_t hash_impl(
+            std::string_view str
+        ) const noexcept
         {
             std::size_t hash = 14695981039346656037ull;
             for (char c : str)

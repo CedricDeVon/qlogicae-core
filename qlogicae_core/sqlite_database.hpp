@@ -9,6 +9,7 @@ namespace QLogicaeCore
     {
     public:
         explicit SQLiteDatabase(const std::string& file_path);
+
         ~SQLiteDatabase();
 
         void enable_foreign_keys();

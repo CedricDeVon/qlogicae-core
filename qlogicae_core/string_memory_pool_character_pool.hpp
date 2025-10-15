@@ -18,28 +18,43 @@ namespace QLogicaeCore
     class CharacterPool
     {
     public:
-        explicit CharacterPool(const std::size_t& block_size = 4096);
+        explicit CharacterPool(
+            const std::size_t& block_size = 4096
+        );
 
         ~CharacterPool();
 
-        CharacterPool(const CharacterPool&) = delete;
+        CharacterPool(
+            const CharacterPool&
+        ) = delete;
 
-        CharacterPool& operator=(const CharacterPool&) = delete;
+        CharacterPool& operator = (
+            const CharacterPool&
+        ) = delete;
 
         void clear();
 
-        char* allocate(const std::size_t& size);
+        char* allocate(
+            const std::size_t& size
+        );
 
         std::future<void> clear_async();
 
-        std::future<char*> allocate_async(const std::size_t& size);
+        std::future<char*> allocate_async(
+            const std::size_t& size
+        );
 
     private:
         char* _current;
+        
         std::size_t _remaining;
+        
         std::size_t _block_size;
+
         std::vector<CharacterPoolBlock*> _blocks;
 
-        void allocate_block(const std::size_t& minimum_size);
+        void allocate_block(
+            const std::size_t& minimum_size
+        );
     };
 }

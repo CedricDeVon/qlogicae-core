@@ -319,92 +319,124 @@ namespace QLogicaeCore
         const std::unordered_map<TimeScaleUnit, std::string_view> TIME_SCALE_UNIT_ABBREVIATION_ENUMS =
         {
             { TimeScaleUnit::NANOSECONDS, TIME_SCALE_UNIT_ABBREVIATION_NANOSECONDS },
+            
             { TimeScaleUnit::MICROSECONDS, TIME_SCALE_UNIT_ABBREVIATION_MICROSECONDS },
+            
             { TimeScaleUnit::MILLISECONDS, TIME_SCALE_UNIT_ABBREVIATION_MILLISECONDS },
+            
             { TimeScaleUnit::SECONDS, TIME_SCALE_UNIT_ABBREVIATION_SECONDS },
+            
             { TimeScaleUnit::MINUTES, TIME_SCALE_UNIT_ABBREVIATION_MINUTES },
+            
             { TimeScaleUnit::HOURS, TIME_SCALE_UNIT_ABBREVIATION_HOURS },
+            
             { TimeScaleUnit::DAYS, TIME_SCALE_UNIT_ABBREVIATION_DAYS },
+            
             { TimeScaleUnit::WEEKS, TIME_SCALE_UNIT_ABBREVIATION_WEEKS },
+            
             { TimeScaleUnit::MONTHS, TIME_SCALE_UNIT_ABBREVIATION_MONTHS },
+            
             { TimeScaleUnit::YEARS, TIME_SCALE_UNIT_ABBREVIATION_YEARS }
         };
 
         const std::unordered_map<std::string_view, TimeScaleUnit> TIME_SCALE_UNIT_ABBREVIATION_STRINGS =
         {
             { TIME_SCALE_UNIT_ABBREVIATION_NANOSECONDS, TimeScaleUnit::NANOSECONDS },
+            
             { TIME_SCALE_UNIT_ABBREVIATION_MICROSECONDS, TimeScaleUnit::MICROSECONDS },
+            
             { TIME_SCALE_UNIT_ABBREVIATION_MILLISECONDS, TimeScaleUnit::MILLISECONDS },
+            
             { TIME_SCALE_UNIT_ABBREVIATION_SECONDS, TimeScaleUnit::SECONDS },
+            
             { TIME_SCALE_UNIT_ABBREVIATION_MINUTES, TimeScaleUnit::MINUTES },
+            
             { TIME_SCALE_UNIT_ABBREVIATION_HOURS, TimeScaleUnit::HOURS },
+            
             { TIME_SCALE_UNIT_ABBREVIATION_DAYS, TimeScaleUnit::DAYS },
+            
             { TIME_SCALE_UNIT_ABBREVIATION_WEEKS, TimeScaleUnit::WEEKS },
+            
             { TIME_SCALE_UNIT_ABBREVIATION_MONTHS, TimeScaleUnit::MONTHS },
+            
             { TIME_SCALE_UNIT_ABBREVIATION_YEARS, TimeScaleUnit::YEARS }
         };
 
         const std::unordered_map<TemperatureUnitType, std::string_view> TEMPERATURE_UNIT_TYPE_ENUMS =
         {
             { TemperatureUnitType::CELSIUS, TEMPERATURE_UNIT_TYPE_CELSIUS },
+
             { TemperatureUnitType::FAHRENHEIT, TEMPERATURE_UNIT_TYPE_FAHRENHEIT },
+
             { TemperatureUnitType::KELVIN, TEMPERATURE_UNIT_TYPE_KELVIN },
+
             { TemperatureUnitType::NONE, TEMPERATURE_UNIT_TYPE_NONE }
         };
 
         const std::unordered_map<std::string_view, TemperatureUnitType> TEMPERATURE_UNIT_TYPE_STRINGS =
         {
             { TEMPERATURE_UNIT_TYPE_CELSIUS, TemperatureUnitType::CELSIUS },
+
             { TEMPERATURE_UNIT_TYPE_FAHRENHEIT, TemperatureUnitType::FAHRENHEIT },
+
             { TEMPERATURE_UNIT_TYPE_KELVIN, TemperatureUnitType::KELVIN },
+
             { TEMPERATURE_UNIT_TYPE_NONE, TemperatureUnitType::NONE }
         };
 
         const std::unordered_map<QLogicaeVisualStudio2022BuildArchitecture, std::string_view> VISUAL_STUDIO_2022_BUILD_ARCHITECTURE_ENUMS =
         {
             { QLogicaeVisualStudio2022BuildArchitecture::X64, VISUAL_STUDIO_2022_X64_BUILD_ARCHITECTURE },
+           
             { QLogicaeVisualStudio2022BuildArchitecture::X86, VISUAL_STUDIO_2022_X86_BUILD_ARCHITECTURE }
         };
 
         const std::unordered_map<std::string_view, QLogicaeVisualStudio2022BuildArchitecture> VISUAL_STUDIO_2022_BUILD_ARCHITECTURE_STRINGS =
         {
             { VISUAL_STUDIO_2022_X64_BUILD_ARCHITECTURE, QLogicaeVisualStudio2022BuildArchitecture::X64 },
+           
             { VISUAL_STUDIO_2022_X86_BUILD_ARCHITECTURE, QLogicaeVisualStudio2022BuildArchitecture::X86 },
         };
         
         const std::unordered_map<QLogicaeVisualStudio2022Build, std::string_view> VISUAL_STUDIO_2022_BUILD_ENUMS =
         {
             { QLogicaeVisualStudio2022Build::RELEASE, VISUAL_STUDIO_2022_RELEASE_BUILD },
+
             { QLogicaeVisualStudio2022Build::DEBUG, VISUAL_STUDIO_2022_DEBUG_BUILD }
         };
 
         const std::unordered_map<std::string_view, QLogicaeVisualStudio2022Build> VISUAL_STUDIO_2022_BUILD_STRINGS =
         {
             { VISUAL_STUDIO_2022_RELEASE_BUILD, QLogicaeVisualStudio2022Build::RELEASE },
+
             { VISUAL_STUDIO_2022_DEBUG_BUILD, QLogicaeVisualStudio2022Build::DEBUG },
         };
 
         const std::unordered_map<WindowsRegistryRootPath, std::string_view> WINDOWS_REGISTRY_ROOT_PATH_ENUMS =
         {
             { WindowsRegistryRootPath::HKCU, WINDOWS_REGISTRY_HKCU_ROOT_PATH_1 },
+
             { WindowsRegistryRootPath::HKLM, WINDOWS_REGISTRY_HKLM_ROOT_PATH_1 }
         };
 
         const std::unordered_map<std::string_view, WindowsRegistryRootPath> WINDOWS_REGISTRY_ROOT_PATH_STRINGS =
         {
             { WINDOWS_REGISTRY_HKCU_ROOT_PATH_1, WindowsRegistryRootPath::HKCU },
+
             { WINDOWS_REGISTRY_HKLM_ROOT_PATH_1, WindowsRegistryRootPath::HKLM },
         };
 
         const std::unordered_map<EnvironmentVariable, std::string_view> ENVIRONMENT_VARIABLE_ENUMS =
         {
             { EnvironmentVariable::USER, ENVIRONMENT_VARIABLE_USER_1 },
+
             { EnvironmentVariable::SYSTEM, ENVIRONMENT_VARIABLE_SYSTEM_1 }
         };
 
         const std::unordered_map<std::string_view, EnvironmentVariable> ENVIRONMENT_VARIABLE_STRINGS =
         {
             { ENVIRONMENT_VARIABLE_USER_1, EnvironmentVariable::USER },
+
             { ENVIRONMENT_VARIABLE_SYSTEM_1, EnvironmentVariable::SYSTEM },
         };
 
@@ -503,10 +535,15 @@ namespace QLogicaeCore
 
 	protected:
 		Utilities();
-		~Utilities() = default;
-		Utilities(const Utilities&) = default;
-		Utilities(Utilities&&) noexcept = delete;
-		Utilities& operator = (Utilities&&) = default;
+		
+        ~Utilities() = default;
+		
+        Utilities(const Utilities&) = default;
+		
+        Utilities(Utilities&&) noexcept = delete;
+		
+        Utilities& operator = (Utilities&&) = default;
+
 		Utilities& operator = (const Utilities&) = delete;
 
 		std::mutex _mutex;

@@ -26,15 +26,25 @@ namespace QLogicaeCore
         public:
             ~SubscriptionHandle();
             
-            SubscriptionHandle(const SubscriptionHandle&) = delete;
+            SubscriptionHandle(
+                const SubscriptionHandle&
+            ) = delete;
 
-            SubscriptionHandle(SubscriptionHandle&& other) noexcept;
+            SubscriptionHandle(
+                SubscriptionHandle&& other
+            ) noexcept;
             
-            SubscriptionHandle(std::function<void()> unsubscribe_callback);
+            SubscriptionHandle(
+                std::function<void()> unsubscribe_callback
+            );
             
-            SubscriptionHandle& operator=(const SubscriptionHandle&) = delete;
+            SubscriptionHandle& operator = (
+                const SubscriptionHandle&
+            ) = delete;
 
-            SubscriptionHandle& operator=(SubscriptionHandle&& other) noexcept;
+            SubscriptionHandle& operator = (
+                SubscriptionHandle&& other
+            ) noexcept;
             
             void unsubscribe();
 
@@ -48,15 +58,23 @@ namespace QLogicaeCore
 
         ~EventDispatcher();
 
-        EventDispatcher(const EventDispatcher&) = delete;
+        EventDispatcher(
+            const EventDispatcher&
+        ) = delete;
 
-        EventDispatcher& operator=(const EventDispatcher&) = delete;
+        EventDispatcher& operator = (
+            const EventDispatcher&
+        ) = delete;
 
         template <typename EventT>
-        void dispatch(const EventT& event);
+        void dispatch(
+            const EventT& event
+        );
 
         template <typename EventT>
-        void dispatch_async(const EventT& event);
+        void dispatch_async(
+            const EventT& event
+        );
         
         template <typename EventT>
         SubscriptionHandle subscribe(
@@ -326,4 +344,3 @@ namespace QLogicaeCore
         ).detach());        
     }
 }
-

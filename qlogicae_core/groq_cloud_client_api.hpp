@@ -127,16 +127,24 @@ namespace QLogicaeCore
         );
 
         EventDispatcher<void> on_retry;
+        
         EventDispatcher<void> on_timeout;
+        
         EventDispatcher<void> on_cancelled;
+        
         EventDispatcher<std::exception> on_exception;
+        
         EventDispatcher<std::string_view> on_stream_chunk;
+        
         EventDispatcher<GroqCloudClientAPIResponse> on_response;
+
         EventDispatcher<uint32_t, std::string_view> on_http_error;
 
     protected:
         mutable std::mutex _messages_mutex;
+        
         mutable std::mutex _response_mutex;
+
         GroqCloudClientAPIPromptConfigurations _prompt_configurations;      
 
         std::string _build_request_body() const;

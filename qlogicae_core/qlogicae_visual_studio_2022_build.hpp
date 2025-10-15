@@ -4,9 +4,11 @@
 
 namespace QLogicaeCore
 {
-    enum class QLogicaeVisualStudio2022Build : uint8_t
+    enum class QLogicaeVisualStudio2022Build :
+        uint8_t
     {
         RELEASE,
+        
         DEBUG
     };
 }

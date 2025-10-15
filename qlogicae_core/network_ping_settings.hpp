@@ -13,15 +13,19 @@ namespace QLogicaeCore
         {
             UTILITIES.DEFAULT_MILLISECONDS_PER_CALLBACK
         };
+        
         std::string host_address
         {
             UTILITIES.DEFAULT_HOST_ADDRESS
         };
+        
         bool is_listening
         {
             UTILITIES.DEFAULT_IS_LISTENING
         };
+
         std::string name;
+        
         std::function<void(const NetworkPingResponse&)> callback;
     };
 }

@@ -19,14 +19,21 @@ namespace QLogicaeCore
     public:
         StringMemoryPoolDiagnostics() = default;
 
-        StringMemoryPoolDiagnostics(const StringMemoryPoolDiagnostics&) = delete;
+        StringMemoryPoolDiagnostics(
+            const StringMemoryPoolDiagnostics&
+        ) = delete;
 
-        StringMemoryPoolDiagnostics& operator=(const StringMemoryPoolDiagnostics&) = delete;
+        StringMemoryPoolDiagnostics& operator = (
+            const StringMemoryPoolDiagnostics&
+        ) = delete;
 
-        std::atomic<std::size_t> pool_hits{ 0 };
-        std::atomic<std::size_t> bytes_used{ 0 };
-        std::atomic<std::size_t> pool_misses{ 0 };
-        std::atomic<std::size_t> interned_count{ 0 };
+        std::atomic<std::size_t> pool_hits { 0 };
+        
+        std::atomic<std::size_t> bytes_used { 0 };
+        
+        std::atomic<std::size_t> pool_misses { 0 };
+        
+        std::atomic<std::size_t> interned_count { 0 };
 
         void reset();
     };

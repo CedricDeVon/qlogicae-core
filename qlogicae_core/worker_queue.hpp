@@ -8,7 +8,9 @@ namespace QLogicaeCore
     struct WorkerQueue
     {
         std::map<TaskPriority, std::queue<SmallTaskObject>> priority_queues;
+
         std::mutex queue_mutex;
+
         std::condition_variable wake_signal;
     };
 }

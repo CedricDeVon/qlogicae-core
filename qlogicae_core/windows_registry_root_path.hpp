@@ -2,9 +2,11 @@
 
 namespace QLogicaeCore
 {
-    enum class WindowsRegistryRootPath : uint8_t
+    enum class WindowsRegistryRootPath :
+        uint8_t
     {
         HKCU,
+
         HKLM
     };
 }

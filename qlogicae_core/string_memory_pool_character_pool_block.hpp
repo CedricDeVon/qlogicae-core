@@ -17,11 +17,18 @@ namespace QLogicaeCore
     struct CharacterPoolBlock
     {
         std::unique_ptr<char[]> data;
+        
         std::size_t size;
+
         CharacterPoolBlock* next;
 
         explicit CharacterPoolBlock(std::size_t sz)
-            : data(new char[sz]), size(sz), next(nullptr) {
+            :
+                data(new char[sz]),
+                size(sz),
+                next(nullptr)
+        {
+        
         }
     };
 }

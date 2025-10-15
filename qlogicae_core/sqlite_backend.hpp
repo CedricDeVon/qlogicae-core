@@ -8,6 +8,7 @@ namespace QLogicaeCore
     {
     public:
         explicit SQLiteBackend(sqlite3* raw_database);
+
         ~SQLiteBackend();
 
         sqlite3* database_handle;

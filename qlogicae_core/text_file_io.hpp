@@ -50,25 +50,43 @@ namespace QLogicaeCore
 
         std::string read();
         
-        bool open(const FileMode& file_mode);
+        bool open(
+            const FileMode& file_mode
+        );
         
-        bool close(const FileMode& file_mode);
+        bool close(
+            const FileMode& file_mode
+        );
         
-        bool is_open(const FileMode& file_mode);
+        bool is_open(
+            const FileMode& file_mode
+        );
         
-        bool write(const std::string& text);
+        bool write(
+            const std::string& text
+        );
         
-        bool append(const std::string& text);
+        bool append(
+            const std::string& text
+        );
 
         std::future<std::string> read_async();
         
-        std::future<bool> open_async(const FileMode& file_mode);
+        std::future<bool> open_async(
+            const FileMode& file_mode
+        );
         
-        std::future<bool> close_async(const FileMode& file_mode);
+        std::future<bool> close_async(
+            const FileMode& file_mode
+        );
         
-        std::future<bool> write_async(const std::string& text);
+        std::future<bool> write_async(
+            const std::string& text
+        );
         
-        std::future<bool> append_async(const std::string& text);
+        std::future<bool> append_async(
+            const std::string& text
+        );
 
         void setup(
             Result<void>& result,
@@ -83,7 +101,9 @@ namespace QLogicaeCore
 
     protected:
         std::optional<fast_io::obuf_file> _write_file;
+        
         std::optional<fast_io::obuf_file> _append_file;
+
         std::optional<fast_io::native_file_loader> _read_file;
     };
 }

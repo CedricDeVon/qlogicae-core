@@ -8,7 +8,9 @@ namespace QLogicaeCore
         uint8_t
     {
         HEX,
+        
         UTF8,
+
         BASE64
     };
 }

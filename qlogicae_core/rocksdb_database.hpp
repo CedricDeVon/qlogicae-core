@@ -36,68 +36,121 @@ namespace QLogicaeCore
         
         ~RocksDBDatabase();
 
-        RocksDBDatabase(const std::string_view&, const RocksDBConfig & = {});
+        RocksDBDatabase(
+            const std::string_view&,
+            const RocksDBConfig & = {}
+        );
         
-        RocksDBDatabase(const RocksDBDatabase&) = delete;
+        RocksDBDatabase(
+            const RocksDBDatabase&
+        ) = delete;
         
-        RocksDBDatabase(RocksDBDatabase&&) noexcept = delete;
+        RocksDBDatabase(
+            RocksDBDatabase&&
+        ) noexcept = delete;
         
-        RocksDBDatabase& operator=(const RocksDBDatabase&) = delete;
+        RocksDBDatabase& operator=(
+            const RocksDBDatabase&
+        ) = delete;
         
-        RocksDBDatabase& operator=(RocksDBDatabase&&) = delete;
+        RocksDBDatabase& operator=(
+            RocksDBDatabase&&
+        ) = delete;
 
         std::string get_file_path() const;
         
-        void setup(const std::string& path, const RocksDBConfig& config = {});
+        void setup(
+            const std::string& path,
+            const RocksDBConfig& config = {}
+        );
 
-        bool is_path_found(const std::string_view&) const;
+        bool is_path_found(
+            const std::string_view&
+        ) const;
         
-        bool is_key_found(const std::string_view&) const;
+        bool is_key_found(
+            const std::string_view&
+        ) const;
 
-        bool remove_value(const std::string_view&);
+        bool remove_value(
+            const std::string_view&
+        );
         
         bool batch_execute();
 
         template <typename T>
-        T get_value(const std::string_view&);
+        T get_value(
+            const std::string_view&
+        );
 
         template <typename T>
-        void set_value(const std::string_view&, const T&);
+        void set_value(
+            const std::string_view&,
+            const T&
+        );
 
         template <typename T>
-        void batch_set_value(const std::string_view&, const T&);
+        void batch_set_value(
+            const std::string_view&,
+            const T&
+        );
 
         template <typename T>
-        void batch_remove_value(const std::string_view&, const T&);
+        void batch_remove_value(
+            const std::string_view&,
+            const T&
+        );
 
-        std::future<bool> remove_value_async(const std::string_view&);
+        std::future<bool> remove_value_async(
+            const std::string_view&
+        );
         
         std::future<bool> batch_execute_async();
 
         template <typename T>
-        std::future<T> get_value_async(const std::string_view&);
+        std::future<T> get_value_async(
+            const std::string_view&
+        );
 
         template <typename T>
-        std::future<void> set_value_async(const std::string_view&, const T&);
+        std::future<void> set_value_async(
+            const std::string_view&,
+            const T&
+        );
 
-        bool create_column_family(const std::string_view&);
+        bool create_column_family(
+            const std::string_view&
+        );
         
-        bool drop_column_family(const std::string_view&);
+        bool drop_column_family(
+            const std::string_view&
+        );
         
-        bool use_column_family(const std::string_view&);
+        bool use_column_family(
+            const std::string_view&
+        );
 
         void begin_batch();
         
         bool commit_batch();
 
-        bool create_backup(const std::string_view&) const;
+        bool create_backup(
+            const std::string_view&
+        ) const;
         
-        bool restore_backup(const std::string_view&);
+        bool restore_backup(
+            const std::string_view&
+        );
 
-        bool create_checkpoint(const std::string_view&) const;
+        bool create_checkpoint(
+            const std::string_view&
+        ) const;
 
         std::optional<std::string> get_with_bounds(
-            const std::string_view&, uint64_t, uint64_t);
+            const std::string_view&,
+            uint64_t,
+            uint64_t
+        );
 
         bool begin_transaction();
         
@@ -105,67 +158,140 @@ namespace QLogicaeCore
         
         bool rollback_transaction();
 
+        void get_file_path(
+            Result<std::string>& result
+        ) const;
 
+        void setup(
+            Result<void>& result,
+            const std::string& path,
+            const RocksDBConfig& config = {}
+        );
 
-        void get_file_path(Result<std::string>& result) const;
+        void is_path_found(
+            Result<bool>& result,
+            const std::string&
+        ) const;
 
-        void setup(Result<void>& result, const std::string& path, const RocksDBConfig& config = {});
+        void is_key_found(
+            Result<bool>& result,
+            const std::string&
+        ) const;
 
-        void is_path_found(Result<bool>& result, const std::string&) const;
+        void remove_value(
+            Result<bool>& result,
+            const std::string&
+        );
 
-        void is_key_found(Result<bool>& result, const std::string&) const;
+        void batch_execute(
+            Result<bool>& result    
+        );
 
-        void remove_value(Result<bool>& result, const std::string&);
+        void create_column_family(
+            Result<bool>& result,
+            const std::string&
+        );
 
-        void batch_execute(Result<bool>& result);
+        void drop_column_family(
+            Result<bool>& result,
+            const std::string&
+        );
 
-        void create_column_family(Result<bool>& result, const std::string&);
+        void use_column_family(
+            Result<bool>& result,
+            const std::string&
+        );
 
-        void drop_column_family(Result<bool>& result, const std::string&);
+        void begin_batch(
+            Result<bool>& result
+        );
 
-        void use_column_family(Result<bool>& result, const std::string&);
+        void commit_batch(
+            Result<bool>& result
+        );
 
-        void begin_batch(Result<bool>& result);
+        void create_backup(
+            Result<bool>& result,
+            const std::string&
+        ) const;
 
-        void commit_batch(Result<bool>& result);
+        void restore_backup(
+        Result<bool>& result,
+        const std::string&
+        );
 
-        void create_backup(Result<bool>& result, const std::string&) const;
-
-        void restore_backup(Result<bool>& result, const std::string&);
-
-        void create_checkpoint(Result<bool>& result, const std::string&) const;
+        void create_checkpoint(
+            Result<bool>& result,
+            const std::string&
+        ) const;
 
         void get_with_bounds(
             Result<std::optional<std::string>>& result,
-            const std::string&, uint64_t, uint64_t);
+            const std::string&,
+            uint64_t,
+            uint64_t
+        );
 
-        void begin_transaction(Result<bool>& result);
+        void begin_transaction(
+            Result<bool>& result
+        );
 
-        void commit_transaction(Result<bool>& result);
+        void commit_transaction(
+            Result<bool>& result
+        );
 
-        void rollback_transaction(Result<bool>& result);
+        void rollback_transaction(
+            Result<bool>& result
+        );
 
-        void remove_value_async(Result<std::future<bool>>& result, const std::string&);
+        void remove_value_async(
+            Result<std::future<bool>>& result,
+            const std::string&
+        );
 
-        void batch_execute_async(Result<std::future<bool>>& result);
+        void batch_execute_async(
+            Result<std::future<bool>>& result
+        );
 
         template <typename Type>
-        void get_value(Result<Type>& result, const std::string&);
+        void get_value(
+            Result<Type>& result,
+            const std::string&
+        );
 
         template <typename Type>
-        void set_value(Result<void>& result, const std::string&, const Type&);
+        void set_value(
+            Result<void>& result,
+            const std::string&,
+            const Type&
+        );
 
         template <typename Type>
-        void batch_set_value(Result<void>& result, const std::string&, const Type&);
+        void batch_set_value(
+            Result<void>& result,
+            const std::string&,
+            const Type&
+        );
 
         template <typename Type>
-        void batch_remove_value(Result<void>& result, const std::string&, const Type&);
+        void batch_remove_value(
+            Result<void>& result,
+            const std::string&,
+            const Type&
+        );
 
         template <typename Type>
-        void get_value_async(Result<std::future<Type>>& result, const std::string&);
+        void get_value_async(
+            Result<std::future<Type>>& result,
+            const std::string&
+        );
 
         template <typename Type>
-        void set_value_async(Result<std::future<void>>& result, const std::string&, const Type&);
+        void set_value_async(
+            Result<std::future<void>>& result,
+            const std::string&,
+            const Type&
+        );
 
     protected:
         RocksDBConfig _config;

@@ -61,51 +61,71 @@ namespace QLogicaeCore
 
         static Generator& get_instance();
 
-        void random_uuid4(Result<std::string>& result) const;
+        void setup(
+            Result<void>& result
+        );
 
-        void random_rgb_hex(Result<std::string>& result) const;
+        void random_uuid4(
+            Result<std::string>& result
+        ) const;
 
-        void random_rgba_hex(Result<std::string>& result) const;
+        void random_rgb_hex(
+            Result<std::string>& result
+        ) const;
 
-        void random_salt(Result<std::array<unsigned char, 16>>& result) const;
+        void random_rgba_hex(
+            Result<std::string>& result
+        ) const;
 
-        void random_bytes(Result<void>& result,
+        void random_salt(
+            Result<std::array<unsigned char, 16>>& result
+        ) const;
+
+        void random_bytes(
+            Result<void>& result,
             unsigned char* buffer, size_t size
         ) const;
 
-        void random_bool(Result<bool>& result,
+        void random_bool(
+            Result<bool>& result,
             const double& = UTILITIES.RANDOM_BOOLEAN_MAXIMUM
         ) const;
 
-        void random_string_vector(Result<std::vector<std::string>>& result,
+        void random_string_vector(
+            Result<std::vector<std::string>>& result,
             const size_t&,
             const size_t & = UTILITIES.RANDOM_SIZE_T_BITS
         ) const;
 
-        void random_hex(Result<std::string>& result,
+        void random_hex(
+            Result<std::string>& result,
             const size_t&,
             const std::string_view & =
             UTILITIES.FULL_VISIBLE_ASCII_CHARACTERSET
         ) const;
 
-        void random_string(Result<std::string>& result,
+        void random_string(
+            Result<std::string>& result,
             const size_t&,
             const std::string_view & =
             UTILITIES.FULL_VISIBLE_ASCII_CHARACTERSET
         ) const;
 
-        void random_base64(Result<std::string>& result,
+        void random_base64(
+            Result<std::string>& result,
             const size_t&,
             const std::string_view & =
             UTILITIES.FULL_VISIBLE_ASCII_CHARACTERSET
         ) const;
 
-        void random_int(Result<int>& result,
+        void random_int(
+            Result<int>& result,
             const int& = std::numeric_limits<int>::min(),
             const int& = std::numeric_limits<int>::max()
         ) const;
 
-        void random_double(Result<double>& result,
+        void random_double(
+            Result<double>& result,
             const double& = UTILITIES.RANDOM_DOUBLE_MINIMUM,
             const double& = UTILITIES.RANDOM_DOUBLE_MAXIMUM
         ) const;

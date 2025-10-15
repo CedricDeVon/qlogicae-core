@@ -16,21 +16,25 @@ namespace QLogicaeCore
 
         AES256SignatureCryptographer(
             const AES256SignatureCryptographer&
-                aes_256_signature_cryptographer) = delete;
+                aes_256_signature_cryptographer
+        ) = delete;
 
         AES256SignatureCryptographer(
             AES256SignatureCryptographer&&
-                aes_256_signature_cryptographer) noexcept = delete;
+                aes_256_signature_cryptographer
+        ) noexcept = delete;
 
         AES256SignatureCryptographer& operator = (
             AES256SignatureCryptographer&&
-                aes_256_signature_cryptographer) = delete;
+                aes_256_signature_cryptographer
+        ) = delete;
 
         AES256SignatureCryptographer& operator = (
             const AES256SignatureCryptographer&
-                aes_256_signature_cryptographer) = delete;
+                aes_256_signature_cryptographer
+        ) = delete;
 
-        void setup(Result<void>& result);;
+        void setup(Result<void>& result);
 
         std::string reverse(
             const std::string& cipher,
@@ -79,45 +83,53 @@ namespace QLogicaeCore
         void reverse(
             Result<std::string>& result,
             const std::string& cipher,
-            unsigned char* public_key) const;
+            unsigned char* public_key
+        ) const;
 
         void reverse(
             Result<std::string>& result,
             const std::string& cipher,
-            const std::string& public_key) const;
+            const std::string& public_key
+        ) const;
 
         void transform(
             Result<std::string>& result,
             const std::string& text,
             unsigned char* public_key,
-            unsigned char* private_key) const;
+            unsigned char* private_key
+        ) const;
 
         void transform(
             Result<std::string>& result,
             const std::string& text,
             const std::string& public_key,
-            const std::string& private_key) const;
+            const std::string& private_key
+        ) const;
 
         void reverse_async(
             Result<std::future<std::string>>& result,
             const std::string& cipher,
-            unsigned char* public_key) const;
+            unsigned char* public_key
+        ) const;
 
         void reverse_async(
             Result<std::future<std::string>>& result,
             const std::string& cipher,
-            const std::string& public_key) const;
+            const std::string& public_key
+        ) const;
 
         void transform_async(
             Result<std::future<std::string>>& result,
             const std::string& text,
             unsigned char* public_key,
-            unsigned char* private_key) const;
+            unsigned char* private_key
+        ) const;
 
         void transform_async(
             Result<std::future<std::string>>& result,
             const std::string& text,
             const std::string& public_key,
-            const std::string& private_key) const;
+            const std::string& private_key
+        ) const;
     };
 }

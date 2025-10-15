@@ -24,11 +24,17 @@ namespace QLogicaeCore
 
         BinaryFileIO() = default;
 
-        BinaryFileIO(const std::string& file_path);
+        BinaryFileIO(
+            const std::string& file_path
+        );
 
-        BinaryFileIO(const BinaryFileIO& binary_file_io) = delete;
+        BinaryFileIO(
+            const BinaryFileIO& binary_file_io
+        ) = delete;
 
-        BinaryFileIO(BinaryFileIO&& binary_file_io) noexcept = default;
+        BinaryFileIO(
+            BinaryFileIO&& binary_file_io
+        ) noexcept = default;
 
         BinaryFileIO& operator = (
             const BinaryFileIO& binary_file_io
@@ -43,21 +49,32 @@ namespace QLogicaeCore
             const std::string& file_path
         );
 
-        bool open(const FileMode& file_mode);
+        bool open(
+            const FileMode& file_mode);
 
-        bool close(const FileMode& file_mode);
+        bool close(
+            const FileMode& file_mode);
 
-        bool is_open(const FileMode& file_mode);
+        bool is_open(
+            const FileMode& file_mode);
 
         std::vector<std::byte> read();
 
-        bool write(const std::span<const std::byte>& content);
+        bool write(
+            const std::span<const std::byte>& content
+        );
 
-        bool append(const std::span<const std::byte>& content);
+        bool append(
+            const std::span<const std::byte>& content
+        );
 
-        std::future<bool> open_async(const FileMode& file_mode);
+        std::future<bool> open_async(
+            const FileMode& file_mode
+        );
 
-        std::future<bool> close_async(const FileMode& file_mode);
+        std::future<bool> close_async(
+            const FileMode& file_mode
+        );
 
         std::future<std::vector<std::byte>> read_async();
 

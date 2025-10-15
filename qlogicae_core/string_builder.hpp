@@ -100,8 +100,11 @@ namespace QLogicaeCore
 
     protected:
         ThreadPool* thread_pool_pointer;
+        
         std::deque<char> character_buffer_deque;
+        
         mutable std::shared_mutex character_buffer_mutex;
+
         std::pmr::memory_resource* memory_resource_pointer;
         
         StringBuilder& _utf8_trim(bool trim_left, bool trim_right);        

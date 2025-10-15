@@ -18,23 +18,28 @@ namespace QLogicaeCore
 
         Argon2idHashCryptographer(
             const CryptographerProperties&
-                cryptographer_properties);
+                cryptographer_properties
+        );
 
         Argon2idHashCryptographer(
             const Argon2idHashCryptographer&
-                argon2id_hash_cryptographer) = delete;
+                argon2id_hash_cryptographer
+        ) = delete;
 
         Argon2idHashCryptographer(
             Argon2idHashCryptographer&&
-                argon2id_hash_cryptographer) noexcept = delete;
+                argon2id_hash_cryptographer
+        ) noexcept = delete;
 
         Argon2idHashCryptographer& operator = (
             Argon2idHashCryptographer&&
-                argon2id_hash_cryptographer) = delete;
+                argon2id_hash_cryptographer
+            ) = delete;
 
         Argon2idHashCryptographer& operator = (
             const Argon2idHashCryptographer&
-                argon2id_hash_cryptographer) = delete;
+                argon2id_hash_cryptographer
+            ) = delete;
 
         void setup(
             Result<void>& result,
@@ -61,25 +66,28 @@ namespace QLogicaeCore
 
         void transform(
             Result<std::string>& result,
-            const std::string& text) const;
+            const std::string& text
+        ) const;
 
         void reverse(
             Result<bool>& result,
             const std::string& hash,
-            const std::string& key) const;
+            const std::string& key
+        ) const;
 
         void transform_async(
             Result<std::future<std::string>>& result,
-            const std::string& text) const;
+            const std::string& text
+        ) const;
 
         void reverse_async(
             Result<std::future<bool>>& result,
             const std::string& hash,
-            const std::string& key) const;
+            const std::string& key
+        ) const;
 
     protected:
         CryptographerProperties _cryptographer_properties;
     };
-
 }
 

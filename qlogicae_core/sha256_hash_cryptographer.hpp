@@ -75,5 +75,4 @@ namespace QLogicaeCore
             const std::string& key
         ) const;
     };
-
 }

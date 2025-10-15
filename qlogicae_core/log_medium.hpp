@@ -4,10 +4,13 @@
 
 namespace QLogicaeCore
 {
-    enum class LogMedium : uint8_t
+    enum class LogMedium :
+        uint8_t
     {
         ALL,
+
         FILE,
+
         CONSOLE
     };
 }

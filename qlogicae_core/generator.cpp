@@ -269,6 +269,13 @@ namespace QLogicaeCore
         return generator;
     }
 
+    void Generator::setup(
+        Result<void>& result
+    )
+    {
+        result.set_to_success();
+    }
+
     void Generator::random_uuid4(
         Result<std::string>& result
     ) const

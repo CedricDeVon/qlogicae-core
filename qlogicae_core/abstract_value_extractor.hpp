@@ -13,22 +13,28 @@ namespace QLogicaeCore
 
         AbstractValueExtractor(
             const AbstractValueExtractor&
-                abstract_value_extractor) = delete;
+                abstract_value_extractor
+        ) = delete;
 
         AbstractValueExtractor(
             AbstractValueExtractor&&
-                abstract_value_extractor) noexcept = delete;
+                abstract_value_extractor
+        ) noexcept = delete;
 
         AbstractValueExtractor& operator = (
             AbstractValueExtractor&&
-                abstract_value_extractor) = delete;
+                abstract_value_extractor
+            ) = delete;
 
         AbstractValueExtractor& operator = (
             const AbstractValueExtractor&
-                abstract_value_extractor) = delete;
+                abstract_value_extractor
+            ) = delete;
 
         virtual std::optional<std::string> get_value() const = 0;
 
-        virtual void get_value(Result<std::string>& result) const = 0;
+        virtual void get_value(
+            Result<std::string>& result
+        ) const = 0;
     };
 }

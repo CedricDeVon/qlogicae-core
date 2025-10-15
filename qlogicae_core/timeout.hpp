@@ -17,13 +17,20 @@ namespace QLogicaeCore
             bool = false
         );
         
-        Timeout(const Timeout&) = delete;
+        Timeout(
+            const Timeout&
+        ) = delete;
         
-        Timeout(Timeout&&) noexcept = delete;
+        Timeout(
+            Timeout&&) noexcept = delete;
         
-        Timeout& operator = (Timeout&&) = delete;
+        Timeout& operator = (
+            Timeout&&
+        ) = delete;
         
-        Timeout& operator = (const Timeout&) = delete;
+        Timeout& operator = (
+            const Timeout&
+        ) = delete;
 
         void cancel();
         
@@ -31,11 +38,17 @@ namespace QLogicaeCore
         
         bool is_cancelled() const;
 
-        void cancel(Result<void>& result);
+        void cancel(
+            Result<void>& result
+        );
 
-        void restart(Result<void>& result);
+        void restart(
+            Result<void>& result
+        );
 
-        void is_cancelled(Result<bool>& result) const;
+        void is_cancelled(
+            Result<bool>& result
+        ) const;
 
     protected:
         std::jthread _thread;

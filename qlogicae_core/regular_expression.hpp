@@ -99,20 +99,30 @@ namespace QLogicaeCore
 			const std::string& pattern
 		);
 
-		void get_instance(Result<RegularExpression*>& result);
+		void get_instance(
+			Result<RegularExpression*>& result
+		);
 
 	protected:
 		~RegularExpression();
 		
 		RegularExpression() = default;
 		
-		RegularExpression(const RegularExpression&) = delete;
+		RegularExpression(
+			const RegularExpression&
+		) = delete;
 		
-		RegularExpression(RegularExpression&&) noexcept = default;
+		RegularExpression(
+			RegularExpression&&
+		) noexcept = default;
 		
-		RegularExpression& operator = (const RegularExpression&) = delete;
+		RegularExpression& operator = (
+			const RegularExpression&
+		) = delete;
 		
-		RegularExpression& operator = (RegularExpression&&) noexcept = default;
+		RegularExpression& operator = (
+			RegularExpression&&
+		) noexcept = default;
 
 		mutable std::shared_mutex _mutex;
 

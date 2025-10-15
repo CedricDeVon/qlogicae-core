@@ -14,9 +14,13 @@ namespace QLogicaeCore
 
 		bool is_print_enabled() const;
 
-		void set_scan_enabled(const bool& value);
+		void set_scan_enabled(
+			const bool& value
+		);
 
-		void set_print_enabled(const bool& value);
+		void set_print_enabled(
+			const bool& value
+		);
 
 		std::string scan();
 
@@ -138,7 +142,9 @@ namespace QLogicaeCore
 			const std::string& text = ""
 		);
 
-		static void get_instance(Result<CliIO*>& result);
+		static void get_instance(
+			Result<CliIO*>& result
+		);
 
     protected:
         CliIO();

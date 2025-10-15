@@ -68,25 +68,25 @@ int main()
 {
     using namespace ankerl;
 
+    std::mutex _m;
+
     std::string template_str(1'000'000, 'x');
 
     nanobench::Bench bench;
-    bench.minEpochIterations(1000).warmup(3);
+    bench.minEpochIterations(100).warmup(1);
 
-    bench.run("copy assignment", [&] {
+    bench.run("with", [&] {
+        std::scoped_lock lock(_m);
+
         std::string src = template_str;
         std::string dst;
-        ankerl::nanobench::doNotOptimizeAway(dst);
         dst = src;
-        ankerl::nanobench::doNotOptimizeAway(dst);
         });
 
-    bench.run("move assignment", [&] {
+    bench.run("without", [&] {
         std::string src = template_str;
         std::string dst;
-        ankerl::nanobench::doNotOptimizeAway(dst);
-        dst = std::move(src);
-        ankerl::nanobench::doNotOptimizeAway(dst);
+        dst = src;
         });
     bool ea;
 

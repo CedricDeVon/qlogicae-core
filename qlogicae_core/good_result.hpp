@@ -5,7 +5,8 @@
 namespace QLogicaeCore
 {
     template <typename ValueType, typename MetaDataType = std::string>
-    class GoodResult : public AbstractResult<ValueType, MetaDataType>
+    class GoodResult :
+        public AbstractResult<ValueType, MetaDataType>
     {
     public:
         GoodResult(
@@ -30,6 +31,7 @@ namespace QLogicaeCore
                 true, value, metadata
             )
     {
+
     }
 }
 

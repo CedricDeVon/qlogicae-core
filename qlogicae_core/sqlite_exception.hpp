@@ -2,10 +2,12 @@
 
 namespace QLogicaeCore
 {
-    class SQLiteException : public std::runtime_error
+    class SQLiteException :
+        public std::runtime_error
     {
     public:
-        SQLiteException(const std::string& message,
+        SQLiteException(
+            const std::string& message,
             const int error_code,
             const int extended_code);
 

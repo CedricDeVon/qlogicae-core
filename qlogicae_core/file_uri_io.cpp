@@ -79,6 +79,55 @@ namespace QLogicaeCore
             });
     }
 
+    void FileUriIO::generate_data_uri(
+        Result<std::string>& result
+    ) const
+    {
+        std::scoped_lock lock(_mutex);
+
+        if (_file_path.empty() ||
+            !std::filesystem::exists(_file_path) ||
+            std::filesystem::is_directory(_file_path))
+        {
+            result.set_to_failure();
+            return;
+        }
+
+        std::ifstream input_file(
+            _file_path, std::ios::binary);
+
+        if (!input_file)
+        {
+            result.set_to_failure();
+            return;
+        }
+
+        std::ostringstream output_buffer;
+        output_buffer << input_file.rdbuf();
+        std::string raw_data = output_buffer.str();
+
+        result.set_to_success(
+            std::string() + "data:" + _mimetype.data() + ";base64," + "AKLOMP_ENCODED(" + raw_data + ")"
+        );
+    }
+
+    void FileUriIO::generate_data_uri_async(
+        Result<std::future<std::string>>& result
+    ) const
+    {
+        result.set_to_success(std::async(
+            std::launch::async,
+            [this]() -> std::string
+            {
+                Result<std::string> result;
+
+                generate_data_uri(result);
+
+                return result.get_data();
+            })
+        );
+    }
+
     void FileUriIO::setup(
         Result<void>& result,
         const std::string& file_path

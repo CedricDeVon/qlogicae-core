@@ -15,21 +15,32 @@ namespace QLogicaeCore
 		
 		~Logger() = default;
 		
-		Logger(const bool is_simplified);
+		Logger(
+			const bool is_simplified
+		);
 		
-		Logger(const Logger& logger) = delete;
+		Logger(
+			const Logger& logger
+		) = delete;
 		
-		Logger(Logger&& logger) noexcept = default;
+		Logger(
+			Logger&& logger
+		) noexcept = default;
 		
-		Logger& operator = (const Logger& logger) = delete;
+		Logger& operator = (
+			const Logger& logger
+			) = delete;
 		
-		Logger& operator = (Logger&& logger) noexcept = default;
+		Logger& operator = (
+			Logger&& logger
+			) noexcept = default;
 
 		Logger(
 			const std::string& name,
 			const LogMedium& medium = LogMedium::CONSOLE,
 			const std::vector<std::string>& output_paths = {},
-			const bool is_simplified = false);
+			const bool is_simplified = false
+		);
 
 		LogMedium get_medium() const;
 
@@ -37,19 +48,23 @@ namespace QLogicaeCore
 
 		bool get_is_simplified() const;
 
-		void set_is_simplified(const bool& value);
+		void set_is_simplified(
+			const bool& value
+		);
 
 		std::vector<std::string> get_output_paths() const;
 
 		void log(
 			const std::string& message,
 			const LogLevel& log_level = LogLevel::INFO,
-			const bool is_simplified = false) const;
+			const bool is_simplified = false
+		) const;
 
 		std::future<void> log_async(
 			const std::string& message,
 			const LogLevel& log_level = LogLevel::INFO,
-			const bool is_simplified = false) const;
+			const bool is_simplified = false
+		) const;
 
 		void get_medium(
 			Result<LogMedium>& result
@@ -76,13 +91,15 @@ namespace QLogicaeCore
 			Result<void>& result,
 			const std::string& message,
 			const LogLevel& log_level = LogLevel::INFO,
-			const bool is_simplified = false) const;
+			const bool is_simplified = false
+		) const;
 
 		void log_async(
 			Result<std::future<void>>& result,
 			const std::string& message,
 			const LogLevel& log_level = LogLevel::INFO,
-			const bool is_simplified = false) const;
+			const bool is_simplified = false
+		) const;
 
 	protected:
 		LogMedium _medium;

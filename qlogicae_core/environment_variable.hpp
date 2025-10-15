@@ -4,9 +4,11 @@
 
 namespace QLogicaeCore
 {
-    enum class EnvironmentVariable : uint8_t
+    enum class EnvironmentVariable :
+        uint8_t
     {
         USER,
+
         SYSTEM
     };
 }

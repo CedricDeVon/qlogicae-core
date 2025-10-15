@@ -7,7 +7,10 @@ namespace QLogicaeCore
     struct SQLiteStatementData
     {
     public:
-        explicit SQLiteStatementData(sqlite3_stmt* raw_statement);
+        explicit SQLiteStatementData(
+            sqlite3_stmt* raw_statement
+        );
+        
         ~SQLiteStatementData();
 
         sqlite3_stmt* get() const noexcept;

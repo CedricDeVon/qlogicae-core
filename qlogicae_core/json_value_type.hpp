@@ -2,13 +2,19 @@
 
 namespace QLogicaeCore
 {
-    enum class JsonValueType : uint8_t
+    enum class JsonValueType :
+        uint8_t
     {
         NONE,
+        
         NUMBER,
+        
         FLOAT,
+        
         STRING,
+        
         ARRAY,
+        
         OBJECT
     };
 }

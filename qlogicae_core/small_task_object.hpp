@@ -24,3 +24,4 @@ namespace QLogicaeCore
         std::function<void()> function_wrapper;
     };
 }
+

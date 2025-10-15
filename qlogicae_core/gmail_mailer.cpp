@@ -4,6 +4,11 @@
 
 namespace QLogicaeCore
 {
+    GmailMailer::GmailMailer()
+    {
+
+    }
+
     GmailMailer::GmailMailer(
         const std::string& sender_address,
         const std::function<std::string()>& password_provider,
@@ -429,7 +434,46 @@ namespace QLogicaeCore
         });
     }
 
+    void GmailMailer::setup(
+        Result<void>& result,
+        const std::string& sender_address,
+        const std::function<std::string()>& password_provider,
+        const std::vector<std::string>& to_recipients,
+        const std::vector<std::string>& cc_recipients,
+        const std::vector<std::string>& bcc_recipients,
+        const std::string& smtp_server
+    )
+    {
+        _curl = nullptr;
+        _mime_mixed = nullptr;
+        _mime_related = nullptr;
+        _html_part = nullptr;
+        _plain_part = nullptr;
+        _sender_address = sender_address;
+        _password_provider = password_provider;
+        _smtp_server = smtp_server;
+        _recipients = nullptr;
+        _headers = nullptr;
+        _to_recipients = to_recipients;
+        _cc_recipients = cc_recipients;
+        _bcc_recipients = bcc_recipients;
+        
+        if (sender_address.empty() || !password_provider)
+        {
+            result.set_to_failure();
+            return;
+        }
+        if (to_recipients.empty())
+        {
+            result.set_to_failure();
+            return;
+        }
 
+        curl_global_init(CURL_GLOBAL_DEFAULT);
+        setup();
+
+        result.set_to_success();
+    }
 
     void GmailMailer::set_subject(
         Result<void>& result,

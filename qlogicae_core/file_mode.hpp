@@ -4,7 +4,8 @@
 
 namespace QLogicaeCore
 {
-    enum class FileMode : uint8_t
+    enum class FileMode :
+        uint8_t
     {
         READ,
         WRITE,

@@ -76,7 +76,9 @@ namespace QLogicaeCore
 
         Result<void> setup();
 
-        void setup(Result<void>& result);
+        void setup(
+            Result<void>& result
+        );
 
         static Transformer& get_instance();
 
@@ -85,18 +87,29 @@ namespace QLogicaeCore
         
         ~Transformer() = default;
         
-        Transformer(const Transformer& transformer) = delete;
+        Transformer(
+            const Transformer& transformer
+        ) = delete;
         
-        Transformer(Transformer&& transformer) noexcept = delete;
+        Transformer(
+            Transformer&& transformer
+        ) noexcept = delete;
         
-        Transformer& operator = (Transformer&& transformer) = delete;
+        Transformer& operator = (
+            Transformer&& transformer
+            ) = delete;
         
-        Transformer& operator = (const Transformer& transformer) = delete;
+        Transformer& operator = (
+            const Transformer& transformer
+            ) = delete;
     };
 
-    inline static Transformer& TRANSFORMER = Transformer::get_instance();
+    inline static Transformer& TRANSFORMER =
+        Transformer::get_instance();
 
-    constexpr std::string get_log_level_string(const LogLevel& level)
+    constexpr std::string get_log_level_string(
+        const LogLevel& level
+    )
     {
         switch (level)
         {

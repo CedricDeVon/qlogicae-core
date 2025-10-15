@@ -23,6 +23,10 @@ namespace QLogicaeCore
 
         static FileIOs& get_instance();
 
+        void setup(
+            Result<void>& result
+        );
+
         void set_file(
             Result<void>& result,
             std::shared_ptr<AbstractFileIO> abstract_file_io
@@ -41,10 +45,6 @@ namespace QLogicaeCore
 
         static void get_instance(
             Result<FileIOs*>& result
-        );
-
-        void setup(
-            Result<void>& result
         );
 
     protected:

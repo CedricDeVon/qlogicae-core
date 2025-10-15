@@ -265,9 +265,13 @@ namespace QLogicaeCore
 
     protected:
         bool _corrupted = false;
+        
         std::recursive_mutex _mutex;
+        
         rapidcsv::LabelParams _label_params{ 0, -1 };
+        
         rapidcsv::SeparatorParams _separator_params{ ',' };
+
         std::optional<rapidcsv::Document> _temporary_csv_document_1;
     };
 }

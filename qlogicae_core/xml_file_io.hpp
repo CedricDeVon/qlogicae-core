@@ -22,16 +22,25 @@ namespace QLogicaeCore
         
         XmlFileIO() = default;
         
-        XmlFileIO(const XmlFileIO&) = delete;
+        XmlFileIO(
+            const XmlFileIO&
+        ) = delete;
         
-        XmlFileIO(XmlFileIO&&) noexcept = default;
+        XmlFileIO(
+            XmlFileIO&&
+        ) noexcept = default;
         
-        XmlFileIO(const std::string& file_path);
+        XmlFileIO(
+            const std::string& file_path
+        );
         
-        XmlFileIO& operator=(const XmlFileIO&) = delete;
+        XmlFileIO& operator = (
+            const XmlFileIO&
+        ) = delete;
         
         XmlFileIO& operator=(
-            XmlFileIO&&) noexcept = default;
+            XmlFileIO&&
+        ) noexcept = default;
         
         XmlFileIO(
             const std::string& file_path,
@@ -44,56 +53,75 @@ namespace QLogicaeCore
         
         bool clear();
         
-        bool save_as(const std::string& file_path);
+        bool save_as(
+            const std::string& file_path
+        );
         
         template<typename ValueType>
         std::optional<ValueType> get_value(
-            const std::vector<std::string>& key_path) const;
+            const std::vector<std::string>& key_path
+        ) const;
         
         template<typename ValueType>
         bool set_value(
             const std::vector<std::string>& key_path,
-            const ValueType& value);
+            const ValueType& value
+        );
         
         template<typename ValueType>
         bool set_values(
             const std::unordered_map<std::vector<std::string>,
-            ValueType, VectorStringHash>& map);
+            ValueType, VectorStringHash>& map
+        );
         
         template<typename ValueType>
         bool append_value(
             const std::vector<std::string>& key_path,
-            const ValueType& value);
+            const ValueType& value
+        );
         
         template<typename ValueType>
         bool append_values(
             const std::unordered_map<std::vector<std::string>,
-            ValueType, VectorStringHash>& map);
+            ValueType, VectorStringHash>& map
+        );
         
-        bool remove_value(const std::vector<std::string>& key_path);
+        bool remove_value(
+            const std::vector<std::string>& key_path
+        );
         
         bool remove_values(
-            const std::vector<std::vector<std::string>>& keys);
+            const std::vector<std::vector<std::string>>& keys
+        );
         
-        bool has_key(const std::vector<std::string>& key_path) const;
+        bool has_key(
+            const std::vector<std::string>& key_path
+        ) const;
         
         template<typename ValueType>
         std::vector<ValueType> get_all_values(
-            const std::vector<std::string>& key_path) const;
+            const std::vector<std::string>& key_path
+        ) const;
         
         std::vector<std::string> get_children(
-            const std::vector<std::string>& key_path) const;
+            const std::vector<std::string>& key_path
+        ) const;
         
         std::string get_root_name() const;
         
-        bool set_root(const std::string& tag_name);
+        bool set_root(
+            const std::string& tag_name
+        );
         
-        bool save_with_indent(std::size_t indent_spaces);
+        bool save_with_indent(
+            std::size_t indent_spaces
+        );
         
         template<typename ValueType>
         std::optional<ValueType> get_attribute(
             const std::vector<std::string>& key_path,
-            const std::string& attribute_name) const;
+            const std::string& attribute_name
+        ) const;
         
         template<typename ValueType>
         bool set_attribute(
@@ -102,20 +130,26 @@ namespace QLogicaeCore
             const ValueType& value);
         
         std::vector<std::string> select_node_texts(
-            const std::string& xpath) const;
+            const std::string& xpath
+        ) const;
         
         std::optional<std::string> select_node_text(
-            const std::string& xpath) const;
+            const std::string& xpath
+        ) const;
         
-        bool validate_against_schema(const std::string& xsd_path) const;
+        bool validate_against_schema(
+            const std::string& xsd_path
+        ) const;
         
         std::vector<std::string> select_attributes(
             const std::string& xpath,
-            const std::string& attribute_name) const;
+            const std::string& attribute_name
+        ) const;
         
         std::optional<std::string> select_attribute(
             const std::string& xpath,
-            const std::string& attribute_name) const;
+            const std::string& attribute_name
+        ) const;
 
         std::future<bool> load_async();
         
@@ -124,60 +158,74 @@ namespace QLogicaeCore
         std::future<bool> clear_async();
         
         std::future<bool> save_as_async(
-            const std::string& file_path);
+            const std::string& file_path
+        );
         
         template<typename ValueType>
-        std::future<std::optional<ValueType>>
-            get_value_async(
-                const std::vector<std::string>& key_path) const;
+        std::future<std::optional<ValueType>> get_value_async(
+            const std::vector<std::string>& key_path
+        ) const;
         
         template<typename ValueType>
-        std::future<bool>
-            set_value_async(
-                const std::vector<std::string>& key_path,
-                const ValueType& value);
+        std::future<bool> set_value_async(
+            const std::vector<std::string>& key_path,
+            const ValueType& value
+        );
         
         template<typename ValueType>
         std::future<bool> set_values_async(
             const std::unordered_map<std::vector<std::string>,
-            ValueType, VectorStringHash>& values);
+            ValueType, VectorStringHash>& values
+        );
         
         template<typename ValueType>
-        std::future<bool>
-            append_value_async(
-                const std::vector<std::string>& key_path,
-                const ValueType& value);
+        std::future<bool> append_value_async(
+            const std::vector<std::string>& key_path,
+            const ValueType& value
+        );
         
         template<typename ValueType>
         std::future<bool> append_values_async(
             const std::unordered_map<std::vector<std::string>,
-            ValueType, VectorStringHash>& values);
+            ValueType, VectorStringHash>& values
+        );
         
         std::future<bool> remove_value_async(
-            const std::vector<std::string>& key_path);
+            const std::vector<std::string>& key_path
+        );
         
         std::future<bool> remove_values_async(
-            const std::vector<std::vector<std::string>>& keys);
+            const std::vector<std::vector<std::string>>& keys
+        );
         
         std::future<bool> has_key_async(
-            const std::vector<std::string>& key_path) const;
+            const std::vector<std::string>& key_path
+        ) const;
         
         template<typename ValueType>
         std::future<std::vector<ValueType>> get_all_values_async(
-            const std::vector<std::string>& key_path) const;
+            const std::vector<std::string>& key_path
+        ) const;
         
         std::future<std::vector<std::string>> get_children_async(
-            const std::vector<std::string>& key_path) const;
+            const std::vector<std::string>& key_path
+        ) const;
         
         std::future<std::string> get_root_name_async() const;
         
-        std::future<bool> save_with_indent_async(std::size_t indent_spaces);
+        std::future<bool> save_with_indent_async(
+            std::size_t indent_spaces
+        );
         
         std::future<std::optional<std::string>>
-            select_node_text_async(const std::string& xpath) const;
+            select_node_text_async(
+                const std::string& xpath
+            ) const;
         
         std::future<std::vector<std::string>>
-            select_node_texts_async(const std::string& xpath) const;
+            select_node_texts_async(
+                const std::string& xpath
+            ) const;
         
         std::future<bool> validate_against_schema_async(
             const std::string& xsd_path
@@ -196,7 +244,9 @@ namespace QLogicaeCore
             const ValueType& value
         );
         
-        std::future<bool> set_root_async(const std::string& tag_name);
+        std::future<bool> set_root_async(
+            const std::string& tag_name
+        );
 
         void setup(
             Result<void>& result,
@@ -213,13 +263,15 @@ namespace QLogicaeCore
         pugi::xml_document _xml_document;
         pugi::xml_node _navigate_to_path(
             const std::vector<std::string>& key_path,
-            bool create_missing) const;
+            bool create_missing
+        ) const;
     };
 
     template<typename ValueType>
     std::optional<ValueType> XmlFileIO::get_attribute(
         const std::vector<std::string>& key_path,
-        const std::string& attribute_name) const
+        const std::string& attribute_name
+    ) const
     {
         static_assert(std::is_constructible_v<std::string, ValueType> ||
             std::is_arithmetic_v<ValueType>,

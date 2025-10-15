@@ -16,20 +16,30 @@ namespace QLogicaeCore
             std::optional<MetaDataType> metadata = std::nullopt
         );
 
-        BadResult(const BadResult& bad_result) = delete;
+        BadResult(
+            const BadResult& bad_result
+        ) = delete;
 
-        BadResult(BadResult&& bad_result) noexcept = default;
+        BadResult(
+            BadResult&& bad_result
+        ) noexcept = default;
 
-        BadResult& operator=(const BadResult& bad_result) = delete;
+        BadResult& operator=(
+            const BadResult& bad_result
+        ) = delete;
 
-        BadResult& operator=(BadResult&& bad_result) noexcept = default;
+        BadResult& operator=(
+            BadResult&& bad_result
+        ) noexcept = default;
     };
 
     template <typename ValueType, typename MetaDataType>
     QLogicaeCore::BadResult<ValueType, MetaDataType>::BadResult(
         std::optional<ValueType> value,
         std::optional<MetaDataType> metadata) :
-            AbstractResult<ValueType, MetaDataType>(false, value, metadata)
+            AbstractResult<ValueType, MetaDataType>(
+                false, value, metadata
+            )
     {
 
     }

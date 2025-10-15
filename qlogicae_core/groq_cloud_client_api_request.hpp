@@ -9,3 +9,4 @@ namespace QLogicaeCore
         std::vector<GroqCloudClientAPIChatMessage> messages;
     };
 }
+

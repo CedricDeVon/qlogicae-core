@@ -14,7 +14,8 @@ namespace QLogicaeCore
     class ThreadPool
     {
     public:
-        explicit ThreadPool(std::size_t thread_count =
+        explicit ThreadPool(
+            std::size_t thread_count =
             std::thread::hardware_concurrency(),
             std::size_t max_queue_size = 1024);
         
@@ -30,7 +31,8 @@ namespace QLogicaeCore
         template <typename Callable>
         std::optional<std::future<void>> enqueue_task(
             Callable&& task,
-            const TaskPriority& priority = TaskPriority::MEDIUM
+            const TaskPriority& priority =
+                TaskPriority::MEDIUM
         );
         
         std::size_t worker_count() const;
@@ -41,21 +43,31 @@ namespace QLogicaeCore
         
         static std::size_t current_worker_index();
 
-        void worker_count(Result<std::size_t>& result) const;
+        void worker_count(
+            Result<std::size_t>& result
+        ) const;
 
-        void total_pending_tasks(Result<std::size_t>& result) const;
+        void total_pending_tasks(
+            Result<std::size_t>& result
+        ) const;
 
-        void get_instance(Result<ThreadPool*>& result);
+        void get_instance(
+            Result<ThreadPool*>& result
+        );
 
-        void current_worker_index(Result<std::size_t>& result);
+        void current_worker_index(
+            Result<std::size_t>& result
+        );
 
         template <typename Callable>
-        void enqueue(Result<bool>& result,
+        void enqueue(
+            Result<bool>& result,
             Callable&& task,
             const TaskPriority& priority = TaskPriority::MEDIUM);
 
         template <typename Callable>
-        void enqueue_task(Result<std::optional<std::future<void>>>& result,
+        void enqueue_task(
+            Result<std::optional<std::future<void>>>& result,
             Callable&& task,
             const TaskPriority& priority = TaskPriority::MEDIUM);
 

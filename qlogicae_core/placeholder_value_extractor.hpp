@@ -27,15 +27,19 @@ namespace QLogicaeCore
         
         PlaceholderValueExtractor& operator =
             (PlaceholderValueExtractor&&
-                placeholder_value_extractor) = delete;
+                placeholder_value_extractor
+            ) = delete;
         
         PlaceholderValueExtractor& operator =
             (const PlaceholderValueExtractor&
-                placeholder_value_extractor) = delete;
+                placeholder_value_extractor
+            ) = delete;
 
         std::optional<std::string> get_value() const;
 
-        void get_value(Result<std::string>& result) const;
+        void get_value(
+            Result<std::string>& result
+        ) const;
 
     protected:
         const std::string _value;

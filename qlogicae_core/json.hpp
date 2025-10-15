@@ -8,7 +8,8 @@ namespace QLogicaeCore
 {
 	struct Json;
 
-    using JsonValuePointer = std::shared_ptr<Json>;
+    using JsonValuePointer =
+        std::shared_ptr<Json>;
 
     using JsonValue = std::variant<
         std::nullptr_t,
@@ -24,10 +25,17 @@ namespace QLogicaeCore
     struct Json
     {
         JsonValue value;
-        using Array = std::vector<JsonValuePointer>;
-        using Object = std::map<std::string, JsonValuePointer>;
+        
+        using Array =
+            std::vector<JsonValuePointer>;
+
+        using Object =
+            std::map<std::string, JsonValuePointer>;
     };
 
-    using JsonKey = std::variant<std::string_view, int>;
-    using JsonPath = std::vector<JsonKey>;
+    using JsonKey =
+        std::variant<std::string_view, int>;
+
+    using JsonPath =
+        std::vector<JsonKey>;
 }

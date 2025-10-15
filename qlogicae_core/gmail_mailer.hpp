@@ -15,6 +15,8 @@ namespace QLogicaeCore
     class GmailMailer
     {
     public:
+        GmailMailer();
+        
         GmailMailer(
             const std::string& sender_address,
             const std::function<std::string()>& password_provider,
@@ -81,9 +83,22 @@ namespace QLogicaeCore
             const std::string& filename
         );
 
-        bool send_email(std::string& error_message);
+        bool send_email(
+            std::string& error_message
+        );
 
         std::future<bool> send_email_async();
+
+        void setup(
+            Result<void>& result,
+            const std::string& sender_address,
+            const std::function<std::string()>& password_provider,
+            const std::vector<std::string>& to_recipients,
+            const std::vector<std::string>& cc_recipients = {},
+            const std::vector<std::string>& bcc_recipients = {},
+            const std::string& smtp_server =
+            UTILITIES.DEFAULT_GMAIL_MAILER_SMTP_SERVER
+        );
 
         void set_subject(
             Result<void>& result,

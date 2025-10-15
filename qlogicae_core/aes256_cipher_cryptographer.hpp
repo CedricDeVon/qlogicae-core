@@ -16,19 +16,23 @@ namespace QLogicaeCore
 
         AES256CipherCryptographer(
             const AES256CipherCryptographer&
-                aes256_cipher_cryptographer) = delete;
+                aes256_cipher_cryptographer
+        ) = delete;
 
         AES256CipherCryptographer(
             AES256CipherCryptographer&&
-                aes256_cipher_cryptographer) noexcept = delete;
+                aes256_cipher_cryptographer
+        ) noexcept = delete;
 
         AES256CipherCryptographer& operator = (
             AES256CipherCryptographer&&
-                aes256_cipher_cryptographer) = delete;
+                aes256_cipher_cryptographer
+            ) = delete;
 
         AES256CipherCryptographer& operator = (
             const AES256CipherCryptographer&
-                aes256_cipher_cryptographer) = delete;
+                aes256_cipher_cryptographer
+            ) = delete;
 
         void setup(Result<void>& result);
 
@@ -84,48 +88,56 @@ namespace QLogicaeCore
             Result<std::string>& result,
             const std::string& cipher,
             const unsigned char* key,
-            const unsigned char* nonce) const;
+            const unsigned char* nonce
+        ) const;
 
         void transform(
             Result<std::string>& result,
             const std::string& text,
             const unsigned char* key,
-            const unsigned char* nonce) const;
+            const unsigned char* nonce
+        ) const;
 
         void reverse(
             Result<std::string>& result,
             const std::string& cipher,
             const std::string& key,
-            const std::string& nonce) const;
+            const std::string& nonce
+        ) const;
 
         void transform(
             Result<std::string>& result,
             const std::string& text,
             const std::string& key,
-            const std::string& nonce) const;
+            const std::string& nonce
+        ) const;
 
         void reverse_async(
             Result<std::future<std::string>>& result,
             const std::string& cipher,
             const unsigned char* key,
-            const unsigned char* nonce) const;
+            const unsigned char* nonce
+        ) const;
 
         void transform_async(
             Result<std::future<std::string>>& result,
             const std::string& text,
             const unsigned char* key,
-            const unsigned char* nonce) const;
+            const unsigned char* nonce
+        ) const;
 
         void reverse_async(
             Result<std::future<std::string>>& result,
             const std::string& cipher,
             const std::string& key,
-            const std::string& nonce) const;
+            const std::string& nonce
+        ) const;
 
         void transform_async(
             Result<std::future<std::string>>& result,
             const std::string& text,
             const std::string& key,
-            const std::string& nonce) const;
+            const std::string& nonce
+        ) const;
     };
 }

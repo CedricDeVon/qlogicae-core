@@ -115,7 +115,9 @@ namespace QLogicaeCore
     template <
         typename DataType
     >
-    void Result<DataType>::get_is_successful(bool& value)
+    void Result<DataType>::get_is_successful(
+        bool& value
+    )
     {
         value = _is_successful;
     }
@@ -131,7 +133,9 @@ namespace QLogicaeCore
     template <
         typename DataType
     >
-    void Result<DataType>::get_data(DataType& value)
+    void Result<DataType>::get_data(
+        DataType& value
+    )
     {
         value = _data;
     }
@@ -239,20 +243,26 @@ namespace QLogicaeCore
     }
 
     template <typename DataType>
-    void Result<DataType>::set_data(DataType&& value)
+    void Result<DataType>::set_data(
+        DataType&& value
+    )
     {
         _data = std::move(value);
     }
 
     template <typename DataType>
-    void Result<DataType>::set_to_success(DataType&& value)
+    void Result<DataType>::set_to_success(
+        DataType&& value
+    )
     {
         set_is_successful_to_true();
         set_data(std::move(value));
     }
 
     template <typename DataType>
-    void Result<DataType>::set_to_failure(DataType&& value)
+    void Result<DataType>::set_to_failure(
+        DataType&& value
+    )
     {
         set_is_successful_to_false();
         set_data(std::move(value));
