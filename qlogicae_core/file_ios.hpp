@@ -43,6 +43,10 @@ namespace QLogicaeCore
             Result<FileIOs*>& result
         );
 
+        void setup(
+            Result<void>& result
+        );
+
     protected:
         FileIOs() = default;
 

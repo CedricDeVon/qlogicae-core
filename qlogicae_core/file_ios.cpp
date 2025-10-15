@@ -11,6 +11,13 @@ namespace QLogicaeCore
 		return singleton;
 	}
 
+	void FileIOs::setup(
+		Result<void>& result
+	)
+	{
+		result.set_to_success();
+	}
+
 	void FileIOs::set_file(std::shared_ptr<AbstractFileIO> instances)
 	{
 		try

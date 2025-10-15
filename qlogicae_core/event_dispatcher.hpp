@@ -103,7 +103,7 @@ namespace QLogicaeCore
         Result<void>& result
     )
     {
-
+        result.set_to_success();
     }
 
     template <typename... EventTypes>
