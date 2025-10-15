@@ -87,4 +87,11 @@ namespace QLogicaeCore
     {
         return get<std::string>(get_index(column_name));
     }
+
+    void SQLiteRow::setup(
+        Result<void>& result
+    )
+    {
+        result.set_to_success();
+    }
 }

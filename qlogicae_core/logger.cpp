@@ -101,6 +101,16 @@ namespace QLogicaeCore
 		});
 	}
 
+	void Logger::setup(
+		Result<void>& result,
+		const bool& is_simplified
+	)
+	{
+		_is_simplified = is_simplified;
+
+		result.set_to_success();
+	}
+
 	void Logger::get_medium(
 		Result<LogMedium>& result
 	) const

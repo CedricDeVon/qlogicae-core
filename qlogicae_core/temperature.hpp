@@ -17,6 +17,10 @@ namespace QLogicaeCore
 
         static Temperature& get_instance();
 
+        void setup(
+            Result<void>& result
+        );
+
         void convert(Result<double>& result,
             const double& value,
             const TemperatureUnitType& from_unit,

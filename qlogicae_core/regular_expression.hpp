@@ -54,6 +54,10 @@ namespace QLogicaeCore
 
 		static RegularExpression& get_instance();
 
+		void setup(
+			Result<void>& result
+		);
+
 		void clear_all_patterns(
 			Result<void>& result
 		);
@@ -63,7 +67,8 @@ namespace QLogicaeCore
 			const std::string& name
 		);
 
-		void has_pattern(Result<void>& result,
+		void has_pattern(
+			Result<void>& result,
 			const std::string& name
 		) const;
 
@@ -72,17 +77,20 @@ namespace QLogicaeCore
 			const std::string& value
 		) const;
 
-		void add_pattern(Result<void>& result,
+		void add_pattern(
+			Result<void>& result,
 			const std::string& name,
 			const std::string& pattern
 		);
 
-		void match_named(Result<void>& result,
+		void match_named(
+			Result<void>& result,
 			const std::string& name,
 			const std::string& pattern
 		);
 
-		void match_direct(Result<void>& result,
+		void match_direct(
+			Result<void>& result,
 			const std::string& name,
 			const std::string& pattern
 		);

@@ -63,6 +63,11 @@ namespace QLogicaeCore
         
         bool continue_listening();
 
+        void setup(
+            Result<void>& result,
+            const NetworkPingSettings& network_ping_settings
+        );
+
         void get_is_listening(
             Result<bool>& result
         ) const;

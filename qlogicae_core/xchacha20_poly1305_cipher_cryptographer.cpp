@@ -157,6 +157,13 @@ namespace QLogicaeCore
         });
     }
 
+    void XChaCha20Poly1305CipherCryptographer::setup(
+        Result<void>& result
+    )
+    {
+        result.set_to_success();
+    }
+
     void XChaCha20Poly1305CipherCryptographer::reverse(
         Result<std::string>& result,
         const std::string_view& cipher,

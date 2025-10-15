@@ -146,6 +146,11 @@ namespace QLogicaeCore
             const std::wstring_view value
         ) const;
 
+        void setup(
+            Result<void>& result,
+            const HKEY hkey = UTILITIES.DEFAULT_HKEY
+        );
+
         static WindowsRegistry& hkcu();
 
         static WindowsRegistry& hklm();

@@ -4,9 +4,11 @@
 
 namespace QLogicaeCore
 {
-    Timeout::Timeout(std::function<void()> function,
+    Timeout::Timeout(
+        std::function<void()> function,
         std::chrono::milliseconds delay,
-        bool execute_immediately)
+        bool execute_immediately
+    )
         : _function(std::move(function)),
         _delay(delay),
         _execute_immediately(execute_immediately)
@@ -50,6 +52,22 @@ namespace QLogicaeCore
                 }
             }
         });
+    }
+
+    void Timeout::setup(
+        Result<void>& result,
+        std::function<void()> function,
+        std::chrono::milliseconds delay,
+        bool execute_immediately
+    )
+    {
+        _function = std::move(function);
+        _delay = delay;
+        _execute_immediately =execute_immediately;
+
+        _start_thread();
+
+        result.set_to_success();
     }
 
     void Timeout::cancel()

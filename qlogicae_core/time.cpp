@@ -589,6 +589,13 @@ namespace QLogicaeCore
         }
     }
 
+    void Time::setup(
+        Result<void>& result
+    )
+    {
+        result.set_to_success();
+    }
+
     void Time::now(Result<double>& result) const
     {
         result.set_to_success(

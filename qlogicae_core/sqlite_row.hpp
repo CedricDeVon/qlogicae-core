@@ -1,5 +1,6 @@
 #pragma once
 
+#include "result.hpp"
 #include "sqlite_exception.hpp"
 
 #include <sqlite3.h>
@@ -39,6 +40,10 @@ namespace QLogicaeCore
         std::string_view get_column_name(
             int column_index
         ) const;
+
+        void setup(
+            Result<void>& result
+        );
 
     protected:
         int get_index(

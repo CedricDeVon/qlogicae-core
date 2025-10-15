@@ -14,4 +14,11 @@ namespace QLogicaeCore
     {
         sqlite3_close(database_handle);
     }
+
+    void SQLiteBackend::setup(
+        Result<void>& result
+    )
+    {
+        result.set_to_success();
+    }
 }

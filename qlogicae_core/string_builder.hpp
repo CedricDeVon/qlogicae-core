@@ -50,15 +50,25 @@ namespace QLogicaeCore
         
         const std::pmr::string& to_pmr_string() const;
         
-        StringBuilder& append(const double& text);
+        StringBuilder& append(
+            const double& text
+        );
         
-        StringBuilder& append(const std::string_view& text);
+        StringBuilder& append(
+            const std::string_view& text
+        );
         
-        StringBuilder& prepend(const double& text);
+        StringBuilder& prepend(
+            const double& text
+        );
         
-        StringBuilder& prepend(const std::string_view& text);
+        StringBuilder& prepend(
+            const std::string_view& text
+        );
         
-        StringBuilder& reserve_capacity(const std::size_t& value);
+        StringBuilder& reserve_capacity(
+            const std::size_t& value
+        );
         
         StringBuilder& insert(
             const double& text,
@@ -80,13 +90,21 @@ namespace QLogicaeCore
         
         std::future<std::pmr::string> async_to_pmr_string() const;
         
-        std::future<void> async_append(const double& text);
+        std::future<void> async_append(
+            const double& text
+        );
         
-        std::future<void> async_append(const std::string_view& text);
+        std::future<void> async_append(
+            const std::string_view& text
+        );
         
-        std::future<void> async_prepend(const double& text);
+        std::future<void> async_prepend(
+            const double& text
+        );
         
-        std::future<void> async_prepend(const std::string_view& text);
+        std::future<void> async_prepend(
+            const std::string_view& text
+        );
         
         std::future<void> async_insert(
             const double& text,
@@ -98,6 +116,10 @@ namespace QLogicaeCore
             const std::size_t& position
         );
 
+        void setup(
+            Result<void>& result
+        );
+
     protected:
         ThreadPool* thread_pool_pointer;
         
@@ -107,7 +129,10 @@ namespace QLogicaeCore
 
         std::pmr::memory_resource* memory_resource_pointer;
         
-        StringBuilder& _utf8_trim(bool trim_left, bool trim_right);        
+        StringBuilder& _utf8_trim(
+            bool trim_left,
+            bool trim_right
+        );        
         
         std::pmr::string _flatten(
             std::pmr::memory_resource* memory_resource_reference = nullptr

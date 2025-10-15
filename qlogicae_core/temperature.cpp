@@ -57,6 +57,13 @@ namespace QLogicaeCore
         }
     }
 
+    void Temperature::setup(
+        Result<void>& result
+    )
+    {
+        result.set_to_success();
+    }
+
     void Temperature::get_instance(Result<Temperature*>& result)
     {
         static Temperature instance;

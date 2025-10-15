@@ -178,6 +178,13 @@ namespace QLogicaeCore
         return get_instance;
     }
 
+    void SystemAccess::setup(
+        Result<void>& result
+    )
+    {
+        result.set_to_success();
+    }
+
     void SystemAccess::has_admin_access(Result<void>& result) const
     {
         BOOL is_admin = FALSE;

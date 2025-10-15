@@ -40,4 +40,11 @@ namespace QLogicaeCore
         SQLiteStatement pragma_statement = prepare("PRAGMA foreign_keys = ON;");
         pragma_statement.step();
     }
+
+    void SQLiteDatabase::setup(
+        Result<void>& result
+    )
+    {
+        result.set_to_success();
+    }
 }

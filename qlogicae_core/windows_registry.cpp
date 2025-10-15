@@ -270,6 +270,16 @@ namespace QLogicaeCore
         return utf8_result;
     }
 
+    void WindowsRegistry::setup(
+        Result<void>& result,
+        const HKEY hkey
+    )
+    {
+        _root_key = hkey;
+
+        result.set_to_success();
+    }
+
     void WindowsRegistry::get_values_via_utf8(
         Result<std::unordered_map<std::string, std::string>>& result,
         const std::string_view value

@@ -64,6 +64,10 @@ namespace QLogicaeCore
             JsonWebTokenReverseInput options
         ) const;
         
+        void setup(
+            Result<void>& result
+        );
+
         void transform(
             Result<std::string>& result,
             JsonWebTokenTransformInput options

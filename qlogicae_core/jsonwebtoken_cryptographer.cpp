@@ -160,6 +160,13 @@ namespace QLogicaeCore
             });
     }
 
+    void JsonWebTokenCryptographer::setup(
+        Result<void>& result
+    )
+    {
+        result.set_to_success();
+    }
+
     void JsonWebTokenCryptographer::transform(
         Result<std::string>& result,
         JsonWebTokenTransformInput options

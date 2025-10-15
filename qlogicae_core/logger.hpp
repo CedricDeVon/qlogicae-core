@@ -66,6 +66,11 @@ namespace QLogicaeCore
 			const bool is_simplified = false
 		) const;
 
+		void setup(
+			Result<void>& result,
+			const bool& is_simplified
+		);
+
 		void get_medium(
 			Result<LogMedium>& result
 		) const;

@@ -53,6 +53,10 @@ namespace QLogicaeCore
             const std::string& key
         ) const;
 
+        void setup(
+            Result<void>& result
+        );
+
         void transform(
             Result<std::string> result,
             const std::string& text

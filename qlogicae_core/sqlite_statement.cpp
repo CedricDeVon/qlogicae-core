@@ -365,4 +365,11 @@ namespace QLogicaeCore
         }
         return bind(name, nullptr);
     }
+
+    void SQLiteStatement::setup(
+        Result<void>& result
+    )
+    {
+        result.set_to_success();
+    }
 }

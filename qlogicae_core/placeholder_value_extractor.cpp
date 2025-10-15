@@ -23,6 +23,16 @@ namespace QLogicaeCore
         }
     }
 
+    void PlaceholderValueExtractor::setup(
+        Result<void>& result,
+        const std::string& value
+    )
+    {
+        _value = value;
+
+        result.set_to_success();
+    }
+
     void PlaceholderValueExtractor::get_value(
         Result<std::string>& result
     ) const

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "result.hpp"
 #include "sqlite_backend.hpp"
 #include "sqlite_exception.hpp"
 #include "sqlite_statement_data.hpp"
@@ -145,6 +146,10 @@ namespace QLogicaeCore
 
         std::future<std::vector<SQLiteRow>> query_async();
 
+        void setup(
+            Result<void>& result
+        );
+
     protected:
         std::shared_ptr<SQLiteBackend> backend;
 
@@ -152,6 +157,8 @@ namespace QLogicaeCore
 
         mutable std::unordered_map<std::string, int> parameter_name_to_index;
 
-        int resolve_named_index(const std::string_view& name);
+        int resolve_named_index(
+            const std::string_view& name
+        );
     };
 }

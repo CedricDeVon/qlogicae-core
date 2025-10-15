@@ -74,6 +74,13 @@ namespace QLogicaeCore
 			});
 	}
 
+	void SHA256HashCryptographer::setup(
+		Result<void>& result
+	)
+	{
+		result.set_to_success();
+	}
+
 	void SHA256HashCryptographer::transform(
 		Result<std::string> result,
 		const std::string& text

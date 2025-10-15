@@ -81,7 +81,11 @@ namespace QLogicaeCore
             const std::string_view& key,
             const std::string_view& nonce
         ) const;
-        
+
+        void setup(
+            Result<void>& result
+        );
+
         void reverse(
             Result<std::string>& result,
             const std::string_view& cipher,

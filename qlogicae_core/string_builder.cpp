@@ -308,5 +308,12 @@ namespace QLogicaeCore
                 clear();
             });
     }
+
+    void StringBuilder::setup(
+        Result<void>& result
+    )
+    {
+        result.set_to_success();
+    }
 }
 

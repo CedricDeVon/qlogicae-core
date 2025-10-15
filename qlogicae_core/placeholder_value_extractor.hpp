@@ -12,7 +12,7 @@ namespace QLogicaeCore
         ~PlaceholderValueExtractor() = default;
         
         PlaceholderValueExtractor(
-            const std::string& name
+            const std::string& value
         );
         
         PlaceholderValueExtractor(
@@ -37,11 +37,16 @@ namespace QLogicaeCore
 
         std::optional<std::string> get_value() const;
 
+        void setup(
+            Result<void>& result,
+            const std::string& value
+        );
+
         void get_value(
             Result<std::string>& result
         ) const;
 
     protected:
-        const std::string _value;
+        std::string _value;
     };
 }

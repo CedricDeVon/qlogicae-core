@@ -22,4 +22,11 @@ namespace QLogicaeCore
     {
         return extended_code;
     }
+
+    void SQLiteException::setup(
+        Result<void>& result
+    )
+    {
+        result.set_to_success();
+    }
 }

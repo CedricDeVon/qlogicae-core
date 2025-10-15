@@ -26,6 +26,10 @@ namespace QLogicaeCore
 
         static SystemAccess& get_instance();
 
+        void setup(
+            Result<void>& result
+        );
+
         void has_admin_access(
             Result<void>& result
         ) const;

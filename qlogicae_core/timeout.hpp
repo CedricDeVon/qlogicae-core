@@ -38,6 +38,13 @@ namespace QLogicaeCore
         
         bool is_cancelled() const;
 
+        void setup(
+            Result<void>& result,
+            std::function<void()>,
+            std::chrono::milliseconds,
+            bool = false
+        );
+
         void cancel(
             Result<void>& result
         );

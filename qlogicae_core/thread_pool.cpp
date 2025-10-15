@@ -221,6 +221,30 @@ namespace QLogicaeCore
         }
     }
 
+    void ThreadPool::setup(
+        Result<void>& result,
+        std::size_t thread_count,
+        std::size_t max_queue_size
+    )
+    {
+        _max_queue_capacity = max_queue_size;
+
+        thread_count = std::max<std::size_t>(1, thread_count);
+        _worker_queues.reserve(thread_count);
+        _worker_threads.reserve(thread_count);
+
+        for (std::size_t i = 0; i < thread_count; ++i)
+        {
+            _worker_queues.emplace_back(std::make_unique<WorkerQueue>());
+            _worker_threads.emplace_back([this, i]()
+                {
+                    _worker_loop(i);
+                });
+        }
+
+        result.set_to_success();
+    }
+
     void ThreadPool::worker_count(Result<std::size_t>& result) const
     {
         result.set_to_success(_worker_queues.size());

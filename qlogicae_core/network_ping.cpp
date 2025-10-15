@@ -121,6 +121,16 @@ namespace QLogicaeCore
         }
     }
 
+    void NetworkPing::setup(
+        Result<void>& result,
+        const NetworkPingSettings& network_ping_settings
+    )
+    {
+        _settings = network_ping_settings;
+
+        result.set_to_success();
+    }
+
     void NetworkPing::get_is_listening(Result<bool>& result) const
     {
         result.set_to_success(_settings.is_listening);

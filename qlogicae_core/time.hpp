@@ -78,6 +78,10 @@ namespace QLogicaeCore
 
         static Time& get_instance();
 
+        void setup(
+            Result<void>& result
+        );
+
         void now(
             Result<double>& result
         ) const;

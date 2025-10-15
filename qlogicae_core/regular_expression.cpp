@@ -213,6 +213,13 @@ namespace QLogicaeCore
         }
     }
 
+    void RegularExpression::setup(
+        Result<void>& result
+    )
+    {
+        result.set_to_success();
+    }
+
     void RegularExpression::clear_all_patterns(
         Result<void>& result
     )

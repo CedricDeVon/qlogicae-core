@@ -4,7 +4,8 @@
 
 namespace QLogicaeCore
 {
-    enum class TimeZone : uint8_t
+    enum class TimeZone :
+        uint8_t
     {
         UTC,
 

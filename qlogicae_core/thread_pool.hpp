@@ -17,7 +17,8 @@ namespace QLogicaeCore
         explicit ThreadPool(
             std::size_t thread_count =
             std::thread::hardware_concurrency(),
-            std::size_t max_queue_size = 1024);
+            std::size_t max_queue_size = 1024
+        );
         
         ~ThreadPool();
 
@@ -42,6 +43,13 @@ namespace QLogicaeCore
         static ThreadPool& get_instance();
         
         static std::size_t current_worker_index();
+
+        void setup(
+            Result<void>& result,
+            std::size_t thread_count =
+                std::thread::hardware_concurrency(),
+            std::size_t max_queue_size = 1024
+        );
 
         void worker_count(
             Result<std::size_t>& result
