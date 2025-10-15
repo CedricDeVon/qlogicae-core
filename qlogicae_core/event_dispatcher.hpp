@@ -81,14 +81,30 @@ namespace QLogicaeCore
             std::function<void(const EventT&)> callback
         );
 
+        template <typename EventT>
+        void setup(
+            Result<void>& result
+        );
+
     private:
+        mutable std::shared_mutex _mutex;
+        
+        using CallbackPtr = std::shared_ptr<void>;
+
+        std::unordered_map<std::type_index, std::vector<CallbackPtr>> _listeners;
+        
         template <typename T>
         static constexpr bool _is_event_type();
-
-        mutable std::shared_mutex _mutex;
-        using CallbackPtr = std::shared_ptr<void>;
-        std::unordered_map<std::type_index, std::vector<CallbackPtr>> _listeners;
     };
+
+    template <typename... EventTypes>
+    template <typename EventT>
+    void EventDispatcher<EventTypes...>::setup(
+        Result<void>& result
+    )
+    {
+
+    }
 
     template <typename... EventTypes>
     EventDispatcher<EventTypes...>::SubscriptionHandle::SubscriptionHandle(
@@ -309,7 +325,5 @@ namespace QLogicaeCore
             }
         ).detach());        
     }
-
-
 }
 
