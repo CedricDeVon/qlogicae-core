@@ -5,15 +5,15 @@
 namespace QLogicaeCore
 {
     BinaryFileIO::BinaryFileIO(
-        const std::string_view& file_path) :
+        const std::string& file_path) :
             AbstractFileIO(file_path)
     {
 
     }
 
     BinaryFileIO::BinaryFileIO(
-        const std::string_view& name,
-        const std::string_view& file_path) :
+        const std::string& name,
+        const std::string& file_path) :
             AbstractFileIO(name, file_path)
     {
 

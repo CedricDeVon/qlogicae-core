@@ -5,15 +5,15 @@
 namespace QLogicaeCore
 {
     TextFileIO::TextFileIO(
-        const std::string_view& file_path) :
+        const std::string& file_path) :
         AbstractFileIO(file_path)
     {
 
     }
 
     TextFileIO::TextFileIO(
-        const std::string_view& name,
-        const std::string_view& file_path) :
+        const std::string& name,
+        const std::string& file_path) :
             AbstractFileIO(name, file_path)
     {
 
@@ -158,7 +158,7 @@ namespace QLogicaeCore
         }
     }
 
-    bool TextFileIO::write(const std::string_view& content)
+    bool TextFileIO::write(const std::string& content)
     {
         try
         {
@@ -183,7 +183,7 @@ namespace QLogicaeCore
         }
     }
 
-    bool TextFileIO::append(const std::string_view& content)
+    bool TextFileIO::append(const std::string& content)
     {
         try
         {
@@ -218,7 +218,7 @@ namespace QLogicaeCore
     }
 
     std::future<bool> TextFileIO::write_async(
-        const std::string_view& content)
+        const std::string& content)
     {
         return std::async(std::launch::async,
             [this, content]() -> bool
@@ -228,7 +228,7 @@ namespace QLogicaeCore
     }
 
     std::future<bool> TextFileIO::append_async(
-        const std::string_view& content)
+        const std::string& content)
     {
         return std::async(std::launch::async,
             [this, content]() -> bool

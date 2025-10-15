@@ -23,7 +23,7 @@ namespace QLogicaeCore
         TextFileIO() = default;
         
         TextFileIO(
-            const std::string_view& file_path
+            const std::string& file_path
         );
         
         TextFileIO(
@@ -43,8 +43,8 @@ namespace QLogicaeCore
         ) noexcept = delete;
         
         TextFileIO(
-            const std::string_view& name,
-            const std::string_view& file_path
+            const std::string& name,
+            const std::string& file_path
         );
 
         std::string read();
@@ -55,9 +55,9 @@ namespace QLogicaeCore
         
         bool is_open(const FileMode& file_mode);
         
-        bool write(const std::string_view& text);
+        bool write(const std::string& text);
         
-        bool append(const std::string_view& text);
+        bool append(const std::string& text);
 
         std::future<std::string> read_async();
         
@@ -65,9 +65,9 @@ namespace QLogicaeCore
         
         std::future<bool> close_async(const FileMode& file_mode);
         
-        std::future<bool> write_async(const std::string_view& text);
+        std::future<bool> write_async(const std::string& text);
         
-        std::future<bool> append_async(const std::string_view& text);
+        std::future<bool> append_async(const std::string& text);
 
     protected:
         std::optional<fast_io::obuf_file> _write_file;

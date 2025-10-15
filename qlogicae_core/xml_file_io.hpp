@@ -25,7 +25,7 @@ namespace QLogicaeCore
         
         XmlFileIO(XmlFileIO&&) noexcept = default;
         
-        XmlFileIO(const std::string_view& file_path);
+        XmlFileIO(const std::string& file_path);
         
         XmlFileIO& operator=(const XmlFileIO&) = delete;
         
@@ -33,8 +33,8 @@ namespace QLogicaeCore
             XmlFileIO&&) noexcept = default;
         
         XmlFileIO(
-            const std::string_view& file_path,
-            const std::string_view& name
+            const std::string& file_path,
+            const std::string& name
         );
 
         bool load();
@@ -43,7 +43,7 @@ namespace QLogicaeCore
         
         bool clear();
         
-        bool save_as(const std::string_view& file_path);
+        bool save_as(const std::string& file_path);
         
         template<typename ValueType>
         std::optional<ValueType> get_value(
@@ -123,7 +123,7 @@ namespace QLogicaeCore
         std::future<bool> clear_async();
         
         std::future<bool> save_as_async(
-            const std::string_view& file_path);
+            const std::string& file_path);
         
         template<typename ValueType>
         std::future<std::optional<ValueType>>

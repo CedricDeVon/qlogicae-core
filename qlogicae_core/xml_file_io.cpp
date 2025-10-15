@@ -10,14 +10,14 @@ namespace QLogicaeCore
 
     }
 
-    XmlFileIO::XmlFileIO(const std::string_view& file_path)
+    XmlFileIO::XmlFileIO(const std::string& file_path)
         : AbstractFileIO(file_path)
     {
 
     }
 
-    XmlFileIO::XmlFileIO(const std::string_view& file_path,
-        const std::string_view& name)
+    XmlFileIO::XmlFileIO(const std::string& file_path,
+        const std::string& name)
         : AbstractFileIO(name, file_path)
     {
 
@@ -85,7 +85,7 @@ namespace QLogicaeCore
         }
     }
 
-    bool XmlFileIO::save_as(const std::string_view& file_path)
+    bool XmlFileIO::save_as(const std::string& file_path)
     {
         try
         {
@@ -132,7 +132,7 @@ namespace QLogicaeCore
     }
 
     std::future<bool> XmlFileIO::save_as_async(
-        const std::string_view& file_path)
+        const std::string& file_path)
     {
         return std::async(std::launch::async,
             [this, file_path]()

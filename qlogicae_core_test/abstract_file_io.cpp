@@ -8,8 +8,8 @@ namespace QLogicaeCoreTest
     {
     public:
         DummyFileIO() : AbstractFileIO("dummy", "path") {}
-        DummyFileIO(const std::string_view& path) : AbstractFileIO("dummy", path) {}
-        DummyFileIO(const std::string_view& name, const std::string_view& path) : AbstractFileIO(name, path) {}
+        DummyFileIO(const std::string& path) : AbstractFileIO("dummy", path) {}
+        DummyFileIO(const std::string& name, const std::string& path) : AbstractFileIO(name, path) {}
     };
 
     class AbstractFileIOTest : public ::testing::TestWithParam<std::string>

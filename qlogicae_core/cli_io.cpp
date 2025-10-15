@@ -59,7 +59,7 @@ namespace QLogicaeCore
 		}
 	}
 	
-	void CliIO::print(const std::string_view& text)
+	void CliIO::print(const std::string& text)
 	{
 		try
 		{
@@ -90,7 +90,7 @@ namespace QLogicaeCore
 		});
 	}
 
-	void CliIO::print_with_new_line(const std::string_view& text)
+	void CliIO::print_with_new_line(const std::string& text)
 	{
 		try
 		{
@@ -105,7 +105,7 @@ namespace QLogicaeCore
 	}
 
 	std::future<void> CliIO::print_with_new_line_async(
-		const std::string_view& text)
+		const std::string& text)
 	{
 		return std::async(std::launch::async, [this, text]() -> void
 		{
@@ -120,7 +120,7 @@ namespace QLogicaeCore
 		});
 	}
 
-	void CliIO::builtin_print_with_new_line(const std::string_view& text)
+	void CliIO::builtin_print_with_new_line(const std::string& text)
 	{
 		try
 		{
@@ -135,7 +135,7 @@ namespace QLogicaeCore
 	}
 
 	std::future<void> CliIO::builtin_print_with_new_line_async(
-		const std::string_view& text)
+		const std::string& text)
 	{
 		return std::async(std::launch::async, [this, text]() -> void
 		{
@@ -150,7 +150,7 @@ namespace QLogicaeCore
 		});
 	}
 	
-	std::future<void> CliIO::print_async(const std::string_view& text)
+	std::future<void> CliIO::print_async(const std::string& text)
 	{
 		return std::async(std::launch::async, [this, text]() -> void
 		{
@@ -183,7 +183,7 @@ namespace QLogicaeCore
 	}
 
 	std::future<void> CliIO::builtin_print_async(
-		const std::string_view& text)
+		const std::string& text)
 	{
 		return std::async(std::launch::async, [this, text]() -> void
 		{
@@ -199,7 +199,7 @@ namespace QLogicaeCore
 	}
 
 	void CliIO::builtin_print(
-		const std::string_view& text)
+		const std::string& text)
 	{
 		std::cout << text;
 	}
@@ -287,7 +287,7 @@ namespace QLogicaeCore
 	}
 
 	void CliIO::print(Result<void>& result,
-		const std::string_view& text
+		const std::string& text
 	)
 	{
 		std::scoped_lock lock(_mutex);
@@ -297,7 +297,7 @@ namespace QLogicaeCore
 
 	void CliIO::builtin_print(
 		Result<void>& result,
-		const std::string_view& text
+		const std::string& text
 	)
 	{
 		std::cout << text;
@@ -307,7 +307,7 @@ namespace QLogicaeCore
 
 	void CliIO::print_with_new_line(
 		Result<void>& result,
-		const std::string_view& text
+		const std::string& text
 	)
 	{
 		std::scoped_lock lock(_mutex);
@@ -317,7 +317,7 @@ namespace QLogicaeCore
 
 	void CliIO::builtin_print_with_new_line(
 		Result<void>& result,
-		const std::string_view& text
+		const std::string& text
 	)
 	{
 		std::scoped_lock lock(_mutex);
@@ -356,7 +356,7 @@ namespace QLogicaeCore
 
 	void CliIO::print_async(
 		Result<std::future<void>>& result,
-		const std::string_view& text
+		const std::string& text
 	)
 	{
 		result.set_to_success(std::async(std::launch::async,
@@ -371,7 +371,7 @@ namespace QLogicaeCore
 
 	void CliIO::builtin_print_async(
 		Result<std::future<void>>& result,
-		const std::string_view& text
+		const std::string& text
 	)
 	{
 		result.set_to_success(std::async(std::launch::async,
@@ -387,7 +387,7 @@ namespace QLogicaeCore
 
 	void CliIO::print_with_new_line_async(
 		Result<std::future<void>>& result,
-		const std::string_view& text
+		const std::string& text
 	)
 	{
 		result.set_to_success(std::async(std::launch::async,
@@ -402,7 +402,7 @@ namespace QLogicaeCore
 
 	void CliIO::builtin_print_with_new_line_async(
 		Result<std::future<void>>& result,
-		const std::string_view& text
+		const std::string& text
 	)
 	{
 		result.set_to_success(std::async(std::launch::async,

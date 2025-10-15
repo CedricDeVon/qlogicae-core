@@ -23,23 +23,23 @@ namespace QLogicaeCore
         
         JsonFileIO() = default;
         
-        JsonFileIO(const std::string_view&);
+        JsonFileIO(const std::string&);
         
         JsonFileIO(const JsonFileIO&) = delete;
         
         JsonFileIO(JsonFileIO&&) noexcept = delete;
         
-        JsonFileIO(const std::string_view&, const bool&);
+        JsonFileIO(const std::string&, const bool&);
         
         JsonFileIO& operator=(const JsonFileIO&) = delete;
         
         JsonFileIO& operator=(JsonFileIO&&) noexcept = delete;
         
-        JsonFileIO(const std::string_view&, const std::string_view&);
+        JsonFileIO(const std::string&, const std::string&);
 
         std::string read();
         
-        bool write(const std::string_view&);
+        bool write(const std::string&);
 
         bool get_is_formatting_allowed();
         
@@ -87,7 +87,7 @@ namespace QLogicaeCore
 
         std::future<std::string> read_async();
         
-        std::future<bool> write_async(const std::string_view&);
+        std::future<bool> write_async(const std::string&);
 
         std::future<bool> get_bool_async(const JsonPath&);
         

@@ -11,15 +11,15 @@ namespace QLogicaeCore
     }
 
     FileUriIO::FileUriIO(
-        const std::string_view& file_path)
+        const std::string& file_path)
         : AbstractFileIO(file_path)
     {
 
     }
 
     FileUriIO::FileUriIO(
-        const std::string_view& file_path,
-        const std::string_view& mimetype)
+        const std::string& file_path,
+        const std::string& mimetype)
         : AbstractFileIO(file_path),
         _mimetype(mimetype)
     {
@@ -27,9 +27,9 @@ namespace QLogicaeCore
     }
 
     FileUriIO::FileUriIO(
-        const std::string_view& file_path,
-        const std::string_view& mimetype,
-        const std::string_view& name)
+        const std::string& file_path,
+        const std::string& mimetype,
+        const std::string& name)
         : AbstractFileIO(name, file_path),
             _mimetype(mimetype)
     {

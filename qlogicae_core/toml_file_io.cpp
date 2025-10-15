@@ -21,7 +21,7 @@ namespace QLogicaeCore
         _raw_buffer.reset();
     }
 
-    TomlFileIO::TomlFileIO(const std::string_view& file_path)
+    TomlFileIO::TomlFileIO(const std::string& file_path)
         : AbstractFileIO(file_path)
     {
         std::scoped_lock lock(_mutex);
@@ -29,8 +29,8 @@ namespace QLogicaeCore
     }
 
     TomlFileIO::TomlFileIO(
-        const std::string_view& name,
-        const std::string_view& file_path)
+        const std::string& name,
+        const std::string& file_path)
         : AbstractFileIO(name, file_path)
     {
         std::scoped_lock lock(_mutex);
@@ -67,7 +67,7 @@ namespace QLogicaeCore
         return save_as(_file_path);
     }
 
-    bool TomlFileIO::save_as(const std::string_view& file_path)
+    bool TomlFileIO::save_as(const std::string& file_path)
     {
         try
         {
@@ -88,7 +88,7 @@ namespace QLogicaeCore
 
             fast_io::io::print(
                 output_file,
-                std::u8string_view(
+                std::u8string(
                     reinterpret_cast<const char8_t*>(output.data()),
                     output.size()));
 
@@ -166,7 +166,7 @@ namespace QLogicaeCore
     }
 
     std::future<bool> TomlFileIO::save_as_async(
-        const std::string_view& file_path)
+        const std::string& file_path)
     {
         return std::async(std::launch::async, [this, file_path]() -> bool
             {

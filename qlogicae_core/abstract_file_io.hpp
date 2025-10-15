@@ -12,7 +12,7 @@ namespace QLogicaeCore
         virtual ~AbstractFileIO() = default;
 
         AbstractFileIO(
-            const std::string_view& file_path
+            const std::string& file_path
         );
 
         AbstractFileIO(
@@ -32,8 +32,8 @@ namespace QLogicaeCore
         ) noexcept = default;
 
         AbstractFileIO(
-            const std::string_view& name,
-            const std::string_view& file_path
+            const std::string& name,
+            const std::string& file_path
         );
         
         std::string get_name() const;
@@ -43,7 +43,7 @@ namespace QLogicaeCore
         std::size_t get_line_count() const;
 
         void set_file_path(
-            const std::string_view& file_path
+            const std::string& file_path
         );
         
         void get_name(Result<std::string>& result) const;
@@ -54,7 +54,7 @@ namespace QLogicaeCore
 
         void set_file_path(
             Result<bool>& result,
-            const std::string_view& file_path
+            const std::string& file_path
         );
 
     protected:

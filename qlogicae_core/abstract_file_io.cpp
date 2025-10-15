@@ -5,15 +5,15 @@
 namespace QLogicaeCore
 {
 	AbstractFileIO::AbstractFileIO(
-		const std::string_view& file_path) :
+		const std::string& file_path) :
 			_file_path(file_path)
 	{
 
 	}
 
 	AbstractFileIO::AbstractFileIO(
-		const std::string_view& name,
-		const std::string_view& file_path) :
+		const std::string& name,
+		const std::string& file_path) :
 			_name(name),
 			_file_path(file_path)
 	{
@@ -51,7 +51,7 @@ namespace QLogicaeCore
 	}
 
 	void AbstractFileIO::set_file_path(
-		const std::string_view& file_path
+		const std::string& file_path
 	)
 	{
 		_file_path = file_path;
@@ -96,7 +96,7 @@ namespace QLogicaeCore
 
 	void AbstractFileIO::set_file_path(
 		Result<bool>& result,
-		const std::string_view& file_path
+		const std::string& file_path
 	)
 	{
 		_file_path = file_path;

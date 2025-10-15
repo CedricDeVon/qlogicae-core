@@ -22,10 +22,10 @@ namespace QLogicaeCore
         
         TomlFileIO();
         
-        TomlFileIO(const std::string_view& file_path);
+        TomlFileIO(const std::string& file_path);
         
-        TomlFileIO(const std::string_view& name,
-            const std::string_view& file_path);
+        TomlFileIO(const std::string& name,
+            const std::string& file_path);
         
         TomlFileIO(const TomlFileIO& toml_file_io) = delete;
         
@@ -39,7 +39,7 @@ namespace QLogicaeCore
         
         bool save();
         
-        bool save_as(const std::string_view& file_path);
+        bool save_as(const std::string& file_path);
         
         template<typename ValueType>
         std::optional<ValueType> get_value(
@@ -65,7 +65,7 @@ namespace QLogicaeCore
         std::future<bool> save_async();
         
         std::future<bool> save_as_async(
-            const std::string_view& file_path);
+            const std::string& file_path);
         
         template<typename ValueType>
         std::future<std::optional<ValueType>>

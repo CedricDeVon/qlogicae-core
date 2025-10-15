@@ -19,7 +19,7 @@ namespace QLogicaeCore
         CsvFileIO() = default;
 
         CsvFileIO(
-            const std::string_view& file_path
+            const std::string& file_path
         );
 
         CsvFileIO(
@@ -31,8 +31,8 @@ namespace QLogicaeCore
         ) noexcept = default;
 
         CsvFileIO(
-            const std::string_view& name,
-            const std::string_view& file_path
+            const std::string& name,
+            const std::string& file_path
         );
 
         bool is_corrupted();
@@ -56,7 +56,7 @@ namespace QLogicaeCore
         );
 
         bool is_header_found(
-            const std::string_view& name
+            const std::string& name
         );
 
         void set_quote_character(
@@ -64,11 +64,11 @@ namespace QLogicaeCore
         );
 
         bool has_column(
-            const std::string_view& name
+            const std::string& name
         ) const;
 
         std::string get_column(
-            const std::string_view& name
+            const std::string& name
         );
 
         bool is_valid_index(
@@ -82,7 +82,7 @@ namespace QLogicaeCore
         );
 
         std::string get_cell(
-            const std::string_view&,
+            const std::string&,
             const unsigned int& row_index
         );
 
@@ -105,7 +105,7 @@ namespace QLogicaeCore
 
         std::string export_to_json(); 
 
-        bool write(const std::string_view& text);
+        bool write(const std::string& text);
 
         bool write(
             const std::vector<std::string>& headers,
@@ -113,7 +113,7 @@ namespace QLogicaeCore
         ); // TODO
 
         bool append(
-            const std::string_view& text
+            const std::string& text
         );
 
         bool remove_row(
@@ -121,7 +121,7 @@ namespace QLogicaeCore
         );
 
         static std::string trim(
-            std::string_view text
+            std::string text
         );
 
         bool import_from_json(
@@ -129,7 +129,7 @@ namespace QLogicaeCore
         );
 
         bool remove_column(
-            const std::string_view& name
+            const std::string& name
         );
 
         bool validate_headers(
@@ -147,12 +147,12 @@ namespace QLogicaeCore
         );
 
         bool update_column(
-            const std::string_view& header,
+            const std::string& header,
             const std::vector<std::string>& values
         );
 
         bool update_cell(
-            const std::string_view& header,
+            const std::string& header,
             const unsigned int& row_index,
             const std::string& value
         );
@@ -174,15 +174,15 @@ namespace QLogicaeCore
         );
 
         std::future<bool> is_header_found_async(
-            const std::string_view& name
+            const std::string& name
         );
 
         std::future<std::string> get_column_async(
-            const std::string_view& name
+            const std::string& name
         );
 
         std::future<std::string> get_cell_async(
-            const std::string_view& column_name,
+            const std::string& column_name,
             const unsigned int& row_index
         );
 
@@ -204,11 +204,11 @@ namespace QLogicaeCore
         std::future<std::string> export_to_json_async();
 
         std::future<bool> write_async(
-            const std::string_view& text
+            const std::string& text
         );
 
         std::future<bool> append_async(
-            const std::string_view& text
+            const std::string& text
         );
 
         std::future<bool> remove_row_async(
@@ -220,7 +220,7 @@ namespace QLogicaeCore
         );
 
         std::future<bool> remove_column_async(
-            const std::string_view& name
+            const std::string& name
         );
 
         std::future<bool> insert_row_async(
@@ -234,12 +234,12 @@ namespace QLogicaeCore
         );
 
         std::future<bool> update_column_async(
-            const std::string_view& name,
+            const std::string& name,
             const std::vector<std::string>& values
         );
 
         std::future<bool> update_cell_async(
-            const std::string_view& column_name,
+            const std::string& column_name,
             const unsigned int& row_index,
             const std::string& value
         );

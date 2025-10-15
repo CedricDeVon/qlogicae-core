@@ -50,6 +50,6 @@ namespace QLogicaeCore
         size_t block_size = 4 * 1024;
 
         size_t background_threads = 4;
-        size_t new_bloom_filter_policy = 10;
+        double new_bloom_filter_policy = 10;
     };
 }

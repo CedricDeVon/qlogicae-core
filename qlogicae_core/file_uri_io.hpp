@@ -17,19 +17,21 @@ namespace QLogicaeCore
 
         FileUriIO(FileUriIO&& file_uri_io) noexcept = default;
 
-        FileUriIO(const std::string_view& file_path);
+        FileUriIO(const std::string& file_path);
 
         FileUriIO& operator=(const FileUriIO& file_uri_io) = delete;
 
         FileUriIO& operator=(FileUriIO&& file_uri_io) noexcept = default;
 
-        FileUriIO(const std::string_view& file_path,
-            const std::string_view& mimetype
+        FileUriIO(
+            const std::string& file_path,
+            const std::string& mimetype
         );
 
-        FileUriIO(const std::string_view& file_path,
-            const std::string_view& mimetype,
-            const std::string_view& name
+        FileUriIO(
+            const std::string& file_path,
+            const std::string& mimetype,
+            const std::string& name
         );
 
         std::string generate_data_uri() const;
@@ -37,6 +39,6 @@ namespace QLogicaeCore
         std::future<std::string> generate_data_uri_async() const;
 
     private:
-        std::string_view _mimetype { UTILITIES.DEFAULT_FILE_URI_IO_MIMETYPE.data()};
+        std::string _mimetype { UTILITIES.DEFAULT_FILE_URI_IO_MIMETYPE.data()};
     };
 }

@@ -23,7 +23,7 @@ namespace QLogicaeCore
 
         BinaryFileIO() = default;
 
-        BinaryFileIO(const std::string_view& file_path);
+        BinaryFileIO(const std::string& file_path);
 
         BinaryFileIO(const BinaryFileIO& binary_file_io) = delete;
 
@@ -38,8 +38,8 @@ namespace QLogicaeCore
         ) noexcept = default;
 
         BinaryFileIO(
-            const std::string_view& name,
-            const std::string_view& file_path
+            const std::string& name,
+            const std::string& file_path
         );
 
         bool open(const FileMode& file_mode);

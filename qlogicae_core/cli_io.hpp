@@ -23,19 +23,19 @@ namespace QLogicaeCore
 		std::string builtin_scan();
 
 		void print(
-			const std::string_view& text = ""
+			const std::string& text = ""
 		);
 
 		void builtin_print(
-			const std::string_view& text = ""
+			const std::string& text = ""
 		);
 
 		void print_with_new_line(
-			const std::string_view& text = ""
+			const std::string& text = ""
 		);
 
 		void builtin_print_with_new_line(
-			const std::string_view& text = ""
+			const std::string& text = ""
 		);
 
 		std::future<std::string> scan_async();
@@ -43,19 +43,19 @@ namespace QLogicaeCore
 		std::future<std::string> builtin_scan_async();
 
 		std::future<void> print_async(
-			const std::string_view& text = ""
+			const std::string& text = ""
 		);
 
 		std::future<void> builtin_print_async(
-			const std::string_view& text = ""
+			const std::string& text = ""
 		);
 
 		std::future<void> print_with_new_line_async(
-			const std::string_view& text = ""
+			const std::string& text = ""
 		);
 
 		std::future<void> builtin_print_with_new_line_async(
-			const std::string_view& text = ""
+			const std::string& text = ""
 		);
 
 		static CliIO& get_instance();
@@ -92,22 +92,22 @@ namespace QLogicaeCore
 
 		void print(
 			Result<void>& result,
-			const std::string_view& text = ""
+			const std::string& text = ""
 		);
 
 		void builtin_print(
 			Result<void>& result,
-			const std::string_view& text = ""
+			const std::string& text = ""
 		);
 
 		void print_with_new_line(
 			Result<void>& result,
-			const std::string_view& text = ""
+			const std::string& text = ""
 		);
 
 		void builtin_print_with_new_line(
 			Result<void>& result,
-			const std::string_view& text = ""
+			const std::string& text = ""
 		);
 
 		void scan_async(
@@ -120,22 +120,22 @@ namespace QLogicaeCore
 
 		void print_async(
 			Result< std::future<void>>& result,
-			const std::string_view& text = ""
+			const std::string& text = ""
 		);
 
 		void builtin_print_async(
 			Result<std::future<void>>& result,
-			const std::string_view& text = ""
+			const std::string& text = ""
 		);
 
 		void print_with_new_line_async(
 			Result<std::future<void>>& result,
-			const std::string_view& text = ""
+			const std::string& text = ""
 		);
 
 		void builtin_print_with_new_line_async(
 			Result<std::future<void>>& result,
-			const std::string_view& text = ""
+			const std::string& text = ""
 		);
 
 		static void get_instance(Result<CliIO*>& result);

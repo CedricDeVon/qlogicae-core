@@ -6,28 +6,28 @@ namespace QLogicaeCore
 {
     CsvFileIO::~CsvFileIO() = default;
 
-    CsvFileIO::CsvFileIO(const std::string_view& path) :
+    CsvFileIO::CsvFileIO(const std::string& path) :
         AbstractFileIO(path)
     {
         
     }
 
     CsvFileIO::CsvFileIO(
-        const std::string_view& path,
-        const std::string_view& content) :
+        const std::string& path,
+        const std::string& content) :
             AbstractFileIO(path, content)
     {
 
     }
 
-    std::string CsvFileIO::trim(std::string_view value)
+    std::string CsvFileIO::trim(std::string value)
     {
         try
         {
             auto start = value.find_first_not_of(" \t\n\r");
             auto end = value.find_last_not_of(" \t\n\r");
 
-            return (start == std::string_view::npos) ? "" :
+            return (start == std::string::npos) ? "" :
                 std::string(value.substr(start, end - start + 1));
         }
         catch (const std::exception& exception)
@@ -76,7 +76,7 @@ namespace QLogicaeCore
             }
 
             fast_io::native_file_loader loader(_file_path);
-            std::string_view buffer(loader.cbegin(), loader.cend());
+            std::string buffer(loader.cbegin(), loader.cend());
 
             if (std::any_of(buffer.begin(), buffer.end(), [](char c)
                 {
@@ -209,7 +209,7 @@ namespace QLogicaeCore
         }
     }
 
-    bool CsvFileIO::is_header_found(const std::string_view& header)
+    bool CsvFileIO::is_header_found(const std::string& header)
     {
         try
         {
@@ -235,7 +235,7 @@ namespace QLogicaeCore
         }
     }
 
-    std::string CsvFileIO::get_column(const std::string_view& name)
+    std::string CsvFileIO::get_column(const std::string& name)
     {
         try
         {
@@ -266,7 +266,7 @@ namespace QLogicaeCore
     }
 
     std::string CsvFileIO::get_cell(
-        const std::string_view& header_name,
+        const std::string& header_name,
         const unsigned int& row_index
     )
     {
@@ -328,7 +328,7 @@ namespace QLogicaeCore
         }
     }
 
-    bool CsvFileIO::write(const std::string_view& content)
+    bool CsvFileIO::write(const std::string& content)
     {
         try
         {
@@ -386,7 +386,7 @@ namespace QLogicaeCore
         }
     }
 
-    bool CsvFileIO::append(const std::string_view& content)
+    bool CsvFileIO::append(const std::string& content)
     {
         try
         {
@@ -684,7 +684,7 @@ namespace QLogicaeCore
         }
     }
 
-    bool CsvFileIO::has_column(const std::string_view& name) const
+    bool CsvFileIO::has_column(const std::string& name) const
     {
         try
         {
@@ -812,7 +812,7 @@ namespace QLogicaeCore
         }
     }
 
-    bool CsvFileIO::remove_column(const std::string_view& name)
+    bool CsvFileIO::remove_column(const std::string& name)
     {
         try
         {
@@ -833,7 +833,7 @@ namespace QLogicaeCore
     }
 
     bool CsvFileIO::update_column(
-        const std::string_view& name,
+        const std::string& name,
         const std::vector<std::string>& column
     )
     {
@@ -861,7 +861,7 @@ namespace QLogicaeCore
     }
 
     bool CsvFileIO::update_cell(
-        const std::string_view& name,
+        const std::string& name,
         const unsigned int& row, const std::string& value
     )
     {
@@ -924,7 +924,7 @@ namespace QLogicaeCore
     }
 
     std::future<bool> CsvFileIO::append_async(
-        const std::string_view& content)
+        const std::string& content)
     {
         return std::async(std::launch::async, [this, content]()
         {
@@ -966,7 +966,7 @@ namespace QLogicaeCore
     }
 
     std::future<bool> CsvFileIO::is_header_found_async(
-        const std::string_view& header)
+        const std::string& header)
     {
         return std::async(std::launch::async, [this, header]()
         {
@@ -975,7 +975,7 @@ namespace QLogicaeCore
     }
 
     std::future<std::string> CsvFileIO::get_column_async(
-        const std::string_view& header)
+        const std::string& header)
     {
         return std::async(std::launch::async, [this, header]()
         {
@@ -984,7 +984,7 @@ namespace QLogicaeCore
     }
 
     std::future<std::string> CsvFileIO::get_cell_async(
-        const std::string_view& header, const unsigned int& row)
+        const std::string& header, const unsigned int& row)
     {
         return std::async(std::launch::async, [this, header, row]()
         {
@@ -1008,7 +1008,7 @@ namespace QLogicaeCore
         });
     }
 
-    std::future<bool> CsvFileIO::write_async(const std::string_view& content)
+    std::future<bool> CsvFileIO::write_async(const std::string& content)
     {
         return std::async(std::launch::async, [this, content]()
         {
@@ -1024,7 +1024,7 @@ namespace QLogicaeCore
         });
     }
 
-    std::future<bool> CsvFileIO::remove_column_async(const std::string_view& header)
+    std::future<bool> CsvFileIO::remove_column_async(const std::string& header)
     {
         return std::async(std::launch::async, [this, header]()
         {
@@ -1051,7 +1051,7 @@ namespace QLogicaeCore
     }
 
     std::future<bool> CsvFileIO::update_column_async(
-        const std::string_view& row, const std::vector<std::string>& column)
+        const std::string& row, const std::vector<std::string>& column)
     {
         return std::async(std::launch::async, [this, row, column]()
         {
@@ -1060,7 +1060,7 @@ namespace QLogicaeCore
     }
 
     std::future<bool> CsvFileIO::update_cell_async(
-        const std::string_view& column,
+        const std::string& column,
         const unsigned int& row_index,
         const std::string& value)
     {
