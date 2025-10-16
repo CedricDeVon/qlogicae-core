@@ -2,6 +2,7 @@
 
 #include "time.hpp"
 #include "result.hpp"
+#include "result_status.hpp"
 #include "cli_io.hpp"
 #include "log_level.hpp"
 
@@ -32,7 +33,15 @@ namespace QLogicaeCore
             const LogLevel& log_level = LogLevel::INFO,
             const size_t& length = 256
         ) const;
-        
+
+        std::string to_result_message_format(
+            const std::string& text = "",
+            const ResultStatus& result_status = ResultStatus::INFO,
+            const TimeFormat& time_format =
+            TimeFormat::FULL_TIMESTAMP,
+            const size_t& length = 256
+        ) const;
+
         std::string to_log_level_color_format(
             const std::string& text = "",
             const LogLevel& log_level = LogLevel::INFO,
@@ -64,6 +73,17 @@ namespace QLogicaeCore
             Result<std::string>& result,
             const std::string& text = "",
             const LogLevel& log_level = LogLevel::INFO,
+            const TimeFormat& time_format =
+                TimeFormat::FULL_TIMESTAMP,
+            const size_t& length = 256
+        ) const;
+
+        void to_result_message_format(
+            Result<std::string>& result,
+            const std::string& text = "",
+            const ResultStatus& result_status = ResultStatus::INFO,
+            const TimeFormat& time_format =
+                TimeFormat::FULL_TIMESTAMP,
             const size_t& length = 256
         ) const;
 
@@ -106,7 +126,7 @@ namespace QLogicaeCore
         Transformer::get_instance();
 
     constexpr std::string get_log_level_string(
-        const LogLevel& level
+        const LogLevel& level        
     )
     {
         switch (level)

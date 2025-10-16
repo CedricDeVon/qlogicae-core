@@ -32,6 +32,69 @@ namespace QLogicaeCore
             ResultStatus& value
         );
         
+        bool is_status(
+            ResultStatus& status
+        );
+
+        void is_status(
+            bool& value,
+            ResultStatus& status
+        );
+
+        bool is_status_good();
+
+        void is_status_good(
+            bool& value
+        );
+
+        bool is_status_bad();
+
+        void is_status_bad(
+            bool& value
+        );
+
+        bool is_status_info();
+
+        void is_status_info(
+            bool& value
+        );
+
+        bool is_status_debug();
+
+        void is_status_debug(
+            bool& value
+        );
+
+        bool is_status_warning();
+
+        void is_status_warning(
+            bool& value
+        );
+
+        bool is_status_exception();
+
+        void is_status_exception(
+            bool& value
+        );
+
+        bool is_status_error();
+        
+        void is_status_error(
+            bool& value
+        );
+
+        bool is_status_safe();
+
+        void is_status_safe(
+            bool& value
+        );
+
+        bool is_status_unsafe();
+
+        void is_status_unsafe(
+            bool& value
+        );
+
         void set_status(
             const ResultStatus& value
         );
@@ -144,7 +207,7 @@ namespace QLogicaeCore
 
         ResultStatus _status;
 
-        std::string _message = "";
+        std::string _message;
     };
 
     template <>
@@ -155,6 +218,69 @@ namespace QLogicaeCore
 
         void get_status(
             ResultStatus& value
+        );
+
+        bool is_status(
+            ResultStatus& status
+        );
+
+        void is_status(
+            bool& value,
+            ResultStatus& status
+        );
+
+        bool is_status_good();
+
+        void is_status_good(
+            bool& value
+        );
+
+        bool is_status_bad();
+
+        void is_status_bad(
+            bool& value
+        );
+
+        bool is_status_info();
+
+        void is_status_info(
+            bool& value
+        );
+
+        bool is_status_debug();
+
+        void is_status_debug(
+            bool& value
+        );
+
+        bool is_status_warning();
+
+        void is_status_warning(
+            bool& value
+        );
+
+        bool is_status_exception();
+
+        void is_status_exception(
+            bool& value
+        );
+
+        bool is_status_error();
+
+        void is_status_error(
+            bool& value
+        );
+
+        bool is_status_safe();
+
+        void is_status_safe(
+            bool& value
+        );
+
+        bool is_status_unsafe();
+
+        void is_status_unsafe(
+            bool& value
         );
 
         void set_status(
@@ -209,7 +335,7 @@ namespace QLogicaeCore
     protected:
         ResultStatus _status;
 
-        std::string _message = "";
+        std::string _message;
     };
 
     template <typename ValueType>
@@ -224,6 +350,157 @@ namespace QLogicaeCore
     )
     {
         value = _value;
+    }
+
+    template <typename ValueType>
+    bool Result<ValueType>::is_status(
+        ResultStatus& status
+    )
+    {
+        return _status == status;
+    }
+
+    template <typename ValueType>
+    void Result<ValueType>::is_status(
+        bool& value,
+        ResultStatus& status
+    )
+    {
+        value = (_status == status);
+    }
+
+    template <typename ValueType>
+    bool Result<ValueType>::is_status_good()
+    {
+        return _status == ResultStatus::GOOD;
+    }
+
+    template <typename ValueType>
+    void Result<ValueType>::is_status_good(
+        bool& value
+    )
+    {
+        value = (_status == ResultStatus::GOOD);
+    }
+
+    template <typename ValueType>
+    bool Result<ValueType>::is_status_bad()
+    {
+        return _status == ResultStatus::BAD;
+    }
+
+    template <typename ValueType>
+    void Result<ValueType>::is_status_bad(
+        bool& value
+    )
+    {
+        value = (_status == ResultStatus::BAD);
+    }
+
+    template <typename ValueType>
+    bool Result<ValueType>::is_status_info()
+    {
+        return _status == ResultStatus::INFO;
+    }
+
+    template <typename ValueType>
+    void Result<ValueType>::is_status_info(
+        bool& value
+    )
+    {
+        value = (_status == ResultStatus::INFO);
+    }
+
+    template <typename ValueType>
+    bool Result<ValueType>::is_status_debug()
+    {
+        return _status == ResultStatus::DEBUG;
+    }
+
+    template <typename ValueType>
+    void Result<ValueType>::is_status_debug(
+        bool& value
+    )
+    {
+        value = (_status == ResultStatus::DEBUG);
+    }
+
+    template <typename ValueType>
+    bool Result<ValueType>::is_status_warning()
+    {
+        return _status == ResultStatus::WARNING;
+    }
+
+    template <typename ValueType>
+    void Result<ValueType>::is_status_warning(
+        bool& value
+    )
+    {
+        value = (_status == ResultStatus::WARNING);
+    }
+
+    template <typename ValueType>
+    bool Result<ValueType>::is_status_exception()
+    {
+        return _status == ResultStatus::EXCEPTION;
+    }
+
+    template <typename ValueType>
+    void Result<ValueType>::is_status_exception(
+        bool& value
+    )
+    {
+        value = (_status == ResultStatus::EXCEPTION);
+    }
+
+    template <typename ValueType>
+    bool Result<ValueType>::is_status_error()
+    {
+        return _status == ResultStatus::ERROR_;
+    }
+
+    template <typename ValueType>
+    void Result<ValueType>::is_status_error(
+        bool& value
+    )
+    {
+        value = (_status == ResultStatus::ERROR_);
+    }
+
+    template <typename ValueType>
+    bool Result<ValueType>::is_status_safe()
+    {
+        return (_status == ResultStatus::GOOD ||
+            _status == ResultStatus::INFO ||
+            _status == ResultStatus::DEBUG);
+    }
+
+    template <typename ValueType>
+    void Result<ValueType>::is_status_safe(
+        bool& value
+    )
+    {
+        value = (_status == ResultStatus::GOOD ||
+            _status == ResultStatus::INFO ||
+            _status == ResultStatus::DEBUG);
+    }
+
+    template <typename ValueType>
+    bool Result<ValueType>::is_status_unsafe()
+    {
+        return (_status == ResultStatus::BAD ||
+            _status == ResultStatus::WARNING ||
+            _status == ResultStatus::ERROR_);
+    }
+
+    template <typename ValueType>
+    void Result<ValueType>::is_status_unsafe(
+        bool& value
+    )
+    {
+        value = (_status == ResultStatus::BAD ||
+            _status == ResultStatus::WARNING ||
+            _status == ResultStatus::ERROR_);
     }
 
     template <typename ValueType>

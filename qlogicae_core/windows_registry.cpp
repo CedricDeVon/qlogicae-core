@@ -387,7 +387,7 @@ namespace QLogicaeCore
     }
 
     void WindowsRegistry::get_value_via_utf8(
-        Result< std::optional<std::string>>& result,
+        Result<std::string>& result,
         const std::string_view sub_path,
         const std::string_view name
     ) const
@@ -403,7 +403,7 @@ namespace QLogicaeCore
     }
 
     void WindowsRegistry::get_value_via_utf16(
-        Result< std::optional<std::wstring>>& result,
+        Result<std::wstring>& result,
         const std::wstring_view sub_path,
         const std::wstring_view name
     ) const

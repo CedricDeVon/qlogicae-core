@@ -1,5 +1,6 @@
 #pragma once
 
+#include "result.hpp"
 #include "utilities.hpp"
 #include "json_file_io.hpp"
 #include "windows_registry.hpp"
@@ -8,38 +9,66 @@ namespace QLogicaeCore
 {
     class Application
     {
-    public:                        
-        std::string get_qlogicae_id();
+    public:                               
+        void get_application_id(
+            Result<std::string>& result
+        );
+        
+        void get_application_name(
+            Result<std::string>& result
+        );
 
-        std::string get_qlogicae_name();
+        void get_application_version(
+            Result<std::string>& result
+        );
 
-        std::string get_qlogicae_version();
+        void get_application_company(
+            Result<std::string>& result
+        );
 
-        std::string get_qlogicae_company();
+        void get_application_authors(
+            Result<std::string>& result
+        );
 
-        std::string get_qlogicae_authors();
+        void get_application_description(
+            Result<std::string>& result
+        );
 
-        std::string get_qlogicae_description();
+        void get_application_url(
+            Result<std::string>& result
+        );
 
-        std::string get_qlogicae_url();
+        void get_application_architecture(
+            Result<std::string>& result
+        );
 
-        std::string get_qlogicae_architecture();
+        void get_environment_id(
+            Result<std::string>& result
+        );
 
-        std::string get_environment_id();
+        void get_environment_name(
+            Result<std::string>& result
+        );
 
-        std::string get_environment_name();
-
-        std::string get_hkcu_windows_registry_value(
+        void get_hkcu_windows_registry_value(
+            Result<std::string>& result,
             const std::string& key
         );
 
-        std::string get_hklm_windows_registry_value(
+        void get_hklm_windows_registry_value(
+            Result<std::string>& result,
             const std::string& key
+        );
+
+        void setup(
+            Result<void>& result
         );
 
         static Application& get_instance();
 
-        bool setup();
+        static void get_instance(
+            Result<Application*>& result
+        );
 
     protected:
         Application();
@@ -56,37 +85,51 @@ namespace QLogicaeCore
 
         std::mutex _mutex;
         
-        std::string _qlogicae_id;
+        std::string _application_id;
 
-        std::string _qlogicae_name;
+        std::string _application_name;
 
-        std::string _qlogicae_version;
+        std::string _application_version;
 
-        std::string _qlogicae_company;
+        std::string _application_company;
 
-        std::string _qlogicae_authors;
+        std::string _application_authors;
 
-        std::string _qlogicae_description;
+        std::string _application_description;
 
-        std::string _qlogicae_url;
+        std::string _application_url;
 
-        std::string _qlogicae_architecture;
+        std::string _application_architecture;
 
         std::string _environment_id;
 
         std::string _environment_name;
 
-        QLogicaeCore::JsonFileIO _qlogicae_file;
+        JsonFileIO _application_file;
 
-        QLogicaeCore::JsonFileIO _environment_file;
+        JsonFileIO _environment_file;
+             
+        WindowsRegistry& _hkcu;
 
-        std::string _get_full_windows_registry_sub_path();
+        WindowsRegistry& _hklm;
 
-        void _load_qlogicae_file();
+        void _get_full_windows_registry_sub_path(
+            Result<std::string>& result
+        );
 
-        void _load_environment_file();
+        void _setup_application_file_data(
+            Result<void>& result
+        );
+
+        void _setup_environment_file_data(
+            Result<void>& result
+        );
+
+        void _setup_windows_registry(
+            Result<void>& result
+        );
     };    
 
-    inline static Application& APPLICATION =
+    inline static Application& QLOGICAE =
         Application::get_instance();
 }

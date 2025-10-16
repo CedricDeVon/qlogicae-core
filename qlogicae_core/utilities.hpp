@@ -284,6 +284,69 @@ namespace QLogicaeCore
         const std::string DEFAULT_GMAIL_MAILER_SMTP_SERVER =
             "smtp.gmail.com:465";
 
+        const std::string RESULT_STATUS_GOOD_STRING_1 =
+            "good";
+
+        const std::string RESULT_STATUS_GOOD_STRING_2 =
+            "GOOD";
+        
+        const std::string RESULT_STATUS_GOOD_STRING_3 =
+            "Good";
+
+        const std::string RESULT_STATUS_BAD_STRING_1 =
+            "bad";
+
+        const std::string RESULT_STATUS_BAD_STRING_2 =
+            "BAD";
+
+        const std::string RESULT_STATUS_BAD_STRING_3 =
+            "Bad";
+
+        const std::string RESULT_STATUS_INFO_STRING_1 =
+            "info";
+
+        const std::string RESULT_STATUS_INFO_STRING_2 =
+            "INFO";
+
+        const std::string RESULT_STATUS_INFO_STRING_3 =
+            "Info";
+
+        const std::string RESULT_STATUS_DEBUG_STRING_1 =
+            "debug";
+
+        const std::string RESULT_STATUS_DEBUG_STRING_2 =
+            "DEBUG";
+
+        const std::string RESULT_STATUS_DEBUG_STRING_3 =
+            "Debug";
+
+        const std::string RESULT_STATUS_WARNING_STRING_1 =
+            "warning";
+
+        const std::string RESULT_STATUS_WARNING_STRING_2 =
+            "WARNING";
+
+        const std::string RESULT_STATUS_WARNING_STRING_3 =
+            "Warning";
+
+        const std::string RESULT_STATUS_EXCEPTION_STRING_1 =
+            "exception";
+
+        const std::string RESULT_STATUS_EXCEPTION_STRING_2 =
+            "EXCEPTION";
+
+        const std::string RESULT_STATUS_EXCEPTION_STRING_3 =
+            "Exception";
+
+        const std::string RESULT_STATUS_ERROR_STRING_1 =
+            "error";
+
+        const std::string RESULT_STATUS_ERROR_STRING_2 =
+            "ERROR";
+
+        const std::string RESULT_STATUS_ERROR_STRING_3 =
+            "Error";
+
         const double EPSILON = 1e-12;
 
         const std::string INNO_SETUP = "inno-setup";
@@ -459,6 +522,108 @@ namespace QLogicaeCore
         {
             { INNO_SETUP, SupportedQLogicaeInstaller::INNO_SETUP }
         };  
+
+        const std::unordered_map<ResultStatus, std::string> RESULT_STATUS_ENUMS_1 =
+        {
+            { ResultStatus::GOOD, RESULT_STATUS_GOOD_STRING_1 },
+
+            { ResultStatus::BAD, RESULT_STATUS_BAD_STRING_1 },
+
+            { ResultStatus::INFO, RESULT_STATUS_INFO_STRING_1 },
+
+            { ResultStatus::DEBUG, RESULT_STATUS_DEBUG_STRING_1 },
+
+            { ResultStatus::WARNING, RESULT_STATUS_WARNING_STRING_1 },
+
+            { ResultStatus::EXCEPTION, RESULT_STATUS_EXCEPTION_STRING_1 },
+
+            { ResultStatus::ERROR_, RESULT_STATUS_ERROR_STRING_1 }
+        };
+
+        const std::unordered_map<std::string, ResultStatus> RESULT_STATUS_STRINGS_1 =
+        {
+            { RESULT_STATUS_GOOD_STRING_1, ResultStatus::GOOD },
+
+            { RESULT_STATUS_BAD_STRING_1, ResultStatus::BAD },
+
+            { RESULT_STATUS_INFO_STRING_1, ResultStatus::INFO },
+
+            { RESULT_STATUS_DEBUG_STRING_1, ResultStatus::DEBUG },
+
+            { RESULT_STATUS_WARNING_STRING_1, ResultStatus::WARNING },
+
+            { RESULT_STATUS_EXCEPTION_STRING_1, ResultStatus::EXCEPTION },
+
+            { RESULT_STATUS_ERROR_STRING_1, ResultStatus::ERROR_ }
+        };
+
+        const std::unordered_map<ResultStatus, std::string> RESULT_STATUS_ENUMS_2 =
+        {
+            { ResultStatus::GOOD, RESULT_STATUS_GOOD_STRING_2 },
+
+            { ResultStatus::BAD, RESULT_STATUS_BAD_STRING_2 },
+
+            { ResultStatus::INFO, RESULT_STATUS_INFO_STRING_2 },
+
+            { ResultStatus::DEBUG, RESULT_STATUS_DEBUG_STRING_2 },
+
+            { ResultStatus::WARNING, RESULT_STATUS_WARNING_STRING_2 },
+
+            { ResultStatus::EXCEPTION, RESULT_STATUS_EXCEPTION_STRING_2 },
+
+            { ResultStatus::ERROR_, RESULT_STATUS_ERROR_STRING_2 }
+        };
+
+        const std::unordered_map<std::string, ResultStatus> RESULT_STATUS_STRINGS_2 =
+        {
+            { RESULT_STATUS_GOOD_STRING_2, ResultStatus::GOOD },
+
+            { RESULT_STATUS_BAD_STRING_2, ResultStatus::BAD },
+
+            { RESULT_STATUS_INFO_STRING_2, ResultStatus::INFO },
+
+            { RESULT_STATUS_DEBUG_STRING_2, ResultStatus::DEBUG },
+
+            { RESULT_STATUS_WARNING_STRING_2, ResultStatus::WARNING },
+
+            { RESULT_STATUS_EXCEPTION_STRING_2, ResultStatus::EXCEPTION },
+
+            { RESULT_STATUS_ERROR_STRING_2, ResultStatus::ERROR_ }
+        };
+
+        const std::unordered_map<ResultStatus, std::string> RESULT_STATUS_ENUMS_3 =
+        {
+            { ResultStatus::GOOD, RESULT_STATUS_GOOD_STRING_3 },
+
+            { ResultStatus::BAD, RESULT_STATUS_BAD_STRING_3 },
+
+            { ResultStatus::INFO, RESULT_STATUS_INFO_STRING_3 },
+
+            { ResultStatus::DEBUG, RESULT_STATUS_DEBUG_STRING_3 },
+
+            { ResultStatus::WARNING, RESULT_STATUS_WARNING_STRING_3 },
+
+            { ResultStatus::EXCEPTION, RESULT_STATUS_EXCEPTION_STRING_3 },
+
+            { ResultStatus::ERROR_, RESULT_STATUS_ERROR_STRING_3 }
+        };
+
+        const std::unordered_map<std::string, ResultStatus> RESULT_STATUS_STRINGS_3 =
+        {
+            { RESULT_STATUS_GOOD_STRING_3, ResultStatus::GOOD },
+
+            { RESULT_STATUS_BAD_STRING_3, ResultStatus::BAD },
+
+            { RESULT_STATUS_INFO_STRING_3, ResultStatus::INFO },
+
+            { RESULT_STATUS_DEBUG_STRING_3, ResultStatus::DEBUG },
+
+            { RESULT_STATUS_WARNING_STRING_3, ResultStatus::WARNING },
+
+            { RESULT_STATUS_EXCEPTION_STRING_3, ResultStatus::EXCEPTION },
+
+            { RESULT_STATUS_ERROR_STRING_3, ResultStatus::ERROR_ }
+        };
 
         const std::string DEFAULT_BOOST_INTERPROCESS_CACHE =
             "BoostInterprocessCache";

@@ -53,11 +53,11 @@ namespace QLogicaeCore
         ) const;
 
         void get_sub_key(
-            Result<std::optional<std::string>>& result
+            Result<std::string>& result
         ) const;
 
         void get_name_key(
-            Result<std::optional<std::string>>& result
+            Result<std::string>& result
         ) const;
 
         void setup(

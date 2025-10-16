@@ -46,14 +46,14 @@ namespace QLogicaeCore
     }
 
     void WindowsRegistryValueExtractor::get_sub_key(
-        Result<std::optional<std::string>>& result
+        Result<std::string>& result
     ) const
     {
         result.set_to_good_status_with_value(_sub_key);
     }
 
     void WindowsRegistryValueExtractor::get_name_key(
-        Result<std::optional<std::string>>& result
+        Result<std::string>& result
     ) const
     {
         result.set_to_good_status_with_value(_name_key);

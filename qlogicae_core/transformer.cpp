@@ -95,6 +95,28 @@ namespace QLogicaeCore
         }
     }
 
+    std::string Transformer::to_result_message_format(
+        const std::string& text,
+        const ResultStatus& result_status,
+        const TimeFormat& time_format,
+        const size_t& output_size
+    ) const
+    {
+        std::string content;
+        content.reserve(output_size);
+
+        content =
+            "[" +
+            TIME.now(time_format) +
+            "] [" +
+            UTILITIES.RESULT_STATUS_ENUMS_2.at(result_status) +
+            "]\t" +
+            text +
+            "\n";
+        
+        return content;
+    }
+
     std::string Transformer::to_log_level_color_format(
         const std::string& text,
         const LogLevel& level,
@@ -181,7 +203,8 @@ namespace QLogicaeCore
 
     void Transformer::color_type(
         Result<std::string>& result,
-        const LogLevel& level) const
+        const LogLevel& level
+    ) const
     {
         switch (level)
         {
@@ -228,16 +251,41 @@ namespace QLogicaeCore
         Result<std::string>& result,
         const std::string& text,
         const LogLevel& level,
-        const size_t& output_size) const
+        const TimeFormat& time_format,
+        const size_t& output_size
+    ) const
     {
         std::string content;
         content.reserve(output_size);
 
         content =
             "[" +
-            TIME.now(TimeFormat::FULL_TIMESTAMP) +
+            TIME.now(time_format) +
             "] [" +
             get_log_level_string(level) +
+            "]\t" +
+            text +
+            "\n";
+
+        result.set_to_good_status_with_value(content);
+    }
+
+    void Transformer::to_result_message_format(
+        Result<std::string>& result,
+        const std::string& text,
+        const ResultStatus& result_status,
+        const TimeFormat& time_format,
+        const size_t& output_size
+    ) const
+    {
+        std::string content;
+        content.reserve(output_size);
+
+        content =
+            "[" +
+            TIME.now(time_format) +
+            "] [" +
+            UTILITIES.RESULT_STATUS_ENUMS_2.at(result_status) +
             "]\t" +
             text +
             "\n";
@@ -249,7 +297,8 @@ namespace QLogicaeCore
         Result<std::string>& result,
         const std::string& text,
         const LogLevel& level,
-        const size_t& output_size) const
+        const size_t& output_size
+    ) const
     {
         std::string content;
         content.reserve(output_size);
@@ -260,13 +309,14 @@ namespace QLogicaeCore
 
     void Transformer::to_none_format(
         Result<std::string>& result,
-        const std::string& text) const
+        const std::string& text
+    ) const
     {
         if (text.empty())
         {
-            result.set_to_good_status_with_value(
+            return result.set_to_good_status_with_value(
                 UTILITIES.STRING_NONE_1
-            );
+            );            
         }
 
         result.set_to_good_status_with_value(text);
@@ -274,11 +324,12 @@ namespace QLogicaeCore
 
     void Transformer::to_na_format(
         Result<std::string>& result,
-        const std::string& text) const
+        const std::string& text
+    ) const
     {
         if (text.empty())
         {
-            result.set_to_good_status_with_value(
+            return result.set_to_good_status_with_value(
                 UTILITIES.STRING_NONE_2
             );
         }
@@ -289,7 +340,8 @@ namespace QLogicaeCore
     void Transformer::split(
         Result<std::vector<std::string>>& result,
         const std::string& text,
-        const std::string& delimeter) const
+        const std::string& delimeter
+    ) const
     {
         auto content = absl::StrSplit(text, delimeter);
 
