@@ -49,6 +49,14 @@ namespace QLogicaeCore
 
         std::future<std::string> generate_data_uri_async() const;
 
+        void generate_data_uri(
+            Result<std::string>& result
+        ) const;
+
+        void generate_data_uri_async(
+            Result<std::future<std::string>>& result
+        ) const;
+
         void setup(
             Result<void>& result,
             const std::string& file_path
@@ -65,15 +73,7 @@ namespace QLogicaeCore
             const std::string& file_path,
             const std::string& mimetype,
             const std::string& name
-        );
-        
-        void generate_data_uri(
-            Result<std::string>& result
-        ) const;
-
-        void generate_data_uri_async(
-            Result<std::future<std::string>>& result
-        ) const;
+        );        
 
     private:
         std::string _mimetype

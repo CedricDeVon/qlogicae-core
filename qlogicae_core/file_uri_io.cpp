@@ -11,8 +11,9 @@ namespace QLogicaeCore
     }
 
     FileUriIO::FileUriIO(
-        const std::string& file_path)
-        : AbstractFileIO(file_path)
+        const std::string& file_path
+    ) :
+        AbstractFileIO(file_path)
     {
 
     }
@@ -20,8 +21,8 @@ namespace QLogicaeCore
     FileUriIO::FileUriIO(
         const std::string& file_path,
         const std::string& mimetype
-    )
-        : AbstractFileIO(file_path),
+    ) :
+        AbstractFileIO(file_path),
         _mimetype(mimetype)
     {
 
@@ -31,9 +32,9 @@ namespace QLogicaeCore
         const std::string& file_path,
         const std::string& mimetype,
         const std::string& name
-    )
-        : AbstractFileIO(name, file_path),
-            _mimetype(mimetype)
+    ) :
+        AbstractFileIO(name, file_path),
+        _mimetype(mimetype)
     {
 
     }
@@ -66,7 +67,13 @@ namespace QLogicaeCore
             output_buffer << input_file.rdbuf();
             std::string raw_data = output_buffer.str();
 
-            return std::string() + "data:" + _mimetype.data() + ";base64," + "AKLOMP_ENCODED(" + raw_data + ")";
+            return std::string() +
+                "data:" +
+                _mimetype.data() +
+                ";base64," +
+                "AKLOMP_ENCODED(" +
+                raw_data +
+                ")";
         }
         catch (const std::exception& exception)
         {
@@ -104,7 +111,9 @@ namespace QLogicaeCore
         }
 
         std::ifstream input_file(
-            _file_path, std::ios::binary);
+            _file_path,
+            std::ios::binary
+        );
 
         if (!input_file)
         {
@@ -118,7 +127,13 @@ namespace QLogicaeCore
         std::string raw_data = output_buffer.str();
 
         result.set_to_good_status_with_value(
-            std::string() + "data:" + _mimetype.data() + ";base64," + "AKLOMP_ENCODED(" + raw_data + ")"
+            std::string() +
+            "data:" +
+            _mimetype.data() +
+            ";base64," +
+            "AKLOMP_ENCODED(" +
+            raw_data +
+            ")"
         );
     }
 

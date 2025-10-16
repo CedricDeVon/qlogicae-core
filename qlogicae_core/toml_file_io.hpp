@@ -117,6 +117,95 @@ namespace QLogicaeCore
             const std::vector<std::vector<std::string>>& keys
         );
 
+
+
+        void load(
+            Result<bool>& result
+        );
+
+        void save(
+            Result<bool>& result
+        );
+
+        void save_as(
+            Result<bool>& result,
+            const std::string& file_path
+        );
+
+        void remove_value(
+            Result<bool>& result,
+            const std::vector<std::string>& key_path
+        );
+
+        void remove_keys(
+            Result<bool>& result,
+            const std::vector<std::vector<std::string>>& keys
+        );
+
+        void load_async(
+            Result<std::future<bool>>& result
+        );
+
+        void save_async(
+            Result<std::future<bool>>& result
+        );
+
+        void save_as_async(
+            Result<std::future<bool>>& result,
+            const std::string& file_path
+        );
+
+        void remove_value_async(
+            Result<std::future<bool>>& result,
+            const std::vector<std::string>& key_path
+        );
+
+        void remove_keys_async(
+            Result<std::future<bool>>& result,
+            const std::vector<std::vector<std::string>>& keys
+        );
+
+        template<typename ValueType>
+        void get_value(
+            Result<ValueType>& result,
+            const std::vector<std::string>& key_path
+        ) const;
+
+        template<typename ValueType>
+        void set_value(
+            Result<bool>& result,
+            const std::vector<std::string>& key_path,
+            const ValueType& value
+        );
+
+        template<typename ValueType>
+        void set_values(
+            Result<bool>& result,
+            const std::unordered_map<std::vector<std::string>,
+            ValueType, VectorStringHash, VectorStringEqual>& map
+        );
+
+        template<typename ValueType>
+        void get_value_async(
+            Result<std::future<ValueType>>& result,
+            const std::vector<std::string>& key_path
+        ) const;
+
+        template<typename ValueType>
+        void set_value_async(
+            Result<std::future<bool>>& result,
+            const std::vector<std::string>& key_path,
+            const ValueType& value
+        );
+
+        template<typename ValueType>
+        void set_values_async(
+            Result<std::future<bool>>& result,
+            const std::unordered_map<std::vector<std::string>,
+            ValueType,
+            VectorStringHash, VectorStringEqual>& values
+        );
+
         void setup(
             Result<void>& result,
             const std::string& file_path
@@ -130,6 +219,7 @@ namespace QLogicaeCore
 
     private:
         std::optional<toml::table*> _toml_root;
+
         std::optional<std::string> _raw_buffer;
     };
 
@@ -287,5 +377,236 @@ namespace QLogicaeCore
             {
                 return set_values<ValueType>(values);
             });
+    }
+
+
+    template<typename ValueType>
+    void TomlFileIO::get_value(
+        Result<ValueType>& result,
+        const std::vector<std::string>& key_path
+    ) const
+    {
+        std::scoped_lock lock(_mutex);
+
+        if (!_toml_root.has_value() || key_path.empty())
+        {
+            return result.set_to_bad_status_without_value(
+                "File has no value or key path is empty"
+            );
+        }
+
+        const toml::node* node = _toml_root.value();
+
+        for (const auto& key : key_path)
+        {
+            if (!node || !node->is_table())
+            {
+                return result.set_to_bad_status_without_value(
+                    "Node is empty or is not a table"
+                );
+            }
+
+            const toml::table* table = node->as_table();
+            const toml::node* next = table->get(key);
+
+            if (!next)
+            {
+                return result.set_to_bad_status_without_value(
+                    "Table is empty"
+                );
+            }
+
+            node = next;
+        }
+
+        if constexpr (std::is_same_v<ValueType, std::vector<std::string>>)
+        {
+            const toml::array* array = node ? node->as_array() : nullptr;
+            if (!array)
+            {
+                return result.set_to_bad_status_without_value(
+                    "Array is empty"
+                );
+            }
+
+            std::vector<std::string> values;
+            for (const auto& item : *array)
+            {
+                if (const auto str = item.value<std::string>())
+                {
+                    values.push_back(*str);
+                }
+                else
+                {
+                    return result.set_to_bad_status_without_value(
+                        "List is empty"
+                    );
+                }
+            }
+
+            return result.set_to_good_status_without_value(
+                values
+            );
+        }
+        else
+        {
+            if (!node)
+            {
+                return result.set_to_bad_status_without_value(
+                    "Node is empty"
+                );
+            }
+            auto value = node->value<ValueType>();
+            if (value)
+            {
+                return result.set_to_good_status_without_value(
+                    value
+                );
+            }
+
+            return result.set_to_bad_status_without_value(
+                "Value does not exist"
+            );
+        }
+    }
+
+    template<typename ValueType>
+    void TomlFileIO::set_value(
+        Result<bool>& result,
+        const std::vector<std::string>& key_path,
+        const ValueType& value
+    )
+    {
+        std::scoped_lock lock(_mutex);
+
+        if (!_toml_root.has_value() || key_path.empty())
+        {
+            return result.set_to_bad_status_without_value(
+                "Root has no value or key path is empty"
+            );
+        }
+
+        toml::table* current_table =
+            static_cast<toml::table*>(_toml_root.value());
+
+        for (std::size_t i = 0; i < key_path.size() - 1; ++i)
+        {
+            toml::node* child = current_table->get(key_path[i]);
+
+            if (!child)
+            {
+                auto [iter, _] = current_table->insert(
+                    key_path[i], toml::table{});
+                child = &iter->second;
+            }
+
+            if (!child->is_table())
+            {
+                return result.set_to_bad_status_without_value(
+                    "Table is empty"
+                );
+            }
+
+            current_table = child->as_table();
+        }
+
+        if constexpr (std::is_same_v<ValueType, std::vector<std::string>>)
+        {
+            toml::array array;
+            for (const auto& item : value)
+            {
+                array.push_back(item);
+            }
+            current_table->insert_or_assign(
+                key_path.back(),
+                std::move(array)
+            );
+        }
+        else
+        {
+            current_table->insert_or_assign(key_path.back(), value);
+        }
+
+        return result.set_to_good_status_without_value(
+            true
+        );
+    }
+
+    template<typename ValueType>
+    void TomlFileIO::set_values(
+        Result<bool>& result,
+        const std::unordered_map<std::vector<std::string>,
+        ValueType, VectorStringHash, VectorStringEqual>& map
+    )
+    {
+        bool success = true;
+        for (const auto& pair : map)
+        {
+            success &= set_value(pair.first, pair.second);
+        }
+
+        return result.set_to_good_status_without_value(
+            success
+        );
+    }
+
+    template<typename ValueType>
+    void TomlFileIO::get_value_async(
+        Result<std::future<ValueType>>& result,
+        const std::vector<std::string>& key_path
+    ) const
+    {
+        result.set_to_good_status_with_value(
+            std::async(
+                std::launch::async, [this, key_path]() -> ValueType
+            {
+                Result<ValueType> result;
+
+                get_value<ValueType>(result, key_path);
+
+                return result.get_value();
+            })
+        );
+    }
+
+    template<typename ValueType>
+    void TomlFileIO::set_value_async(
+        Result<std::future<bool>>& result,
+        const std::vector<std::string>& key_path,
+        const ValueType& value
+    )
+    {
+        result.set_to_good_status_with_value(
+            std::async(
+                std::launch::async, [this, key_path, value]() -> bool
+            {
+                Result<bool> result;
+
+                set_value<ValueType>(result, key_path, value);
+
+                return result.get_value();
+            })
+        );
+    }
+
+    template<typename ValueType>
+    void TomlFileIO::set_values_async(
+        Result<std::future<bool>>& result,
+        const std::unordered_map<std::vector<std::string>,
+        ValueType,
+        VectorStringHash, VectorStringEqual>& values
+    )
+    {
+        result.set_to_good_status_with_value(
+            std::async(
+                std::launch::async, [this, values]() -> bool
+            {
+                Result<bool> result;
+
+                set_values<ValueType>(result, values);
+
+                return result.get_value();
+            })
+        );
     }
 }
