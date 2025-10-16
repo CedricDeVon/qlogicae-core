@@ -267,6 +267,316 @@ namespace QLogicaeCore
         result.set_to_good_status_without_value();
     }
 
+
+
+    void TextFileIO::open(
+        Result<bool>& result,
+        const FileMode& file_mode
+    )
+    {
+        switch (file_mode)
+        {
+        case FileMode::READ:
+            if (!std::filesystem::exists(_file_path))
+            {
+                return result.set_to_bad_status_without_value(
+                    "File not found"
+                );
+            }
+            if (!_read_file)
+            {
+                _read_file.emplace(_file_path);
+            }
+            
+            return result.set_to_good_status_with_value(
+                true
+            );
+
+        case FileMode::WRITE:
+            if (!_write_file)
+            {
+                _write_file.emplace(_file_path);
+            }
+            
+            return result.set_to_good_status_with_value(
+                true
+            );
+
+        case FileMode::APPEND:
+            if (!_append_file)
+            {
+                _append_file.emplace(
+                    _file_path,
+                    fast_io::open_mode::app
+                );
+            }
+
+            return result.set_to_good_status_with_value(
+                true
+            );
+
+        default:
+            return result.set_to_bad_status_without_value(
+                "File open failed"
+            );
+        }
+    }
+
+    void TextFileIO::close(
+        Result<bool>& result,
+        const FileMode& file_mode
+    )
+    {
+        switch (file_mode)
+        {
+        case FileMode::READ:
+            if (_read_file)
+            {
+                _read_file.reset();
+            }
+
+            return result.set_to_good_status_with_value(
+                true
+            );
+
+        case FileMode::WRITE:
+            if (_write_file)
+            {
+                _write_file.reset();
+            }
+
+            return result.set_to_good_status_with_value(
+                true
+            );
+
+        case FileMode::APPEND:
+            if (_append_file)
+            {
+                _append_file.reset();
+            }
+
+            return result.set_to_good_status_with_value(
+                true
+            );
+
+        default:
+            return result.set_to_bad_status_without_value(
+                "File not found"
+            );
+        }
+    }
+
+    void TextFileIO::is_open(
+        Result<bool>& result,
+        const FileMode& file_mode
+    )
+    {
+        switch (file_mode)
+        {
+        case FileMode::READ:
+            return result.set_to_good_status_with_value(
+                _read_file.has_value()
+            );
+
+        case FileMode::WRITE:
+            return result.set_to_good_status_with_value(
+                _write_file.has_value()
+            );
+
+        case FileMode::APPEND:
+            return result.set_to_good_status_with_value(
+                _append_file.has_value()
+            );
+
+        default:
+            return result.set_to_bad_status_without_value(
+                "Invalid file mode"
+            );
+        }
+    }
+
+    void TextFileIO::read(
+        Result<std::string>& result
+    )
+    {
+        std::scoped_lock lock(_mutex);
+
+        if (!open(FileMode::READ))
+        {
+            return result.set_to_bad_status_without_value(
+                "File not open to read"
+            );
+        }
+
+        fast_io::native_file_loader& file_loader =
+            _read_file.value();
+        std::string content{
+            file_loader.begin(),
+            file_loader.end()
+        };
+
+        return result.set_to_good_status_with_value(
+            content
+        );
+    }
+
+    void TextFileIO::write(
+        Result<bool>& result,
+        const std::string& content
+    )
+    {
+        std::scoped_lock lock(_mutex);
+
+        if (!open(FileMode::WRITE))
+        {
+            return result.set_to_bad_status_without_value(
+                "File not open to write"
+            );
+        }
+
+        fast_io::io::print(
+            _write_file.value(),
+            content
+        );
+
+        close(FileMode::READ);
+        close(FileMode::WRITE);
+        close(FileMode::APPEND);
+
+         result.set_to_good_status_with_value(
+            true
+        );
+    }
+
+    void TextFileIO::append(
+        Result<bool>& result,
+        const std::string& content
+    )
+    {
+        std::scoped_lock lock(_mutex);
+
+        if (!open(FileMode::APPEND))
+        {
+            return result.set_to_bad_status_without_value(
+                "File not open to append"
+            );
+        }
+
+        fast_io::io::print(
+            _append_file.value(),
+            content
+        );
+
+        close(FileMode::READ);
+        close(FileMode::WRITE);
+        close(FileMode::APPEND);
+
+        result.set_to_good_status_with_value(
+            true
+        );
+    }
+
+    void TextFileIO::read_async(
+        Result<std::future<std::string>>& result
+    )
+    {
+        result.set_to_good_status_with_value(
+            std::async(std::launch::async,
+                [this]() -> std::string
+                {
+                    Result<std::string> result;
+
+                    read(result);
+
+                    return result.get_value();
+                })
+        );
+    }
+
+    void TextFileIO::write_async(
+        Result<std::future<bool>>& result,
+        const std::string& content
+    )
+    {
+        result.set_to_good_status_with_value(
+            std::async(std::launch::async,
+                [this, content]() -> bool
+                {
+                    Result<bool> result;
+
+                    write(
+                        result,
+                        content
+                    );
+
+                    return result.get_value();
+                })
+        );
+    }
+
+    void TextFileIO::append_async(
+        Result<std::future<bool>>& result,
+        const std::string& content
+    )
+    {
+        result.set_to_good_status_with_value(
+            std::async(std::launch::async,
+                [this, content]() -> bool
+                {
+                    Result<bool> result;
+
+                    write(
+                        result,
+                        content
+                    );
+
+                    return result.get_value();
+                })
+        );
+    }
+
+    void TextFileIO::open_async(
+        Result<std::future<bool>>& result,
+        const FileMode& file_mode
+    )
+    {
+        result.set_to_good_status_with_value(
+            std::async(std::launch::async,
+                [this, file_mode]() -> bool
+                {
+                    Result<bool> result;
+
+                    open(
+                        result,
+                        file_mode
+                    );
+
+                    return result.get_value();
+                })
+        );
+    }
+
+    void TextFileIO::close_async(
+        Result<std::future<bool>>& result,
+        const FileMode& file_mode
+    )
+    {
+        result.set_to_good_status_with_value(
+            std::async(std::launch::async,
+                [this, file_mode]() -> bool
+                {
+                    Result<bool> result;
+
+                    close(
+                        result,
+                        file_mode
+                    );
+
+                    return result.get_value();
+                })
+        );
+    }
+
     void TextFileIO::setup(
         Result<void>& result,
         const std::string& name,

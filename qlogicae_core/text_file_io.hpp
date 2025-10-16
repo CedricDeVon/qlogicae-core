@@ -88,6 +88,59 @@ namespace QLogicaeCore
             const std::string& text
         );
 
+        void read(
+            Result<std::string>& result
+        );
+
+        void open(
+            Result<bool>& result,
+            const FileMode& file_mode
+        );
+
+        void close(
+            Result<bool>& result,
+            const FileMode& file_mode
+        );
+
+        void is_open(
+            Result<bool>& result,
+            const FileMode& file_mode
+        );
+
+        void write(
+            Result<bool>& result,
+            const std::string& text
+        );
+
+        void append(
+            Result<bool>& result,
+            const std::string& text
+        );
+
+        void read_async(
+            Result<std::future<std::string>>& result
+        );
+
+        void open_async(
+            Result<std::future<bool>>& result,
+            const FileMode& file_mode
+        );
+
+        void close_async(
+            Result<std::future<bool>>& result,
+            const FileMode& file_mode
+        );
+
+        void write_async(
+            Result<std::future<bool>>& result,
+            const std::string& text
+        );
+
+        void append_async(
+            Result<std::future<bool>>& result,
+            const std::string& text
+        );
+
         void setup(
             Result<void>& result,
             const std::string& file_path
