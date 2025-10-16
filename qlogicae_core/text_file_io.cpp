@@ -276,49 +276,54 @@ namespace QLogicaeCore
     {
         switch (file_mode)
         {
-        case FileMode::READ:
-            if (!std::filesystem::exists(_file_path))
+            case FileMode::READ:
+            {
+                if (!std::filesystem::exists(_file_path))
+                {
+                    return result.set_to_bad_status_without_value(
+                        "File not found"
+                    );
+                }
+                if (!_read_file)
+                {
+                    _read_file.emplace(_file_path);
+                }
+            
+                return result.set_to_good_status_with_value(
+                    true
+                );
+            }
+            case FileMode::WRITE:
+            {
+                if (!_write_file)
+                {
+                    _write_file.emplace(_file_path);
+                }
+            
+                return result.set_to_good_status_with_value(
+                    true
+                );
+            }
+            case FileMode::APPEND:
+            {
+                if (!_append_file)
+                {
+                    _append_file.emplace(
+                        _file_path,
+                        fast_io::open_mode::app
+                    );
+                }
+
+                return result.set_to_good_status_with_value(
+                    true
+                );
+            }
+            default:
             {
                 return result.set_to_bad_status_without_value(
-                    "File not found"
+                    "File open failed"
                 );
             }
-            if (!_read_file)
-            {
-                _read_file.emplace(_file_path);
-            }
-            
-            return result.set_to_good_status_with_value(
-                true
-            );
-
-        case FileMode::WRITE:
-            if (!_write_file)
-            {
-                _write_file.emplace(_file_path);
-            }
-            
-            return result.set_to_good_status_with_value(
-                true
-            );
-
-        case FileMode::APPEND:
-            if (!_append_file)
-            {
-                _append_file.emplace(
-                    _file_path,
-                    fast_io::open_mode::app
-                );
-            }
-
-            return result.set_to_good_status_with_value(
-                true
-            );
-
-        default:
-            return result.set_to_bad_status_without_value(
-                "File open failed"
-            );
         }
     }
 
@@ -329,40 +334,45 @@ namespace QLogicaeCore
     {
         switch (file_mode)
         {
-        case FileMode::READ:
-            if (_read_file)
+            case FileMode::READ:
             {
-                _read_file.reset();
+                if (_read_file)
+                {
+                    _read_file.reset();
+                }
+
+                return result.set_to_good_status_with_value(
+                    true
+                );
             }
-
-            return result.set_to_good_status_with_value(
-                true
-            );
-
-        case FileMode::WRITE:
-            if (_write_file)
+            case FileMode::WRITE:
             {
-                _write_file.reset();
+                if (_write_file)
+                {
+                    _write_file.reset();
+                }
+
+                return result.set_to_good_status_with_value(
+                    true
+                );
             }
-
-            return result.set_to_good_status_with_value(
-                true
-            );
-
-        case FileMode::APPEND:
-            if (_append_file)
+            case FileMode::APPEND:
             {
-                _append_file.reset();
+                if (_append_file)
+                {
+                    _append_file.reset();
+                }
+
+                return result.set_to_good_status_with_value(
+                    true
+                );
             }
-
-            return result.set_to_good_status_with_value(
-                true
-            );
-
-        default:
-            return result.set_to_bad_status_without_value(
-                "File not found"
-            );
+            default:
+            {
+                return result.set_to_bad_status_without_value(
+                    "File close found"
+                );
+            }
         }
     }
 
@@ -373,25 +383,30 @@ namespace QLogicaeCore
     {
         switch (file_mode)
         {
-        case FileMode::READ:
-            return result.set_to_good_status_with_value(
-                _read_file.has_value()
-            );
-
-        case FileMode::WRITE:
-            return result.set_to_good_status_with_value(
-                _write_file.has_value()
-            );
-
-        case FileMode::APPEND:
-            return result.set_to_good_status_with_value(
-                _append_file.has_value()
-            );
-
-        default:
-            return result.set_to_bad_status_without_value(
-                "Invalid file mode"
-            );
+            case FileMode::READ:
+            {
+                return result.set_to_good_status_with_value(
+                    _read_file.has_value()
+                );
+            }
+            case FileMode::WRITE:
+            {
+                return result.set_to_good_status_with_value(
+                    _write_file.has_value()
+                );
+            }
+            case FileMode::APPEND:
+            {
+                return result.set_to_good_status_with_value(
+                    _append_file.has_value()
+                );
+            }
+            default:
+            {
+                return result.set_to_bad_status_without_value(
+                    "Invalid file mode"
+                );
+            }
         }
     }
 
@@ -525,7 +540,7 @@ namespace QLogicaeCore
                 {
                     Result<bool> result;
 
-                    write(
+                    append(
                         result,
                         content
                     );

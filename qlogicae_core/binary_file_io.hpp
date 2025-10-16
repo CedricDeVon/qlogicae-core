@@ -85,7 +85,62 @@ namespace QLogicaeCore
         std::future<bool> append_async(
             const std::span<const std::byte>& content
         );
-        
+
+
+
+        void open(
+            Result<bool>& result,
+            const FileMode& file_mode
+        );
+
+        void close(
+            Result<bool>& result,
+            const FileMode& file_mode
+        );
+
+        void is_open(
+            Result<bool>& result,
+            const FileMode& file_mode
+        );
+
+        void read(
+            Result<std::vector<std::byte>>& result
+        );
+
+        void write(
+            Result<bool>& result,
+            const std::span<const std::byte>& content
+        );
+
+        void append(
+            Result<bool>& result,
+            const std::span<const std::byte>& content
+        );
+
+        void open_async(
+            Result<std::future<bool>>& result,
+            const FileMode& file_mode
+        );
+
+        void close_async(
+            Result<std::future<bool>>& result,
+            const FileMode& file_mode
+        );
+
+        void read_async(
+            Result<std::future<std::vector<std::byte>>>& result
+        );
+
+        void write_async(
+            Result<std::future<bool>>& result,
+            const std::span<const std::byte>& content
+        );
+
+        void append_async(
+            Result<std::future<bool>>& result,
+            const std::span<const std::byte>& content
+        );
+
         void setup(
             Result<void>& result,
             const std::string& file_path
