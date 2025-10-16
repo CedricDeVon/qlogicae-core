@@ -907,6 +907,860 @@ namespace QLogicaeCore
             });
     }
 
+    void JsonFileIO::read(Result<std::string>& result)
+    {
+        if (_file_path.empty())
+        {
+            return result.set_to_bad_status_with_value("");
+        }
+
+        fast_io::native_file_loader loader{ _file_path };
+        std::string content(loader.data(), loader.data() + loader.size());
+        result.set_to_good_status_with_value(content);
+    }
+
+    void JsonFileIO::write(Result<bool>& result, const std::string& content)
+    {
+        if (_file_path.empty())
+        {
+            return result.set_to_bad_status_with_value(false);
+        }
+
+        fast_io::obuf_file writer{ _file_path };
+        fast_io::io::print(writer, content);
+        result.set_to_good_status_with_value(true);
+    }
+
+    void JsonFileIO::get_is_formatting_allowed(Result<bool>& result)
+    {
+        result.set_to_good_status_with_value(_is_formatting_allowed);
+    }
+
+    void JsonFileIO::is_key_path_valid(Result<bool>& result,
+        const JsonPath& path)
+    {
+        std::scoped_lock lock(_mutex);
+
+        if (_file_path.empty())
+        {
+            return result.set_to_bad_status_with_value(false);
+        }
+
+        rapidjson::Document document;
+        if (document.Parse(read().c_str()).HasParseError())
+        {
+            return result.set_to_bad_status_with_value(false);
+        }
+
+        auto pointer = build_pointer(path);
+        bool is_valid = pointer.Get(document) != nullptr;
+        result.set_to_good_status_with_value(is_valid);
+    }
+
+    void JsonFileIO::set_is_formatting_allowed(
+        Result<bool>& result,
+        const bool& value
+    )
+    {
+        _is_formatting_allowed = value;
+
+        result.set_to_good_status_with_value(true);
+    }
+
+    void JsonFileIO::get_bool(Result<bool>& result, const JsonPath& path)
+    {
+        std::scoped_lock lock(_mutex);
+
+        if (_file_path.empty())
+        {
+            return result.set_to_bad_status_with_value(false);
+        }
+
+        rapidjson::Document document;
+        if (document.Parse(read().c_str()).HasParseError())
+        {
+            return result.set_to_bad_status_with_value(false);
+        }
+
+        auto ptr = build_pointer(path);
+        const rapidjson::Value* val = ptr.Get(document);
+        bool value = (val && val->IsBool()) ? val->GetBool() : false;
+        result.set_to_good_status_with_value(value);
+    }
+
+    void JsonFileIO::get_double(Result<double>& result, const JsonPath& path)
+    {
+        std::scoped_lock lock(_mutex);
+
+        if (_file_path.empty())
+        {
+            return result.set_to_bad_status_with_value(0.0);
+        }
+
+        rapidjson::Document document;
+        if (document.Parse(read().c_str()).HasParseError())
+        {
+            return result.set_to_bad_status_with_value(0.0);
+        }
+
+        auto ptr = build_pointer(path);
+        const rapidjson::Value* val = ptr.Get(document);
+        double value = (val && val->IsNumber()) ? val->GetDouble() : 0.0;
+        result.set_to_good_status_with_value(value);
+    }
+
+    void JsonFileIO::get_string(Result<std::string>& result,
+        const JsonPath& path)
+    {
+        std::scoped_lock lock(_mutex);
+
+        if (_file_path.empty())
+        {
+            return result.set_to_bad_status_with_value("");
+        }
+
+        rapidjson::Document document;
+        if (document.Parse(read().c_str()).HasParseError())
+        {
+            return result.set_to_bad_status_with_value("");
+        }
+
+        auto pointer = build_pointer(path);
+        const rapidjson::Value* value = pointer.Get(document);
+        std::string str_value =
+            (value && value->IsString()) ? value->GetString() : "";
+        result.set_to_good_status_with_value(str_value);
+    }
+
+    void JsonFileIO::get_null(Result<std::nullptr_t>& result,
+        const JsonPath& path)
+    {
+        std::scoped_lock lock(_mutex);
+
+        if (_file_path.empty())
+        {
+            return result.set_to_bad_status_with_value(nullptr);
+        }
+
+        rapidjson::Document document;
+        if (document.Parse(read().c_str()).HasParseError())
+        {
+            return result.set_to_bad_status_with_value(nullptr);
+        }
+
+        auto ptr = build_pointer(path);
+        const rapidjson::Value* val = ptr.Get(document);
+        result.set_to_good_status_with_value(nullptr);
+    }
+
+    void JsonFileIO::get_array(Result<std::vector<std::any>>& result,
+        const JsonPath& path)
+    {
+        if (_file_path.empty())
+        {
+            return result.set_to_bad_status_with_value({});
+        }
+
+        std::ifstream in_file(_file_path);
+        if (!in_file.is_open())
+        {
+            return result.set_to_bad_status_with_value({});
+        }
+
+        std::string json_string((std::istreambuf_iterator<char>(in_file)),
+            std::istreambuf_iterator<char>());
+
+        rapidjson::Document document;
+        if (document.Parse(json_string.c_str()).HasParseError())
+        {
+            return result.set_to_bad_status_with_value({});
+        }
+
+        auto pointer = build_pointer(path);
+        rapidjson::Value* array_value = pointer.Get(document);
+        if (!array_value || !array_value->IsArray())
+        {
+            return result.set_to_bad_status_with_value({});
+        }
+
+        std::vector<std::any> values;
+        for (auto& value : array_value->GetArray())
+        {
+            if (value.IsString())
+            {
+                values.emplace_back(std::string(value.GetString(),
+                    value.GetStringLength()));
+            }
+            else if (value.IsBool())
+            {
+                values.emplace_back(value.GetBool());
+            }
+            else if (value.IsInt() || value.IsUint())
+            {
+                values.emplace_back(static_cast<double>(value.GetInt()));
+            }
+            else if (value.IsDouble())
+            {
+                values.emplace_back(value.GetDouble());
+            }
+            else if (value.IsNull())
+            {
+                values.emplace_back(nullptr);
+            }
+        }
+
+        result.set_to_good_status_with_value(values);
+    }
+
+    void JsonFileIO::get_object(
+        Result<std::unordered_map<std::string, std::any>>& result,
+        const JsonPath& path
+    )
+    {
+        if (_file_path.empty())
+        {
+            return result.set_to_bad_status_with_value({});
+        }
+
+        std::ifstream in_file(_file_path);
+        if (!in_file.is_open())
+        {
+            return result.set_to_bad_status_with_value({});
+        }
+
+        std::string json_string((std::istreambuf_iterator<char>(in_file)),
+            std::istreambuf_iterator<char>());
+
+        rapidjson::Document document;
+        if (document.Parse(json_string.c_str()).HasParseError())
+        {
+            return result.set_to_bad_status_with_value({});
+        }
+
+        auto pointer = build_pointer(path);
+        rapidjson::Value* value_pointer = pointer.Get(document);
+        if (!value_pointer || !value_pointer->IsObject())
+        {
+            return result.set_to_bad_status_with_value({});
+        }
+
+        std::function<std::any(const rapidjson::Value&)> parse_value;
+        parse_value = [&](const rapidjson::Value& value) -> std::any {
+            if (value.IsString())
+            {
+                return std::string(value.GetString());
+            }
+            if (value.IsBool())
+            {
+                return value.GetBool();
+            }
+            if (value.IsNumber())
+            {
+                return value.GetDouble();
+            }
+            if (value.IsNull())
+            {
+                return nullptr;
+            }
+            if (value.IsArray())
+            {
+                std::vector<std::any> arr;
+                for (const auto& elem : value.GetArray())
+                {
+                    arr.emplace_back(parse_value(elem));
+                }
+                return arr;
+            }
+            if (value.IsObject())
+            {
+                std::unordered_map<std::string, std::any> obj;
+                for (auto it = value.MemberBegin(); it != value.MemberEnd(); ++it)
+                {
+                    std::string key(it->name.GetString(),
+                        it->name.GetStringLength());
+                    obj[key] = parse_value(it->value);
+                }
+                return obj;
+            }
+            return std::any();
+            };
+
+        std::unordered_map<std::string, std::any> map;
+        for (auto it = value_pointer->MemberBegin();
+            it != value_pointer->MemberEnd(); ++it)
+        {
+            std::string key(it->name.GetString(), it->name.GetStringLength());
+            map[key] = parse_value(it->value);
+        }
+
+        result.set_to_good_status_with_value(map);
+    }
+
+    void JsonFileIO::insert_string(
+        Result<bool>& result,
+        const JsonPath& path,
+        const std::string& value
+    )
+    {
+        std::scoped_lock lock(_mutex);
+
+        if (path.empty())
+        {
+            return result.set_to_bad_status_with_value(false);
+        }
+
+        rapidjson::Document document;
+        if (document.Parse(read().c_str()).HasParseError())
+        {
+            return result.set_to_bad_status_with_value(false);
+        }
+
+        auto pointer = build_pointer(path);
+        rapidjson::Value& root = document;
+        auto& allocator = document.GetAllocator();
+
+        rapidjson::Value* existing = pointer.Get(root);
+        if (existing && !existing->IsObject() && path.back().index() == 1)
+        {
+            return result.set_to_bad_status_with_value(false);
+        }
+
+        pointer.Create(root, allocator);
+        pointer.Set(root, make_value(value, allocator), allocator);
+
+        fast_io::obuf_file writer{ _file_path };
+        fast_io::io::print(writer, to_string(document));
+        result.set_to_good_status_with_value(true);
+    }
+
+    void JsonFileIO::insert_bool(
+        Result<bool>& result,
+        const JsonPath& path,
+        const bool& value
+    )
+    {
+        std::scoped_lock lock(_mutex);
+
+        if (path.empty())
+        {
+            return result.set_to_bad_status_with_value(false);
+        }
+
+        rapidjson::Document document;
+        if (document.Parse(read().c_str()).HasParseError())
+        {
+            return result.set_to_bad_status_with_value(false);
+        }
+
+        auto pointer = build_pointer(path);
+        rapidjson::Value& root = document;
+        auto& allocator = document.GetAllocator();
+
+        rapidjson::Value* existing = pointer.Get(root);
+        if (existing && !existing->IsObject() && path.back().index() == 1)
+        {
+            return result.set_to_bad_status_with_value(false);
+        }
+
+        pointer.Create(root, allocator);
+        pointer.Set(root, make_value(value, allocator), allocator);
+
+        fast_io::obuf_file writer{ _file_path };
+        fast_io::io::print(writer, to_string(document));
+        result.set_to_good_status_with_value(true);
+    }
+
+    void JsonFileIO::insert_double(
+        Result<bool>& result,
+        const JsonPath& path,
+        const double& value
+    )
+    {
+        std::scoped_lock lock(_mutex);
+
+        if (path.empty())
+        {
+            return result.set_to_bad_status_with_value(false);
+        }
+
+        rapidjson::Document document;
+        if (document.Parse(read().c_str()).HasParseError())
+        {
+            return result.set_to_bad_status_with_value(false);
+        }
+
+        auto pointer = build_pointer(path);
+        rapidjson::Value& root = document;
+        auto& allocator = document.GetAllocator();
+
+        rapidjson::Value* existing = pointer.Get(root);
+        if (existing && !existing->IsObject() && path.back().index() == 1)
+        {
+            return result.set_to_bad_status_with_value(false);
+        }
+
+        pointer.Create(root, allocator);
+        pointer.Set(root, make_value(value, allocator), allocator);
+
+        fast_io::obuf_file writer{ _file_path };
+        fast_io::io::print(writer, to_string(document));
+        result.set_to_good_status_with_value(true);
+    }
+
+    void JsonFileIO::insert_null(
+        Result<bool>& result,
+        const JsonPath& path,
+        const std::nullptr_t& value
+    )
+    {
+        std::scoped_lock lock(_mutex);
+
+        if (path.empty())
+        {
+            return result.set_to_bad_status_with_value(false);
+        }
+
+        rapidjson::Document document;
+        if (document.Parse(read().c_str()).HasParseError())
+        {
+            return result.set_to_bad_status_with_value(false);
+        }
+
+        auto pointer = build_pointer(path);
+        rapidjson::Value& root = document;
+        auto& allocator = document.GetAllocator();
+
+        rapidjson::Value* existing = pointer.Get(root);
+        if (existing && !existing->IsObject() && path.back().index() == 1)
+        {
+            return result.set_to_bad_status_with_value(false);
+        }
+
+        pointer.Create(root, allocator);
+        pointer.Set(root, make_value(value, allocator), allocator);
+
+        fast_io::obuf_file writer{ _file_path };
+        fast_io::io::print(writer, to_string(document));
+        result.set_to_good_status_with_value(true);
+    }
+
+    void JsonFileIO::insert_array(
+        Result<bool>& result,
+        const JsonPath& path,
+        const std::vector<std::any>& value
+    )
+    {
+        std::scoped_lock lock(_mutex);
+
+        if (path.empty())
+        {
+            return result.set_to_bad_status_with_value(false);
+        }
+
+        rapidjson::Document document;
+        if (document.Parse(read().c_str()).HasParseError())
+        {
+            return result.set_to_bad_status_with_value(false);
+        }
+
+        auto pointer = build_pointer(path);
+        rapidjson::Value& root = document;
+        auto& allocator = document.GetAllocator();
+
+        rapidjson::Value* existing = pointer.Get(root);
+        if (existing && !existing->IsObject() && path.back().index() == 1)
+        {
+            return result.set_to_bad_status_with_value(false);
+        }
+
+        pointer.Create(root, allocator);
+        pointer.Set(root, make_value(value, allocator), allocator);
+
+        fast_io::obuf_file writer{ _file_path };
+        fast_io::io::print(writer, to_string(document));
+        result.set_to_good_status_with_value(true);
+    }
+
+    void JsonFileIO::insert_object(
+        Result<bool>& result,
+        const JsonPath& path,
+        const std::unordered_map<std::string, std::any>& value
+    )
+    {
+        std::scoped_lock lock(_mutex);
+
+        if (path.empty())
+        {
+            return result.set_to_bad_status_with_value(false);
+        }
+
+        rapidjson::Document document;
+        if (document.Parse(read().c_str()).HasParseError())
+        {
+            return result.set_to_bad_status_with_value(false);
+        }
+
+        auto pointer = build_pointer(path);
+        rapidjson::Value& root = document;
+        auto& allocator = document.GetAllocator();
+
+        rapidjson::Value* existing = pointer.Get(root);
+        if (existing && !existing->IsObject() && path.back().index() == 1)
+        {
+            return result.set_to_bad_status_with_value(false);
+        }
+
+        pointer.Create(root, allocator);
+        pointer.Set(root, make_value(value, allocator), allocator);
+
+        fast_io::obuf_file writer{ _file_path };
+        fast_io::io::print(writer, to_string(document));
+        result.set_to_good_status_with_value(true);
+    }
+
+    void JsonFileIO::update_string(
+        Result<bool>& result,
+        const JsonPath& path,
+        const std::string& value
+    )
+    {
+        insert_string(result, path, value);
+    }
+
+    void JsonFileIO::update_bool(
+        Result<bool>& result,
+        const JsonPath& path,
+        const bool& value
+    )
+    {
+        insert_bool(result, path, value);
+    }
+
+    void JsonFileIO::update_double(
+        Result<bool>& result,
+        const JsonPath& path,
+        const double& value
+    )
+    {
+        insert_double(result, path, value);
+    }
+
+    void JsonFileIO::update_null(
+        Result<bool>& result,
+        const JsonPath& path,
+        const std::nullptr_t& value
+    )
+    {
+        insert_null(result, path, value);
+    }
+
+    void JsonFileIO::update_array(
+        Result<bool>& result,
+        const JsonPath& path,
+        const std::vector<std::any>& value
+    )
+    {
+        insert_array(result, path, value);
+    }
+
+    void JsonFileIO::update_object(
+        Result<bool>& result,
+        const JsonPath& path,
+        const std::unordered_map<std::string, std::any>& value
+    )
+    {
+        insert_object(result, path, value);
+    }
+
+    void JsonFileIO::read_async(Result<std::future<std::string>>& result)
+    {
+        result.set_to_good_status_with_value(std::async(std::launch::async,
+            [this]()
+            {
+                Result<std::string> result;
+                read(result);
+                return result.get_value();
+            }));
+    }
+
+    void JsonFileIO::write_async(
+        Result<std::future<bool>>& result,
+        const std::string& content
+    )
+    {
+        result.set_to_good_status_with_value(std::async(std::launch::async,
+            [this, content]()
+            {
+                Result<bool> result;
+                write(result, content);
+                return result.get_value();
+            }));
+    }
+
+    void JsonFileIO::get_bool_async(
+        Result<std::future<bool>>& result,
+        const JsonPath& path
+    )
+    {
+        result.set_to_good_status_with_value(std::async(std::launch::async,
+            [this, path]()
+            {
+                Result<bool> result;
+                get_bool(result, path);
+                return result.get_value();
+            }));
+    }
+
+    void JsonFileIO::get_double_async(
+        Result<std::future<double>>& result,
+        const JsonPath& path
+    )
+    {
+        result.set_to_good_status_with_value(std::async(std::launch::async,
+            [this, path]()
+            {
+                Result<double> result;
+                get_double(result, path);
+                return result.get_value();
+            }));
+    }
+
+    void JsonFileIO::get_string_async(
+        Result<std::future<std::string>>& result,
+        const JsonPath& path
+    )
+    {
+        result.set_to_good_status_with_value(std::async(std::launch::async,
+            [this, path]()
+            {
+                Result<std::string> result;
+                get_string(result, path);
+                return result.get_value();
+            }));
+    }
+
+    void JsonFileIO::get_null_async(
+        Result<std::future<std::nullptr_t>>& result,
+        const JsonPath& path
+    )
+    {
+        result.set_to_good_status_with_value(std::async(std::launch::async,
+            [this, path]()
+            {
+                Result<std::nullptr_t> result;
+                get_null(result, path);
+                return result.get_value();
+            }));
+    }
+
+    void JsonFileIO::get_array_async(
+        Result<std::future<std::vector<std::any>>>& result,
+        const JsonPath& path
+    )
+    {
+        result.set_to_good_status_with_value(std::async(std::launch::async,
+            [this, path]()
+            {
+                Result<std::vector<std::any>> result;
+                get_array(result, path);
+                return result.get_value();
+            }));
+    }
+
+    void JsonFileIO::get_object_async(
+        Result<std::future<std::unordered_map<std::string, std::any>>>& result,
+        const JsonPath& path
+    )
+    {
+        result.set_to_good_status_with_value(std::async(std::launch::async,
+            [this, path]()
+            {
+                Result<std::unordered_map<std::string, std::any>> result;
+                get_object(result, path);
+                return result.get_value();
+            }));
+    }
+
+    void JsonFileIO::insert_bool_async(
+        Result<std::future<bool>>& result,
+        const JsonPath& path,
+        const bool& value
+    )
+    {
+        result.set_to_good_status_with_value(std::async(std::launch::async,
+            [this, path, value]()
+            {
+                Result<bool> result;
+                insert_bool(result, path, value);
+                return result.get_value();
+            }));
+    }
+
+    void JsonFileIO::insert_double_async(
+        Result<std::future<bool>>& result,
+        const JsonPath& path,
+        const double& value
+    )
+    {
+        result.set_to_good_status_with_value(std::async(std::launch::async,
+            [this, path, value]()
+            {
+                Result<bool> result;
+                insert_double(result, path, value);
+                return result.get_value();
+            }));
+    }
+
+    void JsonFileIO::insert_string_async(
+        Result<std::future<bool>>& result,
+        const JsonPath& path,
+        const std::string& value
+    )
+    {
+        result.set_to_good_status_with_value(std::async(std::launch::async,
+            [this, path, value]()
+            {
+                Result<bool> result;
+                insert_string(result, path, value);
+                return result.get_value();
+            }));
+    }
+
+    void JsonFileIO::insert_null_async(
+        Result<std::future<bool>>& result,
+        const JsonPath& path,
+        const std::nullptr_t& value
+    )
+    {
+        result.set_to_good_status_with_value(std::async(std::launch::async,
+            [this, path, value]()
+            {
+                Result<bool> result;
+                insert_null(result, path, value);
+                return result.get_value();
+            }));
+    }
+
+    void JsonFileIO::insert_array_async(
+        Result<std::future<bool>>& result,
+        const JsonPath& path,
+        const std::vector<std::any>& value
+    )
+    {
+        result.set_to_good_status_with_value(std::async(std::launch::async,
+            [this, path, value]()
+            {
+                Result<bool> result;
+                insert_array(result, path, value);
+                return result.get_value();
+            }));
+    }
+
+    void JsonFileIO::insert_object_async(
+        Result<std::future<bool>>& result,
+        const JsonPath& path,
+        const std::unordered_map<std::string, std::any>& value
+    )
+    {
+        result.set_to_good_status_with_value(std::async(std::launch::async,
+            [this, path, value]()
+            {
+                Result<bool> result;
+                insert_object(result, path, value);
+                return result.get_value();
+            }));
+    }
+
+    void JsonFileIO::update_bool_async(
+        Result<std::future<bool>>& result,
+        const JsonPath& path,
+        const bool& value
+    )
+    {
+        result.set_to_good_status_with_value(std::async(std::launch::async,
+            [this, path, value]()
+            {
+                Result<bool> result;
+                update_bool(result, path, value);
+                return result.get_value();
+            }));
+    }
+
+    void JsonFileIO::update_double_async(
+        Result<std::future<bool>>& result,
+        const JsonPath& path,
+        const double& value
+    )
+    {
+        result.set_to_good_status_with_value(std::async(std::launch::async,
+            [this, path, value]()
+            {
+                Result<bool> result;
+                update_double(result, path, value);
+                return result.get_value();
+            }));
+    }
+
+    void JsonFileIO::update_string_async(
+        Result<std::future<bool>>& result,
+        const JsonPath& path,
+        const std::string& value
+    )
+    {
+        result.set_to_good_status_with_value(std::async(std::launch::async,
+            [this, path, value]()
+            {
+                Result<bool> result;
+                update_string(result, path, value);
+                return result.get_value();
+            }));
+    }
+
+    void JsonFileIO::update_null_async(
+        Result<std::future<bool>>& result,
+        const JsonPath& path,
+        const std::nullptr_t& value
+    )
+    {
+        result.set_to_good_status_with_value(std::async(std::launch::async,
+            [this, path, value]()
+            {
+                Result<bool> result;
+                update_null(result, path, value);
+                return result.get_value();
+            }));
+    }
+
+    void JsonFileIO::update_array_async(
+        Result<std::future<bool>>& result,
+        const JsonPath& path,
+        const std::vector<std::any>& value
+    )
+    {
+        result.set_to_good_status_with_value(std::async(std::launch::async,
+            [this, path, value]()
+            {
+                Result<bool> result;
+                update_array(result, path, value);
+                return result.get_value();
+            }));
+    }
+
+    void JsonFileIO::update_object_async(
+        Result<std::future<bool>>& result,
+        const JsonPath& path,
+        const std::unordered_map<std::string, std::any>& value
+    )
+    {
+        result.set_to_good_status_with_value(std::async(std::launch::async,
+            [this, path, value]()
+            {
+                Result<bool> result;
+                update_object(result, path, value);
+                return result.get_value();
+            }));
+    }
+
     void JsonFileIO::setup(
         Result<void>& result,
         const std::string& file_path

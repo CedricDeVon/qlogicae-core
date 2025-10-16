@@ -155,25 +155,6 @@ namespace QLogicaeCore
             const std::unordered_map<std::string, std::any>&
         );
 
-
-
-        void setup(
-            Result<void>& result,
-            const std::string& file_path
-        );
-
-        void setup(
-            Result<void>& result,
-            const std::string& file_path,
-            const bool& is_formatting_allowed
-        );
-
-        void setup(
-            Result<void>& result,
-            const std::string& name,
-            const std::string& file_path
-        );
-
         std::future<std::string> read_async();
         
         std::future<bool> write_async(
@@ -263,6 +244,261 @@ namespace QLogicaeCore
         std::future<bool> update_object_async(
             const JsonPath&,
             const std::unordered_map<std::string, std::any>&
+        );
+
+
+
+        void read(
+            Result<std::string>& result
+        );
+
+        void write(
+            Result<bool>& result,
+            const std::string& content
+        );
+
+        void get_is_formatting_allowed(
+            Result<bool>& result
+        );
+
+        void is_key_path_valid(
+            Result<bool>& result,
+            const JsonPath& path
+        );
+
+        void set_is_formatting_allowed(
+            Result<bool>& result,
+            const bool& value
+        );
+
+        void get_bool(
+            Result<bool>& result,
+            const JsonPath& path
+        );
+
+        void get_double(
+            Result<double>& result,
+            const JsonPath& path
+        );
+
+        void get_string(
+            Result<std::string>& result,
+            const JsonPath& path
+        );
+
+        void get_null(
+            Result<std::nullptr_t>& result,
+            const JsonPath& path
+        );
+
+        void get_array(
+            Result<std::vector<std::any>>& result,
+            const JsonPath& path
+        );
+
+        void get_object(
+            Result<std::unordered_map<std::string, std::any>>& result,
+            const JsonPath& path
+        );
+
+        void insert_bool(
+            Result<bool>& result,
+            const JsonPath& path,
+            const bool& value
+        );
+
+        void insert_double(
+            Result<bool>& result,
+            const JsonPath& path,
+            const double&
+        );
+
+        void insert_string(
+            Result<bool>& result,
+            const JsonPath& path,
+            const std::string&
+        );
+
+        void insert_null(
+            Result<bool>& result,
+            const JsonPath& path,
+            const std::nullptr_t&
+        );
+
+        void insert_array(
+            Result<bool>& result,
+            const JsonPath& path,
+            const std::vector<std::any>&
+        );
+
+        void insert_object(
+            Result<bool>& result,
+            const JsonPath& path,
+            const std::unordered_map<std::string, std::any>&
+        );
+
+        void update_bool(
+            Result<bool>& result,
+            const JsonPath& path,
+            const bool& value
+        );
+
+        void update_double(
+            Result<bool>& result,
+            const JsonPath& path,
+            const double&
+        );
+
+        void update_string(
+            Result<bool>& result,
+            const JsonPath& path,
+            const std::string&
+        );
+
+        void update_null(
+            Result<bool>& result,
+            const JsonPath& path,
+            const std::nullptr_t&
+        );
+
+        void update_array(
+            Result<bool>& result,
+            const JsonPath& path,
+            const std::vector<std::any>&
+        );
+
+        void update_object(
+            Result<bool>& result,
+            const JsonPath& path,
+            const std::unordered_map<std::string, std::any>&
+        );
+
+        void read_async(
+            Result<std::future<std::string>>& result
+        );
+
+        void write_async(
+            Result<std::future<bool>>& result,
+            const std::string&
+        );
+
+        void get_bool_async(
+            Result<std::future<bool>>& result,
+            const JsonPath& path
+        );
+
+        void get_double_async(
+            Result<std::future<double>>& result,
+            const JsonPath& path
+        );
+
+        void get_string_async(
+            Result<std::future<std::string>>& result,
+            const JsonPath& path
+        );
+
+        void get_null_async(
+            Result<std::future<std::nullptr_t>>& result,
+            const JsonPath& path
+        );
+
+         void get_array_async(
+            Result<std::future<std::vector<std::any>>>& result,
+            const JsonPath& path
+        );
+
+        void get_object_async(
+            Result<std::future<std::unordered_map<std::string, std::any>>>& result,
+            const JsonPath& path
+        );
+
+        void insert_bool_async(
+            Result<std::future<bool>>& result,
+            const JsonPath& path,
+            const bool& value
+        );
+
+        void insert_double_async(
+            Result<std::future<bool>>& result,
+            const JsonPath& path,
+            const double&
+        );
+
+        void insert_string_async(
+            Result<std::future<bool>>& result,
+            const JsonPath& path,
+            const std::string&
+        );
+
+        void insert_null_async(
+            Result<std::future<bool>>& result,
+            const JsonPath& path,
+            const std::nullptr_t&
+        );
+
+        void insert_array_async(
+            Result<std::future<bool>>& result,
+            const JsonPath& path,
+            const std::vector<std::any>&
+        );
+
+        void insert_object_async(
+            Result<std::future<bool>>& result,
+            const JsonPath& path,
+            const std::unordered_map<std::string, std::any>&
+        );
+
+        void update_bool_async(
+            Result<std::future<bool>>& result,
+            const JsonPath& path,
+            const bool&
+        );
+
+        void update_double_async(
+            Result<std::future<bool>>& result,
+            const JsonPath& path,
+            const double&
+        );
+
+        void update_string_async(
+            Result<std::future<bool>>& result,
+            const JsonPath& path,
+            const std::string&
+        );
+
+        void update_null_async(
+            Result<std::future<bool>>& result,
+            const JsonPath& path,
+            const std::nullptr_t&
+        );
+
+        void update_array_async(
+            Result<std::future<bool>>& result,
+            const JsonPath& path,
+            const std::vector<std::any>&
+        );
+
+        void update_object_async(
+            Result<std::future<bool>>& result,
+            const JsonPath& path,
+            const std::unordered_map<std::string, std::any>&
+        );
+
+        void setup(
+            Result<void>& result,
+            const std::string& file_path
+        );
+
+        void setup(
+            Result<void>& result,
+            const std::string& file_path,
+            const bool& is_formatting_allowed
+        );
+
+        void setup(
+            Result<void>& result,
+            const std::string& name,
+            const std::string& file_path
         );
 
     protected:
