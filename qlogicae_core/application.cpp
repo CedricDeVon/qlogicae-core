@@ -104,7 +104,7 @@ namespace QLogicaeCore
         );
         
 
-        _hkcu.get_value_via_utf8(
+        WindowsRegistry::hkcu().get_value_via_utf8(
             result,
             result.get_value(),
             key
@@ -119,7 +119,7 @@ namespace QLogicaeCore
         _get_full_windows_registry_sub_path(
             result
         );
-        _hklm.get_value_via_utf8(
+        WindowsRegistry::hklm().get_value_via_utf8(
             result,
             result.get_value(),
             key
@@ -153,11 +153,9 @@ namespace QLogicaeCore
         );
     }
 
-    Application::Application() :
-        _hkcu(WindowsRegistry::hkcu()),
-        _hklm(WindowsRegistry::hklm())
+    Application::Application()        
     {
-
+        
     }
 
     void Application::_get_full_windows_registry_sub_path(
@@ -257,7 +255,10 @@ namespace QLogicaeCore
         Result<void>& result
     )
     {
-        _hkcu.setup(result);
-        _hklm.setup(result);
+        _hkcu = &WindowsRegistry::hkcu();
+        _hkcu->setup(result);
+
+        _hklm = &WindowsRegistry::hklm();
+        _hklm->setup(result);
     }
 }

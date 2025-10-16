@@ -109,9 +109,9 @@ namespace QLogicaeCore
 
         JsonFileIO _environment_file;
              
-        WindowsRegistry& _hkcu;
+        WindowsRegistry* _hkcu;
 
-        WindowsRegistry& _hklm;
+        WindowsRegistry* _hklm;
 
         void _get_full_windows_registry_sub_path(
             Result<std::string>& result
@@ -131,5 +131,5 @@ namespace QLogicaeCore
     };    
 
     inline static Application& QLOGICAE =
-        Application::get_instance();
+        Application::get_instance();    
 }
