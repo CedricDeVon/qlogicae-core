@@ -58,7 +58,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string("Exception at Transformer::color_type(): ") + exception.what());
+            throw std::runtime_error(
+                std::string("Exception at Transformer::color_type(): ") +
+                exception.what()
+            );
         }
     }
 
@@ -85,7 +88,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string("Exception at Transformer::to_log_format(): ") + exception.what());
+            throw std::runtime_error(
+                std::string("Exception at Transformer::to_log_format(): ") +
+                exception.what()
+            );
         }
     }
 
@@ -105,7 +111,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string("Exception at Transformer::to_log_level_color_format(): ") + exception.what());
+            throw std::runtime_error(
+                std::string("Exception at Transformer::to_log_level_color_format(): ") +
+                exception.what()
+            );
         }
     }
 
@@ -123,7 +132,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string("Exception at Transformer::to_none_format(): ") + exception.what());
+            throw std::runtime_error(
+                std::string("Exception at Transformer::to_none_format(): ") +
+                exception.what()
+            );
         }
     }
 
@@ -141,7 +153,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string("Exception at Transformer::to_na_format(): ") + exception.what());
+            throw std::runtime_error(
+                std::string("Exception at Transformer::to_na_format(): ") +
+                exception.what()
+            );
         }
     }
 
@@ -157,7 +172,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string("Exception at Transformer::split(): ") + exception.what());
+            throw std::runtime_error
+            (std::string("Exception at Transformer::split(): ") +
+                exception.what()
+            );
         }
     }
 
@@ -169,39 +187,39 @@ namespace QLogicaeCore
         {
             case LogLevel::ALL:
             {
-                result.set_to_success("");
+                result.set_to_good_status_with_value("");
             }
             case LogLevel::INFO:
             {
-                result.set_to_success("");
+                result.set_to_good_status_with_value("");
             }
             case LogLevel::DEBUG:
             {
-                result.set_to_success("\033[94m");
+                result.set_to_good_status_with_value("\033[94m");
             }
             case LogLevel::WARNING:
             {
-                result.set_to_success("\033[93m");
+                result.set_to_good_status_with_value("\033[93m");
             }
             case LogLevel::EXCEPTION:
             {
-                result.set_to_success("\033[91m");
+                result.set_to_good_status_with_value("\033[91m");
             }
             case LogLevel::CRITICAL:
             {
-                result.set_to_success("\033[95m");
+                result.set_to_good_status_with_value("\033[95m");
             }
             case LogLevel::SUCCESS:
             {
-                result.set_to_success("\033[92m");
+                result.set_to_good_status_with_value("\033[92m");
             }
             case LogLevel::HIGHLIGHTED_INFO:
             {
-                result.set_to_success("\033[94m");
+                result.set_to_good_status_with_value("\033[94m");
             }
             default:
             {
-                result.set_to_success("");
+                result.set_to_good_status_with_value("");
             }
         }
     }
@@ -224,7 +242,7 @@ namespace QLogicaeCore
             text +
             "\n";
 
-        result.set_to_success(content);
+        result.set_to_good_status_with_value(content);
     }
 
     void Transformer::to_log_level_color_format(
@@ -237,7 +255,7 @@ namespace QLogicaeCore
         content.reserve(output_size);
         content = text;
 
-        result.set_to_success(content);
+        result.set_to_good_status_with_value(content);
     }
 
     void Transformer::to_none_format(
@@ -246,10 +264,12 @@ namespace QLogicaeCore
     {
         if (text.empty())
         {
-            result.set_to_success(UTILITIES.STRING_NONE_1);
+            result.set_to_good_status_with_value(
+                UTILITIES.STRING_NONE_1
+            );
         }
 
-        result.set_to_success(text);
+        result.set_to_good_status_with_value(text);
     }
 
     void Transformer::to_na_format(
@@ -258,10 +278,12 @@ namespace QLogicaeCore
     {
         if (text.empty())
         {
-            result.set_to_success(UTILITIES.STRING_NONE_2);
+            result.set_to_good_status_with_value(
+                UTILITIES.STRING_NONE_2
+            );
         }
 
-        result.set_to_success(text);
+        result.set_to_good_status_with_value(text);
     }
 
     void Transformer::split(
@@ -271,18 +293,13 @@ namespace QLogicaeCore
     {
         auto content = absl::StrSplit(text, delimeter);
 
-        result.set_to_success(
+        result.set_to_good_status_with_value(
             std::vector<std::string>(content.begin(), content.end())
         );
     }
 
-    Result<void> Transformer::setup()
-    {
-
-    }
-
     void Transformer::setup(Result<void>& result)
     {
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 }

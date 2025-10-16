@@ -4,7 +4,8 @@
 
 namespace QLogicaeCore
 {
-    Interval::Interval(const std::function<bool(size_t)>& callback,
+    Interval::Interval(
+        const std::function<bool(size_t)>& callback,
         std::chrono::milliseconds interval,
         std::optional<size_t> max_count,
         bool execute_now) :
@@ -43,7 +44,11 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Interval::start(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at Interval::start(): " +
+                exception.what()
+            );
         }
     }
 
@@ -105,7 +110,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Interval::run(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at Interval::run(): " +
+                exception.what()
+            )
+                ;
         }
     }
 
@@ -117,7 +127,11 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Interval::pause(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at Interval::pause(): " +
+                exception.what()
+            );
         }
     }
 
@@ -133,7 +147,11 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Interval::resume(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at Interval::resume(): " +
+                exception.what()
+            );
         }
     }
 
@@ -147,7 +165,11 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Interval::stop(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at Interval::stop(): " +
+                exception.what()
+            );
         }
     }
 
@@ -160,7 +182,11 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Interval::cancel(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at Interval::cancel(): " +
+                exception.what()
+            );
         }
     }
 
@@ -177,7 +203,11 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Interval::restart(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at Interval::restart(): " +
+                exception.what()
+            );
         }
     }
 
@@ -189,7 +219,11 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Interval::is_running(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at Interval::is_running(): " +
+                exception.what()
+            );
         }
     }
 
@@ -201,7 +235,11 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Interval::is_paused(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at Interval::is_paused(): " +
+                exception.what()
+            );
         }
     }
 
@@ -213,7 +251,11 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Interval::is_cancelled(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at Interval::is_cancelled(): " +
+                exception.what()
+            );
         }
     }
 
@@ -227,7 +269,11 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Interval::set_interval(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at Interval::set_interval(): " +
+                exception.what()
+            );
         }
     }
 
@@ -241,7 +287,11 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Interval::get_interval(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at Interval::get_interval(): " +
+                exception.what()
+            );
         }
     }
 
@@ -255,7 +305,11 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Interval::set_callback(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at Interval::set_callback(): " +
+                exception.what()
+            );
         }
     }
 
@@ -267,7 +321,11 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Interval::get_execution_count(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at Interval::get_execution_count(): " +
+                exception.what())
+                ;
         }
     }
 
@@ -284,15 +342,16 @@ namespace QLogicaeCore
         _max_count = max_count;
         _execute_now = execute_now;
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
-    void Interval::start(Result<void>& result)
+    void Interval::start(
+        Result<void>& result
+    )
     {
         if (_thread.joinable())
-        {
-            result.set_to_failure();
-            return;
+        {            
+            return result.set_to_bad_status_without_value();
         }
 
         _cancelled.store(false);
@@ -302,26 +361,32 @@ namespace QLogicaeCore
 
         _thread = std::thread(&Interval::run, this);
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
-    void Interval::stop(Result<void>& result)
+    void Interval::stop(
+        Result<void>& result
+    )
     {
         _running.store(false);
         _paused.store(false);
         _cv.notify_all();
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
-    void Interval::pause(Result<void>& result)
+    void Interval::pause(
+        Result<void>& result
+    )
     {
         _paused.store(true);
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
-    void Interval::resume(Result<void>& result)
+    void Interval::resume(
+        Result<void>& result
+    )
     {
         if (_paused.load())
         {
@@ -329,18 +394,22 @@ namespace QLogicaeCore
             _cv.notify_all();
         }
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
-    void Interval::cancel(Result<void>& result)
+    void Interval::cancel(
+        Result<void>& result
+    )
     {
         _cancelled.store(true);
         _cv.notify_all();
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
-    void Interval::restart(Result<void>& result)
+    void Interval::restart(
+        Result<void>& result
+    )
     {
         cancel();
         if (_thread.joinable())
@@ -349,51 +418,75 @@ namespace QLogicaeCore
         }
         start();
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
-    void Interval::is_paused(Result<bool>& result) const
+    void Interval::is_paused(
+        Result<bool>& result
+    ) const
     {
-        result.set_to_success(_paused.load());
+        result.set_to_good_status_with_value(
+            _paused.load()
+        );
     }
 
-    void Interval::is_running(Result<bool>& result) const
+    void Interval::is_running(
+        Result<bool>& result
+    ) const
     {
-        result.set_to_success(_running.load());
+        result.set_to_good_status_with_value(
+            _running.load()
+        );
     }
 
-    void Interval::is_cancelled(Result<bool>& result) const
+    void Interval::is_cancelled(
+        Result<bool>& result
+    ) const
     {
-        result.set_to_success(_cancelled.load());
+        result.set_to_good_status_with_value(
+            _cancelled.load()
+        );
     }
 
-    void Interval::get_execution_count(Result<size_t>& result) const
+    void Interval::get_execution_count(
+        Result<size_t>& result
+    ) const
     {
-        result.set_to_success(_count.load());
+        result.set_to_good_status_with_value(
+            _count.load()
+        );
     }
 
-    void Interval::get_interval(Result<std::chrono::milliseconds>& result) const
+    void Interval::get_interval(
+        Result<std::chrono::milliseconds>& result
+    ) const
     {
         std::lock_guard lock(_mutex);
 
-        result.set_to_success(_interval);        
+        result.set_to_good_status_with_value(_interval);        
     }
 
-    void Interval::set_interval(Result<void>& result, std::chrono::milliseconds interval)
+    void Interval::set_interval(
+        Result<void>& result,
+        std::chrono::milliseconds interval
+    )
     {
         std::lock_guard lock(_mutex);
 
         _interval = interval;
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
-    void Interval::set_callback(Result<void>& result, std::function<bool(size_t)> callback)
+    void Interval::set_callback(
+        Result<void>& result,
+        std::function<bool(size_t)> callback
+    )
     {
         std::lock_guard lock(_mutex);
 
         _callback = std::move(callback);
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 }

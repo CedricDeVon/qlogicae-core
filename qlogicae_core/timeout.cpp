@@ -67,7 +67,7 @@ namespace QLogicaeCore
 
         _start_thread();
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
     void Timeout::cancel()
@@ -86,7 +86,11 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Timeout::cancel(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at Timeout::cancel(): " +
+                exception.what()
+            );
         }
     }
 
@@ -103,7 +107,11 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Timeout::restart(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at Timeout::restart(): " +
+                exception.what()
+            );
         }
     }
 
@@ -115,12 +123,17 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Timeout::is_cancelled(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at Timeout::is_cancelled(): " +
+                exception.what()
+            );
         }
     }
 
     void Timeout::cancel(
-        Result<void>& result)
+        Result<void>& result
+    )
     {
         if (_thread.joinable())
         {
@@ -132,11 +145,12 @@ namespace QLogicaeCore
         _stop_flag.store(true);
         _is_cancelled.store(true);
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
     void Timeout::restart(
-        Result<void>& result)
+        Result<void>& result
+    )
     {
         cancel();
 
@@ -145,13 +159,14 @@ namespace QLogicaeCore
 
         _start_thread();
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
     void Timeout::is_cancelled(
-        Result<bool>& result) const
+        Result<bool>& result
+    ) const
     {
-        result.set_to_success(
+        result.set_to_good_status_with_value(
             _is_cancelled.load()
         );
     }

@@ -32,12 +32,15 @@ namespace QLogicaeCore
             case TemperatureUnitType::CELSIUS:
                 value_in_celsius = value;
                 break;
+
             case TemperatureUnitType::FAHRENHEIT:
                 value_in_celsius = (value - 32.0) * 5.0 / 9.0;
                 break;
+
             case TemperatureUnitType::KELVIN:
                 value_in_celsius = value - 273.15;
                 break;
+
             default:
                 value_in_celsius = value;
                 break;
@@ -45,15 +48,26 @@ namespace QLogicaeCore
 
             switch (to_unit)
             {
-                case TemperatureUnitType::CELSIUS: return value_in_celsius;
-                case TemperatureUnitType::FAHRENHEIT: return (value_in_celsius * 9.0 / 5.0) + 32.0;
-                case TemperatureUnitType::KELVIN: return value_in_celsius + 273.15;
-                default: return value;
+                case TemperatureUnitType::CELSIUS:
+                    return value_in_celsius;
+                
+                case TemperatureUnitType::FAHRENHEIT:
+                    return (value_in_celsius * 9.0 / 5.0) + 32.0;
+
+                case TemperatureUnitType::KELVIN:
+                    return value_in_celsius + 273.15;
+
+                default:
+                    return value;
             }
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Temperature::convert(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at Temperature::convert(): " +
+                exception.what()
+            );
         }
     }
 
@@ -61,25 +75,31 @@ namespace QLogicaeCore
         Result<void>& result
     )
     {
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
-    void Temperature::get_instance(Result<Temperature*>& result)
+    void Temperature::get_instance(
+        Result<Temperature*>& result
+    )
     {
         static Temperature instance;
 
-        result.set_to_success(&instance);
+        result.set_to_good_status_with_value(
+            &instance
+        );
     }
 
-    void Temperature::convert(Result<double>& result,
+    void Temperature::convert(
+        Result<double>& result,
         const double& value,
         const TemperatureUnitType& from_unit,
-        const TemperatureUnitType& to_unit)
+        const TemperatureUnitType& to_unit
+    )
     {
         if (from_unit == TemperatureUnitType::NONE ||
             to_unit == TemperatureUnitType::NONE)
         {
-            result.set_to_success(value);
+            result.set_to_good_status_with_value(value);
 
             return;
         }
@@ -89,32 +109,44 @@ namespace QLogicaeCore
         switch (from_unit)
         {
         case TemperatureUnitType::CELSIUS:
-            value_in_celsius = value;
+            value_in_celsius =
+                value;
             break;
         case TemperatureUnitType::FAHRENHEIT:
-            value_in_celsius = (value - 32.0) * 5.0 / 9.0;
+            value_in_celsius =
+                (value - 32.0) * 5.0 / 9.0;
             break;
         case TemperatureUnitType::KELVIN:
-            value_in_celsius = value - 273.15;
+            value_in_celsius =
+                value - 273.15;
             break;
         default:
-            value_in_celsius = value;
+            value_in_celsius =
+                value;
             break;
         }
 
         switch (to_unit)
         {
         case TemperatureUnitType::CELSIUS:
-            result.set_to_success(value_in_celsius);
+            result.set_to_good_status_with_value(
+                value_in_celsius
+            );
             break;
         case TemperatureUnitType::FAHRENHEIT:
-            result.set_to_success((value_in_celsius * 9.0 / 5.0) + 32.0);
+            result.set_to_good_status_with_value(
+                (value_in_celsius * 9.0 / 5.0) + 32.0
+            );
             break;
         case TemperatureUnitType::KELVIN:
-            result.set_to_success(value_in_celsius + 273.15);
+            result.set_to_good_status_with_value(
+                value_in_celsius + 273.15
+            );
             break;
         default:
-            result.set_to_success(value);
+            result.set_to_good_status_with_value(
+                value
+            );
             break;
         }
     }

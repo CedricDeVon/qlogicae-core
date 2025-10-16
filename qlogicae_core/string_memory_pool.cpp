@@ -16,7 +16,12 @@ namespace QLogicaeCore
         std::size_t character_pool_block_size,
         std::pmr::memory_resource* resource
     )
-        : _data(0, CaseAwareHash(sensitivity), CaseAwareEqual(sensitivity), Allocator(resource)),
+        : _data(
+            0,
+            CaseAwareHash(sensitivity),
+            CaseAwareEqual(sensitivity),
+            Allocator(resource)
+        ),
         _allocator(resource),
         _character_pool(character_pool_block_size),
         _sensitivity(sensitivity)
@@ -33,11 +38,15 @@ namespace QLogicaeCore
     }
 
     template<typename Allocator>
-    bool StringMemoryPool<Allocator>::is_found(const std::string_view& str) const
+    bool StringMemoryPool<Allocator>::is_found(
+        const std::string_view& str
+    ) const
     {
         std::shared_lock lock(_mutex);
 
-        return _data.find(str) != _data.end() || _data.find(std::string(str)) != _data.end();
+        return _data.find(str) !=
+            _data.end() ||
+            _data.find(std::string(str)) != _data.end();
     }
 
     template<typename Allocator>
@@ -53,12 +62,18 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at StringMemoryPool<Allocator>::clear(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at StringMemoryPool<Allocator>::clear(): " +
+                exception.what()
+            );
         }
     }
 
     template<typename Allocator>
-    const std::string* StringMemoryPool<Allocator>::get_internal(const std::string_view& string)
+    const std::string* StringMemoryPool<Allocator>::get_internal(
+        const std::string_view& string
+    )
     {
         try
         {
@@ -93,7 +108,11 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at StringMemoryPool<Allocator>::get_internal(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at StringMemoryPool<Allocator>::get_internal(): " +
+                exception.what()
+            );
         }
     }
 
@@ -111,41 +130,74 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at StringMemoryPool<Allocator>::get_diagnostics_snapshot()(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at StringMemoryPool<Allocator>::get_diagnostics_snapshot()(): " +
+                exception.what()
+            );
         }
     }
 
     template<typename Allocator>
     std::future<std::size_t> StringMemoryPool<Allocator>::get_size_async() const
     {
-        return std::async(std::launch::async, [this]() { return get_size(); });
+        return std::async(
+            std::launch::async,
+            [this]()
+            {
+                return get_size();
+            }
+        );
     }
 
     template<typename Allocator>
     std::future<StringMemoryPoolSnapshot> StringMemoryPool<Allocator>::get_diagnostics_async() const
     {
-        return std::async(std::launch::async, [this]()
+        return std::async
+        (std::launch::async, [this]()
             {
                 return this->get_diagnostics_snapshot();
             });
     }
 
     template<typename Allocator>
-    std::future<bool> StringMemoryPool<Allocator>::is_found_async(const std::string_view& string) const
+    std::future<bool> StringMemoryPool<Allocator>::is_found_async(
+        const std::string_view& string
+    ) const
     {
-        return std::async(std::launch::async, [this, string]() { return is_found(string); });
+        return std::async(
+            std::launch::async,
+            [this, string]()
+            {
+                return is_found(string);
+            }
+        );
     }
 
     template<typename Allocator>
     std::future<void> StringMemoryPool<Allocator>::clear_async()
     {
-        return std::async(std::launch::async, [this]() { clear(); });
+        return std::async(
+            std::launch::async,
+            [this]()
+            {
+                clear();
+            }
+        );
     }
 
     template<typename Allocator>
-    std::future<const std::string*> StringMemoryPool<Allocator>::get_internal_async(const std::string_view& string)
+    std::future<const std::string*> StringMemoryPool<Allocator>::get_internal_async(
+        const std::string_view& string
+    )
     {
-        return std::async(std::launch::async, [this, string]() { return get_internal(string); });
+        return std::async
+        (std::launch::async,
+            [this, string]()
+            {
+                return get_internal(string);
+            }
+        );
     }
 
     template class StringMemoryPool<std::pmr::polymorphic_allocator<std::string>>;

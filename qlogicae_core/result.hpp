@@ -1,374 +1,502 @@
 #pragma once
 
+#include "result_status.hpp"
+
 #include <string>
 
 namespace QLogicaeCore
-{   
+{
     template <
-        typename DataType = std::string
+        typename ValueType = std::string
     >
     struct Result
     {
     public:
-        bool get_is_successful();
+        ValueType& get_value();
 
-        void get_is_successful(
-            bool& value
+        void get_value(
+            ValueType& value
+        );
+
+        void set_value(
+            const ValueType& value
+        );
+
+        void set_value(
+            ValueType&& value
+        );
+
+        ResultStatus get_status();
+
+        void get_status(
+            ResultStatus& value
         );
         
+        void set_status(
+            const ResultStatus& value
+        );
+
+        void set_status_to_good();
+
+        void set_status_to_bad();
+
+        void set_status_to_info();
+
+        void set_status_to_debug();
+
+        void set_status_to_warning();
+
+        void set_status_to_exception();
+
+        void set_status_to_error();
+
         std::string get_message();
 
         void get_message(
             std::string& value
         );
 
-        DataType& get_data();
-
-        void get_data(
-            DataType& value
+        void set_message(
+            const std::string& value
         );
 
-        void set_is_successful(
-            const bool& value
+        void set_to_status_without_value(
+            const ResultStatus& status
         );
 
-        void set_is_successful_to_true();
+        void set_to_status_without_value(
+            const ResultStatus& status,
+            const std::string& message
+        );
 
-        void set_is_successful_to_false();
+        void set_to_status_with_value(
+            const ResultStatus& status,
+            const ValueType& value
+        );
 
-        void set_data(
-            const DataType& value
+        void set_to_status_with_value(
+            const ResultStatus& status,
+            ValueType&& value
+        );
+
+        void set_to_status_with_value(
+            const ResultStatus& status,
+            const ValueType& value,
+            const std::string& message
+        );
+
+        void set_to_status_with_value(
+            const ResultStatus& status,
+            ValueType&& value,
+            const std::string& message
+        );
+
+        void set_to_good_status_without_value();
+
+        void set_to_good_status_without_value(
+            const std::string& message
+        );
+
+        void set_to_good_status_with_value(
+            const ValueType& value
         );
         
-        void set_data(
-            DataType&& value
+        void set_to_good_status_with_value(
+            ValueType&& value
+        );
+
+        void set_to_good_status_with_value(
+            const ValueType& value,
+            const std::string& message
+        );
+
+        void set_to_good_status_with_value(
+            ValueType&& value,
+            const std::string& message
+        );
+
+        void set_to_bad_status_without_value();
+
+        void set_to_bad_status_without_value(
+            const std::string& message
+        );
+
+        void set_to_bad_status_with_value(
+            const ValueType& value
+        );
+
+        void set_to_bad_status_with_value(
+            const ValueType& value,
+            const std::string& message
+        );
+
+        void set_to_bad_status_with_value(
+            ValueType&& value
+        );
+        
+        void set_to_bad_status_with_value(
+            ValueType&& value,
+            const std::string& message
+        );
+
+    protected:
+        ValueType _value;
+
+        ResultStatus _status;
+
+        std::string _message = "";
+    };
+
+    template <>
+    struct Result<void>
+    {
+    public:
+        ResultStatus get_status();
+
+        void get_status(
+            ResultStatus& value
+        );
+
+        void set_status(
+            const ResultStatus& value
+        );
+
+        void set_status_to_good();
+
+        void set_status_to_bad();
+
+        void set_status_to_info();
+
+        void set_status_to_debug();
+
+        void set_status_to_warning();
+
+        void set_status_to_exception();
+
+        void set_status_to_error();
+
+        std::string get_message();
+
+        void get_message(
+            std::string& value
         );
 
         void set_message(
             const std::string& value
         );
 
-        void set_to_success();
-
-        void set_to_success(
-            const DataType& value
+        void set_to_status_without_value(
+            const ResultStatus& status
         );
 
-        void set_to_success(
-            DataType&& value
-        );
-
-        void set_to_failure();
-
-        void set_to_failure(
-            const DataType& value
-        );
-
-        void set_to_failure(
-            DataType&& value
-        );
-
-        void set_to_success_with_message(
+        void set_to_status_without_value(
+            const ResultStatus& status,
             const std::string& message
         );
 
-        void set_to_success_with_message(
-            const DataType& value,
+        void set_to_good_status_without_value();
+
+        void set_to_good_status_without_value(
             const std::string& message
         );
 
-        void set_to_success_with_message(
-            DataType&& value,
-            const std::string& message
-        );
+        void set_to_bad_status_without_value();
 
-        void set_to_failure_with_message(
-            const std::string& message
-        );
-
-        void set_to_failure_with_message(
-            const DataType& value,
-            const std::string& message
-        );
-
-        void set_to_failure_with_message(
-            DataType&& value,
+        void set_to_bad_status_without_value(
             const std::string& message
         );
 
     protected:
-        DataType _data;
-
-        bool _is_successful = true;
+        ResultStatus _status;
 
         std::string _message = "";
     };
 
-    template <
-        typename DataType
-    >
-    bool Result<DataType>::get_is_successful()
+    template <typename ValueType>
+    ValueType& Result<ValueType>::get_value()
     {
-        return _is_successful;
+        return _value;
     }
-    
-    template <
-        typename DataType
-    >
-    void Result<DataType>::get_is_successful(
-        bool& value
+
+    template <typename ValueType>
+    void Result<ValueType>::get_value(
+        ValueType& value
     )
     {
-        value = _is_successful;
+        value = _value;
     }
 
-    template <
-        typename DataType
-    >
-    DataType& Result<DataType>::get_data()
-    {
-        return _data;
-    }
-
-    template <
-        typename DataType
-    >
-    void Result<DataType>::get_data(
-        DataType& value
+    template <typename ValueType>
+    void Result<ValueType>::set_value(
+        const ValueType& value
     )
     {
-        value = _data;
+        _value = value;
     }
 
-    template <
-        typename DataType
-    >
-    std::string Result<DataType>::get_message()
+    template <typename ValueType>
+    void Result<ValueType>::set_value(
+        ValueType&& value
+    )
+    {
+        _value = std::move(value);
+    }
+
+    template <typename ValueType>
+    ResultStatus Result<ValueType>::get_status()
+    {
+        return _status;
+    }
+
+    template <typename ValueType>
+    void Result<ValueType>::get_status(
+        ResultStatus& value
+    )
+    {
+        value = _status;
+    }
+
+    template <typename ValueType>
+    void Result<ValueType>::set_status(
+        const ResultStatus& value
+    )
+    {
+        _status = value;
+    }
+
+    template <typename ValueType>
+    void Result<ValueType>::set_status_to_good()
+    {
+        set_status(ResultStatus::GOOD);
+    }
+
+    template <typename ValueType>
+    void Result<ValueType>::set_status_to_bad()
+    {
+        set_status(ResultStatus::GOOD);
+    }
+
+    template <typename ValueType>
+    void Result<ValueType>::set_status_to_info()
+    {
+        set_status(ResultStatus::GOOD);
+    }
+
+    template <typename ValueType>
+    void Result<ValueType>::set_status_to_debug()
+    {
+        set_status(ResultStatus::GOOD);
+    }
+
+    template <typename ValueType>
+    void Result<ValueType>::set_status_to_warning()
+    {
+        set_status(ResultStatus::GOOD);
+    }
+
+    template <typename ValueType>
+    void Result<ValueType>::set_status_to_exception()
+    {
+        set_status(ResultStatus::GOOD);
+    }
+
+    template <typename ValueType>
+    void Result<ValueType>::set_status_to_error()
+    {
+        set_status(ResultStatus::ERROR_);
+    }
+
+    template <typename ValueType>
+    std::string Result<ValueType>::get_message()
     {
         return _message;
     }
 
-    template <
-        typename DataType
-    >
-    void Result<DataType>::get_message(
+    template <typename ValueType>
+    void Result<ValueType>::get_message(
         std::string& value
     )
     {
         value = _message;
     }
 
-    template <
-        typename DataType
-    >
-    void Result<DataType>::set_is_successful(
-        const bool& value
-    )
-    {
-        _is_successful = value;
-    }
-
-    template <
-        typename DataType
-    >
-    void Result<DataType>::set_is_successful_to_true()
-    {
-        _is_successful = true;
-    }
-
-    template <
-        typename DataType
-    >
-    void Result<DataType>::set_is_successful_to_false()
-    {
-        _is_successful = false;
-    }
-
-    template <
-        typename DataType
-    >
-    void Result<DataType>::set_data(
-        const DataType& value
-    )
-    {
-        _data = value;
-    }
-
-    template <
-        typename DataType
-    >
-    void Result<DataType>::set_message(
+    template <typename ValueType>
+    void Result<ValueType>::set_message(
         const std::string& value
     )
     {
         _message = value;
     }
 
-    template <
-        typename DataType
-    >
-    void Result<DataType>::set_to_success()
-    {
-        set_is_successful_to_true();
-    }
-
-    template <
-        typename DataType
-    >
-    void Result<DataType>::set_to_success(
-        const DataType& value
+    template <typename ValueType>
+    void Result<ValueType>::set_to_status_without_value(
+        const ResultStatus& status
     )
     {
-        set_is_successful_to_true();
-        set_data(value);
+        set_status(status);
     }
 
-    template <
-        typename DataType
-    >
-    void Result<DataType>::set_to_failure()
-    {
-        set_is_successful_to_false();
-    }
-
-    template <
-        typename DataType
-    >
-    void Result<DataType>::set_to_failure(
-        const DataType& value
-    )
-    {
-        set_is_successful_to_false();
-        set_data(value);
-    }
-
-    template <typename DataType>
-    void Result<DataType>::set_data(
-        DataType&& value
-    )
-    {
-        _data = std::move(value);
-    }
-
-    template <typename DataType>
-    void Result<DataType>::set_to_success(
-        DataType&& value
-    )
-    {
-        set_is_successful_to_true();
-        set_data(std::move(value));
-    }
-
-    template <typename DataType>
-    void Result<DataType>::set_to_failure(
-        DataType&& value
-    )
-    {
-        set_is_successful_to_false();
-        set_data(std::move(value));
-    }
-
-
-    template <typename DataType>
-    void Result<DataType>::set_to_success_with_message(
+    template <typename ValueType>
+    void Result<ValueType>::set_to_status_without_value(
+        const ResultStatus& status,
         const std::string& message
     )
     {
-        set_is_successful_to_true();
+        set_status(status);
         set_message(message);
     }
 
-    template <typename DataType>
-    void Result<DataType>::set_to_success_with_message(
-        const DataType& value,
+    template <typename ValueType>
+    void Result<ValueType>::set_to_status_with_value(
+        const ResultStatus& status,
+        const ValueType& value
+    )
+    {
+        set_status(status);
+        set_value(value);
+    }
+
+    template <typename ValueType>
+    void Result<ValueType>::set_to_status_with_value(
+        const ResultStatus& status,
+        ValueType&& value
+    )
+    {
+        set_status(status);
+        set_value(std::move(value));
+    }
+
+    template <typename ValueType>
+    void Result<ValueType>::set_to_status_with_value(
+        const ResultStatus& status,
+        const ValueType& value,
         const std::string& message
     )
     {
-        set_is_successful_to_true();
-        set_data(value);
+        set_status(status);
+        set_value(value);
         set_message(message);
     }
 
-    template <typename DataType>
-    void Result<DataType>::set_to_success_with_message(
-        DataType&& value,
+    template <typename ValueType>
+    void Result<ValueType>::set_to_status_with_value(
+        const ResultStatus& status,
+        ValueType&& value,
         const std::string& message
     )
     {
-        set_is_successful_to_true();
-        set_data(std::move(value));
+        set_status(status);
+        set_value(std::move(value));
         set_message(message);
     }
 
-    template <typename DataType>
-    void Result<DataType>::set_to_failure_with_message(
+    template <typename ValueType>
+    void Result<ValueType>::set_to_good_status_without_value()
+    {
+        set_status_to_good();
+    }
+
+    template <typename ValueType>
+    void Result<ValueType>::set_to_good_status_without_value(
         const std::string& message
     )
     {
-        set_is_successful_to_false();
+        set_status_to_good();
         set_message(message);
     }
 
-    template <typename DataType>
-    void Result<DataType>::set_to_failure_with_message(
-        const DataType& value,
-        const std::string& message
+    template <typename ValueType>
+    void Result<ValueType>::set_to_good_status_with_value(
+        const ValueType& value
     )
     {
-        set_is_successful_to_false();
-        set_data(value);
-        set_message(message);
-    }   
+        set_status_to_good();
+        set_value(value);
+    }
 
-    template <typename DataType>
-    void Result<DataType>::set_to_failure_with_message(
-        DataType&& value,
+    template <typename ValueType>
+    void Result<ValueType>::set_to_good_status_with_value(
+        ValueType&& value
+    )
+    {
+        set_status_to_good();
+        set_value(std::move(value));
+    }
+
+    template <typename ValueType>
+    void Result<ValueType>::set_to_good_status_with_value(
+        const ValueType& value,
         const std::string& message
     )
     {
-        set_is_successful_to_false();
-        set_data(std::move(value));
+        set_status_to_good();
+        set_value(value);
         set_message(message);
     }
 
-    template <>
-    struct Result<void>
+    template <typename ValueType>
+    void Result<ValueType>::set_to_good_status_with_value(
+        ValueType&& value,
+        const std::string& message
+    )
     {
-    public:
-        bool get_is_successful() const;
+        set_status_to_good();
+        set_value(std::move(value));
+        set_message(message);
+    }
 
-        void get_is_successful(
-            bool& value
-        ) const;
-        
-        void set_is_successful(
-            const bool& value
-        );
+    template <typename ValueType>
+    void Result<ValueType>::set_to_bad_status_without_value()
+    {
+        set_status_to_bad();
+    }
 
-        void set_message(
-            const std::string& value
-        );
+    template <typename ValueType>
+    void Result<ValueType>::set_to_bad_status_without_value(
+        const std::string& message
+    )
+    {
+        set_status_to_bad();
+        set_message(message);
+    }
 
-        void set_is_successful_to_true();
-        
-        void set_is_successful_to_false();
-        
-        void set_to_success();
+    template <typename ValueType>
+    void Result<ValueType>::set_to_bad_status_with_value(
+        const ValueType& value
+    )
+    {
+        set_status_to_bad();
+        set_value(value);
+    }
 
-        void set_to_failure();
+    template <typename ValueType>
+    void Result<ValueType>::set_to_bad_status_with_value(
+        ValueType&& value
+    )
+    {
+        set_status_to_bad();
+        set_value(std::move(value));
+    }
 
-        void set_to_success_with_message(
-            const std::string& message
-        );
+    template <typename ValueType>
+    void Result<ValueType>::set_to_bad_status_with_value(
+        const ValueType& value,
+        const std::string& message
+    )
+    {
+        set_status_to_bad();
+        set_value(value);
+        set_message(message);
+    }
 
-        void set_to_failure_with_message(
-            const std::string& message
-        );
-
-    private:
-        bool _is_successful = true;
-
-        std::string _message = "";
-    };
-
+    template <typename ValueType>
+    void Result<ValueType>::set_to_bad_status_with_value(
+        ValueType&& value,
+        const std::string& message
+    )
+    {
+        set_status_to_bad();
+        set_value(std::move(value));
+        set_message(message);
+    } 
 }

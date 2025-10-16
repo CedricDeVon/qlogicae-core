@@ -20,7 +20,11 @@ namespace QLogicaeCore
                 0, 0, 0, 0, 0, 0,
                 &administrators_group))
             {
-                CheckTokenMembership(nullptr, administrators_group, &is_admin);
+                CheckTokenMembership(
+                    nullptr,
+                    administrators_group,
+                    &is_admin
+                );
                 FreeSid(administrators_group);
             }
 
@@ -28,7 +32,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at SystemAccess::has_admin_access(): " + exception.what());
+            throw std::runtime_error(
+                std::string() + "Exception at SystemAccess::has_admin_access(): " +
+                exception.what()
+            );
         }
     }
 
@@ -37,26 +44,63 @@ namespace QLogicaeCore
         try
         {
             wchar_t buffer[MAX_PATH];
-            DWORD length = GetModuleFileNameW(nullptr, buffer, MAX_PATH);
-            if (length == 0 || length == MAX_PATH)
+            DWORD length = GetModuleFileNameW(
+                nullptr,
+                buffer,
+                MAX_PATH
+            );
+            if (length == 0 ||
+                length == MAX_PATH
+                )
             {
                 return {};
             }
-            std::filesystem::path dir = std::filesystem::path(buffer).parent_path();
-            const std::wstring& wstr = dir.wstring();
+
+            std::filesystem::path dir =
+                std::filesystem::path(buffer)
+                    .parent_path();
+            const std::wstring& wstr =
+                dir.wstring();
             if (wstr.empty())
             {
                 return {};
             }
-            int size_needed = WideCharToMultiByte(CP_UTF8, 0, wstr.data(), -1, nullptr, 0, nullptr, nullptr);
-            std::string result(size_needed - 1, 0);
-            WideCharToMultiByte(CP_UTF8, 0, wstr.data(), -1, result.data(), size_needed, nullptr, nullptr);
+
+            int size_needed =
+                WideCharToMultiByte(
+                    CP_UTF8,
+                    0,
+                    wstr.data(),
+                    -1,
+                    nullptr,
+                    0,
+                    nullptr,
+                    nullptr
+                );
+            std::string result(
+                size_needed - 1,
+                0
+            );
+            WideCharToMultiByte(
+                CP_UTF8,
+                0,
+                wstr.data(),
+                -1,
+                result.data(),
+                size_needed,
+                nullptr,
+                nullptr
+            );
 
             return result;
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at SystemAccess::get_executable_dir(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at SystemAccess::get_executable_dir(): " +
+                exception.what()
+            );
         }
     }
 
@@ -68,7 +112,11 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at SystemAccess::get_executed_folder(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at SystemAccess::get_executed_folder(): " +
+                exception.what()
+            );
         }
     }
 
@@ -80,7 +128,11 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at SystemAccess::get_executable_folder(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at SystemAccess::get_executable_folder(): " +
+                exception.what()
+            );
         }
     }
 
@@ -89,8 +141,16 @@ namespace QLogicaeCore
         try
         {
             wchar_t file_path[MAX_PATH];
-            if (::GetEnvironmentVariableW(L"VSAPPIDDIR", nullptr, 0) > 0 ||
-                GetModuleFileNameW(nullptr, file_path, MAX_PATH) == 0)
+            if (::GetEnvironmentVariableW(
+                    L"VSAPPIDDIR",
+                    nullptr,
+                    0
+                ) > 0 ||
+                GetModuleFileNameW(
+                    nullptr,
+                    file_path,
+                    MAX_PATH
+                ) == 0)
             {
                 ExitProcess(1);
                 return;
@@ -107,7 +167,11 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at SystemAccess::restart_with_admin_access(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at SystemAccess::restart_with_admin_access(): " +
+                exception.what()
+            );
         }
     }
 
@@ -117,17 +181,29 @@ namespace QLogicaeCore
         {
             wchar_t* path = nullptr;
             std::wstring result;
-            if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_RoamingAppData, 0, NULL, &path)))
+            if (SUCCEEDED(SHGetKnownFolderPath(
+                    FOLDERID_RoamingAppData,
+                    0,
+                    NULL,
+                    &path
+                )
+            ))
             {
                 result.assign(path);
                 CoTaskMemFree(path);
             }
 
-            return ENCODER.from_utf16_to_utf8(result);
+            return ENCODER.from_utf16_to_utf8(
+                result
+            );
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at SystemAccess::get_roaming_appdata_folder_path(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at SystemAccess::get_roaming_appdata_folder_path(): " +
+                exception.what()
+            );
         }
     }
 
@@ -137,17 +213,28 @@ namespace QLogicaeCore
         {
             wchar_t* path = nullptr;
             std::wstring result;
-            if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, NULL, &path)))
+            if (SUCCEEDED(SHGetKnownFolderPath(
+                FOLDERID_LocalAppData,
+                0,
+                NULL,
+                &path))
+            )
             {
                 result.assign(path);
                 CoTaskMemFree(path);
             }
 
-            return ENCODER.from_utf16_to_utf8(result);
+            return ENCODER.from_utf16_to_utf8(
+                result
+            );
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at SystemAccess::get_local_appdata_folder_path(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at SystemAccess::get_local_appdata_folder_path(): " +
+                exception.what()
+            );
         }
     }
 
@@ -157,7 +244,13 @@ namespace QLogicaeCore
         {
             wchar_t* path = nullptr;
             std::wstring result;
-            if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_ProgramData, 0, NULL, &path)))
+            if (SUCCEEDED(
+                SHGetKnownFolderPath(
+                    FOLDERID_ProgramData,
+                    0,
+                    NULL,
+                    &path)
+            ))
             {
                 result.assign(path);
                 CoTaskMemFree(path);
@@ -167,7 +260,11 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at SystemAccess::get_programdata_folder_path(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at SystemAccess::get_programdata_folder_path(): " +
+                exception.what()
+            );
         }
     }
 
@@ -182,14 +279,17 @@ namespace QLogicaeCore
         Result<void>& result
     )
     {
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
-    void SystemAccess::has_admin_access(Result<void>& result) const
+    void SystemAccess::has_admin_access(
+        Result<void>& result
+    ) const
     {
         BOOL is_admin = FALSE;
         PSID administrators_group = nullptr;
-        SID_IDENTIFIER_AUTHORITY nt_authority = SECURITY_NT_AUTHORITY;
+        SID_IDENTIFIER_AUTHORITY nt_authority =
+            SECURITY_NT_AUTHORITY;
 
         if (AllocateAndInitializeSid(
             &nt_authority,
@@ -197,62 +297,118 @@ namespace QLogicaeCore
             SECURITY_BUILTIN_DOMAIN_RID,
             DOMAIN_ALIAS_RID_ADMINS,
             0, 0, 0, 0, 0, 0,
-            &administrators_group))
+            &administrators_group)
+        )
         {
-            CheckTokenMembership(nullptr, administrators_group, &is_admin);
+            CheckTokenMembership(
+                nullptr,
+                administrators_group,
+                &is_admin
+            );
             FreeSid(administrators_group);
         }
 
         if (is_admin == TRUE)
-            result.set_to_success();
+        {
+            return result.set_to_good_status_without_value();
+        }
         else
-            result.set_to_failure();
+        {
+            return result.set_to_bad_status_without_value();
+        }
     }
 
-    void SystemAccess::get_executable_dir(Result<std::string>& result) const
+    void SystemAccess::get_executable_dir(
+        Result<std::string>& result
+    ) const
     {
         wchar_t buffer[MAX_PATH];
-        DWORD length = GetModuleFileNameW(nullptr, buffer, MAX_PATH);
+        DWORD length = GetModuleFileNameW(
+            nullptr,
+            buffer,
+            MAX_PATH
+        );
         if (length == 0 || length == MAX_PATH)
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value();
         }
 
-        std::filesystem::path dir = std::filesystem::path(buffer).parent_path();
-        const std::wstring& wstr = dir.wstring();
+        std::filesystem::path dir =
+            std::filesystem::path(buffer)
+                .parent_path();
+        const std::wstring& wstr =
+            dir.wstring();
         if (wstr.empty())
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value();
         }
 
-        int size_needed = WideCharToMultiByte(CP_UTF8, 0, wstr.data(), -1, nullptr, 0, nullptr, nullptr);
-        std::string converted(size_needed - 1, 0);
-        WideCharToMultiByte(CP_UTF8, 0, wstr.data(), -1, converted.data(), size_needed, nullptr, nullptr);
+        int size_needed = WideCharToMultiByte(
+            CP_UTF8,
+            0,
+            wstr.data(),
+            -1,
+            nullptr,
+            0,
+            nullptr,
+            nullptr
+        );
+        std::string converted(
+            size_needed - 1,
+            0
+        );
+        WideCharToMultiByte(
+            CP_UTF8,
+            0,
+            wstr.data(), 
+            -1,
+            converted.data(),
+            size_needed,
+            nullptr,
+            nullptr
+        );
 
-        result.set_to_success(converted);
+        result.set_to_good_status_with_value(
+            converted
+        );
     }
 
-    void SystemAccess::get_executable_folder(Result<std::string>& result) const
+    void SystemAccess::get_executable_folder(
+        Result<std::string>& result
+    ) const
     {
         get_executable_dir(result);
     }
 
-    void SystemAccess::get_executed_folder(Result<std::string>& result) const
+    void SystemAccess::get_executed_folder(
+        Result<std::string>& result
+    ) const
     {
-        result.set_to_success(std::filesystem::current_path().string());
+        result.set_to_good_status_with_value(
+            std::filesystem::current_path().string()
+        );
     }
 
-    void SystemAccess::restart_with_admin_access(Result<void>& result) const
+    void SystemAccess::restart_with_admin_access(
+        Result<void>& result
+    ) const
     {
         wchar_t file_path[MAX_PATH];
-        if (::GetEnvironmentVariableW(L"VSAPPIDDIR", nullptr, 0) > 0 ||
-            GetModuleFileNameW(nullptr, file_path, MAX_PATH) == 0)
+        if (::GetEnvironmentVariableW(
+                L"VSAPPIDDIR",
+                nullptr,
+                0
+            ) > 0 ||
+            GetModuleFileNameW(
+                nullptr,
+                file_path,
+                MAX_PATH
+            ) == 0)
         {
             ExitProcess(1);
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value(
+                "Not admin"
+            );
         }
 
         SHELLEXECUTEINFOW sei = { sizeof(sei) };
@@ -263,53 +419,77 @@ namespace QLogicaeCore
 
         ShellExecuteExW(&sei);
         ExitProcess(0);
-        result.set_to_success();
+
+        result.set_to_good_status_without_value();
     }
 
-    void SystemAccess::get_roaming_appdata_folder_path(Result<std::string>& result) const
+    void SystemAccess::get_roaming_appdata_folder_path(
+        Result<std::string>& result
+    ) const
     {
         wchar_t* path = nullptr;
         std::wstring wresult;
-        if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_RoamingAppData, 0, NULL, &path)))
+        if (SUCCEEDED(SHGetKnownFolderPath(
+            FOLDERID_RoamingAppData,
+            0,
+            NULL,
+            &path))
+        )
         {
             wresult.assign(path);
             CoTaskMemFree(path);
         }
 
-        result.set_to_success(ENCODER.from_utf16_to_utf8(wresult));
+        ENCODER.from_utf16_to_utf8(result, wresult);
     }
 
-    void SystemAccess::get_local_appdata_folder_path(Result<std::string>& result) const
+    void SystemAccess::get_local_appdata_folder_path(
+        Result<std::string>& result
+    ) const
     {
         wchar_t* path = nullptr;
         std::wstring wresult;
-        if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, NULL, &path)))
+        if (SUCCEEDED(SHGetKnownFolderPath(
+            FOLDERID_LocalAppData,
+            0,
+            NULL,
+            &path))
+        )
         {
             wresult.assign(path);
             CoTaskMemFree(path);
         }
 
-        result.set_to_success(ENCODER.from_utf16_to_utf8(wresult));
+        ENCODER.from_utf16_to_utf8(result, wresult);
     }
 
-    void SystemAccess::get_programdata_folder_path(Result<std::string>& result) const
+    void SystemAccess::get_programdata_folder_path(
+        Result<std::string>& result
+    ) const
     {
         wchar_t* path = nullptr;
         std::wstring wresult;
-        if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_ProgramData, 0, NULL, &path)))
+        if (SUCCEEDED(SHGetKnownFolderPath(
+            FOLDERID_ProgramData,
+            0,
+            NULL,
+            &path))
+        )
         {
             wresult.assign(path);
             CoTaskMemFree(path);
         }
 
-        result.set_to_success(ENCODER.from_utf16_to_utf8(wresult));
+        ENCODER.from_utf16_to_utf8(result, wresult);
     }
 
-    void SystemAccess::get_instance(Result<SystemAccess*>& results)
+    void SystemAccess::get_instance(
+        Result<SystemAccess*>& results
+    )
     {
         static SystemAccess instance;
 
-        results.set_to_success(&instance);
+        results.set_to_good_status_with_value(&instance);
     }
 }
 

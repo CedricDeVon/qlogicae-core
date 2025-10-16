@@ -21,7 +21,9 @@ namespace QLogicaeCore
         _raw_buffer.reset();
     }
 
-    TomlFileIO::TomlFileIO(const std::string& file_path)
+    TomlFileIO::TomlFileIO(
+        const std::string& file_path
+    )
         : AbstractFileIO(file_path)
     {
         std::scoped_lock lock(_mutex);
@@ -58,7 +60,11 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at TomlFileIO::is_cancelled(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at TomlFileIO::is_cancelled(): " +
+                exception.what()
+            );
         }
     }
 
@@ -67,7 +73,9 @@ namespace QLogicaeCore
         return save_as(_file_path);
     }
 
-    bool TomlFileIO::save_as(const std::string& file_path)
+    bool TomlFileIO::save_as(
+        const std::string& file_path
+    )
     {
         try
         {
@@ -96,11 +104,17 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at TomlFileIO::save_as(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at TomlFileIO::save_as(): " +
+                exception.what()
+            );
         }
     }
 
-    bool TomlFileIO::remove_value(const std::vector<std::string>& key_path)
+    bool TomlFileIO::remove_value(
+        const std::vector<std::string>& key_path
+    )
     {
         try
         {
@@ -127,12 +141,17 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at TomlFileIO::remove_value(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at TomlFileIO::remove_value(): " +
+                exception.what()
+            );
         }
     }
 
     bool TomlFileIO::remove_keys(
-        const std::vector<std::vector<std::string>>& keys)
+        const std::vector<std::vector<std::string>>& keys
+    )
     {
         try
         {
@@ -145,7 +164,11 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at TomlFileIO::remove_keys(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at TomlFileIO::remove_keys(): " +
+                exception.what()
+            );
         }
     }
 
@@ -199,7 +222,7 @@ namespace QLogicaeCore
     {
         _file_path = file_path;
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
     void TomlFileIO::setup(
@@ -211,6 +234,6 @@ namespace QLogicaeCore
         _name = name;
         _file_path = file_path;
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 }

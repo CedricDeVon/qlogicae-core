@@ -14,7 +14,7 @@ namespace QLogicaeCore
         Result<void>& result
     )
     {        
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
 	std::string BcryptHashCryptographer::transform(
@@ -35,7 +35,11 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
-			throw std::runtime_error(std::string() + "Exception at BcryptHashCryptographer::transform(): " + exception.what());
+			throw std::runtime_error(
+				std::string() +
+				"Exception at BcryptHashCryptographer::transform(): " +
+				exception.what()
+			);
 		}
 	}
 
@@ -52,7 +56,11 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
-			throw std::runtime_error(std::string() + "Exception at BcryptHashCryptographer::reverse(): " + exception.what());
+			throw std::runtime_error(
+				std::string() +
+				"Exception at BcryptHashCryptographer::reverse(): " +
+				exception.what()
+			);
 		}
 	}
 
@@ -67,18 +75,23 @@ namespace QLogicaeCore
 	}
 
 	std::future<std::string> BcryptHashCryptographer::transform_async(
-		const std::string& va) const
+		const std::string& va
+	) const
 	{
-		return std::async(std::launch::async, [this, va]() -> std::string
+		return std::async(
+			std::launch::async,
+			[this, va]() -> std::string
 			{
 				return transform(va);
-			});
+			}
+		);
 	}
 
 
     void BcryptHashCryptographer::transform(
         Result<std::string>& result,
-        const std::string& text) const
+        const std::string& text
+	) const
     {
 		std::scoped_lock lock(_mutex);
 
@@ -93,13 +106,16 @@ namespace QLogicaeCore
             crypto_pwhash_MEMLIMIT_MODERATE
         ) == 0;
 
-        result.set_to_success((is_successful) ? hash.c_str() : "");
+        result.set_to_good_status_with_value(
+			(is_successful) ? hash.c_str() : ""
+		);
     }
 
     void BcryptHashCryptographer::reverse(
         Result<bool>& result,
         const std::string& hash,
-        const std::string& key) const
+        const std::string& key
+	) const
     {
 		std::scoped_lock lock(_mutex);
 
@@ -109,20 +125,24 @@ namespace QLogicaeCore
             hash.size()
         ) == 0;
 
-        result.set_to_success(verified);
+        result.set_to_good_status_with_value(verified);
     }
 
     void BcryptHashCryptographer::transform_async(
         Result<std::future<std::string>>& result,
-        const std::string& text) const
+        const std::string& text
+	) const
     {
-        result.set_to_success(std::async(std::launch::async, [this, text]() -> std::string
+        result.set_to_good_status_with_value(
+			std::async(
+				std::launch::async,
+				[this, text]() -> std::string
             {
                 Result<std::string> result;
 
                 transform(result, text);
 
-                return result.get_data();
+                return result.get_value();
             })
         );
     }
@@ -130,15 +150,19 @@ namespace QLogicaeCore
     void BcryptHashCryptographer::reverse_async(
         Result<std::future<bool>>& result,
         const std::string& hash,
-        const std::string& key) const
+        const std::string& key
+	) const
     {
-        result.set_to_success(std::async(std::launch::async, [this, hash, key]() -> bool
+        result.set_to_good_status_with_value(
+			std::async(
+				std::launch::async,
+				[this, hash, key]() -> bool
             {
                 Result<bool> result;
 
                 reverse(result, hash, key);
 
-                return result.get_data();
+                return result.get_value();
             })
         );
     }

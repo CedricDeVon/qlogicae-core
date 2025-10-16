@@ -89,7 +89,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string("Exception at XChaCha20Poly1305CipherCryptographer::transform(): ") + exception.what());
+            throw std::runtime_error(
+                std::string("Exception at XChaCha20Poly1305CipherCryptographer::transform(): ") +
+                exception.what()
+            );
         }
     }
 
@@ -131,7 +134,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string("Exception at XChaCha20Poly1305CipherCryptographer::reverse(): ") + exception.what());
+            throw std::runtime_error(
+                std::string("Exception at XChaCha20Poly1305CipherCryptographer::reverse(): ") +
+                exception.what()
+            );
         }
     }
 
@@ -161,7 +167,7 @@ namespace QLogicaeCore
         Result<void>& result
     )
     {
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
     void XChaCha20Poly1305CipherCryptographer::reverse(
@@ -176,7 +182,9 @@ namespace QLogicaeCore
         if (!key || !nonce ||
             cipher.size() < crypto_aead_xchacha20poly1305_ietf_ABYTES)
         {
-            result.set_to_failure("");
+            return result.set_to_bad_status_with_value(
+                "Key, or nonce is null or cipher size is less than 32"
+            );
         }
 
         unsigned long long ve = 0;
@@ -193,10 +201,12 @@ namespace QLogicaeCore
             vd.data(), vf,
             nullptr, 0, nonce, key) != 0)
         {
-            result.set_to_failure("");
+            return result.set_to_bad_status_with_value(
+                "Decryption failed"
+            );
         }
 
-        result.set_to_success(std::string(
+        result.set_to_good_status_with_value(std::string(
             reinterpret_cast<char*>(decrypted.data()), ve
         ));
         
@@ -213,7 +223,9 @@ namespace QLogicaeCore
 
         if (!key || !nonce)
         {
-            result.set_to_failure("");
+            return result.set_to_bad_status_with_value(
+                "Key or nonce is null"
+            );
         }
 
         unsigned long long ve = 0, vg = text.size();
@@ -227,12 +239,10 @@ namespace QLogicaeCore
             reinterpret_cast<const unsigned char*>(text.data()), vg,
             nullptr, 0, nullptr, nonce, key) != 0)
         {
-            result.set_to_failure("");
+            result.set_to_bad_status_with_value("");
         }
 
-        result.set_to_success(ENCODER
-            .from_bytes_to_base64(vf, ve)
-        );
+        ENCODER.from_bytes_to_base64(result, vf, ve);        
     }
 
     void XChaCha20Poly1305CipherCryptographer::reverse(
@@ -242,7 +252,7 @@ namespace QLogicaeCore
         const std::string_view& nonce
     ) const
     {
-        result.set_to_success(reverse(cipher,
+        result.set_to_good_status_with_value(reverse(cipher,
             reinterpret_cast<const unsigned char*>(key.data()),
             reinterpret_cast<const unsigned char*>(nonce.data())
         ));
@@ -255,7 +265,7 @@ namespace QLogicaeCore
         const std::string_view& nonce
     ) const
     {
-        result.set_to_success(transform(text,
+        result.set_to_good_status_with_value(transform(text,
             reinterpret_cast<const unsigned char*>(key.data()),
             reinterpret_cast<const unsigned char*>(nonce.data())
         ));
@@ -268,14 +278,15 @@ namespace QLogicaeCore
         const unsigned char* nonce
     ) const
     {
-        result.set_to_success(
+        result.set_to_good_status_with_value(
             std::async(std::launch::async,
                 [this, cipher, key, nonce]() -> std::string
                 {
                     Result<std::string> result;
+
                     reverse(result, cipher, key, nonce);
 
-                    return result.get_data();
+                    return result.get_value();
                 })
         );
     }
@@ -287,14 +298,15 @@ namespace QLogicaeCore
         const unsigned char* nonce
     ) const
     {
-        result.set_to_success(
+        result.set_to_good_status_with_value(
             std::async(std::launch::async,
                 [this, text, key, nonce]() -> std::string
                 {
                     Result<std::string> result;
+
                     transform(result, text, key, nonce);
 
-                    return result.get_data();
+                    return result.get_value();
                 })
         );
     }
@@ -306,13 +318,14 @@ namespace QLogicaeCore
         const std::string_view& nonce
     ) const
     {
-        result.set_to_success(
+        result.set_to_good_status_with_value(
             std::async(std::launch::async, [this, cipher, key, nonce]() -> std::string
                 {
                     Result<std::string> result;
+
                     reverse(result, cipher, key, nonce);
 
-                    return result.get_data();
+                    return result.get_value();
                 })
         );
     }
@@ -324,13 +337,14 @@ namespace QLogicaeCore
         const std::string_view& nonce
     ) const
     {
-        result.set_to_success(
+        result.set_to_good_status_with_value(
             std::async(std::launch::async, [this, text, key, nonce]() -> std::string
             {
                     Result<std::string> result;
+
                     transform(result, text, key, nonce);
 
-                    return result.get_data();
+                    return result.get_value();
             })
         );
     }

@@ -59,7 +59,7 @@ namespace QLogicaeCore
         ) const;
 
         void set_file_path(
-            Result<bool>& result,
+            Result<void>& result,
             const std::string& file_path
         );
 

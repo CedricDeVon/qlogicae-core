@@ -14,7 +14,9 @@ namespace QLogicaeCore
 		return _is_scan_enabled;
 	}
 	
-	void CliIO::set_scan_enabled(const bool& value)
+	void CliIO::set_scan_enabled(
+		const bool& value
+	)
 	{
 		_is_scan_enabled = value;
 	}
@@ -24,7 +26,9 @@ namespace QLogicaeCore
 		return _is_print_enabled;
 	}
 	
-	void CliIO::set_print_enabled(const bool& value)
+	void CliIO::set_print_enabled(
+		const bool& value
+	)
 	{
 		_is_print_enabled = value;
 	}
@@ -75,7 +79,9 @@ namespace QLogicaeCore
 	
 	std::future<std::string> CliIO::scan_async()
 	{
-		return std::async(std::launch::async, [this]() -> std::string
+		return std::async(
+			std::launch::async,
+				[this]() -> std::string
 		{
 			try
 			{
@@ -90,7 +96,9 @@ namespace QLogicaeCore
 		});
 	}
 
-	void CliIO::print_with_new_line(const std::string& text)
+	void CliIO::print_with_new_line(
+		const std::string& text
+	)
 	{
 		try
 		{
@@ -105,9 +113,12 @@ namespace QLogicaeCore
 	}
 
 	std::future<void> CliIO::print_with_new_line_async(
-		const std::string& text)
+		const std::string& text
+	)
 	{
-		return std::async(std::launch::async, [this, text]() -> void
+		return std::async(
+			std::launch::async,
+				[this, text]() -> void
 		{
 			try
 			{
@@ -120,7 +131,9 @@ namespace QLogicaeCore
 		});
 	}
 
-	void CliIO::builtin_print_with_new_line(const std::string& text)
+	void CliIO::builtin_print_with_new_line(
+		const std::string& text
+	)
 	{
 		try
 		{
@@ -135,9 +148,12 @@ namespace QLogicaeCore
 	}
 
 	std::future<void> CliIO::builtin_print_with_new_line_async(
-		const std::string& text)
+		const std::string& text
+	)
 	{
-		return std::async(std::launch::async, [this, text]() -> void
+		return std::async(
+			std::launch::async,
+				[this, text]() -> void
 		{
 			try
 			{
@@ -150,9 +166,13 @@ namespace QLogicaeCore
 		});
 	}
 	
-	std::future<void> CliIO::print_async(const std::string& text)
+	std::future<void> CliIO::print_async(
+		const std::string& text
+	)
 	{
-		return std::async(std::launch::async, [this, text]() -> void
+		return std::async(
+			std::launch::async,
+				[this, text]() -> void
 		{
 			try
 			{
@@ -167,7 +187,9 @@ namespace QLogicaeCore
 
 	std::future<std::string> CliIO::builtin_scan_async()
 	{
-		return std::async(std::launch::async, [this]() -> std::string
+		return std::async(
+			std::launch::async,
+				[this]() -> std::string
 		{
 			try
 			{
@@ -183,9 +205,12 @@ namespace QLogicaeCore
 	}
 
 	std::future<void> CliIO::builtin_print_async(
-		const std::string& text)
+		const std::string& text
+	)
 	{
-		return std::async(std::launch::async, [this, text]() -> void
+		return std::async(
+			std::launch::async,
+				[this, text]() -> void
 		{
 			try
 			{
@@ -228,19 +253,23 @@ namespace QLogicaeCore
 		_is_scan_enabled = is_scan_enabled;
 		_is_print_enabled = is_print_enabled;
 
-		result.set_to_success();
+		result.set_to_good_status_without_value();
 	}
 
 	void CliIO::is_scan_enabled(
 		Result<bool>& result) const
 	{
-		result.set_to_success(_is_scan_enabled);
+		result.set_to_good_status_with_value(
+			_is_scan_enabled
+		);
 	}
 
 	void CliIO::is_print_enabled(
 		Result<bool>& result) const
 	{
-		result.set_to_success(_is_print_enabled);
+		result.set_to_good_status_with_value(
+			_is_print_enabled
+		);
 	}
 
 	void CliIO::set_scan_enabled(
@@ -250,7 +279,7 @@ namespace QLogicaeCore
 	{
 		_is_scan_enabled = value;
 
-		result.set_to_success();
+		result.set_to_good_status_without_value();
 	}
 
 	void CliIO::set_print_enabled(
@@ -260,7 +289,7 @@ namespace QLogicaeCore
 	{
 		_is_print_enabled = value;
 
-		result.set_to_success();
+		result.set_to_good_status_without_value();
 	}
 
 	void CliIO::scan(Result<std::string>& result)
@@ -275,7 +304,7 @@ namespace QLogicaeCore
 			content.pop_back();
 		}
 
-		result.set_to_success(content);
+		result.set_to_good_status_with_value(content);
 	}
 
 	void CliIO::builtin_scan(Result<std::string>& result)
@@ -283,7 +312,7 @@ namespace QLogicaeCore
 		std::string content;
 		std::cin >> content;
 
-		result.set_to_success(content);
+		result.set_to_good_status_with_value(content);
 	}
 
 	void CliIO::print(Result<void>& result,
@@ -302,7 +331,7 @@ namespace QLogicaeCore
 	{
 		std::cout << text;
 
-		result.set_to_success();
+		result.set_to_good_status_without_value();
 	}
 
 	void CliIO::print_with_new_line(
@@ -328,13 +357,13 @@ namespace QLogicaeCore
 	void CliIO::scan_async(
 		Result<std::future<std::string>>& result)
 	{
-		result.set_to_success(std::async(
+		result.set_to_good_status_with_value(std::async(
 			std::launch::async, [this]() -> std::string
 			{
 				Result<std::string> result;
 				scan(result);
 
-				return result.get_data();
+				return result.get_value();
 			}
 		));
 	}
@@ -342,14 +371,14 @@ namespace QLogicaeCore
 	void CliIO::builtin_scan_async(
 		Result<std::future<std::string>>& result)
 	{
-		result.set_to_success(
+		result.set_to_good_status_with_value(
 			std::async(std::launch::async,
 			[this]() -> std::string
 			{
 				Result<std::string> result;
 				builtin_scan(result);
 
-				return result.get_data();
+				return result.get_value();
 			}
 		));
 	}
@@ -359,7 +388,8 @@ namespace QLogicaeCore
 		const std::string& text
 	)
 	{
-		result.set_to_success(std::async(std::launch::async,
+		result.set_to_good_status_with_value(
+			std::async(std::launch::async,
 			[this, text]() -> void
 			{
 				Result<void> result;
@@ -374,7 +404,8 @@ namespace QLogicaeCore
 		const std::string& text
 	)
 	{
-		result.set_to_success(std::async(std::launch::async,
+		result.set_to_good_status_with_value(
+			std::async(std::launch::async,
 			[this, text]() -> void
 			{
 				Result<void> result;
@@ -390,7 +421,8 @@ namespace QLogicaeCore
 		const std::string& text
 	)
 	{
-		result.set_to_success(std::async(std::launch::async,
+		result.set_to_good_status_with_value(
+			std::async(std::launch::async,
 			[this, text]() -> void
 			{
 				Result<void> result;
@@ -405,7 +437,8 @@ namespace QLogicaeCore
 		const std::string& text
 	)
 	{
-		result.set_to_success(std::async(std::launch::async,
+		result.set_to_good_status_with_value(
+			std::async(std::launch::async,
 			[this, text]() -> void
 			{
 				Result<void> result;
@@ -415,11 +448,13 @@ namespace QLogicaeCore
 		));
 	}
 
-	void CliIO::get_instance(Result<CliIO*>& result)
+	void CliIO::get_instance(
+		Result<CliIO*>& result
+	)
 	{
 		static CliIO singleton;
 
-		result.set_to_success(
+		result.set_to_good_status_with_value(
 			&singleton
 		);
 	}

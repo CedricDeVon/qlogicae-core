@@ -5,7 +5,8 @@
 namespace QLogicaeCore
 {
     PlaceholderValueExtractor::PlaceholderValueExtractor(
-        const std::string& value) :
+        const std::string& value
+    ) :
             _value(value)
     {
 
@@ -19,7 +20,11 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at PlaceholderValueExtractor::get_value(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at PlaceholderValueExtractor::get_value(): " +
+                exception.what()
+            );
         }
     }
 
@@ -30,14 +35,15 @@ namespace QLogicaeCore
     {
         _value = value;
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
     void PlaceholderValueExtractor::get_value(
         Result<std::string>& result
     ) const
     {
-        result.set_to_success(_value);
+        result.set_to_good_status_with_value(
+            _value
+        );
     }
 }
-

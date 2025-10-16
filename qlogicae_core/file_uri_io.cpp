@@ -19,7 +19,8 @@ namespace QLogicaeCore
 
     FileUriIO::FileUriIO(
         const std::string& file_path,
-        const std::string& mimetype)
+        const std::string& mimetype
+    )
         : AbstractFileIO(file_path),
         _mimetype(mimetype)
     {
@@ -29,7 +30,8 @@ namespace QLogicaeCore
     FileUriIO::FileUriIO(
         const std::string& file_path,
         const std::string& mimetype,
-        const std::string& name)
+        const std::string& name
+    )
         : AbstractFileIO(name, file_path),
             _mimetype(mimetype)
     {
@@ -46,7 +48,10 @@ namespace QLogicaeCore
                 !std::filesystem::exists(_file_path) ||
                 std::filesystem::is_directory(_file_path))
             {
-                throw std::runtime_error(std::string() + "Exception at FileUriIO::generate_data_uri(): File does not exist");
+                throw std::runtime_error(
+                    std::string() +
+                    "Exception at FileUriIO::generate_data_uri(): File does not exist"
+                );
             }
 
             std::ifstream input_file(
@@ -65,7 +70,11 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at FileUriIO::generate_data_uri(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at FileUriIO::generate_data_uri(): " +
+                exception.what()
+            );
         }
     }
 
@@ -89,8 +98,9 @@ namespace QLogicaeCore
             !std::filesystem::exists(_file_path) ||
             std::filesystem::is_directory(_file_path))
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value(
+                "File not found"
+            );
         }
 
         std::ifstream input_file(
@@ -98,15 +108,16 @@ namespace QLogicaeCore
 
         if (!input_file)
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value(
+                "Parsing failed"
+            );
         }
 
         std::ostringstream output_buffer;
         output_buffer << input_file.rdbuf();
         std::string raw_data = output_buffer.str();
 
-        result.set_to_success(
+        result.set_to_good_status_with_value(
             std::string() + "data:" + _mimetype.data() + ";base64," + "AKLOMP_ENCODED(" + raw_data + ")"
         );
     }
@@ -115,7 +126,7 @@ namespace QLogicaeCore
         Result<std::future<std::string>>& result
     ) const
     {
-        result.set_to_success(std::async(
+        result.set_to_good_status_with_value(std::async(
             std::launch::async,
             [this]() -> std::string
             {
@@ -123,7 +134,7 @@ namespace QLogicaeCore
 
                 generate_data_uri(result);
 
-                return result.get_data();
+                return result.get_value();
             })
         );
     }
@@ -135,7 +146,7 @@ namespace QLogicaeCore
     {
         _file_path = file_path;
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
     void FileUriIO::setup(
@@ -147,7 +158,7 @@ namespace QLogicaeCore
         _file_path = file_path;
         _mimetype = mimetype;
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
     void FileUriIO::setup(
@@ -161,6 +172,6 @@ namespace QLogicaeCore
         _mimetype = mimetype;
         _name = name;
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 }

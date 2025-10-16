@@ -593,12 +593,14 @@ namespace QLogicaeCore
         Result<void>& result
     )
     {
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
-    void Time::now(Result<double>& result) const
+    void Time::now(
+        Result<double>& result
+    ) const
     {
-        result.set_to_success(
+        result.set_to_good_status_with_value(
             static_cast<double>(
                 std::chrono::duration_cast<std::chrono::nanoseconds>(
                     std::chrono::high_resolution_clock::now()
@@ -606,9 +608,11 @@ namespace QLogicaeCore
                 .count()));
     }
 
-    void Time::nanosecond(Result<double>& result) const
+    void Time::nanosecond(
+        Result<double>& result
+    ) const
     {
-        result.set_to_success(
+        result.set_to_good_status_with_value(
             static_cast<double>(
                 std::chrono::duration_cast<std::chrono::nanoseconds>(
                     std::chrono::system_clock::now()
@@ -616,9 +620,11 @@ namespace QLogicaeCore
                 .count() % 1'000'000'000));
     }
 
-    void Time::millisecond(Result<double>& result) const
+    void Time::millisecond(
+        Result<double>& result
+    ) const
     {
-        result.set_to_success(
+        result.set_to_good_status_with_value(
             static_cast<double>(
                 std::chrono::duration_cast<std::chrono::milliseconds>(
                     std::chrono::system_clock::now()
@@ -626,9 +632,11 @@ namespace QLogicaeCore
                 .count() % 1'000));
     }
 
-    void Time::microsecond(Result<double>& result) const
+    void Time::microsecond(
+        Result<double>& result
+    ) const
     {
-        result.set_to_success(
+        result.set_to_good_status_with_value(
             static_cast<double>(
                 std::chrono::duration_cast<std::chrono::microseconds>(
                     std::chrono::system_clock::now()
@@ -636,46 +644,71 @@ namespace QLogicaeCore
                 .count() % 1'000'000));
     }
 
-    void Time::day(Result<double>& result,
-        const TimeZone& zone) const
+    void Time::day(
+        Result<double>& result,
+        const TimeZone& zone
+    ) const
     {
-        result.set_to_success(static_cast<double>(_get_time_zone(zone).tm_mday));
+        result.set_to_good_status_with_value(
+            static_cast<double>(_get_time_zone(zone).tm_mday)
+        );
     }
 
-    void Time::hour(Result<double>& result,
-        const TimeZone& zone) const
+    void Time::hour(
+        Result<double>& result,
+        const TimeZone& zone
+    ) const
     {
-        result.set_to_success(static_cast<double>(_get_time_zone(zone).tm_hour));
+        result.set_to_good_status_with_value
+        (static_cast<double>(_get_time_zone(zone).tm_hour)
+        );
     }
 
-    void Time::year(Result<double>& result,
-        const TimeZone& zone) const
+    void Time::year(
+        Result<double>& result,
+        const TimeZone& zone
+    ) const
     {
-        result.set_to_success(static_cast<double>(_get_time_zone(zone).tm_year) +
-            UTILITIES.UNIX_START_YEAR_OFFSET);
+        result.set_to_good_status_with_value(
+            static_cast<double>(_get_time_zone(zone).tm_year) +
+                UTILITIES.UNIX_START_YEAR_OFFSET);
     }
 
-    void Time::month(Result<double>& result,
-        const TimeZone& zone) const
+    void Time::month(
+        Result<double>& result,
+        const TimeZone& zone
+    ) const
     {
-        result.set_to_success(static_cast<double>(_get_time_zone(zone).tm_mon) + 1);
+        result.set_to_good_status_with_value(
+            static_cast<double>(_get_time_zone(zone).tm_mon) + 1
+        );
     }
 
-    void Time::second(Result<double>& result,
-        const TimeZone& zone) const
+    void Time::second(
+        Result<double>& result,
+        const TimeZone& zone
+    ) const
     {
-        result.set_to_success(static_cast<double>(_get_time_zone(zone).tm_sec));
+        result.set_to_good_status_with_value(
+            static_cast<double>(_get_time_zone(zone).tm_sec)
+        );
     }
 
-    void Time::minute(Result<double>& result,
-        const TimeZone& zone) const
+    void Time::minute(
+        Result<double>& result,
+        const TimeZone& zone
+    ) const
     {
-        result.set_to_success(static_cast<double>(_get_time_zone(zone).tm_min));
+        result.set_to_good_status_with_value(
+            static_cast<double>(_get_time_zone(zone).tm_min)
+        );
     }
 
-    void Time::now(Result<std::string>& result,
+    void Time::now(
+        Result<std::string>& result,
         const TimeFormat& format,
-        const TimeZone& zone) const
+        const TimeZone& zone
+    ) const
     {
         absl::Time now_time = absl::Now();
         absl::Duration since_epoch = now_time - absl::UnixEpoch();
@@ -733,93 +766,103 @@ namespace QLogicaeCore
             break;
         }
 
-        result.set_to_success(str);
+        result.set_to_good_status_with_value(str);
     }
 
-    void Time::get_time_unit_full_name(Result<std::string>& result,
-        const TimeScaleUnit& format) const
+    void Time::get_time_unit_full_name(
+        Result<std::string>& result,
+        const TimeScaleUnit& format
+    ) const
     {
         switch (format)
         {
-            case TimeScaleUnit::NANOSECONDS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_NANOSECONDS); break;
-            case TimeScaleUnit::MICROSECONDS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_MICROSECONDS); break;
-            case TimeScaleUnit::MILLISECONDS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_MILLISECONDS); break;
-            case TimeScaleUnit::SECONDS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_SECONDS); break;
-            case TimeScaleUnit::MINUTES: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_MINUTES); break;
-            case TimeScaleUnit::HOURS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_HOURS); break;
-            case TimeScaleUnit::DAYS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_DAYS); break;
-            case TimeScaleUnit::WEEKS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_WEEKS); break;
-            case TimeScaleUnit::MONTHS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_MONTHS); break;
-            case TimeScaleUnit::YEARS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_YEARS); break;
-            default: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_SECONDS); break;
+            case TimeScaleUnit::NANOSECONDS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_NANOSECONDS); break;
+            case TimeScaleUnit::MICROSECONDS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_MICROSECONDS); break;
+            case TimeScaleUnit::MILLISECONDS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_MILLISECONDS); break;
+            case TimeScaleUnit::SECONDS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_SECONDS); break;
+            case TimeScaleUnit::MINUTES: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_MINUTES); break;
+            case TimeScaleUnit::HOURS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_HOURS); break;
+            case TimeScaleUnit::DAYS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_DAYS); break;
+            case TimeScaleUnit::WEEKS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_WEEKS); break;
+            case TimeScaleUnit::MONTHS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_MONTHS); break;
+            case TimeScaleUnit::YEARS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_YEARS); break;
+            default: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_SECONDS); break;
         }
     }
 
-    void Time::get_time_unit_abbreviation(Result<std::string>& result,
-        const TimeScaleUnit& format) const
+    void Time::get_time_unit_abbreviation(
+        Result<std::string>& result,
+        const TimeScaleUnit& format
+    ) const
     {
         switch (format)
         {
-            case TimeScaleUnit::NANOSECONDS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_NANOSECONDS); break;
-            case TimeScaleUnit::MICROSECONDS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_MICROSECONDS); break;
-            case TimeScaleUnit::MILLISECONDS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_MILLISECONDS); break;
-            case TimeScaleUnit::SECONDS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_SECONDS); break;
-            case TimeScaleUnit::MINUTES: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_MINUTES); break;
-            case TimeScaleUnit::HOURS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_HOURS); break;
-            case TimeScaleUnit::DAYS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_DAYS); break;
-            case TimeScaleUnit::WEEKS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_WEEKS); break;
-            case TimeScaleUnit::MONTHS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_MONTHS); break;
-            case TimeScaleUnit::YEARS: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_YEARS); break;
-            default: result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_SECONDS); break;
+            case TimeScaleUnit::NANOSECONDS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_NANOSECONDS); break;
+            case TimeScaleUnit::MICROSECONDS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_MICROSECONDS); break;
+            case TimeScaleUnit::MILLISECONDS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_MILLISECONDS); break;
+            case TimeScaleUnit::SECONDS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_SECONDS); break;
+            case TimeScaleUnit::MINUTES: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_MINUTES); break;
+            case TimeScaleUnit::HOURS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_HOURS); break;
+            case TimeScaleUnit::DAYS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_DAYS); break;
+            case TimeScaleUnit::WEEKS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_WEEKS); break;
+            case TimeScaleUnit::MONTHS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_MONTHS); break;
+            case TimeScaleUnit::YEARS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_YEARS); break;
+            default: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_SECONDS); break;
         }
     }
 
-    void Time::get_time_unit_abbreviation(Result<TimeScaleUnit>& result,
-        const std::string& format) const
+    void Time::get_time_unit_abbreviation(
+        Result<TimeScaleUnit>& result,
+        const std::string& format
+    ) const
     {
         if (UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_STRINGS.contains(format))
-            result.set_to_success(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_STRINGS.at(format));
+            result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_STRINGS.at(format));
         else
-            result.set_to_success(TimeScaleUnit::NANOSECONDS);
+            result.set_to_good_status_with_value(TimeScaleUnit::NANOSECONDS);
     }
 
-    void Time::convert_seconds(Result<double>& result,
+    void Time::convert_seconds(
+        Result<double>& result,
         const double& time,
-        const TimeScaleUnit& format) const
+        const TimeScaleUnit& format
+    ) const
     {
         switch (format)
         {
-            case TimeScaleUnit::NANOSECONDS: result.set_to_success(time / UTILITIES.SECONDS_OVER_NANOSECONDS); break;
-            case TimeScaleUnit::MICROSECONDS: result.set_to_success(time / UTILITIES.SECONDS_OVER_MICROSECONDS); break;
-            case TimeScaleUnit::MILLISECONDS: result.set_to_success(time / UTILITIES.SECONDS_OVER_MILLISECONDS); break;
-            case TimeScaleUnit::SECONDS: result.set_to_success(time); break;
-            case TimeScaleUnit::MINUTES: result.set_to_success(time * UTILITIES.SECONDS_PER_MINUTE); break;
-            case TimeScaleUnit::HOURS: result.set_to_success(time * UTILITIES.SECONDS_PER_HOUR); break;
-            case TimeScaleUnit::DAYS: result.set_to_success(time * UTILITIES.SECONDS_PER_DAY); break;
-            case TimeScaleUnit::WEEKS: result.set_to_success(time * UTILITIES.SECONDS_PER_WEEK); break;
-            case TimeScaleUnit::MONTHS: result.set_to_success(time * UTILITIES.SECONDS_PER_MONTH); break;
-            case TimeScaleUnit::YEARS: result.set_to_success(time * UTILITIES.SECONDS_PER_YEAR); break;
-            default: result.set_to_success(time); break;
+            case TimeScaleUnit::NANOSECONDS: result.set_to_good_status_with_value(time / UTILITIES.SECONDS_OVER_NANOSECONDS); break;
+            case TimeScaleUnit::MICROSECONDS: result.set_to_good_status_with_value(time / UTILITIES.SECONDS_OVER_MICROSECONDS); break;
+            case TimeScaleUnit::MILLISECONDS: result.set_to_good_status_with_value(time / UTILITIES.SECONDS_OVER_MILLISECONDS); break;
+            case TimeScaleUnit::SECONDS: result.set_to_good_status_with_value(time); break;
+            case TimeScaleUnit::MINUTES: result.set_to_good_status_with_value(time * UTILITIES.SECONDS_PER_MINUTE); break;
+            case TimeScaleUnit::HOURS: result.set_to_good_status_with_value(time * UTILITIES.SECONDS_PER_HOUR); break;
+            case TimeScaleUnit::DAYS: result.set_to_good_status_with_value(time * UTILITIES.SECONDS_PER_DAY); break;
+            case TimeScaleUnit::WEEKS: result.set_to_good_status_with_value(time * UTILITIES.SECONDS_PER_WEEK); break;
+            case TimeScaleUnit::MONTHS: result.set_to_good_status_with_value(time * UTILITIES.SECONDS_PER_MONTH); break;
+            case TimeScaleUnit::YEARS: result.set_to_good_status_with_value(time * UTILITIES.SECONDS_PER_YEAR); break;
+            default: result.set_to_good_status_with_value(time); break;
         }
     }
 
-    void Time::convert_nanoseconds(Result<double>& result,
+    void Time::convert_nanoseconds(
+        Result<double>& result,
         const double& time,
-        const TimeScaleUnit& format) const
+        const TimeScaleUnit& format
+    ) const
     {
         switch (format)
         {
-            case TimeScaleUnit::NANOSECONDS: result.set_to_success(time); break;
-            case TimeScaleUnit::MICROSECONDS: result.set_to_success(time / UTILITIES.SECONDS_OVER_MILLISECONDS); break;
-            case TimeScaleUnit::MILLISECONDS: result.set_to_success(time / UTILITIES.SECONDS_OVER_MICROSECONDS); break;
-            case TimeScaleUnit::SECONDS: result.set_to_success(time / UTILITIES.SECONDS_OVER_NANOSECONDS); break;
-            case TimeScaleUnit::MINUTES: result.set_to_success(time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_MINUTE)); break;
-            case TimeScaleUnit::HOURS: result.set_to_success(time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_HOUR)); break;
-            case TimeScaleUnit::DAYS: result.set_to_success(time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_DAY)); break;
-            case TimeScaleUnit::WEEKS: result.set_to_success(time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_WEEK)); break;
-            case TimeScaleUnit::MONTHS: result.set_to_success(time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_MONTH)); break;
-            case TimeScaleUnit::YEARS: result.set_to_success(time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_YEAR)); break;
-            default: result.set_to_success(time); break;
+            case TimeScaleUnit::NANOSECONDS: result.set_to_good_status_with_value(time); break;
+            case TimeScaleUnit::MICROSECONDS: result.set_to_good_status_with_value(time / UTILITIES.SECONDS_OVER_MILLISECONDS); break;
+            case TimeScaleUnit::MILLISECONDS: result.set_to_good_status_with_value(time / UTILITIES.SECONDS_OVER_MICROSECONDS); break;
+            case TimeScaleUnit::SECONDS: result.set_to_good_status_with_value(time / UTILITIES.SECONDS_OVER_NANOSECONDS); break;
+            case TimeScaleUnit::MINUTES: result.set_to_good_status_with_value(time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_MINUTE)); break;
+            case TimeScaleUnit::HOURS: result.set_to_good_status_with_value(time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_HOUR)); break;
+            case TimeScaleUnit::DAYS: result.set_to_good_status_with_value(time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_DAY)); break;
+            case TimeScaleUnit::WEEKS: result.set_to_good_status_with_value(time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_WEEK)); break;
+            case TimeScaleUnit::MONTHS: result.set_to_good_status_with_value(time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_MONTH)); break;
+            case TimeScaleUnit::YEARS: result.set_to_good_status_with_value(time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_YEAR)); break;
+            default: result.set_to_good_status_with_value(time); break;
         }
     }
 
@@ -827,6 +870,6 @@ namespace QLogicaeCore
     {
         static Time singleton;
 
-        result.set_to_success(&singleton);
+        result.set_to_good_status_with_value(&singleton);
     }
 } 

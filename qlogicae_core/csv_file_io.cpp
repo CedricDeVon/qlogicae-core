@@ -6,7 +6,9 @@ namespace QLogicaeCore
 {
     CsvFileIO::~CsvFileIO() = default;
 
-    CsvFileIO::CsvFileIO(const std::string& path) :
+    CsvFileIO::CsvFileIO(
+        const std::string& path
+    ) :
         AbstractFileIO(path)
     {
         
@@ -14,13 +16,16 @@ namespace QLogicaeCore
 
     CsvFileIO::CsvFileIO(
         const std::string& path,
-        const std::string& content) :
+        const std::string& content
+    ) :
             AbstractFileIO(path, content)
     {
 
     }
 
-    std::string CsvFileIO::trim(std::string value)
+    std::string CsvFileIO::trim(
+        std::string value
+    )
     {
         try
         {
@@ -181,7 +186,9 @@ namespace QLogicaeCore
         }
     }
 
-    std::string CsvFileIO::get_row(const unsigned int& index)
+    std::string CsvFileIO::get_row(
+        const unsigned int& index
+    )
     {
         try
         {
@@ -209,7 +216,9 @@ namespace QLogicaeCore
         }
     }
 
-    bool CsvFileIO::is_header_found(const std::string& header)
+    bool CsvFileIO::is_header_found(
+        const std::string& header
+    )
     {
         try
         {
@@ -235,7 +244,9 @@ namespace QLogicaeCore
         }
     }
 
-    std::string CsvFileIO::get_column(const std::string& name)
+    std::string CsvFileIO::get_column(
+        const std::string& name
+    )
     {
         try
         {
@@ -345,7 +356,8 @@ namespace QLogicaeCore
 
     bool CsvFileIO::write(
         const std::vector<std::string>& headers,
-        const std::vector<std::vector<std::string>>& rows)
+        const std::vector<std::vector<std::string>>& rows
+    )
     {
         try
         {
@@ -386,7 +398,9 @@ namespace QLogicaeCore
         }
     }
 
-    bool CsvFileIO::append(const std::string& content)
+    bool CsvFileIO::append(
+        const std::string& content
+    )
     {
         try
         {
@@ -408,7 +422,9 @@ namespace QLogicaeCore
         }
     }
 
-    void CsvFileIO::set_delimiter(const unsigned char& character)
+    void CsvFileIO::set_delimiter(
+        const unsigned char& character
+    )
     {
         try
         {
@@ -420,7 +436,9 @@ namespace QLogicaeCore
         }
     }
 
-    void CsvFileIO::set_quote_character(const unsigned char& character)
+    void CsvFileIO::set_quote_character(
+        const unsigned char& character
+    )
     {
         try
         {
@@ -434,7 +452,8 @@ namespace QLogicaeCore
 
     void CsvFileIO::set_label_params(
         const unsigned int& column,
-        const unsigned int& row)
+        const unsigned int& row
+    )
     {
         try
         {
@@ -448,7 +467,8 @@ namespace QLogicaeCore
     }
 
     bool QLogicaeCore::CsvFileIO::validate_headers(
-        const std::vector<std::string>& expected)
+        const std::vector<std::string>& expected
+    )
     {
         try
         {
@@ -471,7 +491,8 @@ namespace QLogicaeCore
 
     bool CsvFileIO::is_valid_index(
         const unsigned int& row,
-        const unsigned int& column)
+        const unsigned int& column
+    )
     {
         try
         {
@@ -492,7 +513,8 @@ namespace QLogicaeCore
     }
 
     std::map<std::string, std::string> CsvFileIO::get_row_as_map(
-        const unsigned int& index)
+        const unsigned int& index
+    )
     {
         try
         {
@@ -624,7 +646,9 @@ namespace QLogicaeCore
         }
     }
 
-    bool CsvFileIO::import_from_json(const std::string& json_string)
+    bool CsvFileIO::import_from_json(
+        const std::string& json_string
+    )
     {
         try
         {
@@ -684,7 +708,9 @@ namespace QLogicaeCore
         }
     }
 
-    bool CsvFileIO::has_column(const std::string& name) const
+    bool CsvFileIO::has_column(
+        const std::string& name
+    ) const
     {
         try
         {
@@ -705,7 +731,9 @@ namespace QLogicaeCore
         }
     }
 
-    bool CsvFileIO::has_row(const unsigned int& index) const
+    bool CsvFileIO::has_row(
+        const unsigned int& index
+    ) const
     {
         try
         {
@@ -724,7 +752,9 @@ namespace QLogicaeCore
         }
     }
 
-    bool CsvFileIO::remove_row(const unsigned int& index)
+    bool CsvFileIO::remove_row(
+        const unsigned int& index
+    )
     {
         try
         {
@@ -812,7 +842,9 @@ namespace QLogicaeCore
         }
     }
 
-    bool CsvFileIO::remove_column(const std::string& name)
+    bool CsvFileIO::remove_column(
+        const std::string& name
+    )
     {
         try
         {
@@ -893,7 +925,8 @@ namespace QLogicaeCore
     bool CsvFileIO::insert_column(
         const unsigned int& index,
         const std::vector<std::string>& values,
-        const std::string& name)
+        const std::string& name
+    )
     {
         try
         {
@@ -924,7 +957,8 @@ namespace QLogicaeCore
     }
 
     std::future<bool> CsvFileIO::append_async(
-        const std::string& content)
+        const std::string& content
+    )
     {
         return std::async(std::launch::async, [this, content]()
         {
@@ -1062,7 +1096,8 @@ namespace QLogicaeCore
     std::future<bool> CsvFileIO::update_cell_async(
         const std::string& column,
         const unsigned int& row_index,
-        const std::string& value)
+        const std::string& value
+    )
     {
         return std::async(std::launch::async, [this, column, row_index, value]()
         {
@@ -1073,7 +1108,8 @@ namespace QLogicaeCore
     std::future<bool> CsvFileIO::insert_column_async(
         const unsigned int& index,
         const std::vector<std::string>& values,
-        const std::string& column)
+        const std::string& column
+    )
     {
         return std::async(std::launch::async, [this, index, values, column]()
         {
@@ -1124,7 +1160,8 @@ namespace QLogicaeCore
     }
 
     std::future<bool> QLogicaeCore::CsvFileIO::import_from_json_async(
-        const std::string& json)
+        const std::string& json
+    )
     {
         return std::async(std::launch::async, [this, json]()
         {
@@ -1139,7 +1176,7 @@ namespace QLogicaeCore
     {
         _file_path = file_path;
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
     void CsvFileIO::setup(
@@ -1151,7 +1188,7 @@ namespace QLogicaeCore
         _name = name;
         _file_path = file_path;
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 }
 

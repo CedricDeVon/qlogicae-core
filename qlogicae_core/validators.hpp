@@ -1068,7 +1068,7 @@ const std::vector<Type>& values
         const Range& range,
         Predicate predicate)
     {
-        result.set_to_success(std::ranges::all_of(range, predicate));
+        result.set_to_good_status_with_value(std::ranges::all_of(range, predicate));
     }
 
     template<typename Type>
@@ -1076,7 +1076,7 @@ const std::vector<Type>& values
         Type value,
         std::span<const Type> allowed)
     {
-        result.set_to_success(std::ranges::find(allowed, value) != allowed.end());
+        result.set_to_good_status_with_value(std::ranges::find(allowed, value) != allowed.end());
     }
 
     template<typename Type>
@@ -1088,25 +1088,25 @@ const std::vector<Type>& values
         {
             if (!seen.insert(item).second)
             {
-                result.set_to_success(false);
+                result.set_to_good_status_with_value(false);
                 return;
             }
         }
-        result.set_to_success(true);
+        result.set_to_good_status_with_value(true);
     }
 
     template<typename Type>
                 void Validators::is_sorted(Result<bool>& result,
         const std::vector<Type>& values)
     {
-        result.set_to_success(std::ranges::is_sorted(values));
+        result.set_to_good_status_with_value(std::ranges::is_sorted(values));
     }
 
     template<typename Type>
                 void Validators::is_empty(Result<bool>& result,
         const std::vector<Type>& values)
     {
-        result.set_to_success(values.empty());
+        result.set_to_good_status_with_value(values.empty());
     }
 
     template<typename Type>
@@ -1114,7 +1114,7 @@ const std::vector<Type>& values
         const std::vector<Type>& values,
         std::function<bool(const Type&)> predicate)
     {
-        result.set_to_success(std::ranges::any_of(values, predicate));
+        result.set_to_good_status_with_value(std::ranges::any_of(values, predicate));
     }
 
     template void Validators::is_valid_range<std::vector<int>, bool(*)(int)>(

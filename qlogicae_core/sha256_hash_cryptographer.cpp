@@ -78,7 +78,7 @@ namespace QLogicaeCore
 		Result<void>& result
 	)
 	{
-		result.set_to_success();
+		result.set_to_good_status_without_value();
 	}
 
 	void SHA256HashCryptographer::transform(
@@ -87,9 +87,10 @@ namespace QLogicaeCore
 	) const
 	{
 		if (text.empty())
-		{
-			result.set_to_failure("");
-			return;
+		{			
+			return result.set_to_bad_status_with_value(
+				"Text is empty"
+			);
 		}
 
 		unsigned char digest[crypto_hash_sha256_BYTES];
@@ -98,16 +99,16 @@ namespace QLogicaeCore
 			digest,
 			reinterpret_cast<const unsigned char*>(text.data()),
 			text.size()) != 0)
-		{
-			result.set_to_failure("");
-			return;
+		{			
+			return result.set_to_bad_status_with_value(
+				"Encryption failed"
+			);
 		}
 
-		result.set_to_success(
-			ENCODER.from_bytes_to_base64(
-				digest,
-				crypto_hash_sha256_BYTES
-			)
+		ENCODER.from_bytes_to_base64(
+			result,
+			digest,
+			crypto_hash_sha256_BYTES
 		);
 	}
 
@@ -120,24 +121,32 @@ namespace QLogicaeCore
 		if (cipher.empty() ||
 			key.empty())
 		{
-			result.set_to_failure();
-			return;
+			return result.set_to_bad_status_without_value(
+				"Cipher or key is empty"
+			);
 		}
 
-		const std::string computed_base64_hash = transform(cipher);
+		const std::string computed_base64_hash =
+			transform(cipher);
 		if (computed_base64_hash.empty())
 		{
-			result.set_to_failure();
-			return;
+			return result.set_to_bad_status_without_value(
+				"Decryption failed"
+			);
 		}
 
-		result.set_is_successful(
-			sodium_memcmp(
-				computed_base64_hash.data(),
-				key.data(),
-				key.size()
-			) == 0
-		);
+		if (sodium_memcmp(
+			computed_base64_hash.data(),
+			key.data(),
+			key.size()
+		) == 0)
+		{
+			result.set_to_good_status_without_value();
+		}
+		else
+		{
+			result.set_to_bad_status_without_value();
+		}
 	}
 
 	void SHA256HashCryptographer::transform_async(
@@ -145,12 +154,15 @@ namespace QLogicaeCore
 		const std::string& text
 	) const
 	{
-		result.set_to_success(std::async(std::launch::async, [this, text]() -> std::string
+		result.set_to_good_status_with_value(
+			std::async(std::launch::async,
+				[this, text]() -> std::string
 			{
 				Result<std::string> result;
+
 				transform(result, text);
 
-				return result.get_data();
+				return result.get_value();
 			}
 		));		
 	}
@@ -161,9 +173,12 @@ namespace QLogicaeCore
 		const std::string& key
 	) const
 	{
-		result.set_to_success(std::async(std::launch::async, [this, cipher, key]() -> void
+		result.set_to_good_status_with_value(
+			std::async(std::launch::async,
+				[this, cipher, key]() -> void
 			{
 				Result<void> result;
+
 				reverse(result, cipher, key);			
 			}
 		));

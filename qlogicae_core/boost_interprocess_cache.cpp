@@ -68,7 +68,7 @@ namespace QLogicaeCore
             );
         }
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
     std::future<void> BoostInterprocessCache::write_async(
@@ -77,7 +77,9 @@ namespace QLogicaeCore
         Result<void>& result
     )
     {
-        return std::async(std::launch::async, [this, key, value, &result]()
+        return std::async(
+            std::launch::async,
+            [this, key, value, &result]()
             {
                 write(key, value, result);
             }
@@ -96,11 +98,11 @@ namespace QLogicaeCore
         );
         if (iterative != _data->map.end())
         {
-            result.set_to_success(iterative->second.c_str());
+            result.set_to_good_status_with_value(iterative->second.c_str());
         }
         else
         {
-            result.set_to_failure();
+            result.set_to_bad_status_without_value();
         }
     }
 
@@ -109,14 +111,18 @@ namespace QLogicaeCore
         Result<const char*>& result
     )
     {
-        return std::async(std::launch::async, [this, key, &result]()
+        return std::async(
+            std::launch::async,
+            [this, key, &result]()
             {
                 read(key, result);
             }
         );
     }
 
-    bool BoostInterprocessCache::is_key_found(const char* key)
+    bool BoostInterprocessCache::is_key_found(
+        const char* key
+    )
     {
         boost::interprocess::scoped_lock lock(_data->_mutex);
 
@@ -148,11 +154,11 @@ namespace QLogicaeCore
         );
         if (count > 0)
         {
-            result.set_to_success();
+            result.set_to_good_status_without_value();
         }
         else
         {
-            result.set_to_failure();
+            result.set_to_bad_status_without_value();
         }
     }
 
@@ -161,26 +167,33 @@ namespace QLogicaeCore
         Result<void>& result
     )
     {
-        return std::async(std::launch::async, [this, key, &result]()
+        return std::async(
+            std::launch::async,
+            [this, key, &result]()
             {
                 remove(key, result);
             }
         );
     }
 
-    void BoostInterprocessCache::clear(Result<void>& result)
+    void BoostInterprocessCache::clear(
+        Result<void>& result
+    )
     {
         boost::interprocess::scoped_lock lock(_data->_mutex);
         
         _data->map.clear();
-        result.set_to_success();
+
+        result.set_to_good_status_without_value();
     }
 
     std::future<void> BoostInterprocessCache::clear_async(
         Result<void>& result
     )
     {
-        return std::async(std::launch::async, [this, &result]()
+        return std::async(
+            std::launch::async,
+            [this, &result]()
             {
                 clear(result);
             }
@@ -225,7 +238,7 @@ namespace QLogicaeCore
             }
         }
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
     std::future<void> BoostInterprocessCache::write_batch_async(
@@ -233,7 +246,9 @@ namespace QLogicaeCore
         Result<void>& result
     )
     {
-        return std::async(std::launch::async, [this, &items, &result]()
+        return std::async(
+            std::launch::async,
+            [this, &items, &result]()
             {
                 write_batch(items, result);
             }
@@ -260,7 +275,8 @@ namespace QLogicaeCore
                 out[key] = iterative->second.c_str();
             }
         }
-        result.set_to_success();
+
+        result.set_to_good_status_without_value();
     }
 
     std::future<void> BoostInterprocessCache::read_batch_async(
@@ -269,7 +285,9 @@ namespace QLogicaeCore
         Result<void>& result
     )
     {
-        return std::async(std::launch::async, [this, &keys, &out, &result]()
+        return std::async(
+            std::launch::async,
+            [this, &keys, &out, &result]()
             {
                 read_batch(keys, out, result);
             }
@@ -277,7 +295,8 @@ namespace QLogicaeCore
     }
 
     void BoostInterprocessCache::remove_batch(
-        const std::vector<const char*>& keys, Result<void>& result
+        const std::vector<const char*>& keys,
+        Result<void>& result
     )
     {
         boost::interprocess::scoped_lock lock(_data->_mutex);
@@ -292,7 +311,7 @@ namespace QLogicaeCore
             );
         }
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
     std::future<void> BoostInterprocessCache::remove_batch_async(
@@ -300,7 +319,9 @@ namespace QLogicaeCore
         Result<void>& result
     )
     {
-        return std::async(std::launch::async, [this, &keys, &result]()
+        return std::async(
+            std::launch::async,
+            [this, &keys, &result]()
             {
                 remove_batch(keys, result);
             }

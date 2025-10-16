@@ -5,7 +5,8 @@
 namespace QLogicaeCore
 {
 	AbstractFileIO::AbstractFileIO(
-		const std::string& file_path) :
+		const std::string& file_path
+	) :
 			_file_path(file_path)
 	{
 
@@ -13,7 +14,8 @@ namespace QLogicaeCore
 
 	AbstractFileIO::AbstractFileIO(
 		const std::string& name,
-		const std::string& file_path) :
+		const std::string& file_path
+	) :
 			_name(name),
 			_file_path(file_path)
 	{
@@ -57,19 +59,22 @@ namespace QLogicaeCore
 		_file_path = file_path;
 	}
 
-
 	void AbstractFileIO::get_name(
 		Result<std::string>& result
 	) const
 	{
-		result.set_to_success(_name);
+		result.set_to_good_status_with_value(
+			_name
+		);
 	}
 
 	void AbstractFileIO::get_file_path(
 		Result<std::string>& result
 	) const
 	{
-		result.set_to_success(_file_path);
+		result.set_to_good_status_with_value(
+			_file_path
+		);
 	}
 
 	void AbstractFileIO::get_line_count(
@@ -79,8 +84,10 @@ namespace QLogicaeCore
 		std::ifstream file(_file_path);
 
 		if (!file.is_open())
-		{
-			result.set_to_success(0);
+		{			
+			return result.set_to_bad_status_without_value(
+				"File '" + _file_path + "' is closed"
+			);
 		}
 
 		std::size_t count = 0;
@@ -91,15 +98,18 @@ namespace QLogicaeCore
 			++count;
 		}
 
-		result.set_to_success(count);
+		result.set_to_good_status_with_value(
+			count
+		);
 	}
 
 	void AbstractFileIO::set_file_path(
-		Result<bool>& result,
+		Result<void>& result,
 		const std::string& file_path
 	)
 	{
 		_file_path = file_path;
-		result.set_is_successful(true);
+
+		result.set_to_good_status_without_value();
 	}
 }

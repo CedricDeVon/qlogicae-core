@@ -74,8 +74,6 @@ namespace QLogicaeCore
             const size_t& length = 256
         ) const;
 
-        Result<void> setup();
-
         void setup(
             Result<void>& result
         );
@@ -150,39 +148,39 @@ namespace QLogicaeCore
         switch (level)
         {
             case LogLevel::ALL:
-                result.set_to_success(UTILITIES.LOG_LEVEL_INFO);
+                result.set_to_good_status_with_value(UTILITIES.LOG_LEVEL_INFO);
                 break;
 
             case LogLevel::INFO:
-                result.set_to_success(UTILITIES.LOG_LEVEL_INFO);
+                result.set_to_good_status_with_value(UTILITIES.LOG_LEVEL_INFO);
                 break;
 
             case LogLevel::DEBUG:
-                result.set_to_success(UTILITIES.LOG_LEVEL_DEBUG);
+                result.set_to_good_status_with_value(UTILITIES.LOG_LEVEL_DEBUG);
                 break;
 
             case LogLevel::SUCCESS:
-                result.set_to_success(UTILITIES.LOG_LEVEL_SUCCESS);
+                result.set_to_good_status_with_value(UTILITIES.LOG_LEVEL_SUCCESS);
                 break;
 
             case LogLevel::WARNING:
-                result.set_to_success(UTILITIES.LOG_LEVEL_WARNING);
+                result.set_to_good_status_with_value(UTILITIES.LOG_LEVEL_WARNING);
                 break;
 
             case LogLevel::CRITICAL:
-                result.set_to_success(UTILITIES.LOG_LEVEL_CRITICAL);
+                result.set_to_good_status_with_value(UTILITIES.LOG_LEVEL_CRITICAL);
                 break;
 
             case LogLevel::EXCEPTION:
-                result.set_to_success(UTILITIES.LOG_LEVEL_EXCEPTION);
+                result.set_to_good_status_with_value(UTILITIES.LOG_LEVEL_EXCEPTION);
                 break;
 
             case LogLevel::HIGHLIGHTED_INFO:
-                result.set_to_success(UTILITIES.LOG_LEVEL_HIGHLIGHTED_INFO);
+                result.set_to_good_status_with_value(UTILITIES.LOG_LEVEL_HIGHLIGHTED_INFO);
                 break;
 
             default:
-                result.set_to_success(UTILITIES.LOG_LEVEL_INFO);
+                result.set_to_good_status_with_value(UTILITIES.LOG_LEVEL_INFO);
         }
     }
 }

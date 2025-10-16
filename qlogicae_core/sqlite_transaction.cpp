@@ -4,10 +4,15 @@
 
 namespace QLogicaeCore
 {
-    SQLiteTransaction::SQLiteTransaction(SQLiteDatabase& database_instance)
-        : database(database_instance), committed(false)
+    SQLiteTransaction::SQLiteTransaction(
+        SQLiteDatabase& database_instance
+    )
+        : database(database_instance),
+        committed(false)
     {
-        SQLiteStatement begin_statement = database.prepare("BEGIN;");
+        SQLiteStatement begin_statement =
+            database.prepare("BEGIN;");
+        
         begin_statement.step();
     }
 
@@ -17,10 +22,15 @@ namespace QLogicaeCore
         {
             try
             {
-                SQLiteStatement rollback_statement = database.prepare("ROLLBACK;");
+                SQLiteStatement rollback_statement =
+                    database.prepare("ROLLBACK;");
+                
                 rollback_statement.step();
             }
-            catch (...) {}
+            catch (...)
+            {
+            
+            }
         }
     }
 
@@ -28,7 +38,9 @@ namespace QLogicaeCore
     {
         if (!committed)
         {
-            SQLiteStatement commit_statement = database.prepare("COMMIT;");
+            SQLiteStatement commit_statement =
+                database.prepare("COMMIT;");
+            
             commit_statement.step();
             committed = true;
         }

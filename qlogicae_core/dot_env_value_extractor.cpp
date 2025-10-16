@@ -5,9 +5,11 @@
 namespace QLogicaeCore
 {
     DotEnvValueExtractor::DotEnvValueExtractor(
-        const std::string& key) :
-            _key(ENCODER
-                .from_utf8_to_utf16(key))
+        const std::string& key
+    ) :
+            _key(
+                ENCODER.from_utf8_to_utf16(key)
+            )
     {
 
     }
@@ -36,23 +38,33 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at DotEnvValueExtractor::get_value(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at DotEnvValueExtractor::get_value(): " +
+                exception.what()
+            );
         }
     }
 
-    void DotEnvValueExtractor::get_key(Result<std::optional<std::wstring>>& result) const
+    void DotEnvValueExtractor::get_key(
+        Result<std::optional<std::wstring>>& result
+    ) const
     {
-        result.set_to_success(_key);
+        result.set_to_good_status_with_value(_key);
     }
 
-    void DotEnvValueExtractor::get_value(Result<std::string>& result) const
+    void DotEnvValueExtractor::get_value(
+        Result<std::string>& result
+    ) const
     {
-        result.set_to_success(ENCODER
-            .from_utf16_to_utf8(
-                DOT_ENV.get(_key.c_str()
-                ).value()
-            )
+        Result<std::wstring> output;
+
+        DOT_ENV.get(
+            output, _key.c_str()
         );
+        ENCODER.from_utf16_to_utf8(
+            result, output.get_value()
+        );        
     }
 
     void DotEnvValueExtractor::setup(
@@ -60,9 +72,13 @@ namespace QLogicaeCore
         const std::string key
     )
     {
-        _key = ENCODER.from_utf8_to_utf16(key);
+        Result<std::wstring> r;
 
-        result.set_to_success();
+        ENCODER.from_utf8_to_utf16(r, key);
+
+        _key = r.get_value();
+
+        result.set_to_good_status_without_value();
     }
 
     void DotEnvValueExtractor::setup(
@@ -72,6 +88,6 @@ namespace QLogicaeCore
     {
         _key = key;
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 }

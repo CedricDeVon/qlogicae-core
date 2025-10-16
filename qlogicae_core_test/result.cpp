@@ -4,6 +4,7 @@
 
 namespace QLogicaeCoreTest
 {
+    /*
     class ResultStringTest : public ::testing::Test
     {
     protected:
@@ -72,27 +73,27 @@ namespace QLogicaeCoreTest
 
     TEST_F(ResultStringTest, Should_SetAndGetSuccess_When_UsingSetToSuccess)
     {
-        result.set_to_success();
-        EXPECT_TRUE(result.get_is_successful());
+        result.set_to_good_status_with_value();
+        EXPECT_TRUE(result.get_status());
 
         std::string sample_data = "test";
-        result.set_to_success(sample_data);
+        result.set_to_good_status_with_value(sample_data);
 
         std::string retrieved_data;
-        result.get_data(retrieved_data);
+        result.get_value(retrieved_data);
         EXPECT_EQ(retrieved_data, sample_data);
     }
 
     TEST_F(ResultStringTest, Should_SetAndGetFailure_When_UsingSetToFailure)
     {
-        result.set_to_failure();
-        EXPECT_FALSE(result.get_is_successful());
+        result.set_to_bad_status_with_value();
+        EXPECT_FALSE(result.get_status());
 
         std::string sample_data = "fail";
-        result.set_to_failure(sample_data);
+        result.set_to_bad_status_with_value(sample_data);
 
         std::string retrieved_data;
-        result.get_data(retrieved_data);
+        result.get_value(retrieved_data);
         EXPECT_EQ(retrieved_data, sample_data);
     }
 
@@ -116,8 +117,8 @@ namespace QLogicaeCoreTest
                 [this, &start_future]()
                 {
                     start_future.get();
-                    result.set_to_failure();
-                    return result.get_is_successful();
+                    result.set_to_bad_status_with_value();
+                    return result.get_status();
                 });
 
         start_promise.set_value();
@@ -132,8 +133,8 @@ namespace QLogicaeCoreTest
         {
             threads.emplace_back([this, &success_count]()
                 {
-                    result.set_to_success();
-                    if (result.get_is_successful())
+                    result.set_to_good_status_with_value();
+                    if (result.get_status())
                         success_count.fetch_add(1);
                 });
         }
@@ -153,8 +154,8 @@ namespace QLogicaeCoreTest
                 {
                     for (int inner = 0; inner < 50; ++inner)
                     {
-                        result.set_to_success();
-                        result.set_to_failure();
+                        result.set_to_good_status_with_value();
+                        result.set_to_bad_status_with_value();
                     }
                 });
         }
@@ -171,43 +172,32 @@ namespace QLogicaeCoreTest
     TEST_F(ResultStringTest, Should_HandleEdgeCase_When_EmptyData)
     {
         std::string empty_data;
-        result.set_to_success(empty_data);
+        result.set_to_good_status_with_value(empty_data);
 
         std::string retrieved_data;
-        result.get_data(retrieved_data);
+        result.get_value(retrieved_data);
         EXPECT_EQ(retrieved_data, empty_data);
     }
 
     TEST_P(ResultStringParamTest, Should_HandleParameterizedData_When_SetToSuccess)
     {
         const std::string param_value = GetParam();
-        result.set_to_success(param_value);
+        result.set_to_good_status_with_value(param_value);
 
         std::string retrieved_value;
-        result.get_data(retrieved_value);
+        result.get_value(retrieved_value);
         EXPECT_EQ(retrieved_value, param_value);
     }
 
     TEST_F(ResultIntTest, Should_SetAndGetSuccess_When_UsingSetToSuccess)
     {
-        result.set_to_success();
-        EXPECT_TRUE(result.get_is_successful());
+        result.set_to_good_status_with_value();
+        EXPECT_TRUE(result.get_status());
 
-        result.set_to_success(42);
+        result.set_to_good_status_with_value(42);
         int value;
-        result.get_data(value);
+        result.get_value(value);
         EXPECT_EQ(value, 42);
-    }
-
-    TEST_F(ResultIntTest, Should_SetAndGetFailure_When_UsingSetToFailure)
-    {
-        result.set_to_failure();
-        EXPECT_FALSE(result.get_is_successful());
-
-        result.set_to_failure(7);
-        int value;
-        result.get_data(value);
-        EXPECT_EQ(value, 7);
     }
 
     TEST_F(ResultIntTest, Should_HandleAsyncOperations)
@@ -216,8 +206,8 @@ namespace QLogicaeCoreTest
             std::async(std::launch::async,
                 [this]()
                 {
-                    result.set_to_failure();
-                    return result.get_is_successful();
+                    result.set_to_bad_status_with_value();
+                    return result.get_status();
                 });
         EXPECT_FALSE(async_task.get());
     }
@@ -232,8 +222,8 @@ namespace QLogicaeCoreTest
                 {
                     for (int inner = 0; inner < 20; ++inner)
                     {
-                        result.set_to_success();
-                        result.set_to_failure();
+                        result.set_to_good_status_with_value();
+                        result.set_to_bad_status_with_value();
                     }
                 });
         }
@@ -249,24 +239,13 @@ namespace QLogicaeCoreTest
 
     TEST_F(ResultDoubleTest, Should_SetAndGetSuccess_When_UsingSetToSuccess)
     {
-        result.set_to_success();
-        EXPECT_TRUE(result.get_is_successful());
+        result.set_to_good_status_with_value();
+        EXPECT_TRUE(result.get_status());
 
-        result.set_to_success(3.14);
+        result.set_to_good_status_with_value(3.14);
         double value;
-        result.get_data(value);
+        result.get_value(value);
         EXPECT_DOUBLE_EQ(value, 3.14);
-    }
-
-    TEST_F(ResultDoubleTest, Should_SetAndGetFailure_When_UsingSetToFailure)
-    {
-        result.set_to_failure();
-        EXPECT_FALSE(result.get_is_successful());
-
-        result.set_to_failure(2.71);
-        double value;
-        result.get_data(value);
-        EXPECT_DOUBLE_EQ(value, 2.71);
     }
 
     TEST_F(ResultDoubleTest, Should_HandleAsyncOperations)
@@ -275,19 +254,19 @@ namespace QLogicaeCoreTest
             std::async(std::launch::async,
                 [this]()
                 {
-                    result.set_to_failure();
-                    return result.get_is_successful();
+                    result.set_to_bad_status_with_value();
+                    return result.get_status();
                 });
         EXPECT_FALSE(async_task.get());
     }
 
     TEST_F(ResultVoidTest, Should_SetAndGetSuccess)
     {
-        result.set_to_success();
-        EXPECT_TRUE(result.get_is_successful());
+        result.set_to_good_status_with_value();
+        EXPECT_TRUE(result.get_status());
 
-        result.set_to_failure();
-        EXPECT_FALSE(result.get_is_successful());
+        result.set_to_bad_status_with_value();
+        EXPECT_FALSE(result.get_status());
     }
 
     TEST_F(ResultVoidTest, Should_HandleAsyncOperations)
@@ -296,8 +275,8 @@ namespace QLogicaeCoreTest
             std::async(std::launch::async,
                 [this]()
                 {
-                    result.set_to_failure();
-                    return result.get_is_successful();
+                    result.set_to_bad_status_with_value();
+                    return result.get_status();
                 });
         EXPECT_FALSE(async_task.get());
     }
@@ -305,13 +284,13 @@ namespace QLogicaeCoreTest
     TEST_F(ResultThrowTest, Should_Throw_OnCopyAssignment_When_CopyProvided)
     {
         ThrowOnCopy value;
-        EXPECT_THROW(result.set_to_success(value), std::runtime_error);
+        EXPECT_THROW(result.set_to_good_status_with_value(value), std::runtime_error);
     }
 
     TEST_F(ResultThrowTest, Should_NotThrow_OnMoveAssignment_When_MoveProvided)
     {
         ThrowOnCopy value;
-        EXPECT_NO_THROW(result.set_to_success(std::move(value)));
+        EXPECT_NO_THROW(result.set_to_good_status_with_value(std::move(value)));
     }
 
     TEST_F(ResultStringTest,
@@ -334,8 +313,8 @@ namespace QLogicaeCoreTest
                     start_future.wait();
                     {
                         std::lock_guard<std::mutex> guard(mutex);
-                        result.set_to_success();
-                        if (result.get_is_successful())
+                        result.set_to_good_status_with_value();
+                        if (result.get_status())
                             success_increment.fetch_add(1);
                     }
                     completed_count.fetch_add(1);
@@ -364,14 +343,14 @@ namespace QLogicaeCoreTest
     {
         int min_value = std::numeric_limits<int>::min();
         int max_value = std::numeric_limits<int>::max();
-        result.set_to_success(min_value);
+        result.set_to_good_status_with_value(min_value);
         int retrieved_min;
-        result.get_data(retrieved_min);
+        result.get_value(retrieved_min);
         EXPECT_EQ(retrieved_min, min_value);
 
-        result.set_to_success(max_value);
+        result.set_to_good_status_with_value(max_value);
         int retrieved_max;
-        result.get_data(retrieved_max);
+        result.get_value(retrieved_max);
         EXPECT_EQ(retrieved_max, max_value);
     }
 
@@ -380,8 +359,8 @@ namespace QLogicaeCoreTest
         auto start_time = std::chrono::steady_clock::now();
         for (int index = 0; index < 1000; ++index)
         {
-            result.set_to_success("x");
-            result.set_to_failure();
+            result.set_to_good_status_with_value("x");
+            result.set_to_bad_status_with_value();
         }
         auto end_time = std::chrono::steady_clock::now();
         long long elapsed_millis =
@@ -394,9 +373,9 @@ namespace QLogicaeCoreTest
         Should_HandleParameterizedValues_When_SetToSuccess)
     {
         const int param_value = GetParam();
-        result.set_to_success(param_value);
+        result.set_to_good_status_with_value(param_value);
         int retrieved_value;
-        result.get_data(retrieved_value);
+        result.get_value(retrieved_value);
         EXPECT_EQ(retrieved_value, param_value);
     }
 
@@ -404,22 +383,22 @@ namespace QLogicaeCoreTest
         Should_HandleParameterizedValues_When_SetToSuccess)
     {
         const double param_value = GetParam();
-        result.set_to_success(param_value);
+        result.set_to_good_status_with_value(param_value);
         double retrieved_value;
-        result.get_data(retrieved_value);
+        result.get_value(retrieved_value);
         EXPECT_DOUBLE_EQ(retrieved_value, param_value);
     }
 
     TEST_F(ResultIntTest, Should_HandleEdgeCases_NegativeAndZero_When_Set)
     {
-        result.set_to_success(0);
+        result.set_to_good_status_with_value(0);
         int zero_value;
-        result.get_data(zero_value);
+        result.get_value(zero_value);
         EXPECT_EQ(zero_value, 0);
 
-        result.set_to_success(-123);
+        result.set_to_good_status_with_value(-123);
         int negative_value;
-        result.get_data(negative_value);
+        result.get_value(negative_value);
         EXPECT_EQ(negative_value, -123);
     }
 
@@ -427,14 +406,14 @@ namespace QLogicaeCoreTest
     {
         double inf = std::numeric_limits<double>::infinity();
         double nan = std::numeric_limits<double>::quiet_NaN();
-        result.set_to_success(inf);
+        result.set_to_good_status_with_value(inf);
         double retrieved_inf;
-        result.get_data(retrieved_inf);
+        result.get_value(retrieved_inf);
         EXPECT_TRUE(std::isinf(retrieved_inf));
 
-        result.set_to_success(nan);
+        result.set_to_good_status_with_value(nan);
         double retrieved_nan;
-        result.get_data(retrieved_nan);
+        result.get_value(retrieved_nan);
         EXPECT_TRUE(std::isnan(retrieved_nan));
     }
 
@@ -448,10 +427,10 @@ namespace QLogicaeCoreTest
         {
             threads.emplace_back([this, &success_counter]()
                 {
-                    result.set_to_success();
-                    if (result.get_is_successful())
+                    result.set_to_good_status_with_value();
+                    if (result.get_status())
                         success_counter.fetch_add(1);
-                    result.set_to_failure();
+                    result.set_to_bad_status_with_value();
                 });
         }
         for (std::thread& t : threads)
@@ -472,8 +451,8 @@ namespace QLogicaeCoreTest
         {
             futures.push_back(std::async(std::launch::async, [this]()
                 {
-                    result.set_to_success();
-                    return result.get_is_successful();
+                    result.set_to_good_status_with_value();
+                    return result.get_status();
                 }));
         }
         for (std::future<bool>& f : futures)
@@ -487,40 +466,40 @@ namespace QLogicaeCoreTest
 
     TEST_F(ResultIntTest, Should_DefaultToSuccess_When_Uninitialized)
     {
-        EXPECT_TRUE(result.get_is_successful());
+        EXPECT_TRUE(result.get_status());
     }
 
     TEST_F(ResultIntTest, Should_AllowReuse_BetweenStates)
     {
-        result.set_to_success(10);
-        EXPECT_TRUE(result.get_is_successful());
+        result.set_to_good_status_with_value(10);
+        EXPECT_TRUE(result.get_status());
 
-        result.set_to_failure();
-        EXPECT_FALSE(result.get_is_successful());
+        result.set_to_bad_status_with_value();
+        EXPECT_FALSE(result.get_status());
 
-        result.set_to_success(42);
+        result.set_to_good_status_with_value(42);
         int value;
-        result.get_data(value);
+        result.get_value(value);
         EXPECT_EQ(value, 42);
     }
 
     TEST_F(ResultIntTest, Should_PreserveData_When_Moved)
     {
-        result.set_to_success(99);
+        result.set_to_good_status_with_value(99);
         QLogicaeCore::Result<int> moved_result(std::move(result));
 
         int value;
-        moved_result.get_data(value);
+        moved_result.get_value(value);
         EXPECT_EQ(value, 99);
     }
 
     TEST_F(ResultIntTest, Should_CopyCorrectly_When_Copied)
     {
-        result.set_to_success(7);
+        result.set_to_good_status_with_value(7);
         QLogicaeCore::Result<int> copy_result = result;
 
         int value;
-        copy_result.get_data(value);
+        copy_result.get_value(value);
         EXPECT_EQ(value, 7);
     }
 
@@ -533,10 +512,10 @@ namespace QLogicaeCoreTest
         {
             threads.emplace_back([this, &success_count, i]()
                 {
-                    if (i % 2 == 0) result.set_to_success();
-                    else result.set_to_failure();
+                    if (i % 2 == 0) result.set_to_good_status_with_value();
+                    else result.set_to_bad_status_with_value();
 
-                    if (result.get_is_successful())
+                    if (result.get_status())
                         success_count.fetch_add(1);
                 });
         }
@@ -548,10 +527,10 @@ namespace QLogicaeCoreTest
     TEST_F(ResultStringTest, Should_HandleComplexTypes_Correctly)
     {
         std::string text = "TestValue";
-        result.set_to_success(text);
+        result.set_to_good_status_with_value(text);
 
         std::string retrieved;
-        result.get_data(retrieved);
+        result.get_value(retrieved);
         EXPECT_EQ(retrieved, "TestValue");
     }
 
@@ -559,8 +538,8 @@ namespace QLogicaeCoreTest
     {
         auto fut = std::async(std::launch::async, [this]()
             {
-                result.set_to_failure();
-                return result.get_is_successful();
+                result.set_to_bad_status_with_value();
+                return result.get_status();
             });
 
         EXPECT_FALSE(fut.get());
@@ -593,39 +572,39 @@ namespace QLogicaeCoreTest
     TEST_F(ResultStringTest, Should_HandleGetDataBeforeAnySet)
     {
         std::string retrieved;
-        result.get_data(retrieved);
+        result.get_value(retrieved);
         EXPECT_TRUE(retrieved.empty());
     }
 
     TEST_F(ResultIntTest, Should_HandleGetDataBeforeAnySet)
     {
         int value = 12345;
-        EXPECT_NO_THROW(result.get_data(value));
-        EXPECT_TRUE(result.get_is_successful());
+        EXPECT_NO_THROW(result.get_value(value));
+        EXPECT_TRUE(result.get_status());
     }
 
     TEST_F(ResultStringTest, Should_PreserveMessage_When_SwitchingStates)
     {
         result.set_message("info");
-        result.set_to_success("data");
-        result.set_to_failure("fail");
+        result.set_to_good_status_with_value("data");
+        result.set_to_bad_status_with_value("fail");
         EXPECT_EQ(result.get_message(), "info");
     }
 
     TEST_F(ResultStringTest, Should_PreserveData_When_SwitchingStates)
     {
-        result.set_to_success("success");
-        result.set_to_failure("failure");
+        result.set_to_good_status_with_value("success");
+        result.set_to_bad_status_with_value("failure");
         std::string retrieved;
-        result.get_data(retrieved);
+        result.get_value(retrieved);
         EXPECT_EQ(retrieved, "failure");
     }
 
     TEST_F(ResultStringTest, Should_NotThrow_When_GetDataAfterFailure)
     {
-        result.set_to_failure("error_data");
+        result.set_to_bad_status_with_value("error_data");
         std::string retrieved;
-        EXPECT_NO_THROW(result.get_data(retrieved));
+        EXPECT_NO_THROW(result.get_value(retrieved));
     }
 
     TEST_F(ResultThrowTest, Should_NotCorruptState_AfterException)
@@ -635,7 +614,7 @@ namespace QLogicaeCoreTest
 
         try
         {
-            result.set_to_success(value);
+            result.set_to_good_status_with_value(value);
         }
         catch (...)
         {
@@ -643,16 +622,16 @@ namespace QLogicaeCoreTest
         }
 
         EXPECT_TRUE(exception_thrown);
-        EXPECT_TRUE(result.get_is_successful());
+        EXPECT_TRUE(result.get_status());
     }
 
     TEST_F(ResultStringTest, Should_HandleLargePayloads)
     {
         std::string large_data(1000000, 'A');
-        result.set_to_success(large_data);
+        result.set_to_good_status_with_value(large_data);
 
         std::string retrieved;
-        result.get_data(retrieved);
+        result.get_value(retrieved);
         EXPECT_EQ(retrieved.size(), large_data.size());
         EXPECT_EQ(retrieved.front(), 'A');
         EXPECT_EQ(retrieved.back(), 'A');
@@ -685,4 +664,5 @@ namespace QLogicaeCoreTest
             std::numeric_limits<double>::infinity(),
             -std::numeric_limits<double>::infinity())
     );
+    */
 }

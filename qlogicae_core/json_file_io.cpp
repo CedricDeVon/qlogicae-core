@@ -914,7 +914,7 @@ namespace QLogicaeCore
     {
         _file_path = file_path;
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
     void JsonFileIO::setup(
@@ -926,7 +926,7 @@ namespace QLogicaeCore
         _file_path = file_path;
         _is_formatting_allowed = is_formatting_allowed;
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
     void JsonFileIO::setup(
@@ -938,7 +938,7 @@ namespace QLogicaeCore
         _name = name;
         _file_path = file_path;
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 }
 

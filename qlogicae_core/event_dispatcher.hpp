@@ -121,7 +121,7 @@ namespace QLogicaeCore
         Result<void>& result
     )
     {
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
     template <typename... EventTypes>
@@ -285,11 +285,13 @@ namespace QLogicaeCore
             listeners.emplace_back(callback_ptr);
         }
 
-        result.set_to_success(SubscriptionHandle([this, callback_ptr, index]()
+        result.set_to_good_status_with_value(
+            SubscriptionHandle([this, callback_ptr, index]()
             {
                 std::unique_lock lock(_mutex);
                 auto& listeners = _listeners[index];
-                listeners.erase(std::remove_if(listeners.begin(), listeners.end(),
+                listeners.erase(std::remove_if(
+                    listeners.begin(), listeners.end(),
                     [&](const auto& ptr) { return ptr == callback_ptr; }),
                     listeners.end());
             }
@@ -327,7 +329,7 @@ namespace QLogicaeCore
             (*callback)(event);
         }
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
     template <typename... EventTypes>
@@ -337,9 +339,9 @@ namespace QLogicaeCore
         const EventT& event
     )
     {
-        result.set_to_success(std::thread([this, event]()
+        result.set_to_good_status_without_value(std::thread([this, event]()
             {
-                dispatch(event);
+                dispatch(result, event);
             }
         ).detach());        
     }

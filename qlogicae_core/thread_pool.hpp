@@ -160,7 +160,7 @@ namespace QLogicaeCore
     {
         if (_should_stop)
         {
-            result.set_to_failure(false);
+            result.set_to_bad_status_with_value(false);
             return;
         }
 
@@ -171,7 +171,7 @@ namespace QLogicaeCore
             priority
         );
 
-        result.set_to_success(success);
+        result.set_to_good_status_with_value(success);
     }
 
     template <typename Callable>
@@ -181,7 +181,7 @@ namespace QLogicaeCore
     {
         if (_should_stop)
         {
-            result.set_to_failure(std::nullopt);
+            result.set_to_bad_status_with_value(std::nullopt);
             return;
         }
 
@@ -207,10 +207,10 @@ namespace QLogicaeCore
 
         if (!success)
         {
-            result.set_to_failure(std::nullopt);
+            result.set_to_bad_status_with_value(std::nullopt);
             return;
         }
 
-        result.set_to_success(task_future);
+        result.set_to_good_status_with_value(task_future);
     }
 }

@@ -5,7 +5,8 @@
 namespace QLogicaeCore
 {
     BinaryFileIO::BinaryFileIO(
-        const std::string& file_path) :
+        const std::string& file_path
+    ) :
             AbstractFileIO(file_path)
     {
 
@@ -13,7 +14,8 @@ namespace QLogicaeCore
 
     BinaryFileIO::BinaryFileIO(
         const std::string& name,
-        const std::string& file_path) :
+        const std::string& file_path
+    ) :
             AbstractFileIO(name, file_path)
     {
 
@@ -33,7 +35,7 @@ namespace QLogicaeCore
     {
         _file_path = file_path;
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
     void BinaryFileIO::setup(
@@ -45,10 +47,12 @@ namespace QLogicaeCore
         _name = name;
         _file_path = file_path;
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
-    bool BinaryFileIO::open(const FileMode& file_mode)
+    bool BinaryFileIO::open(
+        const FileMode& file_mode
+    )
     {
         try
         {
@@ -92,11 +96,17 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at BinaryFileIO::open(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at BinaryFileIO::open(): " +
+                exception.what()
+            );
         }
     }
 
-    bool BinaryFileIO::close(const FileMode& file_mode)
+    bool BinaryFileIO::close(
+        const FileMode& file_mode
+    )
     {
         try
         {
@@ -132,7 +142,11 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at BinaryFileIO::close(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at BinaryFileIO::close(): " +
+                exception.what()
+            );
         }
     }
 
@@ -162,7 +176,11 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at BinaryFileIO::is_open(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at BinaryFileIO::is_open(): " +
+                exception.what()
+            );
         }
     }
 
@@ -195,7 +213,11 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at BinaryFileIO::read(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at BinaryFileIO::read(): " +
+                exception.what()
+            );
         }
     }
 
@@ -226,7 +248,11 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at BinaryFileIO::write(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at BinaryFileIO::write(): " +
+                exception.what()
+            );
         }
     }
 
@@ -256,7 +282,11 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at BinaryFileIO::append(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at BinaryFileIO::append(): " +
+                exception.what()
+            );
         }
     }
 

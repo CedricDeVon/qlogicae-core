@@ -15,10 +15,12 @@ namespace QLogicaeCore
 		Result<void>& result
 	)
 	{
-		result.set_to_success();
+		result.set_to_good_status_without_value();
 	}
 
-	void FileIOs::set_file(std::shared_ptr<AbstractFileIO> instances)
+	void FileIOs::set_file(
+		std::shared_ptr<AbstractFileIO> instances
+	)
 	{
 		try
 		{
@@ -26,12 +28,17 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
-			throw std::runtime_error(std::string() + "Exception at FileIOs::set_file(): " + exception.what());
+			throw std::runtime_error(
+				std::string() +
+				"Exception at FileIOs::set_file(): " +
+				exception.what()
+			);
 		}
 	}
 
 	void FileIOs::set_file(
-		const std::vector<std::shared_ptr<AbstractFileIO>>& instances)
+		const std::vector<std::shared_ptr<AbstractFileIO>>& instances
+	)
 	{
 		try
 		{
@@ -46,7 +53,11 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
-			throw std::runtime_error(std::string() + "Exception at FileIOs::set_file(): " + exception.what());
+			throw std::runtime_error(
+				std::string() +
+				"Exception at FileIOs::set_file(): " +
+				exception.what()
+			);
 		}
 	}
 
@@ -79,7 +90,7 @@ namespace QLogicaeCore
 	{
 		static FileIOs instance;
 
-		result.set_to_success(&instance);
+		result.set_to_good_status_with_value(&instance);
 	}
 }
 

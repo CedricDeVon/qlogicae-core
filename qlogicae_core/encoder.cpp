@@ -432,17 +432,20 @@ namespace QLogicaeCore
         }
     }
 
-    void Encoder::get_instance(Result<Encoder*>& result)
+    void Encoder::get_instance(
+        Result<Encoder*>& result
+    )
     {
         static Encoder singleton;
 
-        result.set_to_success(&singleton);
+        result.set_to_good_status_with_value(&singleton);
     }
 
     void Encoder::from_bytes_to_base64(
         Result<std::string>& result,
         const unsigned char* text,
-        const size_t& length) const
+        const size_t& length
+    ) const
     {
         std::string base64(sodium_base64_encoded_len(
             length,
@@ -459,17 +462,19 @@ namespace QLogicaeCore
 
         base64.resize(strlen(base64.data()));
 
-        result.set_to_success(base64);
+        result.set_to_good_status_with_value(base64);
     }
 
     void Encoder::from_base64_to_bytes(
         Result<std::vector<unsigned char>>& result,
-        const std::string_view& text) const
+        const std::string_view& text
+    ) const
     {
         if (text.empty())
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value(
+                "Text is empty"
+            );
         }
 
         std::vector<unsigned char> buffer(text.length());
@@ -482,19 +487,21 @@ namespace QLogicaeCore
             nullptr, sodium_base64_VARIANT_ORIGINAL
         ) != 0)
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value(
+                "Encoding failed"
+            );
         }
 
         buffer.resize(actual_len);
 
-        result.set_to_success(buffer);
+        result.set_to_good_status_with_value(buffer);
     }
 
     void Encoder::from_bytes_to_hex(
         Result<std::string>& result,
         const unsigned char* text,
-        const size_t& length) const
+        const size_t& length
+    ) const
     {
         const char* hex_chars = UTILITIES.HEXADECIMAL_CHARACTERSET_1.c_str();
         std::string output;
@@ -508,17 +515,19 @@ namespace QLogicaeCore
             output.push_back(hex_chars[byte & 0x0F]);
         }
 
-        result.set_to_success(output);
+        result.set_to_good_status_with_value(output);
     }
 
     void Encoder::from_hex_to_bytes(
         Result<std::vector<unsigned char>>& result,
-        const std::string_view& text) const
+        const std::string_view& text
+    ) const
     {
         if (text.empty())
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value(
+                "Text is empty"
+            );
         }
 
         unsigned int byte;
@@ -532,17 +541,19 @@ namespace QLogicaeCore
             bytes.push_back(static_cast<unsigned char>(byte));
         }
 
-        result.set_to_success(bytes);
+        result.set_to_good_status_with_value(bytes);
     }
 
     void Encoder::from_utf16_to_utf8(
         Result<std::string>& result,
-        const std::wstring_view& text) const
+        const std::wstring_view& text
+    ) const
     {
         if (text.empty())
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value(
+                "Text is empty"
+            );
         }
 
         int size_needed = WideCharToMultiByte(
@@ -560,17 +571,19 @@ namespace QLogicaeCore
         );
         data.pop_back();
 
-        result.set_to_success(data);
+        result.set_to_good_status_with_value(data);
     }
 
     void Encoder::from_utf8_to_utf16(
         Result<std::wstring>& result,
-        const std::string_view& text) const
+        const std::string_view& text
+    ) const
     {
         if (text.empty())
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value(
+                "Text is empty"
+            );
         }
 
         unsigned int size_needed = MultiByteToWideChar(
@@ -586,17 +599,19 @@ namespace QLogicaeCore
         );
         data.pop_back();
 
-        result.set_to_success(data);
+        result.set_to_good_status_with_value(data);
     }
 
     void Encoder::from_utf8_to_hex(
         Result<std::string>& result,
-        const std::string_view& text) const
+        const std::string_view& text
+    ) const
     {
         if (text.empty())
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value(
+                "Text is empty"
+            );
         }
 
         _to_hex(result, text);
@@ -604,12 +619,14 @@ namespace QLogicaeCore
 
     void Encoder::from_utf8_to_base64(
         Result<std::string>& result,
-        const std::string_view& text) const
+        const std::string_view& text
+    ) const
     {
         if (text.empty())
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value(
+                "Text is empty"
+            );
         }
 
         _to_base64(result, text);
@@ -617,12 +634,14 @@ namespace QLogicaeCore
 
     void Encoder::from_hex_to_utf8(
         Result<std::string>& result,
-        const std::string_view& text) const
+        const std::string_view& text
+    ) const
     {
         if (text.empty())
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value(
+                "Text is empty"
+            );
         }
 
         size_t bin_len = 0;
@@ -633,11 +652,12 @@ namespace QLogicaeCore
             text.data(), text.size(),
             nullptr, &bin_len, nullptr) != 0)
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value(
+                "Encoding failed"
+            );
         }
 
-        result.set_to_success(
+        result.set_to_good_status_with_value(
             std::string(reinterpret_cast<const char*>(
                 buffer.data()), bin_len
             )
@@ -646,26 +666,30 @@ namespace QLogicaeCore
 
     void Encoder::from_hex_to_base64(
         Result<std::string>& result,
-        const std::string_view& text) const
+        const std::string_view& text
+    ) const
     {
         if (text.empty())
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value(
+                "Text is empty"
+            );
         }
 
         from_hex_to_utf8(result, text);
-        _to_base64(result, result.get_data());
+        _to_base64(result, result.get_value());
     }
 
     void Encoder::from_base64_to_utf8(
         Result<std::string>& result,
-        const std::string_view& text) const
+        const std::string_view& text
+    ) const
     {
         if (text.empty())
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value(
+                "Text is empty"
+            );
         }
 
         size_t bin_len = 0;
@@ -676,11 +700,12 @@ namespace QLogicaeCore
             nullptr, &bin_len, nullptr,
             sodium_base64_VARIANT_ORIGINAL) != 0)
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value(
+                "Encoding failed"
+            );
         }
 
-        result.set_to_success(
+        result.set_to_good_status_with_value(
             std::string(reinterpret_cast<const char*>(
                 buffer.data()), bin_len)
         );
@@ -688,12 +713,14 @@ namespace QLogicaeCore
 
     void Encoder::from_base64_to_hex(
         Result<std::string>& result,
-        const std::string_view& text) const
+        const std::string_view& text
+    ) const
     {
         if (text.empty())
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value(
+                "Text is empty"
+            );
         }
 
         from_base64_to_utf8(result, text);
@@ -701,12 +728,14 @@ namespace QLogicaeCore
 
     void Encoder::_to_hex(
         Result<std::string>& result,
-        const std::string_view& text) const
+        const std::string_view& text
+    ) const
     {
         if (text.empty())
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value(
+                "Text is empty"
+            );
         }
 
         std::string output(text.size() * 3, '\0');
@@ -717,7 +746,7 @@ namespace QLogicaeCore
             text.size());
         output.resize(std::strlen(output.c_str()));
 
-        result.set_to_success(
+        result.set_to_good_status_with_value(
             output
         );
     }
@@ -726,17 +755,19 @@ namespace QLogicaeCore
         Result<void>& result
     )
     {
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
     void Encoder::_to_base64(
         Result<std::string>& result,
-        const std::string_view& text) const
+        const std::string_view& text
+    ) const
     {
         if (text.empty())
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value(
+                "Text is empty"
+            );
         }
 
         std::string output(sodium_base64_encoded_len(
@@ -751,7 +782,7 @@ namespace QLogicaeCore
             sodium_base64_VARIANT_ORIGINAL);
         output.resize(std::strlen(output.c_str()));
 
-        result.set_to_success(
+        result.set_to_good_status_with_value(
             output
         );
     }

@@ -49,21 +49,21 @@ namespace QLogicaeCore
         Result<std::optional<std::string>>& result
     ) const
     {
-        result.set_to_success(_sub_key);
+        result.set_to_good_status_with_value(_sub_key);
     }
 
     void WindowsRegistryValueExtractor::get_name_key(
         Result<std::optional<std::string>>& result
     ) const
     {
-        result.set_to_success(_name_key);
+        result.set_to_good_status_with_value(_name_key);
     }
 
     void WindowsRegistryValueExtractor::get_value(
         Result<std::string>& result
     ) const
     {
-        result.set_to_success(WindowsRegistry::hkcu()
+        result.set_to_good_status_with_value(WindowsRegistry::hkcu()
             .get_value_via_utf8(_sub_key, _name_key).value()
         );        
     }
@@ -77,7 +77,7 @@ namespace QLogicaeCore
         _sub_key = sub_key;
         _name_key = name_key;
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
     void WindowsRegistryValueExtractor::setup(
@@ -88,11 +88,11 @@ namespace QLogicaeCore
     {
         Result<std::string> string_result;
         ENCODER.from_utf16_to_utf8(string_result, sub_key);
-        _sub_key = string_result.get_data();
+        _sub_key = string_result.get_value();
         
         ENCODER.from_utf16_to_utf8(string_result, name_key);
-        _name_key = string_result.get_data();
+        _name_key = string_result.get_value();
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 }

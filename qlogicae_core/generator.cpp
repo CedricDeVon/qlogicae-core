@@ -9,7 +9,9 @@ namespace QLogicaeCore
         static const int status = sodium_init();
         if (status < 0)
         {
-            throw std::runtime_error("Exception at: Generator::Generator(): Sodium initialization failed");
+            throw std::runtime_error(
+                "Exception at: Generator::Generator(): Sodium initialization failed"
+            );
         }
     }
 
@@ -36,7 +38,9 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Generator::random_hex(): " + exception.what());
+            throw std::runtime_error(
+                std::string() + "Exception at Generator::random_hex(): " + exception.what()
+            );
         }
     }
 
@@ -55,7 +59,9 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Generator::random_rgb_hex(): " + exception.what());
+            throw std::runtime_error(
+                std::string() + "Exception at Generator::random_rgb_hex(): " + exception.what()
+            );
         }
     }
 
@@ -74,7 +80,9 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Generator::random_rgba_hex(): " + exception.what());
+            throw std::runtime_error(
+                std::string() + "Exception at Generator::random_rgba_hex(): " + exception.what()
+            );
         }
     }
 
@@ -94,7 +102,9 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Generator::random_base64(): " + exception.what());
+            throw std::runtime_error(
+                std::string() + "Exception at Generator::random_base64(): " + exception.what()
+            );
         }
     }
 
@@ -110,7 +120,9 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Generator::random_uuid4(): " + exception.what());
+            throw std::runtime_error(
+                std::string() + "Exception at Generator::random_uuid4(): " + exception.what()
+            );
         }
     }
 
@@ -124,7 +136,9 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Generator::random_salt(): " + exception.what());
+            throw std::runtime_error(
+                std::string() + "Exception at Generator::random_salt(): " + exception.what()
+            );
         }
     }
 
@@ -142,7 +156,9 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Generator::random_bool(): " + exception.what());
+            throw std::runtime_error(
+                std::string() + "Exception at Generator::random_bool(): " + exception.what()
+            );
         }
     }
 
@@ -165,7 +181,9 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Generator::random_string_vector(): " + exception.what());
+            throw std::runtime_error(
+                std::string() + "Exception at Generator::random_string_vector(): " + exception.what()
+            );
         }
     }
 
@@ -197,7 +215,9 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Generator::random_string(): " + exception.what());
+            throw std::runtime_error(
+                std::string() + "Exception at Generator::random_string(): " + exception.what()
+            );
         }
 
     }
@@ -217,7 +237,9 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Generator::random_int(): " + exception.what());
+            throw std::runtime_error(
+                std::string() + "Exception at Generator::random_int(): " + exception.what()
+            );
         }
     }
 
@@ -236,7 +258,9 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Generator::random_double(): " + exception.what());
+            throw std::runtime_error(
+                std::string() + "Exception at Generator::random_double(): " + exception.what()
+            );
         }
     }
 
@@ -255,7 +279,9 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at Generator::random_bytes(): " + exception.what());
+            throw std::runtime_error(
+                std::string() + "Exception at Generator::random_bytes(): " + exception.what()
+            );
         }
     }
 
@@ -273,7 +299,7 @@ namespace QLogicaeCore
         Result<void>& result
     )
     {
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
     void Generator::random_uuid4(
@@ -284,7 +310,7 @@ namespace QLogicaeCore
             _random_m19937()
         );
 
-        result.set_to_success(
+        result.set_to_good_status_with_value(
             uuids::to_string(uuid_generator())
         );
     }
@@ -300,7 +326,7 @@ namespace QLogicaeCore
             random_hex(6)
         );
 
-        result.set_to_success(
+        result.set_to_good_status_with_value(
             content
         );
     }
@@ -316,7 +342,7 @@ namespace QLogicaeCore
             random_hex(8)
         );
 
-        result.set_to_success(
+        result.set_to_good_status_with_value(
             content
         );
     }
@@ -328,7 +354,7 @@ namespace QLogicaeCore
         std::array<unsigned char, 16> salt{};
         randombytes_buf(salt.data(), salt.size());
         
-        result.set_to_success(
+        result.set_to_good_status_with_value(
             salt
         );
     }
@@ -341,12 +367,13 @@ namespace QLogicaeCore
     {
         if (buffer == nullptr && size > 0)
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value(
+                "Buffer is empty and size is greater than 0"
+            );
         }
-
+        
         randombytes_buf(buffer, size);
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
     void Generator::random_bool(
@@ -356,11 +383,12 @@ namespace QLogicaeCore
     {
         if (true_probability < 1)
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value(
+                "True probability is less than 1"
+            );
         }
 
-        result.set_to_success(
+        result.set_to_good_status_with_value(
             std::bernoulli_distribution(
                 true_probability
             )(_random_m19937())
@@ -382,7 +410,7 @@ namespace QLogicaeCore
             content.emplace_back(random_string(length));
         }
 
-        result.set_to_success(content);
+        result.set_to_good_status_with_value(content);
     }
 
     void Generator::random_hex(
@@ -393,14 +421,13 @@ namespace QLogicaeCore
     {
         if (character_set.empty() || length < 1)
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value(
+                "Either character set is empty or output length is less than 1"
+            );
         }
 
-        result.set_to_success(
-            ENCODER.from_utf8_to_hex(
-                random_string(length, character_set)
-            )
+        ENCODER.from_utf8_to_hex(
+            result, random_string(length, character_set)
         );
     }
 
@@ -412,8 +439,9 @@ namespace QLogicaeCore
     {
         if (character_set.empty() || length < 1)
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value(
+                "Either character set is empty or output length is less than 1"
+            );
         }
 
         std::string content;
@@ -429,7 +457,7 @@ namespace QLogicaeCore
             content += character_set[distribution(random_engine)];
         }
 
-        result.set_to_success(content);
+        result.set_to_good_status_with_value(content);
     }
 
     void Generator::random_base64(
@@ -440,14 +468,13 @@ namespace QLogicaeCore
     {
         if (character_set.size() < 64 || length < 1)
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value(
+                "Either character set length is less than 64 or length is less than 1"
+            );
         }
 
-        const std::string raw = random_string(length, character_set);
-        result.set_to_success(
-            ENCODER.from_utf8_to_base64(raw)
-        );
+        random_string(result, length, character_set);
+        ENCODER.from_utf8_to_base64(result, result.get_value());
     }
 
     void Generator::random_int(
@@ -458,11 +485,13 @@ namespace QLogicaeCore
     {
         if (maximum < minimum)
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value(
+                "Maximum is less then minimum"
+            );
         }
 
-        result.set_to_success(std::uniform_int_distribution<int>(
+        result.set_to_good_status_with_value(
+            std::uniform_int_distribution<int>(
             minimum, maximum)(_random_m19937())
         );
     }
@@ -475,11 +504,12 @@ namespace QLogicaeCore
     {
         if (maximum < minimum)
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value(
+                "Maximum is less then minimum"
+            );
         }
 
-        result.set_to_success(
+        result.set_to_good_status_with_value(
             std::uniform_real_distribution<double>(
                 minimum, maximum)(_random_m19937())
         );
@@ -491,7 +521,7 @@ namespace QLogicaeCore
     {
         static Generator instance;
 
-        result.set_to_success(&instance);
+        result.set_to_good_status_with_value(&instance);
     }
 }
 

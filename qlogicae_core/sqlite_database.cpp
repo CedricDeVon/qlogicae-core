@@ -10,7 +10,7 @@ namespace QLogicaeCore
         int result = sqlite3_open(file_path.c_str(), &raw_handle);
         if (result != SQLITE_OK)
         {
-            throw SQLiteException("failed to open database", result, result);
+            throw SQLiteException("Failed to open database", result, result);
         }
         backend = std::make_shared<SQLiteBackend>(raw_handle);
     }
@@ -45,6 +45,6 @@ namespace QLogicaeCore
         Result<void>& result
     )
     {
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 }

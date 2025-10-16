@@ -447,11 +447,10 @@ namespace QLogicaeCore
         auto s = _object->Get(_read_options, key, &value);
         if (!s.ok())
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value();
         }
             
-        result.set_to_success(
+        result.set_to_good_status_with_value(
             deserialize<Type>(value)
         );
     }
@@ -469,11 +468,10 @@ namespace QLogicaeCore
         auto s = _object->Put(_options, key, serialized);
         if (!s.ok())
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value();
         }
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
     template <typename Type>
@@ -487,7 +485,7 @@ namespace QLogicaeCore
 
         _write_batch.Put(key, serialize(value));
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
     template <typename Type>
@@ -501,7 +499,7 @@ namespace QLogicaeCore
         
         _write_batch.Delete(key);
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
     template <typename Type>
@@ -510,14 +508,14 @@ namespace QLogicaeCore
         const std::string& key
     )
     {
-        result.set_to_success(
+        result.set_to_good_status_with_value(
             std::async(std::launch::async, [this, key = std::move(key)]()
             {
                 Result<Type> result;
 
                 get_value<Type>(result, key);
 
-                return result.get_data();
+                return result.get_value();
             })
         );
     }
@@ -529,7 +527,7 @@ namespace QLogicaeCore
         const Type& value
     )
     {
-        result.set_to_success(
+        result.set_to_good_status_without_value(
             std::async(std::launch::async,
                 [this, key = std::move(key), value = std::move(value)]()
             {

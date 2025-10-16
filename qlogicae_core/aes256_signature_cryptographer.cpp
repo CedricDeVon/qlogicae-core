@@ -12,7 +12,7 @@ namespace QLogicaeCore
     
     void AES256SignatureCryptographer::setup(Result<void>& result)
     {
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
 	std::string AES256SignatureCryptographer::reverse(
@@ -162,8 +162,9 @@ namespace QLogicaeCore
 
         if (!public_key)
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_with_value(
+                "Empty public key"
+            );
         }
 
         std::vector<unsigned char> decoded =
@@ -178,13 +179,17 @@ namespace QLogicaeCore
             public_key
         ) != 0)
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_with_value(
+                "Decryption failed"
+            );
         }
 
-        result.set_to_success(std::string(
-            reinterpret_cast<const char*>(message_ptr), message_len
-        ));
+        result.set_to_good_status_with_value(
+            std::string(
+                reinterpret_cast<const char*>(message_ptr),
+                message_len
+            )
+        );
     }
 
     void AES256SignatureCryptographer::reverse(
@@ -212,9 +217,10 @@ namespace QLogicaeCore
         std::scoped_lock lock(_mutex);
 
         if (!public_key || !private_key)
-        {
-            result.set_to_failure();
-            return;
+        {            
+            return result.set_to_bad_status_with_value(
+                "Empty public key or private key"
+            );
         }
 
         crypto_sign_keypair(public_key, private_key);
@@ -234,9 +240,7 @@ namespace QLogicaeCore
             private_key
         );
 
-        result.set_to_success(
-            ENCODER.from_bytes_to_base64(signed_ptr, signed_len)
-        );
+        ENCODER.from_bytes_to_base64(result, signed_ptr, signed_len);
     }
 
     void AES256SignatureCryptographer::transform(
@@ -264,14 +268,19 @@ namespace QLogicaeCore
         unsigned char* public_key
     ) const
     {
-        result.set_to_success(
-            std::async(std::launch::async, [this, cipher, public_key]() -> std::string
+        result.set_to_good_status_with_value(
+            std::async(std::launch::async,
+                [this, cipher, public_key]() -> std::string
             {
                 Result<std::string> inner_result;
                 
-                reverse(inner_result, cipher, public_key);
+                reverse(
+                    inner_result,
+                    cipher,
+                    public_key
+                );
 
-                return inner_result.get_data();
+                return inner_result.get_value();
             })
         );
     }
@@ -282,14 +291,19 @@ namespace QLogicaeCore
         const std::string& public_key
     ) const
     {
-        result.set_to_success(
-            std::async(std::launch::async, [this, cipher, public_key]() -> std::string
+        result.set_to_good_status_with_value(
+            std::async(std::launch::async,
+                [this, cipher, public_key]() -> std::string
                 {
                     Result<std::string> inner_result;
                     
-                    reverse(inner_result, cipher, public_key);
+                    reverse(
+                        inner_result,
+                        cipher,
+                        public_key
+                    );
 
-                    return inner_result.get_data();
+                    return inner_result.get_value();
                 })
         );
     }
@@ -301,14 +315,20 @@ namespace QLogicaeCore
         unsigned char* private_key
     ) const
     {
-        result.set_to_success(
-            std::async(std::launch::async, [this, text, public_key, private_key]() -> std::string
+        result.set_to_good_status_with_value(
+            std::async(std::launch::async,
+                [this, text, public_key, private_key]() -> std::string
                 {
                     Result<std::string> inner_result;
                     
-                    transform(inner_result, text, public_key, private_key);
+                    transform(
+                        inner_result,
+                        text,
+                        public_key,
+                        private_key
+                    );
 
-                    return inner_result.get_data();
+                    return inner_result.get_value();
                 })
         );
     }
@@ -320,14 +340,20 @@ namespace QLogicaeCore
         const std::string& private_key
     ) const
     {
-        result.set_to_success(
-            std::async(std::launch::async, [this, text, public_key, private_key]() -> std::string
+        result.set_to_good_status_with_value(
+            std::async(std::launch::async,
+                [this, text, public_key, private_key]() -> std::string
                 {
                     Result<std::string> inner_result;
                     
-                    transform(inner_result, text, public_key, private_key);
+                    transform(
+                        inner_result,
+                        text,
+                        public_key,
+                        private_key
+                    );
 
-                    return inner_result.get_data();
+                    return inner_result.get_value();
                 })
         );
     }

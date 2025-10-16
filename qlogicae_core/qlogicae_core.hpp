@@ -4,6 +4,7 @@
 #include "system_access.hpp"
 
 // Results
+#include "result_status.hpp"
 #include "result.hpp"
 #include "abstract_result.hpp"
 #include "bad_result.hpp"

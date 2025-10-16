@@ -24,7 +24,8 @@ namespace QLogicaeCore
 
     const jwt::algorithm::es256k& JsonWebTokenCryptographer::
         _get_es256k_verifier(
-            const std::string& public_key) const
+            const std::string& public_key
+        ) const
     {
         static const jwt::algorithm::es256k verifier(
             public_key, "", "", "");
@@ -33,7 +34,8 @@ namespace QLogicaeCore
     }
 
     std::string JsonWebTokenCryptographer::transform(
-        JsonWebTokenTransformInput options) const
+        JsonWebTokenTransformInput options
+    ) const
     {
         try
         {
@@ -74,12 +76,17 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at JsonWebTokenCryptographer::transform(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at JsonWebTokenCryptographer::transform(): " +
+                exception.what()
+            );
         }
     }
 
     JsonWebTokenReverseResult JsonWebTokenCryptographer::reverse(
-        JsonWebTokenReverseInput options) const
+        JsonWebTokenReverseInput options
+    ) const
     {
         JsonWebTokenReverseResult result;
 
@@ -87,21 +94,24 @@ namespace QLogicaeCore
         {
             if (options.token.empty())
             {
-                result.message = "Exception at JsonWebTokenCryptographer::reverse(): Token input is empty";
+                result.message = 
+                    "Exception at JsonWebTokenCryptographer::reverse(): Token input is empty";
                 
                 return result;
             }
 
             if (options.issuer.empty())
             {
-                result.message = "Exception at JsonWebTokenCryptographer::reverse(): Expected issuer is empty";
+                result.message = 
+                    "Exception at JsonWebTokenCryptographer::reverse(): Expected issuer is empty";
                 
                 return result;
             }
 
             if (options.public_key.empty())
             {
-                result.message = "Exception at JsonWebTokenCryptographer::reverse(): Public key is empty";
+                result.message = 
+                    "Exception at JsonWebTokenCryptographer::reverse(): Public key is empty";
                 
                 return result;
             }
@@ -110,7 +120,8 @@ namespace QLogicaeCore
 
             if (decoded.get_issuer() != options.issuer)
             {
-                result.message = "Exception at JsonWebTokenCryptographer::reverse(): Invalid issuer";
+                result.message = 
+                    "Exception at JsonWebTokenCryptographer::reverse(): Invalid issuer";
 
                 return result;
             }
@@ -136,35 +147,43 @@ namespace QLogicaeCore
         }
         catch (const std::exception& ex)
         {
-            result.message = std::string("Exception at JsonWebTokenCryptographer::reverse(): JWT verification failed: ") + ex.what();
+            result.message = std::string(
+                "Exception at JsonWebTokenCryptographer::reverse(): JWT verification failed: ") +
+                ex.what();
         }
 
         return result;
     }
 
     std::future<std::string> JsonWebTokenCryptographer::transform_async(
-        JsonWebTokenTransformInput options) const
+        JsonWebTokenTransformInput options
+    ) const
     {
-        return std::async(std::launch::async, [this, options]()
+        return std::async(
+            std::launch::async, [this, options]()
             {
                 return this->transform(options);
-            });
+            }
+        );
     }
 
     std::future<JsonWebTokenReverseResult> JsonWebTokenCryptographer::reverse_async(
-        JsonWebTokenReverseInput options) const
+        JsonWebTokenReverseInput options
+    ) const
     {
-        return std::async(std::launch::async, [this, options]()
+        return std::async(
+            std::launch::async, [this, options]()
             {
                 return this->reverse(options);
-            });
+            }
+        );
     }
 
     void JsonWebTokenCryptographer::setup(
         Result<void>& result
     )
     {
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
     void JsonWebTokenCryptographer::transform(
@@ -175,22 +194,19 @@ namespace QLogicaeCore
         if (options.issuer.empty() ||
             options.data.empty())
         {
-            result.set_to_failure("");
-            return;
+            return result.set_to_bad_status_with_value("");
         }
 
         if (options.public_key.empty() ||
             options.private_key.empty())
         {
-            result.set_to_failure("");
-            return;
+            return result.set_to_bad_status_with_value("");
         }
 
         if (options.lifetime < std::chrono::seconds{ 1 } ||
             options.lifetime > std::chrono::hours{ 24 * 30 })
         {
-            result.set_to_failure("");
-            return;
+            return result.set_to_bad_status_with_value("");
         }
 
         auto now = std::chrono::system_clock::now();
@@ -202,12 +218,16 @@ namespace QLogicaeCore
             .set_issued_at(now);
 
         if (options.lifetime.count() > 0)
+        {
             builder.set_expires_at(now + options.lifetime);
+        }
 
         for (const auto& [k, v] : options.claims)
+        {
             builder.set_payload_claim(k, jwt::claim(v));
+        }
 
-        result.set_to_success(builder.sign(_get_es256k_signer(
+        result.set_to_good_status_with_value(builder.sign(_get_es256k_signer(
             options.public_key, options.private_key))
         );
     }
@@ -217,35 +237,32 @@ namespace QLogicaeCore
         JsonWebTokenReverseInput options
     ) const
     {
-        JsonWebTokenReverseResult& json_result = result.get_data();
+        JsonWebTokenReverseResult& json_result =
+            result.get_value();
         if (options.token.empty())
         {
-            json_result.message = "Exception at JsonWebTokenCryptographer::reverse(): Token input is empty";
-            result.set_is_successful_to_false();
-            return;
+            json_result.message = "Token input is empty";
+            return result.set_status_to_bad();
         }
 
         if (options.issuer.empty())
         {
-            json_result.message = "Exception at JsonWebTokenCryptographer::reverse(): Expected issuer is empty";
-            result.set_is_successful_to_false();
-            return;
+            json_result.message = "Expected issuer is empty";
+            return result.set_status_to_bad();
         }
 
         if (options.public_key.empty())
         {
-            json_result.message = "Exception at JsonWebTokenCryptographer::reverse(): Public key is empty";
-            result.set_is_successful_to_false();
-            return;
+            json_result.message = "Public key is empty";
+            return result.set_status_to_bad();
         }
 
         auto decoded = jwt::decode(options.token);
 
         if (decoded.get_issuer() != options.issuer)
         {
-            json_result.message = "Exception at JsonWebTokenCryptographer::reverse(): Invalid issuer";
-            result.set_is_successful_to_false();
-            return;
+            json_result.message = "Invalid issuer";
+            return result.set_status_to_bad();
         }
 
         jwt::verify()
@@ -267,7 +284,7 @@ namespace QLogicaeCore
             json_result.payloads[k] = v.serialize();
         }
 
-        result.set_is_successful_to_true();
+        result.set_status_to_good();
     }
 
     void JsonWebTokenCryptographer::transform_async(
@@ -275,12 +292,15 @@ namespace QLogicaeCore
         JsonWebTokenTransformInput options
     ) const
     {
-        result.set_to_success(std::async(std::launch::async, [this, options]()
+        result.set_to_good_status_with_value(
+            std::async(
+                std::launch::async, [this, options]()
             {
                 Result<std::string> result;
+
                 transform(result, options);
 
-                return result.get_data();
+                return result.get_value();
             })
         );
     }
@@ -290,12 +310,15 @@ namespace QLogicaeCore
         JsonWebTokenReverseInput options
     ) const
     {
-        result.set_to_success(std::async(std::launch::async, [this, options]()
+        result.set_to_good_status_with_value(
+            std::async(
+                std::launch::async, [this, options]()
             {
                 Result<JsonWebTokenReverseResult> result;
+
                 reverse(result, options);
 
-                return result.get_data();
+                return result.get_value();
             })
         );
     }

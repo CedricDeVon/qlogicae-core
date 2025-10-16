@@ -23,7 +23,7 @@ namespace QLogicaeCore
 	{
 		_cryptographer_properties = properties;
 
-		result.set_to_success();
+		result.set_to_good_status_without_value();
 	}
 
 	std::string Argon2idHashCryptographer::transform(
@@ -94,7 +94,9 @@ namespace QLogicaeCore
 		const std::string& va,
 		const std::string& vb) const
 	{
-		return std::async(std::launch::async, [this, va, vb]() -> bool
+		return std::async(
+			std::launch::async,
+			[this, va, vb]() -> bool
 		{
 			return reverse(va, vb);			
 		});
@@ -102,7 +104,8 @@ namespace QLogicaeCore
 
 	void Argon2idHashCryptographer::transform(
 		Result<std::string>& result,
-		const std::string& text) const
+		const std::string& text
+	) const
 	{
 		std::scoped_lock lock(_mutex);
 
@@ -122,11 +125,12 @@ namespace QLogicaeCore
 
 		if (status != ARGON2_OK)
 		{
-			result.set_to_failure();
-			return;
+			return result.set_to_bad_status_without_value(
+				"Hashing failed"
+			);
 		}
 
-		result.set_to_success(
+		result.set_to_good_status_with_value(
 			buffer.data()
 		);
 	}
@@ -134,7 +138,8 @@ namespace QLogicaeCore
 	void Argon2idHashCryptographer::reverse(
 		Result<bool>& result,
 		const std::string& hash,
-		const std::string& key) const
+		const std::string& key
+	) const
 	{
 		std::scoped_lock lock(_mutex);
 
@@ -144,20 +149,24 @@ namespace QLogicaeCore
 			key.size()
 		) == ARGON2_OK;
 
-		result.set_to_success(verified);
+		result.set_to_good_status_with_value(verified);
 	}
 
 	void Argon2idHashCryptographer::transform_async(
 		Result<std::future<std::string>>& result,
-		const std::string& text) const
+		const std::string& text
+	) const
 	{
-		result.set_to_success(std::async(std::launch::async, [this, text]() -> std::string
+		result.set_to_good_status_with_value(
+			std::async(
+				std::launch::async,
+				[this, text]() -> std::string
 			{
 				Result<std::string> result;
 
 				transform(result, text);
 
-				return result.get_data();
+				return result.get_value();
 			})
 		);
 	}
@@ -165,15 +174,20 @@ namespace QLogicaeCore
 	void Argon2idHashCryptographer::reverse_async(
 		Result<std::future<bool>>& result,
 		const std::string& hash,
-		const std::string& key) const
+		const std::string& key
+	) const
 	{
-		result.set_to_success(std::async(std::launch::async, [this, hash, key]() -> bool
+		result.set_to_good_status_with_value(
+			std::async(
+				std::launch::async,
+				[this, hash, key]() -> bool
 			{
 				Result<bool> result;
 
 				reverse(result, hash, key);
 
-				return result.get_data();
-			}));
+				return result.get_value();
+			})
+		);
 	}
 }

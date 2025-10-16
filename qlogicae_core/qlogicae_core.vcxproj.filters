@@ -480,6 +480,9 @@
     <ClInclude Include="boost_interprocess_cache_shared_data.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="result_status.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="qlogicae_core.cpp">
@@ -684,6 +687,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="boost_interprocess_cache_shared_data.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="result_status.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

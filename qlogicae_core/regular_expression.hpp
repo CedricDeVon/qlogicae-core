@@ -63,12 +63,12 @@ namespace QLogicaeCore
 		);
 
 		void remove_pattern(
-			Result<void>& result,
+			Result<bool>& result,
 			const std::string& name
 		);
 
 		void has_pattern(
-			Result<void>& result,
+			Result<bool>& result,
 			const std::string& name
 		) const;
 
@@ -84,25 +84,25 @@ namespace QLogicaeCore
 		);
 
 		void match_named(
-			Result<void>& result,
+			Result<bool>& result,
 			const std::string& name,
 			const std::string& pattern
 		);
 
 		void match_direct(
-			Result<void>& result,
+			Result<bool>& result,
 			const std::string& name,
 			const std::string& pattern
 		);
 
 		void match_named_async(
-			Result<std::future<void>>& result,
+			Result<std::future<bool>>& result,
 			const std::string& name,
 			const std::string& pattern
 		);
 
 		void match_direct_async(
-			Result<std::future<void>>& result,
+			Result<std::future<bool>>& result,
 			const std::string& name,
 			const std::string& pattern
 		);

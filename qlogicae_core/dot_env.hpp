@@ -27,23 +27,23 @@ namespace QLogicaeCore
 		);
 
 		void remove(
-			Result<void> result,
+			Result<bool>& result,
 			const wchar_t* key
 		);
 
 		void set(
-			Result<void> result,
+			Result<bool>& result,
 			const wchar_t* key,
 			const wchar_t* value
 		);
 
 		void get(
-			Result<std::wstring> result,
+			Result<std::wstring>& result,
 			const wchar_t* key
 		);
 
 		static void get_instance(
-			Result<DotEnv*> result
+			Result<DotEnv*>& result
 		);
 
 	protected:

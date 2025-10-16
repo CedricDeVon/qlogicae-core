@@ -252,11 +252,13 @@ namespace QLogicaeCore
     }
 
     std::unordered_map<std::string, std::string> WindowsRegistry::get_values_via_utf8(
-        std::string_view sub_key) const
+        std::string_view sub_key
+    ) const
     {
         std::unordered_map<std::string, std::string> utf8_result;
 
-        const std::wstring wide_sub_key = ENCODER.from_utf8_to_utf16(sub_key);
+        const std::wstring wide_sub_key =
+            ENCODER.from_utf8_to_utf16(sub_key);
         const auto wide_map = get_values_via_utf16(wide_sub_key);
 
         for (const auto& [key, value] : wide_map)
@@ -277,7 +279,7 @@ namespace QLogicaeCore
     {
         _root_key = hkey;
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
     void WindowsRegistry::get_values_via_utf8(
@@ -285,7 +287,9 @@ namespace QLogicaeCore
         const std::string_view value
     ) const
     {
-        result.set_to_success(WindowsRegistry::get_values_via_utf8(value));
+        result.set_to_good_status_with_value(
+            WindowsRegistry::get_values_via_utf8(value)
+        );
     }
 
     void WindowsRegistry::get_values_via_utf16(
@@ -293,7 +297,9 @@ namespace QLogicaeCore
         const std::wstring_view value
     ) const
     {
-        result.set_to_success(WindowsRegistry::get_values_via_utf16(value));
+        result.set_to_good_status_with_value(
+            WindowsRegistry::get_values_via_utf16(value)
+        );
     }
 
     void WindowsRegistry::remove_value_via_utf8(
@@ -302,8 +308,12 @@ namespace QLogicaeCore
         const std::string_view name
     ) const
     {
-        WindowsRegistry::remove_value_via_utf8(sub_path, name);
-        result.set_to_success();
+        WindowsRegistry::remove_value_via_utf8(
+            sub_path,
+            name
+        );
+
+        result.set_to_good_status_without_value();
     }
 
     void WindowsRegistry::remove_value_via_utf16(
@@ -312,8 +322,12 @@ namespace QLogicaeCore
         const std::wstring_view name
     ) const
     {
-        WindowsRegistry::remove_value_via_utf16(sub_path, name);
-        result.set_to_success();
+        WindowsRegistry::remove_value_via_utf16(
+            sub_path,
+            name
+        );
+
+        result.set_to_good_status_without_value();
     }
 
     void WindowsRegistry::set_sub_and_name_keys_via_utf8(
@@ -322,8 +336,12 @@ namespace QLogicaeCore
         const std::string_view name
     )
     {
-        WindowsRegistry::set_sub_and_name_keys_via_utf8(sub_path, name);
-        result.set_to_success();
+        WindowsRegistry::set_sub_and_name_keys_via_utf8(
+            sub_path,
+            name
+        );
+
+        result.set_to_good_status_without_value();
     }
 
     void WindowsRegistry::set_sub_and_name_keys_via_utf16(
@@ -332,8 +350,12 @@ namespace QLogicaeCore
         const std::wstring_view name
     )
     {
-        WindowsRegistry::set_sub_and_name_keys_via_utf16(sub_path, name);
-        result.set_to_success();
+        WindowsRegistry::set_sub_and_name_keys_via_utf16(
+            sub_path,
+            name
+        );
+
+        result.set_to_good_status_without_value();
     }
 
     void WindowsRegistry::is_sub_and_name_key_path_found_via_utf8(
@@ -342,8 +364,11 @@ namespace QLogicaeCore
         const std::string_view name
     ) const
     {
-        result.set_to_success(
-            WindowsRegistry::is_sub_and_name_key_path_found_via_utf8(sub_path, name)
+        result.set_to_good_status_with_value(
+            WindowsRegistry::is_sub_and_name_key_path_found_via_utf8(
+                sub_path,
+                name
+            )
         );
     }
 
@@ -353,8 +378,11 @@ namespace QLogicaeCore
         const std::wstring_view name
     ) const
     {
-        result.set_to_success(
-            WindowsRegistry::is_sub_and_name_key_path_found_via_utf16(sub_path, name)
+        result.set_to_good_status_with_value(
+            WindowsRegistry::is_sub_and_name_key_path_found_via_utf16(
+                sub_path,
+                name
+            )
         );
     }
 
@@ -364,8 +392,14 @@ namespace QLogicaeCore
         const std::string_view name
     ) const
     {
-        const auto value = WindowsRegistry::get_value_via_utf8(sub_path, name);
-        result.set_to_success(value.has_value() ? value.value() : std::string());
+        const auto value = WindowsRegistry::get_value_via_utf8(
+            sub_path,
+            name
+        );
+
+        result.set_to_good_status_with_value(
+            value.has_value() ? value.value() : std::string()
+        );
     }
 
     void WindowsRegistry::get_value_via_utf16(
@@ -374,8 +408,14 @@ namespace QLogicaeCore
         const std::wstring_view name
     ) const
     {
-        const auto value = WindowsRegistry::get_value_via_utf16(sub_path, name);
-        result.set_to_success(value.has_value() ? value.value() : std::wstring());
+        const auto value = WindowsRegistry::get_value_via_utf16(
+            sub_path,
+            name
+        );
+
+        result.set_to_good_status_with_value(
+            value.has_value() ? value.value() : std::wstring()
+        );
     }
 
     void WindowsRegistry::set_value_via_utf8(
@@ -385,8 +425,13 @@ namespace QLogicaeCore
         const std::string_view value
     ) const
     {
-        WindowsRegistry::set_value_via_utf8(sub_path, name, value);
-        result.set_to_success();
+        WindowsRegistry::set_value_via_utf8(
+            sub_path,
+            name,
+            value
+        );
+
+        result.set_to_good_status_without_value();
     }
 
     void WindowsRegistry::set_value_via_utf16(
@@ -396,8 +441,13 @@ namespace QLogicaeCore
         const std::wstring_view value
     ) const
     {
-        WindowsRegistry::set_value_via_utf16(sub_path, name, value);
-        result.set_to_success();
+        WindowsRegistry::set_value_via_utf16(
+            sub_path,
+            name,
+            value
+        );
+
+        result.set_to_good_status_without_value();
     }
 }
 

@@ -391,7 +391,8 @@ namespace QLogicaeCore
     }
 
     rocksdb::ColumnFamilyHandle* RocksDBDatabase::get_cf_handle(
-        const std::string& name) const
+        const std::string& name
+    ) const
     {
         std::string name_key(name);
 
@@ -411,7 +412,7 @@ namespace QLogicaeCore
         Result<std::string>& result
     ) const
     {
-        result.set_to_success(
+        result.set_to_good_status_with_value(
             _file_path
         );
     }
@@ -430,7 +431,7 @@ namespace QLogicaeCore
         setup_db();
         open_db();
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
     void RocksDBDatabase::is_path_found(
@@ -440,7 +441,7 @@ namespace QLogicaeCore
     {
         std::shared_lock lock(_mutex);
 
-        result.set_to_success(
+        result.set_to_good_status_with_value(
             std::filesystem::exists(path)
         );
     }
@@ -454,13 +455,17 @@ namespace QLogicaeCore
 
         if (_object == nullptr)
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value();
         }
-        std::string value;
-        auto s = _object->Get(_read_options, std::string(key), &value);
 
-        result.set_to_success(
+        std::string value;
+        auto s = _object->Get(
+            _read_options,
+            std::string(key),
+            &value
+        );
+
+        result.set_to_good_status_with_value(
             s.ok()
         );
     }
@@ -475,7 +480,7 @@ namespace QLogicaeCore
         auto string = _object->Delete(
             _write_options, key.data());
 
-        result.set_to_success(
+        result.set_to_good_status_with_value(
             string.ok()
         );
     }
@@ -490,7 +495,7 @@ namespace QLogicaeCore
             _write_options, &_write_batch);
         _write_batch.Clear();
 
-        result.set_to_success(
+        result.set_to_good_status_with_value(
             string.ok()
         );
     }
@@ -505,13 +510,19 @@ namespace QLogicaeCore
         std::string name_key(name);
         rocksdb::ColumnFamilyHandle* handle = nullptr;
         auto s = _object->CreateColumnFamily(
-            rocksdb::ColumnFamilyOptions(), name_key, &handle);
+            rocksdb::ColumnFamilyOptions(),
+            name_key,
+            &handle
+        );
         if (s.ok())
         {
-            _column_families.emplace(std::move(name_key), handle);
+            _column_families.emplace(
+                std::move(name_key),
+                handle
+            );
         }
 
-        result.set_to_success(
+        result.set_to_good_status_with_value(
             s.ok()
         );
     }
@@ -527,16 +538,19 @@ namespace QLogicaeCore
         auto iterator = _column_families.find(name_key);
         if (iterator == _column_families.end())
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value();
         }
-        auto s = _object->DropColumnFamily(iterator->second);
+        auto s = _object->DropColumnFamily(
+            iterator->second
+        );
         if (s.ok())
         {
-            _object->DestroyColumnFamilyHandle(iterator->second);
+            _object->DestroyColumnFamilyHandle(
+                iterator->second
+            );
             _column_families.erase(iterator);
         }
-        result.set_to_success(
+        result.set_to_good_status_with_value(
             s.ok()
         );
     }
@@ -546,7 +560,7 @@ namespace QLogicaeCore
         const std::string& name
     )
     {
-        result.set_to_success(
+        result.set_to_good_status_with_value(
             _column_families.contains(name.data())
         );
     }
@@ -575,18 +589,22 @@ namespace QLogicaeCore
         std::shared_lock lock(_mutex);
 
         rocksdb::BackupEngine* backup;
-        rocksdb::BackupEngineOptions options(path.data());
+        rocksdb::BackupEngineOptions options(
+            path.data()
+        );
         auto string = rocksdb::BackupEngine::Open(
-            rocksdb::Env::Default(), options, &backup);
+            rocksdb::Env::Default(),
+            options,
+            &backup
+        );
         if (!string.ok())
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value();
         }
         string = backup->CreateNewBackup(_object);
         delete backup;
 
-        result.set_to_success(
+        result.set_to_good_status_with_value(
             string.ok()
         );
     }
@@ -607,19 +625,20 @@ namespace QLogicaeCore
         );
         if (!string.ok())
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value();
         }
-        string = backup->RestoreDBFromLatestBackup(_file_path, _file_path);
+        string = backup->RestoreDBFromLatestBackup(
+            _file_path,
+            _file_path
+        );
         delete backup;
         if (!string.ok())
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value();
         }
         open_db();
 
-        result.set_to_success(
+        result.set_to_good_status_with_value(
             true
         );
     }
@@ -632,16 +651,20 @@ namespace QLogicaeCore
         std::shared_lock lock(_mutex);
 
         rocksdb::Checkpoint* checkpoint;
-        auto string = rocksdb::Checkpoint::Create(_object, &checkpoint);
+        auto string = rocksdb::Checkpoint::Create(
+            _object,
+            &checkpoint
+        );
         if (!string.ok())
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value();
         }
-        string = checkpoint->CreateCheckpoint(path.data());
+        string = checkpoint->CreateCheckpoint(
+            path.data()
+        );
         delete checkpoint;
 
-        result.set_to_success(
+        result.set_to_good_status_with_value(
             string.ok()
         );
     }
@@ -657,8 +680,7 @@ namespace QLogicaeCore
 
         if (_object == nullptr)
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value();
         }
 
         rocksdb::PinnableSlice pvalue;
@@ -668,20 +690,22 @@ namespace QLogicaeCore
             std::string(key), &pvalue);
         if (!s.ok())
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value();
         }
+
         const uint64_t psize = static_cast<uint64_t>(pvalue.size());
         if (offset >= psize)
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value();
         }
-        const uint64_t max_size = psize - offset;
-        const size_t use_size = static_cast<size_t>(std::min<uint64_t>(size, max_size));
-
-        result.set_to_success(
-            std::string(pvalue.data() + static_cast<size_t>(offset), use_size)
+        
+        result.set_to_good_status_with_value(
+            std::string(pvalue.data() +
+                static_cast<size_t>(offset),
+                static_cast<size_t>(
+                    std::min<uint64_t>(size, psize - offset)
+                )
+            )
         );
     }
 
@@ -693,13 +717,12 @@ namespace QLogicaeCore
 
         if (_transaction)
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value();
         }
         _transaction = _transaction_db->BeginTransaction(
             _write_options);
 
-        result.set_to_success(
+        result.set_to_good_status_with_value(
             _transaction != nullptr
         );
     }
@@ -712,14 +735,14 @@ namespace QLogicaeCore
 
         if (!_transaction)
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value();
         }
+
         auto string = _transaction->Commit();
         delete _transaction;
         _transaction = nullptr;
 
-        result.set_to_success(
+        result.set_to_good_status_with_value(
             string.ok()
         );
     }
@@ -732,14 +755,14 @@ namespace QLogicaeCore
 
         if (!_transaction)
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value();
         }
+
         auto string = _transaction->Rollback();
         delete _transaction;
         _transaction = nullptr;
 
-        result.set_to_success(
+        result.set_to_good_status_with_value(
             string.ok()
         );
     }
@@ -749,17 +772,13 @@ namespace QLogicaeCore
         const std::string& key
     )
     {
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
     void RocksDBDatabase::batch_execute_async(
         Result<std::future<bool>>& result
     )
     {
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 }
-
-/*
-
-*/

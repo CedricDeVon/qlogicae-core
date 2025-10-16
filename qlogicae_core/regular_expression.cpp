@@ -18,7 +18,8 @@ namespace QLogicaeCore
 
     bool RegularExpression::add_pattern(
         const std::string& name,
-        const std::string& pattern)
+        const std::string& pattern
+    )
     {
         try
         {
@@ -51,12 +52,17 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at RegularExpression::add_pattern(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at RegularExpression::add_pattern(): " +
+                exception.what()
+            );
         }
     }
 
     std::string RegularExpression::get_patterrn(
-        const std::string& name) const
+        const std::string& name
+    ) const
     {
         try
         {
@@ -68,22 +74,32 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at RegularExpression::get_patterrn(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at RegularExpression::get_patterrn(): " +
+                exception.what()
+            );
         }
     }
 
     bool RegularExpression::has_pattern(
-        const std::string& name) const
+        const std::string& name
+    ) const
     {
         try
         {
             std::shared_lock lock(_mutex);
 
-            return _compiled_patterns.find(name) != _compiled_patterns.end();
+            return _compiled_patterns.find(name) !=
+                _compiled_patterns.end();
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at RegularExpression::has_pattern(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at RegularExpression::has_pattern(): " +
+                exception.what()
+            );
         }
     }
 
@@ -102,35 +118,49 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at RegularExpression::clear_all_patterns(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at RegularExpression::clear_all_patterns(): " +
+                exception.what()
+            );
         }
     }
 
     bool RegularExpression::match_named(
         const std::string& subject,
-        const std::string& pattern_name)
+        const std::string& pattern_name
+    )
     {
         try
         {
             std::shared_lock lock(_mutex);
 
-            auto result = _compiled_patterns.find(pattern_name);
+            auto result =
+                _compiled_patterns.find(pattern_name);
             if (result == _compiled_patterns.end())
             {
                 return false;
             }
 
-            return _do_match(subject, result->second.second);
+            return _do_match(
+                subject,
+                result->second.second
+            );
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at RegularExpression::match_named(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at RegularExpression::match_named(): " +
+                exception.what()
+            );
         }
     }
 
     bool RegularExpression::match_direct(
         const std::string& subject,
-        const std::string& pattern)
+        const std::string& pattern
+    )
     {
         try
         {
@@ -151,20 +181,29 @@ namespace QLogicaeCore
                 return false;
             }
 
-            bool result = _do_match(subject, regular_expression);
+            bool result =
+                _do_match(
+                    subject,
+                    regular_expression
+                );
             pcre2_code_free(regular_expression);
 
             return result;
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at RegularExpression::match_direct(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at RegularExpression::match_direct(): " +
+                exception.what()
+            );
         }
     }
 
     std::future<bool> RegularExpression::match_named_async(
         const std::string& subject,
-        const std::string& pattern_name)
+        const std::string& pattern_name
+    )
     {
         return std::async(std::launch::async,
             [this, subject, pattern_name]() -> bool
@@ -175,7 +214,8 @@ namespace QLogicaeCore
 
     std::future<bool> RegularExpression::match_direct_async(
         const std::string& subject,
-        const std::string& pattern_name)
+        const std::string& pattern_name
+    )
     {
         return std::async(std::launch::async,
             [this, subject, pattern_name]() -> bool
@@ -186,12 +226,16 @@ namespace QLogicaeCore
 
     bool RegularExpression::_do_match(
         const std::string& subject,
-        pcre2_code* get_error_code) const
+        pcre2_code* get_error_code
+    ) const
     {
         try
         {
             pcre2_match_data* match_data =
-                pcre2_match_data_create_from_pattern(get_error_code, nullptr);
+                pcre2_match_data_create_from_pattern(
+                    get_error_code,
+                    nullptr
+                );
 
             int result = pcre2_match(
                 get_error_code,
@@ -209,7 +253,11 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at RegularExpression::_do_match(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at RegularExpression::_do_match(): " +
+                exception.what()
+            );
         }
     }
 
@@ -217,7 +265,7 @@ namespace QLogicaeCore
         Result<void>& result
     )
     {
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
     void RegularExpression::clear_all_patterns(
@@ -232,25 +280,28 @@ namespace QLogicaeCore
         }
 
         _compiled_patterns.clear();
+
+        result.set_to_good_status_without_value();
     }
 
     void RegularExpression::remove_pattern(
-        Result<void>& result,
+        Result<bool>& result,
         const std::string& name
     )
     {
-
+        result.set_to_good_status_with_value(true);
     }
 
     void RegularExpression::has_pattern(
-        Result<void>& result,
+        Result<bool>& result,
         const std::string& name
     ) const
     {
         std::shared_lock lock(_mutex);
 
-        result.set_is_successful(
-            _compiled_patterns.find(name) != _compiled_patterns.end()
+        result.set_to_good_status_with_value(
+            _compiled_patterns.find(name) !=
+                _compiled_patterns.end()
         );
     }
 
@@ -262,10 +313,18 @@ namespace QLogicaeCore
         std::shared_lock lock(_mutex);
 
         auto pair = _compiled_patterns.find(value);
-        result.set_to_success(
-            (pair != _compiled_patterns.end()) ?
-                pair->second.first : ""
-        );
+        if (pair != _compiled_patterns.end())
+        {
+            result.set_to_good_status_with_value(
+                pair->second.first
+            );
+        }
+        else
+        {
+            result.set_to_bad_status_with_value(
+                ""
+            );
+        }
     }
 
     void RegularExpression::add_pattern(
@@ -288,8 +347,7 @@ namespace QLogicaeCore
 
         if (!regular_expression)
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value();
         }
 
         std::unique_lock lock(_mutex);
@@ -300,11 +358,11 @@ namespace QLogicaeCore
         }
 
         _compiled_patterns[name] = { pattern, regular_expression };
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
     void RegularExpression::match_named(
-        Result<void>& result,
+        Result<bool>& result,
         const std::string& subject,
         const std::string& pattern_name
     )
@@ -314,19 +372,24 @@ namespace QLogicaeCore
         auto content = _compiled_patterns.find(pattern_name);
         if (content == _compiled_patterns.end())
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value();
         }
 
-        result.set_is_successful(
-            _do_match(subject, content->second.second)
-        );
+        if (_do_match(subject, content->second.second))
+        {
+            result.set_to_good_status_without_value();
+        }
+        else
+        {
+            result.set_to_bad_status_without_value();
+        }        
     }
 
     void RegularExpression::match_direct(
-        Result<void>& result,
+        Result<bool>& result,
         const std::string& subject,
-        const std::string& pattern)
+        const std::string& pattern
+    )
     {
         int error_number;
         PCRE2_SIZE error_offset;
@@ -342,53 +405,70 @@ namespace QLogicaeCore
 
         if (!regular_expression)
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value();
         }
 
-        result.set_is_successful(
-            _do_match(subject, regular_expression)
-        );
+        if (_do_match(subject, regular_expression))
+        {
+            result.set_to_good_status_without_value();
+        }
+        else
+        {
+            result.set_to_bad_status_without_value();
+        }
+        
         pcre2_code_free(regular_expression);
     }
 
     void RegularExpression::match_named_async(
-        Result<std::future<void>>& result,
+        Result<std::future<bool>>& result,
         const std::string& name,
         const std::string& pattern
     )
     {
-        result.set_to_success(std::async(std::launch::async,
-            [this, name, pattern]() -> void
+        result.set_to_good_status_with_value(
+            std::async(std::launch::async,
+            [this, name, pattern]() -> bool
             {
-                Result<void> result;
+                Result<bool> result;
 
-                match_named(result, name, pattern);                
+                match_named(result, name, pattern);          
+
+                return result.get_value();
             }
         ));
     }
 
     void RegularExpression::match_direct_async(
-        Result<std::future<void>>& result,
+        Result<std::future<bool>>& result,
         const std::string& name,
         const std::string& pattern
     )
     {
-        result.set_to_success(std::async(std::launch::async,
-            [this, name, pattern]() -> void
+        result.set_to_good_status_with_value(
+            std::async(std::launch::async,
+            [this, name, pattern]() -> bool
             {
-                Result<void> result;
+                Result<bool> result;
 
-                match_direct(result, name, pattern);
+                match_direct(
+                    result,
+                    name,
+                    pattern
+                );
+
+                return result.get_value();
             }
         ));
     }
 
-    void RegularExpression::get_instance(Result<RegularExpression*>& result)
+    void RegularExpression::get_instance(
+        Result<RegularExpression*>& result
+    )
     {
         static RegularExpression instance;
 
-        result.set_to_success(&instance);
+        result.set_to_good_status_with_value(&instance);
     }
 }
 

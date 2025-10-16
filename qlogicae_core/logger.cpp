@@ -43,7 +43,9 @@ namespace QLogicaeCore
 		return _is_simplified;
 	}
 
-	void Logger::set_is_simplified(const bool& value)
+	void Logger::set_is_simplified(
+		const bool& value
+	)
 	{
 		_is_simplified = value;
 	}
@@ -77,7 +79,10 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
-			CLI_IO.print_with_new_line_async(std::string("Exception at Logger::log(): ") + exception.what());
+			CLI_IO.print_with_new_line_async(
+				std::string("Exception at Logger::log(): ") +
+				exception.what()
+			);
 		}
 	}
 
@@ -96,7 +101,10 @@ namespace QLogicaeCore
 			}
 			catch (const std::exception& exception)
 			{
-				CLI_IO.print_with_new_line_async(std::string("Exception at Logger::log_async(): ") + exception.what());
+				CLI_IO.print_with_new_line_async(
+					std::string("Exception at Logger::log_async(): ") +
+					exception.what()
+				);
 			}
 		});
 	}
@@ -108,28 +116,28 @@ namespace QLogicaeCore
 	{
 		_is_simplified = is_simplified;
 
-		result.set_to_success();
+		result.set_to_good_status_without_value();
 	}
 
 	void Logger::get_medium(
 		Result<LogMedium>& result
 	) const
 	{
-		result.set_to_success(_medium);
+		result.set_to_good_status_with_value(_medium);
 	}
 
 	void Logger::get_name(
 		Result<std::string>& result
 	) const
 	{
-		result.set_to_success(_name);
+		result.set_to_good_status_with_value(_name);
 	}
 
 	void Logger::get_is_simplified(
-		Result<void>& result
+		Result<bool>& result
 	) const
 	{
-		result.set_is_successful(_is_simplified);
+		result.set_to_good_status_with_value(_is_simplified);
 	}
 
 	void Logger::set_is_simplified(
@@ -139,41 +147,51 @@ namespace QLogicaeCore
 	{
 		_is_simplified = value;
 
-		result.set_to_success();
+		result.set_to_good_status_without_value();
 	}
 
 	void Logger::get_output_paths(
 		Result<std::vector<std::string>>& result
 	) const
 	{
-		result.set_to_success(_output_paths);
+		result.set_to_good_status_with_value(_output_paths);
 	}
 
 	void Logger::log(
 		Result<void>& result,
 		const std::string& message,
 		const LogLevel& log_level,
-		const bool is_simplified) const
+		const bool is_simplified
+	) const
 	{
 		std::scoped_lock lock(_mutex);
 
-		CLI_IO.print(
-			(is_simplified) ?
-			message :
-			TRANSFORMER
-			.to_log_format(message, log_level)
-		);
+		if (is_simplified)
+		{
+			CLI_IO.print(
+				result, message
+			);
+		}
+		else
+		{
+			Result<std::string> string_result;
 
-		result.set_to_success();
+			TRANSFORMER.to_log_format(string_result, message, log_level);
+			CLI_IO.print(result, string_result.get_value());
+		}		
+
+		result.set_to_good_status_without_value();
 	}
 
 	void Logger::log_async(
 		Result<std::future<void>>& result,
 		const std::string& message,
 		const LogLevel& log_level,
-		const bool is_simplified) const
+		const bool is_simplified
+	) const
 	{
-		result.set_to_success(std::async(std::launch::async,
+		result.set_to_good_status_with_value(
+			std::async(std::launch::async,
 			[this, message, log_level, is_simplified]()
 				{
 					Result<void> result;

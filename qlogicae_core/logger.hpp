@@ -80,7 +80,7 @@ namespace QLogicaeCore
 		) const;
 
 		void get_is_simplified(
-			Result<void>& result
+			Result<bool>& result
 		) const;
 
 		void set_is_simplified(

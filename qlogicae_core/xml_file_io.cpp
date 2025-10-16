@@ -46,7 +46,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string("Exception at XmlFileIO::load(): ") + exception.what());
+            throw std::runtime_error(
+                std::string("Exception at XmlFileIO::load(): ") +
+                exception.what()
+            );
         }
     }
 
@@ -65,7 +68,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string("Exception at XmlFileIO::save(): ") + exception.what());
+            throw std::runtime_error(
+                std::string("Exception at XmlFileIO::save(): ") +
+                exception.what()
+            );
         }
     }
 
@@ -81,7 +87,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string("Exception at XmlFileIO::clear(): ") + exception.what());
+            throw std::runtime_error(
+                std::string("Exception at XmlFileIO::clear(): ") +
+                exception.what()
+            );
         }
     }
 
@@ -100,7 +109,8 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string("Exception at XmlFileIO::save_as(): ") + exception.what());
+            throw std::runtime_error(
+                std::string("Exception at XmlFileIO::save_as(): ") + exception.what());
         }
     }
 
@@ -170,7 +180,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string("Exception at XmlFileIO::_navigate_to_path(): ") + exception.what());
+            throw std::runtime_error(
+                std::string("Exception at XmlFileIO::_navigate_to_path(): ") +
+                exception.what()
+            );
         }
     }
 
@@ -203,7 +216,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string("Exception at XmlFileIO::remove_value(): ") + exception.what());
+            throw std::runtime_error(
+                std::string("Exception at XmlFileIO::remove_value(): ") +
+                exception.what()
+            );
         }
     }
 
@@ -260,7 +276,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string("Exception at XmlFileIO::has_key(): ") + exception.what());
+            throw std::runtime_error(
+                std::string("Exception at XmlFileIO::has_key(): ") +
+                exception.what()
+            );
         }
     }
 
@@ -292,7 +311,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string("Exception at XmlFileIO::get_children(): ") + exception.what());
+            throw std::runtime_error(
+                std::string("Exception at XmlFileIO::get_children(): ") +
+                exception.what()
+            );
         }
     }
 
@@ -311,7 +333,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string("Exception at XmlFileIO::get_root_name(): ") + exception.what());
+            throw std::runtime_error(
+                std::string("Exception at XmlFileIO::get_root_name(): ") +
+                exception.what()
+            );
         }
     }
 
@@ -329,7 +354,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string("Exception at XmlFileIO::set_root(): ") + exception.what());
+            throw std::runtime_error(
+                std::string("Exception at XmlFileIO::set_root(): ") +
+                exception.what()
+            );
         }
     }
 
@@ -361,7 +389,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string("Exception at XmlFileIO::save_with_indent(): ") + exception.what());
+            throw std::runtime_error(
+                std::string("Exception at XmlFileIO::save_with_indent(): ") +
+                exception.what()
+            );
         }
     }
 
@@ -431,7 +462,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string("Exception at XmlFileIO::select_node_texts(): ") + exception.what());
+            throw std::runtime_error(
+                std::string("Exception at XmlFileIO::select_node_texts(): ") +
+                exception.what()
+            );
         }
     }
 
@@ -462,7 +496,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string("Exception at XmlFileIO::select_node_text(): ") + exception.what());
+            throw std::runtime_error(
+                std::string("Exception at XmlFileIO::select_node_text(): ") +
+                exception.what()
+            );
         }
     }
 
@@ -519,7 +556,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string("Exception at XmlFileIO::validate_against_schema(): ") + exception.what());
+            throw std::runtime_error(
+                std::string("Exception at XmlFileIO::validate_against_schema(): ") +
+                exception.what()
+            );
         }
     }
 
@@ -583,7 +623,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string("Exception at XmlFileIO::select_attributes(): ") + exception.what());
+            throw std::runtime_error(
+                std::string("Exception at XmlFileIO::select_attributes(): ") +
+                exception.what()
+            );
         }
     }
 
@@ -615,7 +658,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string("Exception at XmlFileIO::select_attribute(): ") + exception.what());
+            throw std::runtime_error(
+                std::string("Exception at XmlFileIO::select_attribute(): ") +
+                exception.what()
+            );
         }
     }
 
@@ -636,7 +682,7 @@ namespace QLogicaeCore
     {
         _file_path = file_path;
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
     void XmlFileIO::setup(
@@ -648,6 +694,6 @@ namespace QLogicaeCore
         _name = name;
         _file_path = file_path;
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 }

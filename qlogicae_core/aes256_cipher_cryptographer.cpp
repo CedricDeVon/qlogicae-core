@@ -10,15 +10,18 @@ namespace QLogicaeCore
 
 	}
 
-	void AES256CipherCryptographer::setup(Result<void>& result)
+	void AES256CipherCryptographer::setup(
+		Result<void>& result
+	)
 	{
-		result.set_to_success();
+		result.set_to_good_status_without_value();
 	}
 
 	std::string AES256CipherCryptographer::reverse(
 		const std::string& va,
 		const std::string& vb,
-		const std::string& vc) const
+		const std::string& vc
+	) const
 	{
 		return reverse(va,
 			reinterpret_cast<const unsigned char*>(vb.data()),
@@ -29,7 +32,8 @@ namespace QLogicaeCore
 	std::string AES256CipherCryptographer::transform(
 		const std::string& va,
 		const std::string& vb,
-		const std::string& vc) const
+		const std::string& vc
+	) const
 	{
 		return transform(va,
 			reinterpret_cast<const unsigned char*>(vb.data()),
@@ -40,31 +44,36 @@ namespace QLogicaeCore
 	std::future<std::string> AES256CipherCryptographer::reverse_async(
 		const std::string& va,
 		const std::string& vb,
-		const std::string& vc) const
+		const std::string& vc
+	) const
 	{
 		return std::async(std::launch::async,
 			[this, va, vb, vc]() -> std::string
 			{
 				return reverse(va, vb, vc);				
-			});
+			}
+		);
 	}
 
 	std::future<std::string> AES256CipherCryptographer::transform_async(
 		const std::string& va,
 		const std::string& vb,
-		const std::string& vc) const
+		const std::string& vc
+	) const
 	{
 		return std::async(std::launch::async,
 			[this, va, vb, vc]() -> std::string
 			{
 				return transform(va, vb, vc);				
-			});
+			}
+		);
 	}
 
 	std::string AES256CipherCryptographer::transform(
 		const std::string& va,
 		const unsigned char* vb,
-		const unsigned char* vc) const
+		const unsigned char* vc
+	) const
 	{
 		try
 		{
@@ -108,7 +117,8 @@ namespace QLogicaeCore
 	std::string AES256CipherCryptographer::reverse(
 		const std::string& va,
 		const unsigned char* vb,
-		const unsigned char* vc) const
+		const unsigned char* vc
+	) const
 	{
 		try
 		{
@@ -148,9 +158,12 @@ namespace QLogicaeCore
 	std::future<std::string> AES256CipherCryptographer::reverse_async(
 		const std::string& va,
 		const unsigned char* vb,
-		const unsigned char* vc) const
+		const unsigned char* vc
+	) const
 	{
-		return std::async(std::launch::async, [this, va, vb, vc]() -> std::string
+		return std::async(
+			std::launch::async,
+				[this, va, vb, vc]() -> std::string
 		{
 			return reverse(va, vb, vc);			
 		});
@@ -159,9 +172,12 @@ namespace QLogicaeCore
 	std::future<std::string> AES256CipherCryptographer::transform_async(
 		const std::string& va,
 		const unsigned char* vb,
-		const unsigned char* vc) const
+		const unsigned char* vc
+	) const
 	{
-		return std::async(std::launch::async, [this, va, vb, vc]() -> std::string
+		return std::async(
+			std::launch::async,
+				[this, va, vb, vc]() -> std::string
 		{
 			return transform(va, vb, vc);			
 		});
@@ -209,9 +225,10 @@ namespace QLogicaeCore
 		std::scoped_lock lock(_mutex);
 
 		if (!key || !nonce)
-		{
-			result.set_to_failure();
-			return;
+		{			
+			return result.set_to_bad_status_without_value(
+				"Empty key or nonce"
+			);
 		}
 
 		std::vector<unsigned char> bytes =
@@ -225,11 +242,12 @@ namespace QLogicaeCore
 			bytes.data(), in_len,
 			nullptr, 0, nonce, key) != 0)
 		{
-			result.set_to_failure();
-			return;
+			return result.set_to_bad_status_without_value(
+				"Decryption failed"
+			);
 		}
 
-		result.set_to_success(
+		result.set_to_good_status_with_value(
 			std::string(reinterpret_cast<const char*>(out_ptr), out_len)
 		);
 	}
@@ -245,13 +263,17 @@ namespace QLogicaeCore
 
 		if (!key || !nonce)
 		{
-			result.set_to_failure();
-			return;
+			return result.set_to_bad_status_without_value(
+				"Empty key or nonce"
+			);
 		}
 
 		unsigned long long text_len = text.size(), cipher_len;
-		const unsigned char* text_ptr = reinterpret_cast<const unsigned char*>(text.data());
-		std::vector<unsigned char> cipher_buf(text_len + crypto_aead_aes256gcm_ABYTES);
+		const unsigned char* text_ptr =
+			reinterpret_cast<const unsigned char*>(text.data());
+		std::vector<unsigned char> cipher_buf(
+			text_len + crypto_aead_aes256gcm_ABYTES
+		);
 		unsigned char* cipher_ptr = cipher_buf.data();
 
 		crypto_aead_aes256gcm_encrypt(
@@ -272,9 +294,14 @@ namespace QLogicaeCore
 		const unsigned char* nonce
 	) const
 	{
-		result.set_to_success(std::async(std::launch::async, [this, cipher, key, nonce]()
+		result.set_to_good_status_with_value(
+			std::async(std::launch::async, [this, cipher, key, nonce]()
 			{
-				return reverse(cipher, key, nonce);
+				Result<std::string> result;
+
+				reverse(result, cipher, key, nonce);
+
+				return result.get_value();
 			})
 		);
 	}
@@ -286,13 +313,14 @@ namespace QLogicaeCore
 		const unsigned char* nonce
 	) const
 	{
-		result.set_to_success(std::async(std::launch::async, [this, text, key, nonce]()
+		result.set_to_good_status_with_value(
+			std::async(std::launch::async, [this, text, key, nonce]()
 			{
 				Result<std::string> result;
 
 				transform(result, text, key, nonce);
 
-				return result.get_data();
+				return result.get_value();
 			})
 		);
 	}
@@ -304,13 +332,15 @@ namespace QLogicaeCore
 		const std::string& nonce
 	) const
 	{
-		result.set_to_success(std::async(std::launch::async, [this, cipher, key, nonce]()
+		result.set_to_good_status_with_value(
+			std::async(std::launch::async,
+				[this, cipher, key, nonce]()
 			{
 				Result<std::string> result;
 
 				reverse(result, cipher, key, nonce);
 
-				return result.get_data();
+				return result.get_value();
 			})
 		);
 	}
@@ -322,7 +352,9 @@ namespace QLogicaeCore
 		const std::string& nonce
 	) const
 	{
-		result.set_to_success(std::async(std::launch::async, [this, text, key, nonce]()
+		result.set_to_good_status_with_value(
+			std::async(std::launch::async,
+				[this, text, key, nonce]()
 			{
 				Result<std::string> result;
 
@@ -333,7 +365,7 @@ namespace QLogicaeCore
 					reinterpret_cast<const unsigned char*>(nonce.data())
 				);
 
-				return result.get_data();
+				return result.get_value();
 			})
 		);
 	}

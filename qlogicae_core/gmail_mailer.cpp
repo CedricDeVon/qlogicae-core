@@ -15,7 +15,8 @@ namespace QLogicaeCore
         const std::vector<std::string>& to_recipients,
         const std::vector<std::string>& cc_recipients,
         const std::vector<std::string>& bcc_recipients,
-        const std::string& smtp_server)
+        const std::string& smtp_server
+    )
         : _curl(nullptr),
         _mime_mixed(nullptr),
         _mime_related(nullptr),
@@ -32,11 +33,15 @@ namespace QLogicaeCore
     {
         if (sender_address.empty() || !password_provider)
         {
-            throw std::runtime_error("Exception at GmailMailer::GmailMailer(): Sender and password provider required");
+            throw std::runtime_error(
+                "Exception at GmailMailer::GmailMailer(): Sender and password provider required"
+            );
         }
         if (to_recipients.empty())
         {
-            throw std::runtime_error("Exception at GmailMailer::GmailMailer(): At least one recipient required");
+            throw std::runtime_error(
+                "Exception at GmailMailer::GmailMailer(): At least one recipient required"
+            );
         }
 
         curl_global_init(CURL_GLOBAL_DEFAULT);
@@ -56,7 +61,9 @@ namespace QLogicaeCore
             _curl = curl_easy_init();
             if (_curl == nullptr)
             {
-                throw std::runtime_error("Exception at GmailMailer::setup(): CURL initialization failed");
+                throw std::runtime_error(
+                    "Exception at GmailMailer::setup(): CURL initialization failed"
+                );
             }
 
             configure_smtp();
@@ -88,7 +95,9 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at GmailMailer::configure_smtp(): " + exception.what());
+            throw std::runtime_error(
+                std::string() + "Exception at GmailMailer::configure_smtp(): " + exception.what()
+            );
         }
     }
 
@@ -112,7 +121,9 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at GmailMailer::prepare_recipients(): " + exception.what());
+            throw std::runtime_error(
+                std::string() + "Exception at GmailMailer::prepare_recipients(): " + exception.what()
+            );
         }
     }
 
@@ -149,7 +160,9 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at GmailMailer::prepare_headers(): " + exception.what());
+            throw std::runtime_error(
+                std::string() + "Exception at GmailMailer::prepare_headers(): " + exception.what()
+            );
         }
     }
 
@@ -176,7 +189,9 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at GmailMailer::finalize_body(): " + exception.what());
+            throw std::runtime_error(
+                std::string() + "Exception at GmailMailer::finalize_body(): " + exception.what()
+            );
         }
     }
 
@@ -198,7 +213,9 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at GmailMailer::send_email(): " + exception.what());
+            throw std::runtime_error(
+                std::string() + "Exception at GmailMailer::send_email(): " + exception.what()
+            );
         }
     }
 
@@ -228,7 +245,9 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at GmailMailer::reset_mime(): " + exception.what());
+            throw std::runtime_error(
+                std::string() + "Exception at GmailMailer::reset_mime(): " + exception.what()
+            );
         }
     }
 
@@ -259,7 +278,9 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at GmailMailer::cleanup(): " + exception.what());
+            throw std::runtime_error(
+                std::string() + "Exception at GmailMailer::cleanup(): " + exception.what()
+            );
         }
     }
 
@@ -273,7 +294,9 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at GmailMailer::set_subject(): " + exception.what());
+            throw std::runtime_error(
+                std::string() + "Exception at GmailMailer::set_subject(): " + exception.what()
+            );
         }
     }
 
@@ -295,7 +318,9 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at GmailMailer::set_html_body(): " + exception.what());
+            throw std::runtime_error(
+                std::string() + "Exception at GmailMailer::set_html_body(): " + exception.what()
+            );
         }
     }
 
@@ -317,7 +342,9 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at GmailMailer::set_plain_body(): " + exception.what());
+            throw std::runtime_error(
+                std::string() + "Exception at GmailMailer::set_plain_body(): " + exception.what()
+            );
         }
     }
 
@@ -340,7 +367,9 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at GmailMailer::set_header(): " + exception.what());
+            throw std::runtime_error(
+                std::string() + "Exception at GmailMailer::set_header(): " + exception.what()
+            );
         }
     }
 
@@ -364,7 +393,9 @@ namespace QLogicaeCore
 
             if (!std::filesystem::exists(file_path))
             {
-                throw std::runtime_error("Exception at GmailMailer::attach_inline_image(): Inline image file not found: " + file_path);
+                throw std::runtime_error(
+                    "Exception at GmailMailer::attach_inline_image(): Inline image file not found: " + file_path
+                );
             }
 
             curl_mimepart* part = curl_mime_addpart(_mime_related);
@@ -379,7 +410,9 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at GmailMailer::attach_inline_image(): " + exception.what());
+            throw std::runtime_error(
+                std::string() + "Exception at GmailMailer::attach_inline_image(): " + exception.what()
+            );
         }
     }
 
@@ -404,7 +437,9 @@ namespace QLogicaeCore
 
             if (!std::filesystem::exists(file_path))
             {
-                throw std::runtime_error("Exception at GmailMailer::attach_file(): Attachment file not found: " + file_path);
+                throw std::runtime_error(
+                    "Exception at GmailMailer::attach_file(): Attachment file not found: " + file_path
+                );
             }
 
             curl_mimepart* part = curl_mime_addpart(_mime_mixed);
@@ -420,18 +455,25 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at GmailMailer::attach_file(): " + exception.what());
+            throw std::runtime_error(
+                std::string() + "Exception at GmailMailer::attach_file(): " + exception.what()
+            );
         }
     }
 
     std::future<void> GmailMailer::attach_file_async(
         const std::string& file_path,
         const std::string& mime_type,
-        const std::string& filename)
+        const std::string& filename
+    )
     {
-        return std::async(std::launch::async, [this, file_path, mime_type, filename]() {
-            attach_file(file_path, mime_type, filename);
-        });
+        return std::async(
+            std::launch::async,
+            [this, file_path, mime_type, filename]()
+            {
+                attach_file(file_path, mime_type, filename);
+            }
+        );
     }
 
     void GmailMailer::setup(
@@ -460,19 +502,21 @@ namespace QLogicaeCore
         
         if (sender_address.empty() || !password_provider)
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value(
+                "Sender address is empty or pasword provider is null"
+            );
         }
         if (to_recipients.empty())
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value(
+                "No recipients"
+            );
         }
 
         curl_global_init(CURL_GLOBAL_DEFAULT);
         setup();
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
     void GmailMailer::set_subject(
@@ -484,7 +528,7 @@ namespace QLogicaeCore
 
         this->_subject = subject;
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
     void GmailMailer::set_subject_async(
@@ -492,7 +536,10 @@ namespace QLogicaeCore
         const std::string& subject
     )
     {
-        result.set_to_success(std::async(std::launch::async, [this, subject]()
+        result.set_to_good_status_with_value(
+            std::async(
+                std::launch::async,
+                [this, subject]()
             {
                 Result<void> result;
 
@@ -510,7 +557,7 @@ namespace QLogicaeCore
 
         _html_body = html;
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
     void GmailMailer::set_html_body_async(
@@ -518,11 +565,15 @@ namespace QLogicaeCore
         const std::string& html
     )
     {
-        result.set_to_success(std::async(std::launch::async, [this, html]()
+        result.set_to_good_status_with_value(
+            std::async(std::launch::async, [this, html]()
             {
                 Result<void> result;
 
-                set_html_body(result, html);
+                set_html_body(
+                    result,
+                    html
+                );
             })
         );
     }
@@ -536,7 +587,7 @@ namespace QLogicaeCore
 
         _plain_body = plain;
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
     void GmailMailer::set_plain_body_async(
@@ -544,11 +595,17 @@ namespace QLogicaeCore
         const std::string& plain
     )
     {
-        result.set_to_success(std::async(std::launch::async, [this, plain]()
+        result.set_to_good_status_with_value(
+            std::async(
+                std::launch::async,
+                [this, plain]()
             {
                 Result<void> result;
 
-                set_plain_body(result, plain);
+                set_plain_body(
+                    result,
+                    plain
+                );
             })
         );
     }
@@ -562,7 +619,7 @@ namespace QLogicaeCore
 
         _custom_headers[key] = value;
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
     void GmailMailer::set_header_async(
@@ -570,7 +627,10 @@ namespace QLogicaeCore
         const std::string& key,
         const std::string& value)
     {
-        result.set_to_success(std::async(std::launch::async, [this, key, value]()
+        result.set_to_good_status_with_value(
+            std::async(
+                std::launch::async,
+                [this, key, value]()
             {
                 Result<void> result;
 
@@ -589,8 +649,9 @@ namespace QLogicaeCore
 
         if (!std::filesystem::exists(file_path))
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value(
+                "File does not exist"
+            );
         }
 
         curl_mimepart* part = curl_mime_addpart(_mime_related);
@@ -600,10 +661,14 @@ namespace QLogicaeCore
         curl_mime_filename(part, file_path.c_str());
 
         std::string header = "Content-ID: <" + content_id + ">";
-        struct curl_slist* header_list = curl_slist_append(nullptr, header.c_str());
+        struct curl_slist* header_list =
+            curl_slist_append(
+                nullptr,
+                header.c_str()
+            );
         curl_mime_headers(part, header_list, 1);
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
     void GmailMailer::attach_inline_image_async(
@@ -612,11 +677,18 @@ namespace QLogicaeCore
         const std::string& content_id,
         const std::string& mime_type)
     {
-        result.set_to_success(std::async(std::launch::async, [this, file_path, content_id, mime_type]()
+        result.set_to_good_status_with_value(
+            std::async(std::launch::async,
+                [this, file_path, content_id, mime_type]()
             {
                 Result<void> result;
 
-                attach_inline_image(result, file_path, content_id, mime_type);
+                attach_inline_image(
+                    result,
+                    file_path,
+                    content_id,
+                    mime_type
+                );
             })
         );
     }
@@ -631,8 +703,9 @@ namespace QLogicaeCore
 
         if (!std::filesystem::exists(file_path))
         {
-            result.set_to_failure();
-            return;
+            return result.set_to_bad_status_without_value(
+                "File does not exist"
+            );
         }
 
         curl_mimepart* part = curl_mime_addpart(_mime_mixed);
@@ -646,7 +719,7 @@ namespace QLogicaeCore
         struct curl_slist* header_list = curl_slist_append(nullptr, header.c_str());
         curl_mime_headers(part, header_list, 1);
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
     void GmailMailer::attach_file_async(
@@ -655,11 +728,18 @@ namespace QLogicaeCore
         const std::string& mime_type,
         const std::string& filename)
     {
-        result.set_to_success(std::async(std::launch::async, [this, file_path, mime_type, filename]()
+        result.set_to_good_status_with_value(
+            std::async(std::launch::async,
+                [this, file_path, mime_type, filename]()
             {
                 Result<void> result;
 
-                attach_file(result, file_path, mime_type, filename);
+                attach_file(
+                    result,
+                    file_path,
+                    mime_type,
+                    filename
+                );
             })
         );
     }

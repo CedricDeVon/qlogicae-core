@@ -4,7 +4,9 @@
 
 namespace QLogicaeCore
 {
-    SQLiteStatementData::SQLiteStatementData(sqlite3_stmt* raw_statement)
+    SQLiteStatementData::SQLiteStatementData(
+        sqlite3_stmt* raw_statement
+    )
         : statement_handle(raw_statement)
     {
     }

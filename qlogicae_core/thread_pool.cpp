@@ -4,7 +4,8 @@
 
 namespace QLogicaeCore
 {
-    ThreadPool::ThreadPool(std::size_t thread_count,
+    ThreadPool::ThreadPool(
+        std::size_t thread_count,
         std::size_t max_queue_size)
         : _max_queue_capacity(max_queue_size)
     {
@@ -14,7 +15,9 @@ namespace QLogicaeCore
 
         for (std::size_t i = 0; i < thread_count; ++i)
         {
-            _worker_queues.emplace_back(std::make_unique<WorkerQueue>());
+            _worker_queues.emplace_back(
+                std::make_unique<WorkerQueue>()
+            );
             _worker_threads.emplace_back([this, i]()
                 {
                     _worker_loop(i);
@@ -53,7 +56,8 @@ namespace QLogicaeCore
         return current_thread_index;
     }
 
-    bool ThreadPool::_try_enqueue_to_worker(const std::size_t& worker_index,
+    bool ThreadPool::_try_enqueue_to_worker(
+        const std::size_t& worker_index,
         SmallTaskObject&& task,
         const TaskPriority& priority
     )
@@ -82,12 +86,18 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at ThreadPool::get_instance(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at ThreadPool::get_instance(): " +
+                exception.what()
+            );
         }
 
     }
 
-    void ThreadPool::_worker_loop(const std::size_t& thread_index)
+    void ThreadPool::_worker_loop(
+        const std::size_t& thread_index
+    )
     {
         try
         {
@@ -182,7 +192,11 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at ThreadPool::_worker_loop(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at ThreadPool::_worker_loop(): " +
+                exception.what()
+            );
         }
     }
 
@@ -205,7 +219,11 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at ThreadPool::total_pending_tasks(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at ThreadPool::total_pending_tasks(): " +
+                exception.what()
+            );
         }
     }
 
@@ -217,7 +235,11 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at ThreadPool::worker_count(): " + exception.what());
+            throw std::runtime_error(
+                std::string() +
+                "Exception at ThreadPool::worker_count(): " +
+                exception.what()
+            );
         }
     }
 
@@ -235,22 +257,30 @@ namespace QLogicaeCore
 
         for (std::size_t i = 0; i < thread_count; ++i)
         {
-            _worker_queues.emplace_back(std::make_unique<WorkerQueue>());
+            _worker_queues.emplace_back(
+                std::make_unique<WorkerQueue>()
+            );
             _worker_threads.emplace_back([this, i]()
                 {
                     _worker_loop(i);
                 });
         }
 
-        result.set_to_success();
+        result.set_to_good_status_without_value();
     }
 
-    void ThreadPool::worker_count(Result<std::size_t>& result) const
+    void ThreadPool::worker_count(
+        Result<std::size_t>& result
+    ) const
     {
-        result.set_to_success(_worker_queues.size());
+        result.set_to_good_status_with_value(
+            _worker_queues.size()
+        );
     }
 
-    void ThreadPool::total_pending_tasks(Result<std::size_t>& result) const
+    void ThreadPool::total_pending_tasks(
+        Result<std::size_t>& result
+    ) const
     {
         std::size_t total = 0;
 
@@ -263,18 +293,29 @@ namespace QLogicaeCore
             }
         }
 
-        result.set_to_success(total);
+        result.set_to_good_status_with_value(total);
     }
 
-    void ThreadPool::get_instance(Result<ThreadPool*>& result)
+    void ThreadPool::get_instance(
+        Result<ThreadPool*>& result
+    )
     {
         static ThreadPool global_thread_pool(
-            std::thread::hardware_concurrency(), 4096);
-        result.set_to_success(&global_thread_pool);
+            std::thread::hardware_concurrency(),
+            4096
+        );
+
+        result.set_to_good_status_with_value(
+            &global_thread_pool
+        );
     }
 
-    void ThreadPool::current_worker_index(Result<std::size_t>& result)
+    void ThreadPool::current_worker_index(
+        Result<std::size_t>& result
+    )
     {
-        result.set_to_success(current_thread_index);
+        result.set_to_good_status_with_value(
+            current_thread_index
+        );
     }
 }
