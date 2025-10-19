@@ -163,6 +163,15 @@ namespace QLogicaeCore
         });
     }
 
+    bool XChaCha20Poly1305CipherCryptographer::setup()
+    {
+        Result<void> result;
+
+        setup(result);
+
+        return result.is_status_safe();
+    }
+
     void XChaCha20Poly1305CipherCryptographer::setup(
         Result<void>& result
     )

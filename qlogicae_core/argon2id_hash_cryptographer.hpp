@@ -41,6 +41,16 @@ namespace QLogicaeCore
                 argon2id_hash_cryptographer
             ) = delete;
 
+        bool setup();
+
+        void setup(
+            Result<void>& result
+        );
+
+        bool setup(
+            const CryptographerProperties& va
+        );
+
         void setup(
             Result<void>& result,
             const CryptographerProperties& va
@@ -89,5 +99,7 @@ namespace QLogicaeCore
     protected:
         CryptographerProperties _cryptographer_properties;
     };
+
+    static inline Argon2idHashCryptographer ARGON2ID_HASH_CRYPTOGRAPHER;
 }
 

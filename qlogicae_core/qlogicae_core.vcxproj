@@ -199,7 +199,7 @@
     <ClInclude Include="abstract_value_extractor.hpp" />
     <ClInclude Include="application_cache.hpp" />
     <ClInclude Include="application_cryptographer.hpp" />
-    <ClInclude Include="application_io.hpp" />
+    <ClInclude Include="application_file_io.hpp" />
     <ClInclude Include="application_language.hpp" />
     <ClInclude Include="application_logger.hpp" />
     <ClInclude Include="application_startup_inputs.hpp" />
@@ -235,9 +235,9 @@
     <ClInclude Include="json_value_pointer.hpp" />
     <ClInclude Include="json_value_type.hpp" />
     <ClInclude Include="json_visitor.hpp" />
-    <ClInclude Include="json_web_token_reverse_input.hpp" />
-    <ClInclude Include="json_web_token_reverse_result.hpp" />
-    <ClInclude Include="json_web_token_transform_input.hpp" />
+    <ClInclude Include="jsonwebtoken_reverse_input.hpp" />
+    <ClInclude Include="jsonwebtoken_reverse_result.hpp" />
+    <ClInclude Include="jsonwebtoken_transform_input.hpp" />
     <ClInclude Include="log_level.hpp" />
     <ClInclude Include="log_medium.hpp" />
     <ClInclude Include="network_ping_response.hpp" />
@@ -317,9 +317,9 @@
     <ClInclude Include="json_value_pointer.cpp" />
     <ClInclude Include="json_value_type.cpp" />
     <ClInclude Include="json_visitor.cpp" />
-    <ClInclude Include="json_web_token_reverse_input.cpp" />
-    <ClInclude Include="json_web_token_reverse_result.cpp" />
-    <ClInclude Include="json_web_token_transform_input.cpp" />
+    <ClInclude Include="jsonwebtoken_reverse_input.cpp" />
+    <ClInclude Include="jsonwebtoken_reverse_result.cpp" />
+    <ClInclude Include="jsonwebtoken_transform_input.cpp" />
     <ClInclude Include="log_level.cpp" />
     <ClInclude Include="log_medium.cpp" />
     <ClInclude Include="network_ping_response.cpp" />
@@ -366,7 +366,7 @@
     <ClCompile Include="abstract_value_extractor.cpp" />
     <ClCompile Include="application_cache.cpp" />
     <ClCompile Include="application_cryptographer.cpp" />
-    <ClCompile Include="application_io.cpp" />
+    <ClCompile Include="application_file_io.cpp" />
     <ClCompile Include="application_language.cpp" />
     <ClCompile Include="application_logger.cpp" />
     <ClCompile Include="application_startup_inputs.cpp" />

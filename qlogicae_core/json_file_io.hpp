@@ -55,6 +55,20 @@ namespace QLogicaeCore
             const std::string&
         );
 
+        bool setup(
+            const std::string& file_path
+        );
+
+        bool setup(
+            const std::string& file_path,
+            const bool& is_formatting_allowed
+        );
+
+        bool setup(
+            const std::string& name,
+            const std::string& file_path
+        );
+
         std::string read();
         
         bool write(
@@ -245,8 +259,6 @@ namespace QLogicaeCore
             const JsonPath&,
             const std::unordered_map<std::string, std::any>&
         );
-
-
 
         void read(
             Result<std::string>& result
@@ -544,4 +556,6 @@ namespace QLogicaeCore
             rapidjson::Document::AllocatorType&
         );
     };
+
+    static inline JsonFileIO JSON_FILE_IO;
 }

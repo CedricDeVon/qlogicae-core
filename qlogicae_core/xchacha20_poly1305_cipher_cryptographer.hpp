@@ -34,56 +34,58 @@ namespace QLogicaeCore
                 xchacha20poly1305_cryptographer
         ) = delete;
 
-        std::string reverse(
-            const std::string_view& cipher,
-            const unsigned char* key,
-            const unsigned char* nonce
-        );
-        
-        std::string transform(
-            const std::string_view& text,
-            const unsigned char* key,
-            const unsigned char* nonce
-        );
-        
-        std::string reverse(
-            const std::string_view& cipher,
-            const std::string_view& key,
-            const std::string_view& nonce
-        );
-        
-        std::string transform(
-            const std::string_view& text,
-            const std::string_view& key,
-            const std::string_view& nonce
-        );
-        
-        std::future<std::string> reverse_async(
-            const std::string_view& cipher,
-            const unsigned char* key,
-            const unsigned char* nonce
-        );
-        
-        std::future<std::string> transform_async(
-            const std::string_view& text,
-            const unsigned char* key,
-            const unsigned char* nonce
-        );
-        
-        std::future<std::string> reverse_async(
-            const std::string_view& cipher,
-            const std::string_view& key,
-            const std::string_view& nonce
-        );
-        
-        std::future<std::string> transform_async(
-            const std::string_view& text,
-            const std::string_view& key,
-            const std::string_view& nonce
-        );
+        bool setup();
 
         void setup(
             Result<void>& result
+        );
+
+        std::string reverse(
+            const std::string_view& cipher,
+            const unsigned char* key,
+            const unsigned char* nonce
+        );
+        
+        std::string transform(
+            const std::string_view& text,
+            const unsigned char* key,
+            const unsigned char* nonce
+        );
+        
+        std::string reverse(
+            const std::string_view& cipher,
+            const std::string_view& key,
+            const std::string_view& nonce
+        );
+        
+        std::string transform(
+            const std::string_view& text,
+            const std::string_view& key,
+            const std::string_view& nonce
+        );
+        
+        std::future<std::string> reverse_async(
+            const std::string_view& cipher,
+            const unsigned char* key,
+            const unsigned char* nonce
+        );
+        
+        std::future<std::string> transform_async(
+            const std::string_view& text,
+            const unsigned char* key,
+            const unsigned char* nonce
+        );
+        
+        std::future<std::string> reverse_async(
+            const std::string_view& cipher,
+            const std::string_view& key,
+            const std::string_view& nonce
+        );
+        
+        std::future<std::string> transform_async(
+            const std::string_view& text,
+            const std::string_view& key,
+            const std::string_view& nonce
         );
 
         void reverse(
@@ -142,5 +144,7 @@ namespace QLogicaeCore
             const std::string_view& nonce
         );
     };
+
+    static inline XChaCha20Poly1305CipherCryptographer XCHACHA20_POLY1305_CIPHER_CRYPTOGRAPHER;
 }
 

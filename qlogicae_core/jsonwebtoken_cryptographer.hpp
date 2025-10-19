@@ -3,9 +3,9 @@
 #include "encoder.hpp"
 #include "generator.hpp"
 #include "cryptographer.hpp"
-#include "json_web_token_reverse_input.hpp"
-#include "json_web_token_reverse_result.hpp"
-#include "json_web_token_transform_input.hpp"
+#include "jsonwebtoken_reverse_input.hpp"
+#include "jsonwebtoken_reverse_result.hpp"
+#include "jsonwebtoken_transform_input.hpp"
 
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -48,6 +48,12 @@ namespace QLogicaeCore
                 json_web_token_cryptographer
          ) = delete;
 
+        bool setup();
+
+        void setup(
+            Result<void>& result
+        );
+
         std::string transform(
             JsonWebTokenTransformInput options
         );
@@ -64,10 +70,6 @@ namespace QLogicaeCore
             JsonWebTokenReverseInput options
         );
         
-        void setup(
-            Result<void>& result
-        );
-
         void transform(
             Result<std::string>& result,
             JsonWebTokenTransformInput options
@@ -98,4 +100,6 @@ namespace QLogicaeCore
             const std::string& public_key
         );
     };
+
+    static inline JsonWebTokenCryptographer JSONWEBTOKEN_SIGNATURE_CRYPTOGRAPHER;
 }

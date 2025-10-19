@@ -10,6 +10,15 @@ namespace QLogicaeCore
 		
 	}
 
+	bool BcryptHashCryptographer::setup()
+	{
+		Result<void> result;
+
+		setup(result);
+
+		return result.is_status_safe();
+	}
+
     void BcryptHashCryptographer::setup(
         Result<void>& result
     )

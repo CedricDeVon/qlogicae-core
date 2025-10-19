@@ -2,6 +2,7 @@
 
 #include "result.hpp"
 #include "abstract_application.hpp"
+#include "cryptographer_properties.hpp"
 #include "bcrypt_hash_cryptographer.hpp"
 #include "sha256_hash_cryptographer.hpp"
 #include "jsonwebtoken_cryptographer.hpp"
@@ -15,21 +16,7 @@ namespace QLogicaeCore
     class ApplicationCryptographer :
         public AbstractApplication
     {
-    public:
-        BcryptHashCryptographer BCRYPT_HASH;
-
-        SHA256HashCryptographer SHA256_HASH;
-
-        Argon2idHashCryptographer ARGON2ID_HASH;
-
-        AES256CipherCryptographer AES256_CIPHER;
-
-        XChaCha20Poly1305CipherCryptographer XCHACHA20_POLY1305_CIPHER;
-
-        JsonWebTokenCryptographer JSONWEBTOKEN_SIGNATURE;
-
-        AES256SignatureCryptographer AES256_SIGNATURE;
-
+    public:                                    
         bool setup();
 
         void setup(

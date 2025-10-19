@@ -7,19 +7,48 @@ namespace QLogicaeCore
 	Argon2idHashCryptographer::Argon2idHashCryptographer() :
 		Cryptographer()
 	{
-		_cryptographer_properties = default_cryptographer_3_properties;
+		_cryptographer_properties = DEFAULT_CRYPTOGRAPHER_3_PROPERTIES;
 	}
 
 	Argon2idHashCryptographer::Argon2idHashCryptographer(
-		const CryptographerProperties& properties) :
+		const CryptographerProperties& properties
+	) :
 			Cryptographer()
 	{
 		_cryptographer_properties = properties;
 	}
 
+	bool Argon2idHashCryptographer::setup()
+	{
+		Result<void> result;
+
+		setup(result);
+
+		return result.is_status_safe();
+	}
+
+	void Argon2idHashCryptographer::setup(
+		Result<void>& result
+	)
+	{		
+		result.set_to_good_status_without_value();
+	}
+
+	bool Argon2idHashCryptographer::setup(
+		const CryptographerProperties& properties
+	)
+	{
+		Result<void> result;
+
+		setup(result, properties);
+
+		return result.is_status_safe();
+	}
+
 	void Argon2idHashCryptographer::setup(
 		Result<void>& result,
-		const CryptographerProperties& properties)
+		const CryptographerProperties& properties
+	)
 	{
 		_cryptographer_properties = properties;
 

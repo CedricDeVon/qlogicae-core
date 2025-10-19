@@ -35,6 +35,8 @@ namespace QLogicaeCore
                 bcrypt_hash_cryptographer
             ) = delete;
 
+        bool setup();
+
         void setup(
             Result<void>& result
         );
@@ -77,4 +79,6 @@ namespace QLogicaeCore
             const std::string& key
         );
     };
+
+    static inline BcryptHashCryptographer BCRYPT_HASH_CRYPTOGRAPHER;
 }

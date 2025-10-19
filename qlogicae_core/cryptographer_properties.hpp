@@ -22,7 +22,7 @@ namespace QLogicaeCore
     };
 
     static CryptographerProperties
-        default_cryptographer_3_properties
+        DEFAULT_CRYPTOGRAPHER_3_PROPERTIES
     {
         .size_t_1 = 32,
         

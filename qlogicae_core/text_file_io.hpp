@@ -48,6 +48,15 @@ namespace QLogicaeCore
             const std::string& file_path
         );
 
+        bool setup(
+            const std::string& file_path
+        );
+
+        bool setup(
+            const std::string& name,
+            const std::string& file_path
+        );
+
         std::string read();
         
         bool open(
@@ -159,4 +168,6 @@ namespace QLogicaeCore
 
         std::optional<fast_io::native_file_loader> _read_file;
     };
+
+    static inline TextFileIO TEXT_FILE_IO;
 }

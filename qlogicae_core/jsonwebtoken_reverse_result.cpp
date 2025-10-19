@@ -1,6 +1,6 @@
 #include "pch.hpp"
 
-#include "json_web_token_transform_input.hpp"
+#include "jsonwebtoken_reverse_result.hpp"
 
 namespace QLogicaeCore
 {

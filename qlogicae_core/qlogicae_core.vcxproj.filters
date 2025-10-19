@@ -288,13 +288,13 @@
     <ClInclude Include="worker_queue.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="json_web_token_transform_input.hpp">
+    <ClInclude Include="jsonwebtoken_transform_input.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="json_web_token_reverse_input.hpp">
+    <ClInclude Include="jsonwebtoken_reverse_input.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="json_web_token_reverse_result.hpp">
+    <ClInclude Include="jsonwebtoken_reverse_result.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="vector_string_hash.hpp">
@@ -387,13 +387,13 @@
     <ClInclude Include="json_visitor.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="json_web_token_reverse_input.cpp">
+    <ClInclude Include="jsonwebtoken_reverse_input.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="json_web_token_reverse_result.cpp">
+    <ClInclude Include="jsonwebtoken_reverse_result.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="json_web_token_transform_input.cpp">
+    <ClInclude Include="jsonwebtoken_transform_input.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="log_level.cpp">
@@ -498,7 +498,7 @@
     <ClInclude Include="application_language.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="application_io.hpp">
+    <ClInclude Include="application_file_io.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="application_startup_inputs.hpp">
@@ -734,7 +734,7 @@
     <ClCompile Include="application_windows_registry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="application_io.cpp">
+    <ClCompile Include="application_file_io.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="application_startup_inputs.cpp">

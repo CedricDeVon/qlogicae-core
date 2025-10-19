@@ -39,6 +39,29 @@ namespace QLogicaeCore
         _toml_root = std::make_optional<toml::table*>(new toml::table{});
     }
 
+    bool TomlFileIO::setup(
+        const std::string& file_path
+    )
+    {
+        Result<void> void_result;
+
+        setup(void_result, file_path);
+
+        return void_result.is_status_safe();
+    }
+
+    bool TomlFileIO::setup(
+        const std::string& name,
+        const std::string& file_path
+    )
+    {
+        Result<void> void_result;
+
+        setup(void_result, name, file_path);
+
+        return void_result.is_status_safe();
+    }
+
     bool TomlFileIO::load()
     {
         try
@@ -430,8 +453,6 @@ namespace QLogicaeCore
             })
         );
     }
-
-
 
     void TomlFileIO::setup(
         Result<void>& result,

@@ -145,4 +145,6 @@ namespace QLogicaeCore
 
 		std::vector<std::string> _output_paths;
 	};
+
+	static inline Logger LOGGER;
 }

@@ -23,6 +23,29 @@ namespace QLogicaeCore
 
     }
 
+    bool CsvFileIO::setup(
+        const std::string& file_path
+    )
+    {
+        Result<void> void_result;
+
+        setup(void_result, file_path);
+
+        return void_result.is_status_safe();
+    }
+
+    bool CsvFileIO::setup(
+        const std::string& name,
+        const std::string& file_path
+    )
+    {
+        Result<void> void_result;
+
+        setup(void_result, name, file_path);
+
+        return void_result.is_status_safe();
+    }
+
     std::string CsvFileIO::trim(
         std::string value
     )

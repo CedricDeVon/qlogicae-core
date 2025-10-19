@@ -47,6 +47,15 @@ namespace QLogicaeCore
             const std::string& name
         );
 
+        bool setup(
+            const std::string& file_path
+        );
+
+        bool setup(
+            const std::string& name,
+            const std::string& file_path
+        );
+
         bool load();
         
         bool save();
@@ -692,5 +701,7 @@ namespace QLogicaeCore
                 return this->set_value<ValueType>(key_path, value);
             });
     }
+
+    static inline XmlFileIO XML_FILE_IO;
 }
 

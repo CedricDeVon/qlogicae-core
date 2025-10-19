@@ -45,6 +45,21 @@ namespace QLogicaeCore
             const std::string& name
         );
 
+        bool setup(
+            const std::string& file_path
+        );
+
+        bool setup(
+            const std::string& file_path,
+            const std::string& mimetype
+        );
+
+        bool setup(
+            const std::string& file_path,
+            const std::string& mimetype,
+            const std::string& name
+        );
+
         std::string generate_data_uri();
 
         std::future<std::string> generate_data_uri_async();

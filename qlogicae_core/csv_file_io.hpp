@@ -36,6 +36,15 @@ namespace QLogicaeCore
             const std::string& file_path
         );
 
+        bool setup(
+            const std::string& file_path
+        );
+
+        bool setup(
+            const std::string& name,
+            const std::string& file_path
+        );
+
         bool is_corrupted();
 
         size_t get_row_count();
@@ -274,5 +283,7 @@ namespace QLogicaeCore
 
         std::optional<rapidcsv::Document> _temporary_csv_document_1;
     };
+
+    static inline CsvFileIO CSV_FILE_IO;
 }
 

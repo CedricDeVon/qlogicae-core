@@ -74,6 +74,15 @@ namespace QLogicaeCore
 			});
 	}
 
+	bool SHA256HashCryptographer::setup()
+	{
+		Result<void> result;
+
+		setup(result);
+
+		return result.is_status_safe();
+	}
+
 	void SHA256HashCryptographer::setup(
 		Result<void>& result
 	)

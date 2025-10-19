@@ -53,6 +53,8 @@ namespace QLogicaeCore
             const std::string& key
         );
 
+        bool setup();
+
         void setup(
             Result<void>& result
         );
@@ -79,4 +81,6 @@ namespace QLogicaeCore
             const std::string& key
         );
     };
+
+    static inline SHA256HashCryptographer SHA256_HASH_CRYPTOGRAPHER;
 }

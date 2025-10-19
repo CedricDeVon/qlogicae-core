@@ -47,7 +47,16 @@ namespace QLogicaeCore
         TomlFileIO& operator = (
             TomlFileIO&& toml_file_io
         ) noexcept = default;
-      
+
+        bool setup(
+            const std::string& file_path
+        );
+
+        bool setup(
+            const std::string& name,
+            const std::string& file_path
+        );
+
         bool load();
         
         bool save();
@@ -116,8 +125,6 @@ namespace QLogicaeCore
         std::future<bool> remove_keys_async(
             const std::vector<std::vector<std::string>>& keys
         );
-
-
 
         void load(
             Result<bool>& result

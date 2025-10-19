@@ -24,7 +24,7 @@ namespace QLogicaeCoreTest
     {
         std::string long_input(1000000, 'x');
         QLogicaeCore::CryptographerProperties weak_properties =
-            QLogicaeCore::default_cryptographer_3_properties;
+            QLogicaeCore::DEFAULT_CRYPTOGRAPHER_3_PROPERTIES;
         weak_properties.size_t_1 = 1;
         weak_properties.size_t_2 = 1;
         QLogicaeCore::Argon2idHashCryptographer weak_crypto(

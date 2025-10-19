@@ -28,6 +28,62 @@ namespace QLogicaeCore
         Result<void>& result
     )
     {
+        AES256_CIPHER_CRYPTOGRAPHER.setup(
+            result
+        );
+        if (result.is_status_safe())
+        {
+            return result.set_to_bad_status_without_value();
+        }
+
+        AES256_SIGNATURE_CRYPTOGRAPHER.setup(
+            result
+        );
+        if (result.is_status_safe())
+        {
+            return result.set_to_bad_status_without_value();
+        }
+
+        ARGON2ID_HASH_CRYPTOGRAPHER.setup(
+            result
+        );
+        if (result.is_status_safe())
+        {
+            return result.set_to_bad_status_without_value();
+        }
+
+        BCRYPT_HASH_CRYPTOGRAPHER.setup(
+            result
+        );
+        if (result.is_status_safe())
+        {
+            return result.set_to_bad_status_without_value();
+        }
+
+        SHA256_HASH_CRYPTOGRAPHER.setup(
+            result
+        );
+        if (result.is_status_safe())
+        {
+            return result.set_to_bad_status_without_value();
+        }
+
+        XCHACHA20_POLY1305_CIPHER_CRYPTOGRAPHER.setup(
+            result
+        );
+        if (result.is_status_safe())
+        {
+            return result.set_to_bad_status_without_value();
+        }
+
+        JSONWEBTOKEN_SIGNATURE_CRYPTOGRAPHER.setup(
+            result
+        );
+        if (result.is_status_safe())
+        {
+            return result.set_to_bad_status_without_value();
+        }
+
         set_is_enabled(true);
 
         result.set_to_good_status_without_value();

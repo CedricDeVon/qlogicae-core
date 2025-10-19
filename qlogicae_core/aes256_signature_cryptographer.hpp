@@ -34,7 +34,11 @@ namespace QLogicaeCore
                 aes_256_signature_cryptographer
         ) = delete;
 
-        void setup(Result<void>& result);
+        bool setup();
+
+        void setup(
+            Result<void>& result
+        );
 
         std::string reverse(
             const std::string& cipher,
@@ -132,4 +136,6 @@ namespace QLogicaeCore
             const std::string& private_key
         );
     };
+
+    static inline AES256SignatureCryptographer AES256_SIGNATURE_CRYPTOGRAPHER;
 }

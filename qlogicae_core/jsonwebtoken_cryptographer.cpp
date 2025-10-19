@@ -179,6 +179,15 @@ namespace QLogicaeCore
         );
     }
 
+    bool JsonWebTokenCryptographer::setup()
+    {
+        Result<void> result;
+
+        setup(result);
+
+        return result.is_status_safe();
+    }
+
     void JsonWebTokenCryptographer::setup(
         Result<void>& result
     )
