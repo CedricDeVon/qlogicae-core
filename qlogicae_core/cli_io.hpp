@@ -10,9 +10,9 @@ namespace QLogicaeCore
     class CliIO
     {
     public:
-		bool is_scan_enabled() const;
+		bool is_scan_enabled();
 
-		bool is_print_enabled() const;
+		bool is_print_enabled();
 
 		void set_scan_enabled(
 			const bool& value
@@ -72,11 +72,11 @@ namespace QLogicaeCore
 
 		void is_scan_enabled(
 			Result<bool>& result
-		) const;
+		);
 
 		void is_print_enabled(
 			Result<bool>& result
-		) const;
+		);
 
 		void set_scan_enabled(
 			Result<void>& result,

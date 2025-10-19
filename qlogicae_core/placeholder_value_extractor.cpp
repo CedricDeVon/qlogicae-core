@@ -12,7 +12,7 @@ namespace QLogicaeCore
 
     }
 
-    std::optional<std::string> PlaceholderValueExtractor::get_value() const
+    std::optional<std::string> PlaceholderValueExtractor::get_value()
     {
         try
         {
@@ -40,7 +40,7 @@ namespace QLogicaeCore
 
     void PlaceholderValueExtractor::get_value(
         Result<std::string>& result
-    ) const
+    )
     {
         result.set_to_good_status_with_value(
             _value

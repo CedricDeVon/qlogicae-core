@@ -41,40 +41,40 @@ namespace QLogicaeCore
 
         std::string transform(
             const std::string& text
-        ) const;
+        );
 
         bool reverse(
             const std::string& hash,
             const std::string& key
-        ) const;
+        );
 
         std::future<std::string> transform_async(
             const std::string& text
-        ) const;
+        );
 
         std::future<bool> reverse_async(
             const std::string& hash,
             const std::string& key
-        ) const;
+        );
 
         void transform(Result<std::string>& result,
             const std::string& text
-        ) const;
+        );
 
         void reverse(Result<bool>& result,
             const std::string& hash,
             const std::string& key
-        ) const;
+        );
 
         void transform_async(
             Result<std::future<std::string>>& result,
             const std::string& text
-        ) const;
+        );
 
         void reverse_async(
             Result<std::future<bool>>& result,
             const std::string& hash,
             const std::string& key
-        ) const;
+        );
     };
 }

@@ -13,7 +13,7 @@ namespace QLogicaeCore
     std::string XChaCha20Poly1305CipherCryptographer::reverse(
         const std::string_view& va,
         const std::string_view& vb,
-        const std::string_view& vc) const
+        const std::string_view& vc)
     {
         return reverse(va,
             reinterpret_cast<const unsigned char*>(vb.data()),
@@ -24,7 +24,7 @@ namespace QLogicaeCore
     std::string XChaCha20Poly1305CipherCryptographer::transform(
         const std::string_view& va,
         const std::string_view& vb,
-        const std::string_view& vc) const
+        const std::string_view& vc)
     {
         return transform(va,
             reinterpret_cast<const unsigned char*>(vb.data()),
@@ -35,7 +35,7 @@ namespace QLogicaeCore
     std::future<std::string> XChaCha20Poly1305CipherCryptographer::reverse_async(
         const std::string_view& va,
         const std::string_view& vb,
-        const std::string_view& vc) const
+        const std::string_view& vc)
     {
         return std::async(std::launch::async,
             [this, va, vb, vc]() -> std::string
@@ -47,7 +47,7 @@ namespace QLogicaeCore
     std::future<std::string> XChaCha20Poly1305CipherCryptographer::transform_async(
         const std::string_view& va,
         const std::string_view& vb,
-        const std::string_view& vc) const
+        const std::string_view& vc)
     {
         return std::async(std::launch::async,
             [this, va, vb, vc]() -> std::string
@@ -59,7 +59,7 @@ namespace QLogicaeCore
     std::string XChaCha20Poly1305CipherCryptographer::transform(
         const std::string_view& va,
         const unsigned char* vb,
-        const unsigned char* vc) const
+        const unsigned char* vc)
     {
         try
         {
@@ -99,7 +99,7 @@ namespace QLogicaeCore
     std::string XChaCha20Poly1305CipherCryptographer::reverse(
         const std::string_view& va,
         const unsigned char* vb,
-        const unsigned char* vc) const
+        const unsigned char* vc)
     {
         try
         {
@@ -144,7 +144,7 @@ namespace QLogicaeCore
     std::future<std::string> XChaCha20Poly1305CipherCryptographer::reverse_async(
         const std::string_view& va,
         const unsigned char* vb,
-        const unsigned char* vc) const
+        const unsigned char* vc)
     {
         return std::async(std::launch::async, [this, va, vb, vc]() -> std::string
         {
@@ -155,7 +155,7 @@ namespace QLogicaeCore
     std::future<std::string> XChaCha20Poly1305CipherCryptographer::transform_async(
         const std::string_view& va,
         const unsigned char* vb,
-        const unsigned char* vc) const
+        const unsigned char* vc)
     {
         return std::async(std::launch::async, [this, va, vb, vc]() -> std::string
         {
@@ -175,7 +175,7 @@ namespace QLogicaeCore
         const std::string_view& cipher,
         const unsigned char* key,
         const unsigned char* nonce
-    ) const
+    )
     {
         std::scoped_lock lock(_mutex);
 
@@ -217,7 +217,7 @@ namespace QLogicaeCore
         const std::string_view& text,
         const unsigned char* key,
         const unsigned char* nonce
-    ) const
+    )
     {
         std::scoped_lock lock(_mutex);
 
@@ -250,7 +250,7 @@ namespace QLogicaeCore
         const std::string_view& cipher,
         const std::string_view& key,
         const std::string_view& nonce
-    ) const
+    )
     {
         result.set_to_good_status_with_value(reverse(cipher,
             reinterpret_cast<const unsigned char*>(key.data()),
@@ -263,7 +263,7 @@ namespace QLogicaeCore
         const std::string_view& text,
         const std::string_view& key,
         const std::string_view& nonce
-    ) const
+    )
     {
         result.set_to_good_status_with_value(transform(text,
             reinterpret_cast<const unsigned char*>(key.data()),
@@ -276,7 +276,7 @@ namespace QLogicaeCore
         const std::string_view& cipher,
         const unsigned char* key,
         const unsigned char* nonce
-    ) const
+    )
     {
         result.set_to_good_status_with_value(
             std::async(std::launch::async,
@@ -296,7 +296,7 @@ namespace QLogicaeCore
         const std::string_view& text,
         const unsigned char* key,
         const unsigned char* nonce
-    ) const
+    )
     {
         result.set_to_good_status_with_value(
             std::async(std::launch::async,
@@ -316,7 +316,7 @@ namespace QLogicaeCore
         const std::string_view& cipher,
         const std::string_view& key,
         const std::string_view& nonce
-    ) const
+    )
     {
         result.set_to_good_status_with_value(
             std::async(std::launch::async, [this, cipher, key, nonce]() -> std::string
@@ -335,7 +335,7 @@ namespace QLogicaeCore
         const std::string_view& text,
         const std::string_view& key,
         const std::string_view& nonce
-    ) const
+    )
     {
         result.set_to_good_status_with_value(
             std::async(std::launch::async, [this, text, key, nonce]() -> std::string

@@ -211,7 +211,7 @@ namespace QLogicaeCore
         }
     }
 
-    bool Interval::is_running() const
+    bool Interval::is_running()
     {
         try
         {
@@ -227,7 +227,7 @@ namespace QLogicaeCore
         }
     }
 
-    bool Interval::is_paused() const
+    bool Interval::is_paused()
     {
         try
         {
@@ -243,7 +243,7 @@ namespace QLogicaeCore
         }
     }
 
-    bool Interval::is_cancelled() const
+    bool Interval::is_cancelled()
     {
         try
         {
@@ -277,7 +277,7 @@ namespace QLogicaeCore
         }
     }
 
-    std::chrono::milliseconds Interval::get_interval() const
+    std::chrono::milliseconds Interval::get_interval()
     {
         try
         {
@@ -313,7 +313,7 @@ namespace QLogicaeCore
         }
     }
 
-    size_t Interval::get_execution_count() const
+    size_t Interval::get_execution_count()
     {
         try
         {
@@ -423,7 +423,7 @@ namespace QLogicaeCore
 
     void Interval::is_paused(
         Result<bool>& result
-    ) const
+    )
     {
         result.set_to_good_status_with_value(
             _paused.load()
@@ -432,7 +432,7 @@ namespace QLogicaeCore
 
     void Interval::is_running(
         Result<bool>& result
-    ) const
+    )
     {
         result.set_to_good_status_with_value(
             _running.load()
@@ -441,7 +441,7 @@ namespace QLogicaeCore
 
     void Interval::is_cancelled(
         Result<bool>& result
-    ) const
+    )
     {
         result.set_to_good_status_with_value(
             _cancelled.load()
@@ -450,7 +450,7 @@ namespace QLogicaeCore
 
     void Interval::get_execution_count(
         Result<size_t>& result
-    ) const
+    )
     {
         result.set_to_good_status_with_value(
             _count.load()
@@ -459,7 +459,7 @@ namespace QLogicaeCore
 
     void Interval::get_interval(
         Result<std::chrono::milliseconds>& result
-    ) const
+    )
     {
         std::lock_guard lock(_mutex);
 

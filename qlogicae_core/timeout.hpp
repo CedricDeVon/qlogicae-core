@@ -36,7 +36,7 @@ namespace QLogicaeCore
         
         void restart();
         
-        bool is_cancelled() const;
+        bool is_cancelled();
 
         void setup(
             Result<void>& result,
@@ -55,7 +55,7 @@ namespace QLogicaeCore
 
         void is_cancelled(
             Result<bool>& result
-        ) const;
+        );
 
     protected:
         std::jthread _thread;

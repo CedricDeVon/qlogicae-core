@@ -193,9 +193,18 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="abstract_application.hpp" />
     <ClInclude Include="abstract_file_io.hpp" />
     <ClInclude Include="abstract_result.hpp" />
     <ClInclude Include="abstract_value_extractor.hpp" />
+    <ClInclude Include="application_cache.hpp" />
+    <ClInclude Include="application_cryptographer.hpp" />
+    <ClInclude Include="application_io.hpp" />
+    <ClInclude Include="application_language.hpp" />
+    <ClInclude Include="application_logger.hpp" />
+    <ClInclude Include="application_startup_inputs.hpp" />
+    <ClInclude Include="application_utilities.hpp" />
+    <ClInclude Include="application_windows_registry.hpp" />
     <ClInclude Include="bad_result.hpp" />
     <ClInclude Include="bcrypt_hash_cryptographer.hpp" />
     <ClInclude Include="binary_file_io.hpp" />
@@ -351,9 +360,18 @@
     <ClInclude Include="xml_file_io.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="abstract_application.cpp" />
     <ClCompile Include="abstract_file_io.cpp" />
     <ClCompile Include="abstract_result.cpp" />
     <ClCompile Include="abstract_value_extractor.cpp" />
+    <ClCompile Include="application_cache.cpp" />
+    <ClCompile Include="application_cryptographer.cpp" />
+    <ClCompile Include="application_io.cpp" />
+    <ClCompile Include="application_language.cpp" />
+    <ClCompile Include="application_logger.cpp" />
+    <ClCompile Include="application_startup_inputs.cpp" />
+    <ClCompile Include="application_utilities.cpp" />
+    <ClCompile Include="application_windows_registry.cpp" />
     <ClCompile Include="bad_result.cpp" />
     <ClCompile Include="bcrypt_hash_cryptographer.cpp" />
     <ClCompile Include="binary_file_io.cpp" />

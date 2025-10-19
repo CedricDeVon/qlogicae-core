@@ -4,7 +4,7 @@
 
 struct RegularKeyDeleteHandler
 {
-    void operator() (HKEY handler) const
+    void operator() (HKEY handler)
     {
         if (handler)
         {
@@ -58,7 +58,7 @@ namespace QLogicaeCore
 
     std::optional<std::wstring> WindowsRegistry::get_value_via_utf16(
         std::wstring_view sub_key,
-        std::wstring_view name_key) const
+        std::wstring_view name_key)
     {
         sub_key = (sub_key.empty()) ? _sub_key : sub_key;
         name_key = (name_key.empty()) ? _name_key : name_key;
@@ -105,7 +105,7 @@ namespace QLogicaeCore
 
     std::optional<std::string> WindowsRegistry::get_value_via_utf8(
         std::string_view sub_key,
-        std::string_view name_key) const
+        std::string_view name_key)
     {
         return ENCODER.from_utf16_to_utf8(
             get_value_via_utf16(
@@ -118,7 +118,7 @@ namespace QLogicaeCore
     bool WindowsRegistry::set_value_via_utf16(
         std::wstring_view sub_key,
         std::wstring_view name_key,
-        const std::wstring_view value) const
+        const std::wstring_view value)
     {
         name_key = (name_key.empty()) ? _name_key : name_key;
         sub_key = (sub_key.empty()) ? _sub_key : sub_key;
@@ -142,7 +142,7 @@ namespace QLogicaeCore
     bool WindowsRegistry::set_value_via_utf8(
         std::string_view sub_key,
         std::string_view name_key,
-        const std::string_view value) const
+        const std::string_view value)
     {
         return set_value_via_utf16(
             ENCODER.from_utf8_to_utf16(sub_key),
@@ -153,14 +153,14 @@ namespace QLogicaeCore
 
     bool WindowsRegistry::is_sub_and_name_key_path_found_via_utf16(
         std::wstring_view sub_key,
-        std::wstring_view name_key) const
+        std::wstring_view name_key)
     {
         return !(get_value_via_utf16(sub_key, name_key).value().empty());
     }
 
     bool WindowsRegistry::is_sub_and_name_key_path_found_via_utf8(
         std::string_view sub_key,
-        std::string_view name_key) const
+        std::string_view name_key)
     {
         return !(get_value_via_utf16(
             ENCODER.from_utf8_to_utf16(sub_key),
@@ -170,7 +170,7 @@ namespace QLogicaeCore
 
     bool WindowsRegistry::remove_value_via_utf16(
         std::wstring_view sub_key,
-        std::wstring_view name_key) const
+        std::wstring_view name_key)
     {
         sub_key = (sub_key.empty()) ? _sub_key : sub_key;
         name_key = (name_key.empty()) ? _name_key : name_key;
@@ -190,7 +190,7 @@ namespace QLogicaeCore
 
     bool WindowsRegistry::remove_value_via_utf8(
         std::string_view sub_key,
-        std::string_view name_key) const
+        std::string_view name_key)
     {
         return remove_value_via_utf16(
             ENCODER.from_utf8_to_utf16(sub_key),
@@ -199,7 +199,7 @@ namespace QLogicaeCore
     }
 
     std::unordered_map<std::string, std::wstring> WindowsRegistry::get_values_via_utf16(
-        std::wstring_view sub_key) const
+        std::wstring_view sub_key)
     {
         std::unordered_map<std::string, std::wstring> result;
 
@@ -253,7 +253,7 @@ namespace QLogicaeCore
 
     std::unordered_map<std::string, std::string> WindowsRegistry::get_values_via_utf8(
         std::string_view sub_key
-    ) const
+    )
     {
         std::unordered_map<std::string, std::string> utf8_result;
 
@@ -285,7 +285,7 @@ namespace QLogicaeCore
     void WindowsRegistry::get_values_via_utf8(
         Result<std::unordered_map<std::string, std::string>>& result,
         const std::string_view value
-    ) const
+    )
     {
         result.set_to_good_status_with_value(
             WindowsRegistry::get_values_via_utf8(value)
@@ -295,7 +295,7 @@ namespace QLogicaeCore
     void WindowsRegistry::get_values_via_utf16(
         Result<std::unordered_map<std::string, std::wstring>>& result,
         const std::wstring_view value
-    ) const
+    )
     {
         result.set_to_good_status_with_value(
             WindowsRegistry::get_values_via_utf16(value)
@@ -306,7 +306,7 @@ namespace QLogicaeCore
         Result<void>& result,
         const std::string_view sub_path,
         const std::string_view name
-    ) const
+    )
     {
         WindowsRegistry::remove_value_via_utf8(
             sub_path,
@@ -320,7 +320,7 @@ namespace QLogicaeCore
         Result<void>& result,
         const std::wstring_view sub_path,
         const std::wstring_view name
-    ) const
+    )
     {
         WindowsRegistry::remove_value_via_utf16(
             sub_path,
@@ -362,7 +362,7 @@ namespace QLogicaeCore
         Result<bool>& result,
         const std::string_view sub_path,
         const std::string_view name
-    ) const
+    )
     {
         result.set_to_good_status_with_value(
             WindowsRegistry::is_sub_and_name_key_path_found_via_utf8(
@@ -376,7 +376,7 @@ namespace QLogicaeCore
         Result<bool>& result,
         const std::wstring_view sub_path,
         const std::wstring_view name
-    ) const
+    )
     {
         result.set_to_good_status_with_value(
             WindowsRegistry::is_sub_and_name_key_path_found_via_utf16(
@@ -390,7 +390,7 @@ namespace QLogicaeCore
         Result<std::string>& result,
         const std::string_view sub_path,
         const std::string_view name
-    ) const
+    )
     {
         const auto value = WindowsRegistry::get_value_via_utf8(
             sub_path,
@@ -406,7 +406,7 @@ namespace QLogicaeCore
         Result<std::wstring>& result,
         const std::wstring_view sub_path,
         const std::wstring_view name
-    ) const
+    )
     {
         const auto value = WindowsRegistry::get_value_via_utf16(
             sub_path,
@@ -423,7 +423,7 @@ namespace QLogicaeCore
         const std::string_view sub_path,
         const std::string_view name,
         const std::string_view value
-    ) const
+    )
     {
         WindowsRegistry::set_value_via_utf8(
             sub_path,
@@ -439,7 +439,7 @@ namespace QLogicaeCore
         const std::wstring_view sub_path,
         const std::wstring_view name,
         const std::wstring_view value
-    ) const
+    )
     {
         WindowsRegistry::set_value_via_utf16(
             sub_path,

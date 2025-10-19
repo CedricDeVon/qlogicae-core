@@ -33,13 +33,13 @@ namespace QLogicaeCore
             const DotEnvValueExtractor& dot_env_value_extractor
         ) = delete;
 
-        std::optional<std::wstring> get_key() const;
+        std::optional<std::wstring> get_key();
 
-        std::optional<std::string> get_value() const;
+        std::optional<std::string> get_value();
 
-        void get_key(Result<std::optional<std::wstring>>& result) const;
+        void get_key(Result<std::optional<std::wstring>>& result);
 
-        void get_value(Result<std::string>& result) const;
+        void get_value(Result<std::string>& result);
 
         void setup(
             Result<void>& result,

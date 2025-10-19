@@ -12,7 +12,7 @@ namespace QLogicaeCore
     }
 
     std::string Transformer::color_type(
-        const LogLevel& level) const
+        const LogLevel& level)
     {
         try
         {
@@ -68,7 +68,7 @@ namespace QLogicaeCore
     std::string Transformer::to_log_format(
         const std::string& text,
         const LogLevel& level,
-        const size_t& output_size) const
+        const size_t& output_size)
     {
         try
         {
@@ -100,7 +100,7 @@ namespace QLogicaeCore
         const ResultStatus& result_status,
         const TimeFormat& time_format,
         const size_t& output_size
-    ) const
+    )
     {
         std::string content;
         content.reserve(output_size);
@@ -120,7 +120,7 @@ namespace QLogicaeCore
     std::string Transformer::to_log_level_color_format(
         const std::string& text,
         const LogLevel& level,
-        const size_t& output_size) const
+        const size_t& output_size)
     {
         try
         {
@@ -141,7 +141,7 @@ namespace QLogicaeCore
     }
 
     std::string Transformer::to_none_format(
-        const std::string& text) const
+        const std::string& text)
     {
         try
         {
@@ -162,7 +162,7 @@ namespace QLogicaeCore
     }
 
     std::string Transformer::to_na_format(
-        const std::string& text) const
+        const std::string& text)
     {
         try
         {
@@ -184,7 +184,7 @@ namespace QLogicaeCore
 
     std::vector<std::string> Transformer::split(
         const std::string& text,
-        const std::string& delimeter) const
+        const std::string& delimeter)
     {
         try
         {
@@ -204,7 +204,7 @@ namespace QLogicaeCore
     void Transformer::color_type(
         Result<std::string>& result,
         const LogLevel& level
-    ) const
+    )
     {
         switch (level)
         {
@@ -253,7 +253,7 @@ namespace QLogicaeCore
         const LogLevel& level,
         const TimeFormat& time_format,
         const size_t& output_size
-    ) const
+    )
     {
         std::string content;
         content.reserve(output_size);
@@ -276,7 +276,7 @@ namespace QLogicaeCore
         const ResultStatus& result_status,
         const TimeFormat& time_format,
         const size_t& output_size
-    ) const
+    )
     {
         std::string content;
         content.reserve(output_size);
@@ -298,7 +298,7 @@ namespace QLogicaeCore
         const std::string& text,
         const LogLevel& level,
         const size_t& output_size
-    ) const
+    )
     {
         std::string content;
         content.reserve(output_size);
@@ -310,7 +310,7 @@ namespace QLogicaeCore
     void Transformer::to_none_format(
         Result<std::string>& result,
         const std::string& text
-    ) const
+    )
     {
         if (text.empty())
         {
@@ -325,7 +325,7 @@ namespace QLogicaeCore
     void Transformer::to_na_format(
         Result<std::string>& result,
         const std::string& text
-    ) const
+    )
     {
         if (text.empty())
         {
@@ -341,7 +341,7 @@ namespace QLogicaeCore
         Result<std::vector<std::string>>& result,
         const std::string& text,
         const std::string& delimeter
-    ) const
+    )
     {
         auto content = absl::StrSplit(text, delimeter);
 

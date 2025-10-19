@@ -21,7 +21,7 @@ namespace QLogicaeCore
 		const std::string& va,
 		const std::string& vb,
 		const std::string& vc
-	) const
+	)
 	{
 		return reverse(va,
 			reinterpret_cast<const unsigned char*>(vb.data()),
@@ -33,7 +33,7 @@ namespace QLogicaeCore
 		const std::string& va,
 		const std::string& vb,
 		const std::string& vc
-	) const
+	)
 	{
 		return transform(va,
 			reinterpret_cast<const unsigned char*>(vb.data()),
@@ -45,7 +45,7 @@ namespace QLogicaeCore
 		const std::string& va,
 		const std::string& vb,
 		const std::string& vc
-	) const
+	)
 	{
 		return std::async(std::launch::async,
 			[this, va, vb, vc]() -> std::string
@@ -59,7 +59,7 @@ namespace QLogicaeCore
 		const std::string& va,
 		const std::string& vb,
 		const std::string& vc
-	) const
+	)
 	{
 		return std::async(std::launch::async,
 			[this, va, vb, vc]() -> std::string
@@ -73,7 +73,7 @@ namespace QLogicaeCore
 		const std::string& va,
 		const unsigned char* vb,
 		const unsigned char* vc
-	) const
+	)
 	{
 		try
 		{
@@ -118,7 +118,7 @@ namespace QLogicaeCore
 		const std::string& va,
 		const unsigned char* vb,
 		const unsigned char* vc
-	) const
+	)
 	{
 		try
 		{
@@ -159,7 +159,7 @@ namespace QLogicaeCore
 		const std::string& va,
 		const unsigned char* vb,
 		const unsigned char* vc
-	) const
+	)
 	{
 		return std::async(
 			std::launch::async,
@@ -173,7 +173,7 @@ namespace QLogicaeCore
 		const std::string& va,
 		const unsigned char* vb,
 		const unsigned char* vc
-	) const
+	)
 	{
 		return std::async(
 			std::launch::async,
@@ -190,7 +190,7 @@ namespace QLogicaeCore
 		const std::string& cipher,
 		const std::string& key,
 		const std::string& nonce
-	) const
+	)
 	{
 		reverse(
 			result, 
@@ -205,7 +205,7 @@ namespace QLogicaeCore
 		const std::string& text,
 		const std::string& key,
 		const std::string& nonce
-	) const
+	)
 	{
 		transform(
 			result,
@@ -220,7 +220,7 @@ namespace QLogicaeCore
 		const std::string& cipher,
 		const unsigned char* key,
 		const unsigned char* nonce
-	) const
+	)
 	{
 		std::scoped_lock lock(_mutex);
 
@@ -257,7 +257,7 @@ namespace QLogicaeCore
 		const std::string& text,
 		const unsigned char* key,
 		const unsigned char* nonce
-	) const
+	)
 	{
 		std::scoped_lock lock(_mutex);
 
@@ -292,7 +292,7 @@ namespace QLogicaeCore
 		const std::string& cipher,
 		const unsigned char* key,
 		const unsigned char* nonce
-	) const
+	)
 	{
 		result.set_to_good_status_with_value(
 			std::async(std::launch::async, [this, cipher, key, nonce]()
@@ -311,7 +311,7 @@ namespace QLogicaeCore
 		const std::string& text,
 		const unsigned char* key,
 		const unsigned char* nonce
-	) const
+	)
 	{
 		result.set_to_good_status_with_value(
 			std::async(std::launch::async, [this, text, key, nonce]()
@@ -330,7 +330,7 @@ namespace QLogicaeCore
 		const std::string& cipher,
 		const std::string& key,
 		const std::string& nonce
-	) const
+	)
 	{
 		result.set_to_good_status_with_value(
 			std::async(std::launch::async,
@@ -350,7 +350,7 @@ namespace QLogicaeCore
 		const std::string& text,
 		const std::string& key,
 		const std::string& nonce
-	) const
+	)
 	{
 		result.set_to_good_status_with_value(
 			std::async(std::launch::async,

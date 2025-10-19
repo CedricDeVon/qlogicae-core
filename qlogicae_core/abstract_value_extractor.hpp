@@ -31,10 +31,10 @@ namespace QLogicaeCore
                 abstract_value_extractor
             ) = delete;
 
-        virtual std::optional<std::string> get_value() const = 0;
+        virtual std::optional<std::string> get_value() = 0;
 
         virtual void get_value(
             Result<std::string>& result
-        ) const = 0;
+        ) = 0;
     };
 }

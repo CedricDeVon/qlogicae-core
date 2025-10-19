@@ -57,7 +57,7 @@ namespace QLogicaeCore
             RocksDBDatabase&&
         ) = delete;
 
-        std::string get_file_path() const;
+        std::string get_file_path();
         
         void setup(
             const std::string& path,
@@ -66,11 +66,11 @@ namespace QLogicaeCore
 
         bool is_path_found(
             const std::string_view&
-        ) const;
+        );
         
         bool is_key_found(
             const std::string_view&
-        ) const;
+        );
 
         bool remove_value(
             const std::string_view&
@@ -136,7 +136,7 @@ namespace QLogicaeCore
 
         bool create_backup(
             const std::string_view&
-        ) const;
+        );
         
         bool restore_backup(
             const std::string_view&
@@ -144,7 +144,7 @@ namespace QLogicaeCore
 
         bool create_checkpoint(
             const std::string_view&
-        ) const;
+        );
 
         std::optional<std::string> get_with_bounds(
             const std::string_view&,
@@ -160,7 +160,7 @@ namespace QLogicaeCore
 
         void get_file_path(
             Result<std::string>& result
-        ) const;
+        );
 
         void setup(
             Result<void>& result,
@@ -171,12 +171,12 @@ namespace QLogicaeCore
         void is_path_found(
             Result<bool>& result,
             const std::string&
-        ) const;
+        );
 
         void is_key_found(
             Result<bool>& result,
             const std::string&
-        ) const;
+        );
 
         void remove_value(
             Result<bool>& result,
@@ -213,7 +213,7 @@ namespace QLogicaeCore
         void create_backup(
             Result<bool>& result,
             const std::string&
-        ) const;
+        );
 
         void restore_backup(
         Result<bool>& result,
@@ -223,7 +223,7 @@ namespace QLogicaeCore
         void create_checkpoint(
             Result<bool>& result,
             const std::string&
-        ) const;
+        );
 
         void get_with_bounds(
             Result<std::optional<std::string>>& result,
@@ -334,7 +334,7 @@ namespace QLogicaeCore
         
         void setup_db();
 
-        rocksdb::ColumnFamilyHandle* get_cf_handle(const std::string& name) const;
+        rocksdb::ColumnFamilyHandle* get_cf_handle(const std::string& name);
 
         template <typename T>
         static std::string serialize(const T& value);

@@ -36,9 +36,9 @@ namespace QLogicaeCore
                 TaskPriority::MEDIUM
         );
         
-        std::size_t worker_count() const;
+        std::size_t worker_count();
         
-        std::size_t total_pending_tasks() const;
+        std::size_t total_pending_tasks();
         
         static ThreadPool& get_instance();
         
@@ -53,11 +53,11 @@ namespace QLogicaeCore
 
         void worker_count(
             Result<std::size_t>& result
-        ) const;
+        );
 
         void total_pending_tasks(
             Result<std::size_t>& result
-        ) const;
+        );
 
         void get_instance(
             Result<ThreadPool*>& result

@@ -36,11 +36,11 @@ namespace QLogicaeCore
             const std::string& file_path
         );
         
-        std::string get_name() const;
+        std::string get_name();
 
-        std::string get_file_path() const;
+        std::string get_file_path();
 
-        std::size_t get_line_count() const;
+        std::size_t get_line_count();
 
         void set_file_path(
             const std::string& file_path
@@ -48,15 +48,15 @@ namespace QLogicaeCore
         
         void get_name(
             Result<std::string>& result
-        ) const;
+        );
 
         void get_file_path(
             Result<std::string>& result
-        ) const;
+        );
 
         void get_line_count(
             Result<std::size_t>& result
-        ) const;
+        );
 
         void set_file_path(
             Result<void>& result,

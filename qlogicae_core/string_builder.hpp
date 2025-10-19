@@ -28,7 +28,7 @@ namespace QLogicaeCore
             ThreadPool* thread_pool_reference = nullptr
         );
 
-        bool is_empty() const;
+        bool is_empty();
         
         StringBuilder& clear();
         
@@ -38,7 +38,7 @@ namespace QLogicaeCore
         
         StringBuilder& right_trim();
         
-        std::size_t get_size() const;        
+        std::size_t get_size();        
 
         StringBuilder& shrink_to_fit();
         
@@ -46,9 +46,9 @@ namespace QLogicaeCore
         
         StringBuilder& left_and_right_trim();
         
-        const std::string& to_string() const;
+        const std::string& to_string();
         
-        const std::pmr::string& to_pmr_string() const;
+        const std::pmr::string& to_pmr_string();
         
         StringBuilder& append(
             const double& text
@@ -84,11 +84,11 @@ namespace QLogicaeCore
         
         std::future<std::string> async_take_string();
         
-        std::future<std::string> async_to_string() const;
+        std::future<std::string> async_to_string();
         
         std::future<std::pmr::string> async_take_pmr_string();
         
-        std::future<std::pmr::string> async_to_pmr_string() const;
+        std::future<std::pmr::string> async_to_pmr_string();
         
         std::future<void> async_append(
             const double& text
@@ -136,6 +136,6 @@ namespace QLogicaeCore
         
         std::pmr::string _flatten(
             std::pmr::memory_resource* memory_resource_reference = nullptr
-        ) const;
+        );
     };
 }

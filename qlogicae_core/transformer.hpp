@@ -13,26 +13,26 @@ namespace QLogicaeCore
     public:
         std::string color_type(
             const LogLevel& log_level
-        ) const;
+        );
         
         std::string to_na_format(
             const std::string& text = ""
-        ) const;
+        );
         
         std::string to_none_format(
             const std::string& text = ""
-        ) const;
+        );
         
         std::vector<std::string> split(
             const std::string& text,
             const std::string& delimeters
-        ) const;
+        );
         
         std::string to_log_format(
             const std::string& text = "",
             const LogLevel& log_level = LogLevel::INFO,
             const size_t& length = 256
-        ) const;
+        );
 
         std::string to_result_message_format(
             const std::string& text = "",
@@ -40,34 +40,34 @@ namespace QLogicaeCore
             const TimeFormat& time_format =
             TimeFormat::FULL_TIMESTAMP,
             const size_t& length = 256
-        ) const;
+        );
 
         std::string to_log_level_color_format(
             const std::string& text = "",
             const LogLevel& log_level = LogLevel::INFO,
             const size_t& length = 256
-        ) const;
+        );
 
         void color_type(
             Result<std::string>& result,
             const LogLevel& log_level
-        ) const;
+        );
 
         void to_na_format(
             Result<std::string>& result,
             const std::string& text = ""
-        ) const;
+        );
 
         void to_none_format(
             Result<std::string>& result,
             const std::string& text = ""
-        ) const;
+        );
 
         void split(
             Result<std::vector<std::string>>& result,
             const std::string& text,
             const std::string& delimeters
-        ) const;
+        );
 
         void to_log_format(
             Result<std::string>& result,
@@ -76,7 +76,7 @@ namespace QLogicaeCore
             const TimeFormat& time_format =
                 TimeFormat::FULL_TIMESTAMP,
             const size_t& length = 256
-        ) const;
+        );
 
         void to_result_message_format(
             Result<std::string>& result,
@@ -85,14 +85,14 @@ namespace QLogicaeCore
             const TimeFormat& time_format =
                 TimeFormat::FULL_TIMESTAMP,
             const size_t& length = 256
-        ) const;
+        );
 
         void to_log_level_color_format(
             Result<std::string>& result,
             const std::string& text = "",
             const LogLevel& log_level = LogLevel::INFO,
             const size_t& length = 256
-        ) const;
+        );
 
         void setup(
             Result<void>& result

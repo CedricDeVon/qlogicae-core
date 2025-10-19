@@ -35,15 +35,15 @@ namespace QLogicaeCore
                 std::pmr::get_default_resource()
         );
 
-        std::size_t get_size() const;
+        std::size_t get_size();
         
-        const StringMemoryPoolDiagnostics& get_diagnostics() const;
+        const StringMemoryPoolDiagnostics& get_diagnostics();
         
-        StringMemoryPoolSnapshot get_diagnostics_snapshot() const;
+        StringMemoryPoolSnapshot get_diagnostics_snapshot();
         
         bool is_found(
             const std::string_view& string
-        ) const;
+        );
         
         void clear();
         
@@ -51,13 +51,13 @@ namespace QLogicaeCore
             const std::string_view& string
         );
 
-        std::future<std::size_t> get_size_async() const;
+        std::future<std::size_t> get_size_async();
         
-        std::future<StringMemoryPoolSnapshot> get_diagnostics_async() const;
+        std::future<StringMemoryPoolSnapshot> get_diagnostics_async();
         
         std::future<bool> is_found_async(
             const std::string_view& string
-        ) const;
+        );
         
         std::future<void> clear_async();
         

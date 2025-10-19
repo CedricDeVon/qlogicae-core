@@ -60,7 +60,7 @@ namespace QLogicaeCore
         template<typename ValueType>
         std::optional<ValueType> get_value(
             const std::vector<std::string>& key_path
-        ) const;
+        );
         
         template<typename ValueType>
         bool set_value(
@@ -96,18 +96,18 @@ namespace QLogicaeCore
         
         bool has_key(
             const std::vector<std::string>& key_path
-        ) const;
+        );
         
         template<typename ValueType>
         std::vector<ValueType> get_all_values(
             const std::vector<std::string>& key_path
-        ) const;
+        );
         
         std::vector<std::string> get_children(
             const std::vector<std::string>& key_path
-        ) const;
+        );
         
-        std::string get_root_name() const;
+        std::string get_root_name();
         
         bool set_root(
             const std::string& tag_name
@@ -121,7 +121,7 @@ namespace QLogicaeCore
         std::optional<ValueType> get_attribute(
             const std::vector<std::string>& key_path,
             const std::string& attribute_name
-        ) const;
+        );
         
         template<typename ValueType>
         bool set_attribute(
@@ -131,25 +131,25 @@ namespace QLogicaeCore
         
         std::vector<std::string> select_node_texts(
             const std::string& xpath
-        ) const;
+        );
         
         std::optional<std::string> select_node_text(
             const std::string& xpath
-        ) const;
+        );
         
         bool validate_against_schema(
             const std::string& xsd_path
-        ) const;
+        );
         
         std::vector<std::string> select_attributes(
             const std::string& xpath,
             const std::string& attribute_name
-        ) const;
+        );
         
         std::optional<std::string> select_attribute(
             const std::string& xpath,
             const std::string& attribute_name
-        ) const;
+        );
 
         std::future<bool> load_async();
         
@@ -164,7 +164,7 @@ namespace QLogicaeCore
         template<typename ValueType>
         std::future<std::optional<ValueType>> get_value_async(
             const std::vector<std::string>& key_path
-        ) const;
+        );
         
         template<typename ValueType>
         std::future<bool> set_value_async(
@@ -200,18 +200,18 @@ namespace QLogicaeCore
         
         std::future<bool> has_key_async(
             const std::vector<std::string>& key_path
-        ) const;
+        );
         
         template<typename ValueType>
         std::future<std::vector<ValueType>> get_all_values_async(
             const std::vector<std::string>& key_path
-        ) const;
+        );
         
         std::future<std::vector<std::string>> get_children_async(
             const std::vector<std::string>& key_path
-        ) const;
+        );
         
-        std::future<std::string> get_root_name_async() const;
+        std::future<std::string> get_root_name_async();
         
         std::future<bool> save_with_indent_async(
             std::size_t indent_spaces
@@ -220,22 +220,22 @@ namespace QLogicaeCore
         std::future<std::optional<std::string>>
             select_node_text_async(
                 const std::string& xpath
-            ) const;
+            );
         
         std::future<std::vector<std::string>>
             select_node_texts_async(
                 const std::string& xpath
-            ) const;
+            );
         
         std::future<bool> validate_against_schema_async(
             const std::string& xsd_path
-        ) const;
+        );
         
         template<typename ValueType>
         std::future<std::optional<ValueType>> get_attribute_async(
             const std::vector<std::string>& key_path,
             const std::string& attribute_name
-        ) const;
+        );
         
         template<typename ValueType>
         std::future<bool> set_attribute_async(
@@ -264,14 +264,14 @@ namespace QLogicaeCore
         pugi::xml_node _navigate_to_path(
             const std::vector<std::string>& key_path,
             bool create_missing
-        ) const;
+        );
     };
 
     template<typename ValueType>
     std::optional<ValueType> XmlFileIO::get_attribute(
         const std::vector<std::string>& key_path,
         const std::string& attribute_name
-    ) const
+    )
     {
         static_assert(std::is_constructible_v<std::string, ValueType> ||
             std::is_arithmetic_v<ValueType>,
@@ -315,7 +315,7 @@ namespace QLogicaeCore
     template<typename ValueType>
     std::future<std::vector<ValueType>>
         XmlFileIO::get_all_values_async(
-            const std::vector<std::string>& key_path) const
+            const std::vector<std::string>& key_path)
     {
         return std::async(std::launch::async,
             [this, key_path]()
@@ -328,7 +328,7 @@ namespace QLogicaeCore
     std::future<std::optional<ValueType>>
         QLogicaeCore::XmlFileIO::get_attribute_async(
             const std::vector<std::string>& key_path,
-            const std::string& attribute_name) const
+            const std::string& attribute_name)
     {
         return std::async(std::launch::async,
             [this, key_path, attribute_name]()
@@ -392,7 +392,7 @@ namespace QLogicaeCore
 
     template<typename ValueType>
     std::vector<ValueType> XmlFileIO::get_all_values(
-        const std::vector<std::string>& key_path) const
+        const std::vector<std::string>& key_path)
     {
         static_assert(std::is_default_constructible_v<ValueType>,
             "ValueType must be default constructible");
@@ -453,7 +453,7 @@ namespace QLogicaeCore
 
     template<typename ValueType>
     std::optional<ValueType> XmlFileIO::get_value(
-        const std::vector<std::string>& key_path) const
+        const std::vector<std::string>& key_path)
     {
         static_assert(std::is_default_constructible_v<ValueType>,
             "ValueType must be default constructible");
@@ -672,7 +672,7 @@ namespace QLogicaeCore
     template<typename ValueType>
     std::future<std::optional<ValueType>>
         XmlFileIO::get_value_async(
-            const std::vector<std::string>& key_path) const
+            const std::vector<std::string>& key_path)
     {
         return std::async(std::launch::async,
             [this, key_path]()

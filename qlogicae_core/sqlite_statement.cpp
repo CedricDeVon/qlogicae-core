@@ -73,7 +73,7 @@ namespace QLogicaeCore
         }
     }
 
-    bool SQLiteStatement::is_valid() const
+    bool SQLiteStatement::is_valid()
     {
         return statement != nullptr;
     }
@@ -172,14 +172,14 @@ namespace QLogicaeCore
         return *this;
     }
 
-    int SQLiteRow::get_column_count() const
+    int SQLiteRow::get_column_count()
     {
         return sqlite3_column_count(statement);
     }
 
     std::string_view SQLiteRow::get_column_name(
         int column_index
-    ) const
+    )
     {
         const char* name = sqlite3_column_name(
             statement,
@@ -193,7 +193,7 @@ namespace QLogicaeCore
 
     int SQLiteRow::get_index(
         const std::string_view& column_name
-    ) const
+    )
     {
         auto it = column_name_to_index.find(
             std::string(column_name)
@@ -527,7 +527,7 @@ namespace QLogicaeCore
     template<>
     std::optional<bool> SQLiteRow::get_optional<bool>(
         int column_index
-    ) const
+    )
     {
         if (sqlite3_column_type(
             statement, column_index) == SQLITE_NULL

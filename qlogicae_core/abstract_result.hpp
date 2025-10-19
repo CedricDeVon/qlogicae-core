@@ -26,15 +26,15 @@ namespace QLogicaeCore
         AbstractResult& operator=(
             AbstractResult&& abstract_result) noexcept = default;
 
-        bool has_value() const;
+        bool has_value();
 
-        bool has_metadata() const;
+        bool has_metadata();
 
-        bool is_status_good() const;
+        bool is_status_good();
 
-        const std::optional<ValueType>& get_value() const;
+        const std::optional<ValueType>& get_value();
 
-        const std::optional<MetaDataType>& get_metadata() const;
+        const std::optional<MetaDataType>& get_metadata();
 
     protected:
         const bool _state;
@@ -56,33 +56,33 @@ namespace QLogicaeCore
     }
 
     template <typename ValueType, typename MetaDataType>
-    bool AbstractResult<ValueType, MetaDataType>::is_status_good() const
+    bool AbstractResult<ValueType, MetaDataType>::is_status_good()
     {
         return _state;
     }
 
     template <typename ValueType, typename MetaDataType>
-    bool AbstractResult<ValueType, MetaDataType>::has_value() const
+    bool AbstractResult<ValueType, MetaDataType>::has_value()
     {
         return _value.has_value();
     }
 
     template <typename ValueType, typename MetaDataType>
-    bool AbstractResult<ValueType, MetaDataType>::has_metadata() const
+    bool AbstractResult<ValueType, MetaDataType>::has_metadata()
     {
         return _metadata.has_value();
     }
 
     template <typename ValueType, typename MetaDataType>
     const std::optional<ValueType>&
-        AbstractResult<ValueType, MetaDataType>::get_value() const
+        AbstractResult<ValueType, MetaDataType>::get_value()
     {
         return _value;
     }
 
     template <typename ValueType, typename MetaDataType>
     const std::optional<MetaDataType>&
-        AbstractResult<ValueType, MetaDataType>::get_metadata() const
+        AbstractResult<ValueType, MetaDataType>::get_metadata()
     {
         return _metadata;
     }

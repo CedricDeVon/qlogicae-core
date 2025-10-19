@@ -17,7 +17,7 @@ namespace QLogicaeCore
 
         void enable_foreign_keys();
 
-        int64_t last_insert_rowid() const;
+        int64_t last_insert_rowid();
 
         SQLiteStatement prepare(
             const std::string_view& sql_text

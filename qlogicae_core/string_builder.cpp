@@ -70,13 +70,13 @@ namespace QLogicaeCore
         return *this;
     }
 
-    bool StringBuilder::is_empty() const
+    bool StringBuilder::is_empty()
     {
         std::shared_lock lock(character_buffer_mutex);
         return character_buffer_deque.empty();
     }
 
-    std::size_t StringBuilder::get_size() const
+    std::size_t StringBuilder::get_size()
     {
         std::shared_lock lock(character_buffer_mutex);
         return character_buffer_deque.size();
@@ -117,7 +117,7 @@ namespace QLogicaeCore
     }
 
     std::pmr::string StringBuilder::_flatten(
-        std::pmr::memory_resource* memory_resource_reference) const
+        std::pmr::memory_resource* memory_resource_reference)
     {
         std::shared_lock lock(character_buffer_mutex);
         std::pmr::memory_resource* resource =
@@ -173,7 +173,7 @@ namespace QLogicaeCore
         return *this;
     }
 
-    const std::pmr::string& StringBuilder::to_pmr_string() const
+    const std::pmr::string& StringBuilder::to_pmr_string()
     {
         thread_local std::pmr::string temporary(memory_resource_pointer);
         temporary = _flatten();
@@ -202,7 +202,7 @@ namespace QLogicaeCore
     }
 
 
-    const std::string& StringBuilder::to_string() const
+    const std::string& StringBuilder::to_string()
     {
         thread_local std::string temporary;
         std::shared_lock lock(character_buffer_mutex);
@@ -212,7 +212,7 @@ namespace QLogicaeCore
         return temporary;
     }
 
-    std::future<std::pmr::string> StringBuilder::async_to_pmr_string() const
+    std::future<std::pmr::string> StringBuilder::async_to_pmr_string()
     {
         return std::async(std::launch::async, [this]() -> std::pmr::string
             {
@@ -228,7 +228,7 @@ namespace QLogicaeCore
             });
     }
 
-    std::future<std::string> StringBuilder::async_to_string() const
+    std::future<std::string> StringBuilder::async_to_string()
     {
         return std::async(std::launch::async, [this]() -> std::string
             {

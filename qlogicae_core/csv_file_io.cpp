@@ -710,7 +710,7 @@ namespace QLogicaeCore
 
     bool CsvFileIO::has_column(
         const std::string& name
-    ) const
+    )
     {
         try
         {
@@ -733,7 +733,7 @@ namespace QLogicaeCore
 
     bool CsvFileIO::has_row(
         const unsigned int& index
-    ) const
+    )
     {
         try
         {

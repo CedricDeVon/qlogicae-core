@@ -59,7 +59,7 @@ namespace QLogicaeCore
         template<typename ValueType>
         std::optional<ValueType> get_value(
             const std::vector<std::string>& key_path
-        ) const;
+        );
         
         template<typename ValueType>
         bool set_value(
@@ -93,7 +93,7 @@ namespace QLogicaeCore
         std::future<std::optional<ValueType>>
             get_value_async(
                 const std::vector<std::string>& key_path
-        ) const;
+        );
         
         template<typename ValueType>
         std::future<bool>
@@ -169,7 +169,7 @@ namespace QLogicaeCore
         void get_value(
             Result<ValueType>& result,
             const std::vector<std::string>& key_path
-        ) const;
+        );
 
         template<typename ValueType>
         void set_value(
@@ -189,7 +189,7 @@ namespace QLogicaeCore
         void get_value_async(
             Result<std::future<ValueType>>& result,
             const std::vector<std::string>& key_path
-        ) const;
+        );
 
         template<typename ValueType>
         void set_value_async(
@@ -225,7 +225,7 @@ namespace QLogicaeCore
 
     template<typename ValueType>
     std::optional<ValueType> TomlFileIO::get_value(
-        const std::vector<std::string>& key_path) const
+        const std::vector<std::string>& key_path)
     {
         std::scoped_lock lock(_mutex);
 
@@ -349,7 +349,7 @@ namespace QLogicaeCore
 
     template<typename ValueType>
     std::future<std::optional<ValueType>> TomlFileIO::get_value_async(
-        const std::vector<std::string>& key_path) const
+        const std::vector<std::string>& key_path)
     {
         return std::async(std::launch::async, [this, key_path]()
             {
@@ -384,7 +384,7 @@ namespace QLogicaeCore
     void TomlFileIO::get_value(
         Result<ValueType>& result,
         const std::vector<std::string>& key_path
-    ) const
+    )
     {
         std::scoped_lock lock(_mutex);
 
@@ -554,7 +554,7 @@ namespace QLogicaeCore
     void TomlFileIO::get_value_async(
         Result<std::future<ValueType>>& result,
         const std::vector<std::string>& key_path
-    ) const
+    )
     {
         result.set_to_good_status_with_value(
             std::async(

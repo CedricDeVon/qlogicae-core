@@ -17,7 +17,7 @@ namespace QLogicaeCore
 
 	std::string AES256SignatureCryptographer::reverse(
 		const std::string& va,
-		const std::string& vb) const
+		const std::string& vb)
 	{
 		return reverse(
 			va,
@@ -28,7 +28,7 @@ namespace QLogicaeCore
 	std::string AES256SignatureCryptographer::transform(
 		const std::string& va,
 		const std::string& vb,
-		const std::string& vc) const
+		const std::string& vc)
 	{
 		return transform(
 			va,
@@ -39,7 +39,7 @@ namespace QLogicaeCore
 
 	std::future<std::string> AES256SignatureCryptographer::reverse_async(
 		const std::string& va,
-		const std::string& vb) const
+		const std::string& vb)
 	{
 		return std::async(std::launch::async,
 			[this, va, vb]() -> std::string
@@ -51,7 +51,7 @@ namespace QLogicaeCore
 	std::future<std::string> AES256SignatureCryptographer::transform_async(
 		const std::string& va,
 		const std::string& vb,
-		const std::string& vc) const
+		const std::string& vc)
 	{
 		return std::async(std::launch::async,
 			[this, va, vb, vc]() -> std::string
@@ -63,7 +63,7 @@ namespace QLogicaeCore
 	std::string AES256SignatureCryptographer::transform(
 		const std::string& va,
 		unsigned char* vb,
-		unsigned char* vc) const
+		unsigned char* vc)
 	{
 		try
 		{
@@ -98,7 +98,7 @@ namespace QLogicaeCore
 
 	std::string AES256SignatureCryptographer::reverse(
 		const std::string& va,
-		unsigned char* vb) const
+		unsigned char* vb)
 	{
 		try
 		{
@@ -133,7 +133,7 @@ namespace QLogicaeCore
 
 	std::future<std::string> AES256SignatureCryptographer::reverse_async(
 		const std::string& va,
-		unsigned char* vb) const
+		unsigned char* vb)
 	{
 		return std::async(std::launch::async, [this, va, vb]() -> std::string
 		{
@@ -144,7 +144,7 @@ namespace QLogicaeCore
 	std::future<std::string> AES256SignatureCryptographer::transform_async(
 		const std::string& va,
 		unsigned char* vb,
-		unsigned char* vc) const
+		unsigned char* vc)
 	{
 		return std::async(std::launch::async, [this, va, vb, vc]() -> std::string
 		{
@@ -156,7 +156,7 @@ namespace QLogicaeCore
         Result<std::string>& result,
         const std::string& cipher,
         unsigned char* public_key
-    ) const
+    )
     {
         std::scoped_lock lock(_mutex);
 
@@ -196,7 +196,7 @@ namespace QLogicaeCore
         Result<std::string>& result,
         const std::string& cipher,
         const std::string& public_key
-    ) const
+    )
     {
         reverse(
             result,
@@ -212,7 +212,7 @@ namespace QLogicaeCore
         const std::string& text,
         unsigned char* public_key,
         unsigned char* private_key
-    ) const
+    )
     {
         std::scoped_lock lock(_mutex);
 
@@ -248,7 +248,7 @@ namespace QLogicaeCore
         const std::string& text,
         const std::string& public_key,
         const std::string& private_key
-    ) const
+    )
     {
         transform(
             result,
@@ -266,7 +266,7 @@ namespace QLogicaeCore
         Result<std::future<std::string>>& result,
         const std::string& cipher,
         unsigned char* public_key
-    ) const
+    )
     {
         result.set_to_good_status_with_value(
             std::async(std::launch::async,
@@ -289,7 +289,7 @@ namespace QLogicaeCore
         Result<std::future<std::string>>& result,
         const std::string& cipher,
         const std::string& public_key
-    ) const
+    )
     {
         result.set_to_good_status_with_value(
             std::async(std::launch::async,
@@ -313,7 +313,7 @@ namespace QLogicaeCore
         const std::string& text,
         unsigned char* public_key,
         unsigned char* private_key
-    ) const
+    )
     {
         result.set_to_good_status_with_value(
             std::async(std::launch::async,
@@ -338,7 +338,7 @@ namespace QLogicaeCore
         const std::string& text,
         const std::string& public_key,
         const std::string& private_key
-    ) const
+    )
     {
         result.set_to_good_status_with_value(
             std::async(std::launch::async,

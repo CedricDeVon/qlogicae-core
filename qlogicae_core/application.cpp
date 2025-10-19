@@ -4,93 +4,220 @@
 
 namespace QLogicaeCore
 {   
-    void Application::get_application_id(
-        Result<std::string>& result
+    Application::Application() :
+        AbstractApplication()
+    {
+
+    }
+
+    Application::~Application()
+    {
+
+    }
+
+    bool Application::setup()
+    {       
+        Result<void> void_result;
+
+        setup(void_result);
+
+        return void_result.is_status_safe();
+    }
+
+    void Application::setup(
+        Result<void>& result
     )
     {
-        result.set_to_good_status_with_value(
-            _application_id
+        Result<void> void_result;
+
+        QLOGICAE_APPLICATION_UTILITIES.setup(
+            void_result
+        );
+        if (void_result.is_status_unsafe())
+        {
+            return;
+        }
+
+        QLOGICAE_APPLICATION_CACHE.setup(
+            void_result
+        );
+        if (void_result.is_status_unsafe())
+        {
+            return;
+        }
+
+        QLOGICAE_APPLICATION_IO.setup(
+            void_result
+        );
+        if (void_result.is_status_unsafe())
+        {
+            return;
+        }
+
+        QLOGICAE_APPLICATION_LOGGER.setup(
+            void_result
+        );
+        if (void_result.is_status_unsafe())
+        {
+            return;
+        }
+
+        QLOGICAE_APPLICATION_CRYPTOGRAPHER.setup(
+            void_result
+        );
+        if (void_result.is_status_unsafe())
+        {
+            return;
+        }
+
+        QLOGICAE_APPLICATION_WINDOWS_REGISTRY.setup(
+            void_result
+        );
+        if (void_result.is_status_unsafe())
+        {
+            return;
+        }
+
+        set_is_enabled(true);
+
+        result.set_to_good_status_without_value();
+    }
+
+    std::future<bool> Application::setup_async()
+    {
+        return std::async(
+            std::launch::async,
+            [this]() -> bool
+            {
+                return setup();
+            }
         );
     }
 
-    void Application::get_application_name(
-        Result<std::string>& result
+    void Application::setup_async(
+        Result<std::future<void>>& result
     )
     {
         result.set_to_good_status_with_value(
-            _application_name
+            std::async(
+                std::launch::async,
+                [this]() -> void
+                {
+                    Result<void> void_result;
+
+                    setup(void_result);
+                }
+            )
         );
     }
 
-    void Application::get_application_version(
+    Application& Application::get_instance()
+    {
+        static Application instance;
+
+        return instance;
+    }
+
+    void Application::get_instance(
+        Result<Application*>& result
+    )
+    {
+        static Application instance;
+
+        result.set_to_good_status_with_value(
+            &instance
+        );
+    }
+}
+
+/*
+    void Application::get_configuration_application_id(
         Result<std::string>& result
     )
     {
         result.set_to_good_status_with_value(
-            _application_version
+            _configuration_application_id
         );
     }
 
-    void Application::get_application_company(
+    void Application::get_configuration_application_name(
         Result<std::string>& result
     )
     {
         result.set_to_good_status_with_value(
-            _application_company
+            _configuration_application_name
         );
     }
 
-    void Application::get_application_authors(
+    void Application::get_configuration_application_version(
         Result<std::string>& result
     )
     {
         result.set_to_good_status_with_value(
-            _application_authors
+            _configuration_application_version
         );
     }
 
-    void Application::get_application_description(
+    void Application::get_configuration_application_company(
         Result<std::string>& result
     )
     {
         result.set_to_good_status_with_value(
-            _application_description
+            _configuration_application_company
         );
     }
 
-    void Application::get_application_url(
+    void Application::get_configuration_application_authors(
         Result<std::string>& result
     )
     {
         result.set_to_good_status_with_value(
-            _application_url
+            _configuration_application_authors
         );
     }
 
-    void Application::get_application_architecture(
+    void Application::get_configuration_application_description(
         Result<std::string>& result
     )
     {
         result.set_to_good_status_with_value(
-            _application_architecture
+            _configuration_application_description
         );
     }
 
-    void Application::get_environment_id(
+    void Application::get_configuration_application_url(
         Result<std::string>& result
     )
     {
         result.set_to_good_status_with_value(
-            _environment_id
+            _configuration_application_url
         );
     }
 
-    void Application::get_environment_name(
+    void Application::get_configuration_application_architecture(
         Result<std::string>& result
     )
     {
         result.set_to_good_status_with_value(
-            _environment_name
+            _configuration_application_architecture
+        );
+    }
+
+    void Application::get_configuration_environment_id(
+        Result<std::string>& result
+    )
+    {
+        result.set_to_good_status_with_value(
+            _configuration_environment_id
+        );
+    }
+
+    void Application::get_configuration_environment_name(
+        Result<std::string>& result
+    )
+    {
+        result.set_to_good_status_with_value(
+            _configuration_environment_name
         );
     }
 
@@ -102,7 +229,7 @@ namespace QLogicaeCore
         _get_full_windows_registry_sub_path(
             result
         );
-        
+
 
         WindowsRegistry::hkcu().get_value_via_utf8(
             result,
@@ -123,7 +250,7 @@ namespace QLogicaeCore
             result,
             result.get_value(),
             key
-        );        
+        );
     }
 
     void Application::setup(
@@ -153,19 +280,14 @@ namespace QLogicaeCore
         );
     }
 
-    Application::Application()        
-    {
-        
-    }
-
     void Application::_get_full_windows_registry_sub_path(
         Result<std::string>& result
     )
-    {        
+    {
         result.set_to_good_status_with_value(
             UTILITIES.RELATIVE_QLOGICAE_WINDOWS_REGISTRY_SUB_PATH +
-            "\\" + _application_id +
-            "\\" + _environment_id            
+            "\\" + _configuration_application_id +
+            "\\" + _configuration_environment_id
         );
     }
 
@@ -173,53 +295,53 @@ namespace QLogicaeCore
         Result<void>& result
     )
     {
-        _application_file.set_file_path(
+        _CONFIGURATION_APPLICATION_IO_FILE.set_file_path(
             UTILITIES.FULL_APPLICATION_QLOGICAE_PUBLIC_APPLICATION_CONFIGURATIONS_QLOGICAE_FILE_PATH
         );
 
-        _application_id = _application_file.get_string(
+        _configuration_application_id = _CONFIGURATION_APPLICATION_IO_FILE.get_string(
             {
                 "id"
             }
         );
 
-        _application_name = _application_file.get_string(
+        _configuration_application_name = _CONFIGURATION_APPLICATION_IO_FILE.get_string(
             {
                 "name"
             }
         );
 
-        _application_version = _application_file.get_string(
+        _configuration_application_version = _CONFIGURATION_APPLICATION_IO_FILE.get_string(
             {
                 "version"
             }
         );
 
-        _application_company = _application_file.get_string(
+        _configuration_application_company = _CONFIGURATION_APPLICATION_IO_FILE.get_string(
             {
                 "company"
             }
         );
 
-        _application_authors = _application_file.get_string(
+        _configuration_application_authors = _CONFIGURATION_APPLICATION_IO_FILE.get_string(
             {
                 "authors"
             }
         );
 
-        _application_description = _application_file.get_string(
+        _configuration_application_description = _CONFIGURATION_APPLICATION_IO_FILE.get_string(
             {
                 "description"
             }
         );
 
-        _application_url = _application_file.get_string(
+        _configuration_application_url = _CONFIGURATION_APPLICATION_IO_FILE.get_string(
             {
                 "url"
             }
         );
 
-        _application_architecture = _application_file.get_string(
+        _configuration_application_architecture = _CONFIGURATION_APPLICATION_IO_FILE.get_string(
             {
                 "architecture"
             }
@@ -232,17 +354,17 @@ namespace QLogicaeCore
         Result<void>& result
     )
     {
-        _environment_file.set_file_path(
+        _CONFIGURATION_ENVIRONMENT_IO_FILE.set_file_path(
             UTILITIES.FULL_APPLICATION_QLOGICAE_PUBLIC_APPLICATION_CONFIGURATIONS_ENVIRONMENT_FILE_PATH
         );
 
-        _environment_id = _environment_file.get_string(
+        _configuration_environment_id = _CONFIGURATION_ENVIRONMENT_IO_FILE.get_string(
             {
                 "id"
             }
         );
 
-        _environment_name = _environment_file.get_string(
+        _configuration_environment_name = _CONFIGURATION_ENVIRONMENT_IO_FILE.get_string(
             {
                 "name"
             }
@@ -255,10 +377,10 @@ namespace QLogicaeCore
         Result<void>& result
     )
     {
-        _hkcu = &WindowsRegistry::hkcu();
-        _hkcu->setup(result);
+        _HKCU_WINDOWS_REGISTRY = &WindowsRegistry::hkcu();
+        _HKCU_WINDOWS_REGISTRY->setup(result);
 
-        _hklm = &WindowsRegistry::hklm();
-        _hklm->setup(result);
+        _HKLM_WINDOWS_REGISTRY = &WindowsRegistry::hklm();
+        _HKLM_WINDOWS_REGISTRY->setup(result);
     }
-}
+    */

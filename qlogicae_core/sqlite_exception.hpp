@@ -14,9 +14,9 @@ namespace QLogicaeCore
             const int extended_code
         );
 
-        int get_error_code() const noexcept;
+        int get_error_code() noexcept;
 
-        int get_extended_code() const noexcept;
+        int get_extended_code() noexcept;
 
         void setup(
             Result<void>& result

@@ -13,7 +13,8 @@ namespace QLogicaeCore
 	}
 
 	Logger::Logger(
-		const bool is_simplified)
+		const bool is_simplified
+	)
 	{
 		_name = "";
 		_output_paths = std::vector<std::string>();
@@ -25,7 +26,8 @@ namespace QLogicaeCore
 		const std::string& name,
 		const LogMedium& medium,
 		const std::vector<std::string>& output_paths,
-		const bool is_simplified)
+		const bool is_simplified
+	)
 	{
 		_name = name;
 		_medium = medium;
@@ -33,12 +35,12 @@ namespace QLogicaeCore
 		_is_simplified = is_simplified;
 	}
 
-	LogMedium Logger::get_medium() const
+	LogMedium Logger::get_medium()
 	{
 		return _medium;
 	}
 	
-	bool Logger::get_is_simplified() const
+	bool Logger::get_is_simplified()
 	{
 		return _is_simplified;
 	}
@@ -50,12 +52,12 @@ namespace QLogicaeCore
 		_is_simplified = value;
 	}
 
-	std::string Logger::get_name() const
+	std::string Logger::get_name()
 	{
 		return _name;
 	}
 
-	std::vector<std::string> Logger::get_output_paths() const
+	std::vector<std::string> Logger::get_output_paths()
 	{
 		return _output_paths;
 	}
@@ -64,18 +66,34 @@ namespace QLogicaeCore
 		const std::string& message,
 		const LogLevel& log_level,
 		const bool is_simplified
-	) const
+	)
 	{
 		try
 		{
 			std::scoped_lock lock(_mutex);
 
-			CLI_IO.print(
+			std::string assumed_message =
 				(is_simplified) ?
-				message :
-				TRANSFORMER
-					.to_log_format(message, log_level)
-			);
+					message :
+					TRANSFORMER.to_log_format(message, log_level);
+
+			if (_medium == LogMedium::CONSOLE)
+			{
+				CLI_IO.print(
+					assumed_message
+				);
+			}
+			if (_medium == LogMedium::FILE)
+			{
+				for (const auto& output_path : _output_paths)
+				{
+					_log_file_io.set_file_path(output_path);
+
+					_log_file_io.append_async(
+						assumed_message
+					);
+				}
+			}
 		}
 		catch (const std::exception& exception)
 		{
@@ -90,23 +108,26 @@ namespace QLogicaeCore
 		const std::string& message,
 		const LogLevel& log_level,
 		const bool is_simplified
-	) const
+	)
 	{
 		return std::async(std::launch::async,
 			[this, message, log_level, is_simplified]()
-		{
-			try
 			{
 				log(message, log_level, is_simplified);
 			}
-			catch (const std::exception& exception)
-			{
-				CLI_IO.print_with_new_line_async(
-					std::string("Exception at Logger::log_async(): ") +
-					exception.what()
-				);
-			}
-		});
+		);
+	}
+
+	void Logger::setup(
+		Result<void>& result
+	)
+	{
+		_name = "";
+		_output_paths = std::vector<std::string>();
+		_medium = LogMedium::CONSOLE;
+		_is_simplified = false;
+
+		result.set_to_good_status_without_value();
 	}
 
 	void Logger::setup(
@@ -114,28 +135,84 @@ namespace QLogicaeCore
 		const bool& is_simplified
 	)
 	{
+		_name = "";
+		_output_paths = std::vector<std::string>();
+		_medium = LogMedium::CONSOLE;
 		_is_simplified = is_simplified;
 
 		result.set_to_good_status_without_value();
 	}
 
+	void Logger::setup(
+		Result<void>& result,
+		const std::string& name,
+		const LogMedium& medium,
+		const std::vector<std::string>& output_paths,
+		const bool is_simplified
+	)
+	{
+		_name = name;
+		_medium = medium;
+		_output_paths = output_paths;
+		_is_simplified = is_simplified;
+
+		result.set_to_good_status_without_value();
+	}
+
+	bool Logger::setup()
+	{
+		_name = "";
+		_output_paths = std::vector<std::string>();
+		_medium = LogMedium::CONSOLE;
+		_is_simplified = false;
+
+		return true;
+	}
+
+	bool Logger::setup(
+		const bool& is_simplified
+	)
+	{
+		_name = "";
+		_output_paths = std::vector<std::string>();
+		_medium = LogMedium::CONSOLE;
+		_is_simplified = is_simplified;
+
+		return true;
+	}
+
+	bool Logger::setup(
+		const std::string& name,
+		const LogMedium& medium,
+		const std::vector<std::string>& output_paths,
+		const bool is_simplified
+	)
+	{
+		_name = name;
+		_medium = medium;
+		_output_paths = output_paths;
+		_is_simplified = is_simplified;
+
+		return true;
+	}
+
 	void Logger::get_medium(
 		Result<LogMedium>& result
-	) const
+	)
 	{
 		result.set_to_good_status_with_value(_medium);
 	}
 
 	void Logger::get_name(
 		Result<std::string>& result
-	) const
+	)
 	{
 		result.set_to_good_status_with_value(_name);
 	}
 
 	void Logger::get_is_simplified(
 		Result<bool>& result
-	) const
+	)
 	{
 		result.set_to_good_status_with_value(_is_simplified);
 	}
@@ -152,7 +229,7 @@ namespace QLogicaeCore
 
 	void Logger::get_output_paths(
 		Result<std::vector<std::string>>& result
-	) const
+	)
 	{
 		result.set_to_good_status_with_value(_output_paths);
 	}
@@ -162,7 +239,7 @@ namespace QLogicaeCore
 		const std::string& message,
 		const LogLevel& log_level,
 		const bool is_simplified
-	) const
+	)
 	{
 		std::scoped_lock lock(_mutex);
 
@@ -188,7 +265,7 @@ namespace QLogicaeCore
 		const std::string& message,
 		const LogLevel& log_level,
 		const bool is_simplified
-	) const
+	)
 	{
 		result.set_to_good_status_with_value(
 			std::async(std::launch::async,

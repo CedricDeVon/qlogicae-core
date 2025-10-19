@@ -62,7 +62,7 @@ namespace QLogicaeCore
 
     std::string RegularExpression::get_patterrn(
         const std::string& name
-    ) const
+    )
     {
         try
         {
@@ -84,7 +84,7 @@ namespace QLogicaeCore
 
     bool RegularExpression::has_pattern(
         const std::string& name
-    ) const
+    )
     {
         try
         {
@@ -227,7 +227,7 @@ namespace QLogicaeCore
     bool RegularExpression::_do_match(
         const std::string& subject,
         pcre2_code* get_error_code
-    ) const
+    )
     {
         try
         {
@@ -295,7 +295,7 @@ namespace QLogicaeCore
     void RegularExpression::has_pattern(
         Result<bool>& result,
         const std::string& name
-    ) const
+    )
     {
         std::shared_lock lock(_mutex);
 
@@ -308,7 +308,7 @@ namespace QLogicaeCore
     void RegularExpression::get_patterrn(
         Result<std::string>& result,
         const std::string& value
-    ) const
+    )
     {
         std::shared_lock lock(_mutex);
 

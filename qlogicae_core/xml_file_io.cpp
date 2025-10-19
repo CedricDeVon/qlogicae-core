@@ -153,7 +153,7 @@ namespace QLogicaeCore
 
     pugi::xml_node XmlFileIO::_navigate_to_path(
         const std::vector<std::string>& key_path,
-        bool create_missing) const
+        bool create_missing)
     {
         try
         {
@@ -258,7 +258,7 @@ namespace QLogicaeCore
     }
 
     bool XmlFileIO::has_key(
-        const std::vector<std::string>& key_path) const
+        const std::vector<std::string>& key_path)
     {
         try
         {
@@ -284,7 +284,7 @@ namespace QLogicaeCore
     }
 
     std::vector<std::string> XmlFileIO::get_children(
-        const std::vector<std::string>& key_path) const
+        const std::vector<std::string>& key_path)
     {
         try
         {
@@ -318,7 +318,7 @@ namespace QLogicaeCore
         }
     }
 
-    std::string XmlFileIO::get_root_name() const
+    std::string XmlFileIO::get_root_name()
     {
         try
         {
@@ -397,7 +397,7 @@ namespace QLogicaeCore
     }
 
     std::future<bool> XmlFileIO::has_key_async(
-        const std::vector<std::string>& key_path) const
+        const std::vector<std::string>& key_path)
     {
         return std::async(std::launch::async,
             [this, key_path]()
@@ -408,7 +408,7 @@ namespace QLogicaeCore
 
     std::future<std::vector<std::string>>
         XmlFileIO::get_children_async(
-            const std::vector<std::string>& key_path) const
+            const std::vector<std::string>& key_path)
     {
         return std::async(std::launch::async,
             [this, key_path]()
@@ -417,7 +417,7 @@ namespace QLogicaeCore
             });
     }
 
-    std::future<std::string> XmlFileIO::get_root_name_async() const
+    std::future<std::string> XmlFileIO::get_root_name_async()
     {
         return std::async(std::launch::async,
             [this]()
@@ -438,7 +438,7 @@ namespace QLogicaeCore
 
     std::vector<std::string>
         XmlFileIO::select_node_texts(
-            const std::string& xpath) const
+            const std::string& xpath)
     {
         try
         {
@@ -471,7 +471,7 @@ namespace QLogicaeCore
 
     std::optional<std::string>
         XmlFileIO::select_node_text(
-            const std::string& xpath) const
+            const std::string& xpath)
     {
         try
         {
@@ -503,7 +503,7 @@ namespace QLogicaeCore
         }
     }
 
-    bool XmlFileIO::validate_against_schema(const std::string& xsd_path) const
+    bool XmlFileIO::validate_against_schema(const std::string& xsd_path)
     {
         try
         {
@@ -564,7 +564,7 @@ namespace QLogicaeCore
     }
 
     std::future<bool> XmlFileIO::validate_against_schema_async(
-        const std::string& xsd_path) const
+        const std::string& xsd_path)
     {
         return std::async(std::launch::async,
             [this, xsd_path]()
@@ -575,7 +575,7 @@ namespace QLogicaeCore
 
     std::future<std::optional<std::string>>
         XmlFileIO::select_node_text_async(
-            const std::string& xpath) const
+            const std::string& xpath)
     {
         return std::async(std::launch::async,
             [this, xpath]()
@@ -586,7 +586,7 @@ namespace QLogicaeCore
 
     std::future<std::vector<std::string>>
         XmlFileIO::select_node_texts_async(
-            const std::string& xpath) const
+            const std::string& xpath)
     {
         return std::async(std::launch::async,
             [this, xpath]()
@@ -597,7 +597,7 @@ namespace QLogicaeCore
 
     std::vector<std::string> XmlFileIO::select_attributes(
         const std::string& xpath,
-        const std::string& attribute_name) const
+        const std::string& attribute_name)
     {
         try
         {
@@ -632,7 +632,7 @@ namespace QLogicaeCore
 
     std::optional<std::string> XmlFileIO::select_attribute(
         const std::string& xpath,
-        const std::string& attribute_name) const
+        const std::string& attribute_name)
     {
         try
         {

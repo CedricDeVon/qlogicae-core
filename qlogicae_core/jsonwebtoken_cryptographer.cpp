@@ -14,7 +14,7 @@ namespace QLogicaeCore
         _get_es256k_signer(
             const std::string& public_key,
             const std::string& private_key
-        ) const
+        )
     {
         static const jwt::algorithm::es256k signer(
             public_key, private_key, "", "");
@@ -25,7 +25,7 @@ namespace QLogicaeCore
     const jwt::algorithm::es256k& JsonWebTokenCryptographer::
         _get_es256k_verifier(
             const std::string& public_key
-        ) const
+        )
     {
         static const jwt::algorithm::es256k verifier(
             public_key, "", "", "");
@@ -35,7 +35,7 @@ namespace QLogicaeCore
 
     std::string JsonWebTokenCryptographer::transform(
         JsonWebTokenTransformInput options
-    ) const
+    )
     {
         try
         {
@@ -86,7 +86,7 @@ namespace QLogicaeCore
 
     JsonWebTokenReverseResult JsonWebTokenCryptographer::reverse(
         JsonWebTokenReverseInput options
-    ) const
+    )
     {
         JsonWebTokenReverseResult result;
 
@@ -157,7 +157,7 @@ namespace QLogicaeCore
 
     std::future<std::string> JsonWebTokenCryptographer::transform_async(
         JsonWebTokenTransformInput options
-    ) const
+    )
     {
         return std::async(
             std::launch::async, [this, options]()
@@ -169,7 +169,7 @@ namespace QLogicaeCore
 
     std::future<JsonWebTokenReverseResult> JsonWebTokenCryptographer::reverse_async(
         JsonWebTokenReverseInput options
-    ) const
+    )
     {
         return std::async(
             std::launch::async, [this, options]()
@@ -189,7 +189,7 @@ namespace QLogicaeCore
     void JsonWebTokenCryptographer::transform(
         Result<std::string>& result,
         JsonWebTokenTransformInput options
-    ) const
+    )
     {
         if (options.issuer.empty() ||
             options.data.empty())
@@ -235,7 +235,7 @@ namespace QLogicaeCore
     void JsonWebTokenCryptographer::reverse(
         Result<JsonWebTokenReverseResult>& result,
         JsonWebTokenReverseInput options
-    ) const
+    )
     {
         JsonWebTokenReverseResult& json_result =
             result.get_value();
@@ -290,7 +290,7 @@ namespace QLogicaeCore
     void JsonWebTokenCryptographer::transform_async(
         Result<std::future<std::string>>& result,
         JsonWebTokenTransformInput options
-    ) const
+    )
     {
         result.set_to_good_status_with_value(
             std::async(
@@ -308,7 +308,7 @@ namespace QLogicaeCore
     void JsonWebTokenCryptographer::reverse_async(
         Result<std::future<JsonWebTokenReverseResult>>& result,
         JsonWebTokenReverseInput options
-    ) const
+    )
     {
         result.set_to_good_status_with_value(
             std::async(

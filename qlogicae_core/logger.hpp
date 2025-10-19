@@ -5,6 +5,7 @@
 #include "cli_io.hpp"
 #include "log_medium.hpp"
 #include "transformer.hpp"
+#include "text_file_io.hpp"
 
 namespace QLogicaeCore
 {
@@ -42,46 +43,71 @@ namespace QLogicaeCore
 			const bool is_simplified = false
 		);
 
-		LogMedium get_medium() const;
+		bool setup();
 
-		std::string get_name() const;
-
-		bool get_is_simplified() const;
-
-		void set_is_simplified(
-			const bool& value
+		void setup(
+			Result<void>& result
 		);
 
-		std::vector<std::string> get_output_paths() const;
-
-		void log(
-			const std::string& message,
-			const LogLevel& log_level = LogLevel::INFO,
-			const bool is_simplified = false
-		) const;
-
-		std::future<void> log_async(
-			const std::string& message,
-			const LogLevel& log_level = LogLevel::INFO,
-			const bool is_simplified = false
-		) const;
+		bool setup(
+			const bool& is_simplified
+		);
 
 		void setup(
 			Result<void>& result,
 			const bool& is_simplified
 		);
 
+		bool setup(
+			const std::string& name,
+			const LogMedium& medium = LogMedium::CONSOLE,
+			const std::vector<std::string>& output_paths = {},
+			const bool is_simplified = false
+		);
+
+		void setup(
+			Result<void>& result,
+			const std::string& name,
+			const LogMedium& medium = LogMedium::CONSOLE,
+			const std::vector<std::string>& output_paths = {},
+			const bool is_simplified = false
+		);
+
+		LogMedium get_medium();
+
+		std::string get_name();
+
+		bool get_is_simplified();
+
+		void set_is_simplified(
+			const bool& value
+		);
+
+		std::vector<std::string> get_output_paths();
+
+		void log(
+			const std::string& message,
+			const LogLevel& log_level = LogLevel::INFO,
+			const bool is_simplified = false
+		);
+
+		std::future<void> log_async(
+			const std::string& message,
+			const LogLevel& log_level = LogLevel::INFO,
+			const bool is_simplified = false
+		);
+
 		void get_medium(
 			Result<LogMedium>& result
-		) const;
+		);
 
 		void get_name(
 			Result<std::string>& result
-		) const;
+		);
 
 		void get_is_simplified(
 			Result<bool>& result
-		) const;
+		);
 
 		void set_is_simplified(
 			Result<void>& result,
@@ -90,23 +116,25 @@ namespace QLogicaeCore
 
 		void get_output_paths(
 			Result<std::vector<std::string>>& result
-		) const;
+		);
 
 		void log(
 			Result<void>& result,
 			const std::string& message,
 			const LogLevel& log_level = LogLevel::INFO,
 			const bool is_simplified = false
-		) const;
+		);
 
 		void log_async(
 			Result<std::future<void>>& result,
 			const std::string& message,
 			const LogLevel& log_level = LogLevel::INFO,
 			const bool is_simplified = false
-		) const;
+		);
 
 	protected:
+		TextFileIO _log_file_io;
+
 		LogMedium _medium;
 		
 		std::string _name;

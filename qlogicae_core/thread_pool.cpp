@@ -200,7 +200,7 @@ namespace QLogicaeCore
         }
     }
 
-    std::size_t ThreadPool::total_pending_tasks() const
+    std::size_t ThreadPool::total_pending_tasks()
     {
         try
         {
@@ -227,7 +227,7 @@ namespace QLogicaeCore
         }
     }
 
-    std::size_t ThreadPool::worker_count() const
+    std::size_t ThreadPool::worker_count()
     {
         try
         {
@@ -271,7 +271,7 @@ namespace QLogicaeCore
 
     void ThreadPool::worker_count(
         Result<std::size_t>& result
-    ) const
+    )
     {
         result.set_to_good_status_with_value(
             _worker_queues.size()
@@ -280,7 +280,7 @@ namespace QLogicaeCore
 
     void ThreadPool::total_pending_tasks(
         Result<std::size_t>& result
-    ) const
+    )
     {
         std::size_t total = 0;
 

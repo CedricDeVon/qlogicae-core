@@ -42,23 +42,23 @@ namespace QLogicaeCore
             windows_registry_value_extractor
         ) = delete;
 
-        std::optional<std::string> get_value() const;
+        std::optional<std::string> get_value();
         
-        std::optional<std::string> get_sub_key() const;
+        std::optional<std::string> get_sub_key();
         
-        std::optional<std::string> get_name_key() const;
+        std::optional<std::string> get_name_key();
 
         void get_value(
             Result<std::string>& result
-        ) const;
+        );
 
         void get_sub_key(
             Result<std::string>& result
-        ) const;
+        );
 
         void get_name_key(
             Result<std::string>& result
-        ) const;
+        );
 
         void setup(
             Result<void>& result,

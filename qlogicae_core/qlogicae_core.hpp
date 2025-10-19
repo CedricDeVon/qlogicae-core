@@ -148,3 +148,13 @@
 
 // QLogicae Application
 #include "application.hpp"
+#include "application_io.hpp"
+#include "application_cache.hpp"
+#include "application_logger.hpp"
+#include "application_language.hpp"
+#include "abstract_application.hpp"
+#include "application_utilities.hpp"
+#include "application_cryptographer.hpp"
+#include "application_startup_inputs.hpp"
+#include "application_windows_registry.hpp"
+

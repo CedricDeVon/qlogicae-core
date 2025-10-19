@@ -22,17 +22,17 @@ namespace QLogicaeCore
 
 	}
 
-	std::string AbstractFileIO::get_name() const
+	std::string AbstractFileIO::get_name()
 	{
 		return _name;
 	}
 
-	std::string AbstractFileIO::get_file_path() const
+	std::string AbstractFileIO::get_file_path()
 	{
 		return _file_path;
 	}
 
-	std::size_t AbstractFileIO::get_line_count() const
+	std::size_t AbstractFileIO::get_line_count()
 	{
 		std::ifstream file(_file_path);
 		
@@ -61,7 +61,7 @@ namespace QLogicaeCore
 
 	void AbstractFileIO::get_name(
 		Result<std::string>& result
-	) const
+	)
 	{
 		result.set_to_good_status_with_value(
 			_name
@@ -70,7 +70,7 @@ namespace QLogicaeCore
 
 	void AbstractFileIO::get_file_path(
 		Result<std::string>& result
-	) const
+	)
 	{
 		result.set_to_good_status_with_value(
 			_file_path
@@ -79,7 +79,7 @@ namespace QLogicaeCore
 
 	void AbstractFileIO::get_line_count(
 		Result<std::size_t>& result
-	) const
+	)
 	{
 		std::ifstream file(_file_path);
 

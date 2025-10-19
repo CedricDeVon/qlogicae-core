@@ -25,7 +25,7 @@ namespace QLogicaeCore
         open_db();
     }
 
-    std::string RocksDBDatabase::get_file_path() const
+    std::string RocksDBDatabase::get_file_path()
     {
         return _file_path;
     }
@@ -44,7 +44,7 @@ namespace QLogicaeCore
     }
 
     bool RocksDBDatabase::is_path_found(
-        const std::string_view& path) const
+        const std::string_view& path)
     {
         std::shared_lock lock(_mutex);
 
@@ -52,7 +52,7 @@ namespace QLogicaeCore
     }
 
     bool RocksDBDatabase::is_key_found(
-        const std::string_view& key) const
+        const std::string_view& key)
     {
         std::shared_lock lock(_mutex);
 
@@ -161,7 +161,7 @@ namespace QLogicaeCore
         return batch_execute();
     }
 
-    bool RocksDBDatabase::create_backup(const std::string_view& path) const
+    bool RocksDBDatabase::create_backup(const std::string_view& path)
     {
         std::shared_lock lock(_mutex);
 
@@ -206,7 +206,7 @@ namespace QLogicaeCore
     }
 
     bool RocksDBDatabase::create_checkpoint(
-        const std::string_view& path) const
+        const std::string_view& path)
     {
         std::shared_lock lock(_mutex);
 
@@ -392,7 +392,7 @@ namespace QLogicaeCore
 
     rocksdb::ColumnFamilyHandle* RocksDBDatabase::get_cf_handle(
         const std::string& name
-    ) const
+    )
     {
         std::string name_key(name);
 
@@ -410,7 +410,7 @@ namespace QLogicaeCore
 
     void RocksDBDatabase::get_file_path(
         Result<std::string>& result
-    ) const
+    )
     {
         result.set_to_good_status_with_value(
             _file_path
@@ -437,7 +437,7 @@ namespace QLogicaeCore
     void RocksDBDatabase::is_path_found(
         Result<bool>& result,
         const std::string& path
-    ) const
+    )
     {
         std::shared_lock lock(_mutex);
 
@@ -449,7 +449,7 @@ namespace QLogicaeCore
     void RocksDBDatabase::is_key_found(
         Result<bool>& result,
         const std::string& key
-    ) const
+    )
     {
         std::shared_lock lock(_mutex);
 
@@ -584,7 +584,7 @@ namespace QLogicaeCore
     void RocksDBDatabase::create_backup(
         Result<bool>& result,
         const std::string& path
-    ) const
+    )
     {
         std::shared_lock lock(_mutex);
 
@@ -646,7 +646,7 @@ namespace QLogicaeCore
     void RocksDBDatabase::create_checkpoint(
         Result<bool>& result,
         const std::string& path
-    ) const
+    )
     {
         std::shared_lock lock(_mutex);
 

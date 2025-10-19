@@ -46,7 +46,7 @@ namespace QLogicaeCore
 
         bool has_row(
             const unsigned int& row_index
-        ) const;
+        );
 
         std::string get_row(
             const unsigned int& row_index
@@ -66,7 +66,7 @@ namespace QLogicaeCore
 
         bool has_column(
             const std::string& name
-        ) const;
+        );
 
         std::string get_column(
             const std::string& name

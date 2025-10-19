@@ -21,11 +21,11 @@ namespace QLogicaeCore
 		
 		bool has_pattern(
 			const std::string& name
-		) const;
+		);
 		
 		std::string get_patterrn(
 			const std::string& value
-		) const;
+		);
 		
 		bool add_pattern(
 			const std::string& name,
@@ -70,12 +70,12 @@ namespace QLogicaeCore
 		void has_pattern(
 			Result<bool>& result,
 			const std::string& name
-		) const;
+		);
 
 		void get_patterrn(
 			Result<std::string>& result,
 			const std::string& value
-		) const;
+		);
 
 		void add_pattern(
 			Result<void>& result,
@@ -138,7 +138,7 @@ namespace QLogicaeCore
 			_compiled_patterns;
 
 		bool _do_match(
-			const std::string& subject, pcre2_code* get_error_code) const;
+			const std::string& subject, pcre2_code* get_error_code);
 	};
 
 	inline static RegularExpression& REGULAR_EXPRESSION =

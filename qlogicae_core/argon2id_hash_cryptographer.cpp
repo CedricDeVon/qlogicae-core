@@ -27,7 +27,7 @@ namespace QLogicaeCore
 	}
 
 	std::string Argon2idHashCryptographer::transform(
-		const std::string& va) const
+		const std::string& va)
 	{
 		try
 		{
@@ -61,7 +61,7 @@ namespace QLogicaeCore
 	}
 
 	std::future<std::string> Argon2idHashCryptographer::transform_async(
-		const std::string& va) const
+		const std::string& va)
 	{
 		return std::async(std::launch::async, [this, va]() -> std::string
 		{
@@ -71,7 +71,7 @@ namespace QLogicaeCore
 
 	bool Argon2idHashCryptographer::reverse(
 		const std::string& va,
-		const std::string& vb) const
+		const std::string& vb)
 	{
 		try
 		{
@@ -92,7 +92,7 @@ namespace QLogicaeCore
 	
 	std::future<bool> Argon2idHashCryptographer::reverse_async(
 		const std::string& va,
-		const std::string& vb) const
+		const std::string& vb)
 	{
 		return std::async(
 			std::launch::async,
@@ -105,7 +105,7 @@ namespace QLogicaeCore
 	void Argon2idHashCryptographer::transform(
 		Result<std::string>& result,
 		const std::string& text
-	) const
+	)
 	{
 		std::scoped_lock lock(_mutex);
 
@@ -139,7 +139,7 @@ namespace QLogicaeCore
 		Result<bool>& result,
 		const std::string& hash,
 		const std::string& key
-	) const
+	)
 	{
 		std::scoped_lock lock(_mutex);
 
@@ -155,7 +155,7 @@ namespace QLogicaeCore
 	void Argon2idHashCryptographer::transform_async(
 		Result<std::future<std::string>>& result,
 		const std::string& text
-	) const
+	)
 	{
 		result.set_to_good_status_with_value(
 			std::async(
@@ -175,7 +175,7 @@ namespace QLogicaeCore
 		Result<std::future<bool>>& result,
 		const std::string& hash,
 		const std::string& key
-	) const
+	)
 	{
 		result.set_to_good_status_with_value(
 			std::async(

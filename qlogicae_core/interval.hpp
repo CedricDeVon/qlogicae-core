@@ -38,15 +38,15 @@ namespace QLogicaeCore
 
         void restart();
 
-        bool is_paused() const;
+        bool is_paused();
 
-        bool is_running() const;
+        bool is_running();
 
-        bool is_cancelled() const;
+        bool is_cancelled();
 
-        size_t get_execution_count() const;
+        size_t get_execution_count();
 
-        std::chrono::milliseconds get_interval() const;
+        std::chrono::milliseconds get_interval();
 
         void set_interval(std::chrono::milliseconds time);
 
@@ -86,23 +86,23 @@ namespace QLogicaeCore
 
         void is_paused(
             Result<bool>& result
-        ) const;
+        );
 
         void is_running(
             Result<bool>& result
-        ) const;
+        );
 
         void is_cancelled(
             Result<bool>& result
-        ) const;
+        );
 
         void get_execution_count(
             Result<size_t>& result
-        ) const;
+        );
 
         void get_interval(
             Result<std::chrono::milliseconds>& result
-        ) const;
+        );
 
         void set_interval(
             Result<void>& result, std::chrono::milliseconds time

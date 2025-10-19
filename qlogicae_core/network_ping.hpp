@@ -35,25 +35,25 @@ namespace QLogicaeCore
             const NetworkPing& network_ping
         ) = delete;
 
-        bool get_is_listening() const;
+        bool get_is_listening();
         
         void set_is_listening(
             const bool& value
         );
         
-        std::string_view get_name() const;
+        std::string_view get_name();
         
         void set_name(
             const std::string_view& value
         );
         
-        std::string_view get_host_address() const;
+        std::string_view get_host_address();
         
         void set_host_address(
             const std::string_view& value
         );
         
-        std::chrono::milliseconds get_milliseconds_per_callback() const;
+        std::chrono::milliseconds get_milliseconds_per_callback();
         
         void set_milliseconds_per_callback(
             const std::chrono::milliseconds& value
@@ -70,7 +70,7 @@ namespace QLogicaeCore
 
         void get_is_listening(
             Result<bool>& result
-        ) const;
+        );
 
         void set_is_listening(
             Result<void>& result, const bool&
@@ -78,7 +78,7 @@ namespace QLogicaeCore
 
         void get_name(
             Result<std::string_view>& result
-        ) const;
+        );
 
         void set_name(
             Result<void>& result,
@@ -87,7 +87,7 @@ namespace QLogicaeCore
 
         void get_host_address(
             Result<std::string_view>& result
-        ) const;
+        );
 
         void set_host_address(
             Result<void>& result,
@@ -96,7 +96,7 @@ namespace QLogicaeCore
 
         void get_milliseconds_per_callback(
             Result<std::chrono::milliseconds>& result
-        ) const;
+        );
 
         void set_milliseconds_per_callback(
             Result<void>& result, 

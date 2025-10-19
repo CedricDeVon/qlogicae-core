@@ -13,7 +13,7 @@ namespace QLogicaeCore
         
         ~SQLiteStatementData();
 
-        sqlite3_stmt* get() const noexcept;
+        sqlite3_stmt* get() noexcept;
 
     protected:
         sqlite3_stmt* statement_handle;

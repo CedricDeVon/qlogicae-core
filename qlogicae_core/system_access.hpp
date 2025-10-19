@@ -8,21 +8,21 @@ namespace QLogicaeCore
     class SystemAccess
     {
     public:
-        bool has_admin_access() const;
+        bool has_admin_access();
         
-        std::string get_executable_dir() const;
+        std::string get_executable_dir();
 
-        std::string get_executable_folder() const;
+        std::string get_executable_folder();
 
-        std::string get_executed_folder() const;
+        std::string get_executed_folder();
         
-        void restart_with_admin_access() const;
+        void restart_with_admin_access();
         
-        std::string get_programdata_folder_path() const;
+        std::string get_programdata_folder_path();
         
-        std::string get_local_appdata_folder_path() const;
+        std::string get_local_appdata_folder_path();
         
-        std::string get_roaming_appdata_folder_path() const;
+        std::string get_roaming_appdata_folder_path();
 
         static SystemAccess& get_instance();
 
@@ -32,35 +32,35 @@ namespace QLogicaeCore
 
         void has_admin_access(
             Result<void>& result
-        ) const;
+        );
 
         void get_executable_dir(
             Result<std::string>& result
-        ) const;
+        );
 
         void get_executable_folder(
             Result<std::string>& result
-        ) const;
+        );
 
         void get_executed_folder(
             Result<std::string>& result
-        ) const;
+        );
 
         void restart_with_admin_access(
             Result<void>& result
-        ) const;
+        );
 
         void get_programdata_folder_path(
             Result<std::string>& result
-        ) const;
+        );
 
         void get_local_appdata_folder_path(
             Result<std::string>& result
-        ) const;
+        );
 
         void get_roaming_appdata_folder_path(
             Result<std::string>& result
-        ) const;
+        );
 
         static void get_instance(
             Result<SystemAccess*>& results

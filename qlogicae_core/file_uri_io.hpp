@@ -45,17 +45,17 @@ namespace QLogicaeCore
             const std::string& name
         );
 
-        std::string generate_data_uri() const;
+        std::string generate_data_uri();
 
-        std::future<std::string> generate_data_uri_async() const;
+        std::future<std::string> generate_data_uri_async();
 
         void generate_data_uri(
             Result<std::string>& result
-        ) const;
+        );
 
         void generate_data_uri_async(
             Result<std::future<std::string>>& result
-        ) const;
+        );
 
         void setup(
             Result<void>& result,

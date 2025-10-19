@@ -30,7 +30,7 @@ namespace QLogicaeCore
             });
     }
 
-    int64_t SQLiteDatabase::last_insert_rowid() const
+    int64_t SQLiteDatabase::last_insert_rowid()
     {
         return sqlite3_last_insert_rowid(backend->database_handle);
     }

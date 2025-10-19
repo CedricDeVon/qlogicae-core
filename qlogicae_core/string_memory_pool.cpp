@@ -5,7 +5,7 @@
 namespace QLogicaeCore
 {
     template<typename Allocator>
-    const StringMemoryPoolDiagnostics& StringMemoryPool<Allocator>::get_diagnostics() const
+    const StringMemoryPoolDiagnostics& StringMemoryPool<Allocator>::get_diagnostics()
     {
         return _diagnostics;
     }
@@ -30,7 +30,7 @@ namespace QLogicaeCore
     }
 
     template<typename Allocator>
-    std::size_t StringMemoryPool<Allocator>::get_size() const
+    std::size_t StringMemoryPool<Allocator>::get_size()
     {
         std::shared_lock lock(_mutex);
 
@@ -40,7 +40,7 @@ namespace QLogicaeCore
     template<typename Allocator>
     bool StringMemoryPool<Allocator>::is_found(
         const std::string_view& str
-    ) const
+    )
     {
         std::shared_lock lock(_mutex);
 
@@ -117,7 +117,7 @@ namespace QLogicaeCore
     }
 
     template<typename Allocator>
-    StringMemoryPoolSnapshot StringMemoryPool<Allocator>::get_diagnostics_snapshot() const
+    StringMemoryPoolSnapshot StringMemoryPool<Allocator>::get_diagnostics_snapshot()
     {
         try
         {
@@ -139,7 +139,7 @@ namespace QLogicaeCore
     }
 
     template<typename Allocator>
-    std::future<std::size_t> StringMemoryPool<Allocator>::get_size_async() const
+    std::future<std::size_t> StringMemoryPool<Allocator>::get_size_async()
     {
         return std::async(
             std::launch::async,
@@ -151,7 +151,7 @@ namespace QLogicaeCore
     }
 
     template<typename Allocator>
-    std::future<StringMemoryPoolSnapshot> StringMemoryPool<Allocator>::get_diagnostics_async() const
+    std::future<StringMemoryPoolSnapshot> StringMemoryPool<Allocator>::get_diagnostics_async()
     {
         return std::async
         (std::launch::async, [this]()
@@ -163,7 +163,7 @@ namespace QLogicaeCore
     template<typename Allocator>
     std::future<bool> StringMemoryPool<Allocator>::is_found_async(
         const std::string_view& string
-    ) const
+    )
     {
         return std::async(
             std::launch::async,

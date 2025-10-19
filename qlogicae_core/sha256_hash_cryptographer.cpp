@@ -10,7 +10,7 @@ namespace QLogicaeCore
 	}
 
 	std::string SHA256HashCryptographer::transform(
-		const std::string& va) const
+		const std::string& va)
 	{
 		if (va.empty())
 		{
@@ -35,7 +35,7 @@ namespace QLogicaeCore
 
 	bool SHA256HashCryptographer::reverse(
 		const std::string& va, const std::string& vb
-	) const
+	)
 	{
 		if (va.empty() ||
 			vb.empty())
@@ -57,7 +57,7 @@ namespace QLogicaeCore
 
 	std::future<bool> SHA256HashCryptographer::reverse_async(
 		const std::string& va,
-		const std::string& vb) const
+		const std::string& vb)
 	{
 		return std::async(std::launch::async, [this, va, vb]() -> bool
 			{
@@ -66,7 +66,7 @@ namespace QLogicaeCore
 	}
 
 	std::future<std::string> SHA256HashCryptographer::transform_async(
-		const std::string& va) const
+		const std::string& va)
 	{
 		return std::async(std::launch::async, [this, va]() -> std::string
 			{
@@ -84,7 +84,7 @@ namespace QLogicaeCore
 	void SHA256HashCryptographer::transform(
 		Result<std::string> result,
 		const std::string& text
-	) const
+	)
 	{
 		if (text.empty())
 		{			
@@ -116,7 +116,7 @@ namespace QLogicaeCore
 		Result<void> result,
 		const std::string& cipher,
 		const std::string& key
-	) const
+	)
 	{
 		if (cipher.empty() ||
 			key.empty())
@@ -152,7 +152,7 @@ namespace QLogicaeCore
 	void SHA256HashCryptographer::transform_async(
 		Result<std::future<std::string>> result,
 		const std::string& text
-	) const
+	)
 	{
 		result.set_to_good_status_with_value(
 			std::async(std::launch::async,
@@ -171,7 +171,7 @@ namespace QLogicaeCore
 		Result<std::future<void>> result,
 		const std::string& cipher,
 		const std::string& key
-	) const
+	)
 	{
 		result.set_to_good_status_with_value(
 			std::async(std::launch::async,

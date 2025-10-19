@@ -13,12 +13,12 @@ namespace QLogicaeCore
     {
     }
 
-    int SQLiteException::get_error_code() const noexcept
+    int SQLiteException::get_error_code() noexcept
     {
         return error_code;
     }
 
-    int SQLiteException::get_extended_code() const noexcept
+    int SQLiteException::get_extended_code() noexcept
     {
         return extended_code;
     }

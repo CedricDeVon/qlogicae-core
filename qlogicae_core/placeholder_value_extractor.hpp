@@ -35,7 +35,7 @@ namespace QLogicaeCore
                 placeholder_value_extractor
             ) = delete;
 
-        std::optional<std::string> get_value() const;
+        std::optional<std::string> get_value();
 
         void setup(
             Result<void>& result,
@@ -44,7 +44,7 @@ namespace QLogicaeCore
 
         void get_value(
             Result<std::string>& result
-        ) const;
+        );
 
     protected:
         std::string _value;

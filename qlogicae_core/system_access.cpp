@@ -4,7 +4,7 @@
 
 namespace QLogicaeCore
 {
-    bool SystemAccess::has_admin_access() const
+    bool SystemAccess::has_admin_access()
     {
         try
         {
@@ -39,7 +39,7 @@ namespace QLogicaeCore
         }
     }
 
-    std::string SystemAccess::get_executable_dir() const
+    std::string SystemAccess::get_executable_dir()
     {
         try
         {
@@ -104,7 +104,7 @@ namespace QLogicaeCore
         }
     }
 
-    std::string SystemAccess::get_executed_folder() const
+    std::string SystemAccess::get_executed_folder()
     {
         try
         {
@@ -120,7 +120,7 @@ namespace QLogicaeCore
         }
     }
 
-    std::string SystemAccess::get_executable_folder() const
+    std::string SystemAccess::get_executable_folder()
     {
         try
         {            
@@ -136,7 +136,7 @@ namespace QLogicaeCore
         }
     }
 
-    void SystemAccess::restart_with_admin_access() const
+    void SystemAccess::restart_with_admin_access()
     {
         try
         {
@@ -175,7 +175,7 @@ namespace QLogicaeCore
         }
     }
 
-    std::string SystemAccess::get_roaming_appdata_folder_path() const
+    std::string SystemAccess::get_roaming_appdata_folder_path()
     {
         try
         {
@@ -207,7 +207,7 @@ namespace QLogicaeCore
         }
     }
 
-    std::string SystemAccess::get_local_appdata_folder_path() const
+    std::string SystemAccess::get_local_appdata_folder_path()
     {
         try
         {
@@ -238,7 +238,7 @@ namespace QLogicaeCore
         }
     }
 
-    std::string SystemAccess::get_programdata_folder_path() const
+    std::string SystemAccess::get_programdata_folder_path()
     {
         try
         {
@@ -284,7 +284,7 @@ namespace QLogicaeCore
 
     void SystemAccess::has_admin_access(
         Result<void>& result
-    ) const
+    )
     {
         BOOL is_admin = FALSE;
         PSID administrators_group = nullptr;
@@ -320,7 +320,7 @@ namespace QLogicaeCore
 
     void SystemAccess::get_executable_dir(
         Result<std::string>& result
-    ) const
+    )
     {
         wchar_t buffer[MAX_PATH];
         DWORD length = GetModuleFileNameW(
@@ -375,14 +375,14 @@ namespace QLogicaeCore
 
     void SystemAccess::get_executable_folder(
         Result<std::string>& result
-    ) const
+    )
     {
         get_executable_dir(result);
     }
 
     void SystemAccess::get_executed_folder(
         Result<std::string>& result
-    ) const
+    )
     {
         result.set_to_good_status_with_value(
             std::filesystem::current_path().string()
@@ -391,7 +391,7 @@ namespace QLogicaeCore
 
     void SystemAccess::restart_with_admin_access(
         Result<void>& result
-    ) const
+    )
     {
         wchar_t file_path[MAX_PATH];
         if (::GetEnvironmentVariableW(
@@ -425,7 +425,7 @@ namespace QLogicaeCore
 
     void SystemAccess::get_roaming_appdata_folder_path(
         Result<std::string>& result
-    ) const
+    )
     {
         wchar_t* path = nullptr;
         std::wstring wresult;
@@ -445,7 +445,7 @@ namespace QLogicaeCore
 
     void SystemAccess::get_local_appdata_folder_path(
         Result<std::string>& result
-    ) const
+    )
     {
         wchar_t* path = nullptr;
         std::wstring wresult;
@@ -465,7 +465,7 @@ namespace QLogicaeCore
 
     void SystemAccess::get_programdata_folder_path(
         Result<std::string>& result
-    ) const
+    )
     {
         wchar_t* path = nullptr;
         std::wstring wresult;

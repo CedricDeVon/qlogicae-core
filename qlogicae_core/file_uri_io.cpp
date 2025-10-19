@@ -39,7 +39,7 @@ namespace QLogicaeCore
 
     }
 
-    std::string FileUriIO::generate_data_uri() const
+    std::string FileUriIO::generate_data_uri()
     {
         try
         {
@@ -85,7 +85,7 @@ namespace QLogicaeCore
         }
     }
 
-    std::future<std::string> FileUriIO::generate_data_uri_async() const
+    std::future<std::string> FileUriIO::generate_data_uri_async()
     {
         return std::async(
             std::launch::async,
@@ -97,7 +97,7 @@ namespace QLogicaeCore
 
     void FileUriIO::generate_data_uri(
         Result<std::string>& result
-    ) const
+    )
     {
         std::scoped_lock lock(_mutex);
 
@@ -139,7 +139,7 @@ namespace QLogicaeCore
 
     void FileUriIO::generate_data_uri_async(
         Result<std::future<std::string>>& result
-    ) const
+    )
     {
         result.set_to_good_status_with_value(std::async(
             std::launch::async,

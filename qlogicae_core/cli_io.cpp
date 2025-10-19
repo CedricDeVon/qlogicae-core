@@ -9,7 +9,7 @@ namespace QLogicaeCore
 		_is_scan_enabled = _is_print_enabled = true;
 	}
 
-	bool CliIO::is_scan_enabled() const
+	bool CliIO::is_scan_enabled()
 	{
 		return _is_scan_enabled;
 	}
@@ -21,7 +21,7 @@ namespace QLogicaeCore
 		_is_scan_enabled = value;
 	}
 	
-	bool CliIO::is_print_enabled() const
+	bool CliIO::is_print_enabled()
 	{
 		return _is_print_enabled;
 	}
@@ -257,7 +257,7 @@ namespace QLogicaeCore
 	}
 
 	void CliIO::is_scan_enabled(
-		Result<bool>& result) const
+		Result<bool>& result)
 	{
 		result.set_to_good_status_with_value(
 			_is_scan_enabled
@@ -265,7 +265,7 @@ namespace QLogicaeCore
 	}
 
 	void CliIO::is_print_enabled(
-		Result<bool>& result) const
+		Result<bool>& result)
 	{
 		result.set_to_good_status_with_value(
 			_is_print_enabled

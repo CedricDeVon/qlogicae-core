@@ -16,7 +16,7 @@ namespace QLogicaeCore
         sqlite3_finalize(statement_handle);
     }
 
-    sqlite3_stmt* SQLiteStatementData::get() const noexcept
+    sqlite3_stmt* SQLiteStatementData::get() noexcept
     {
         return statement_handle;
     }

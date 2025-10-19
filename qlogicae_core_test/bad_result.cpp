@@ -61,7 +61,7 @@ namespace QLogicaeCoreTest
         for (int index = 0; index < thread_count; ++index)
         {
             ASSERT_TRUE(results[index].has_value());
-            const BadResult<int>& result = results[index].value();
+            BadResult<int>& result = results[index].value();
             EXPECT_FALSE(result.is_status_good());
             EXPECT_TRUE(result.has_value());
             EXPECT_TRUE(result.has_metadata());

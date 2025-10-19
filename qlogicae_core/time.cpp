@@ -11,7 +11,7 @@ namespace QLogicaeCore
         return singleton;
     }
 
-    std::tm Time::_get_time_zone(const TimeZone& zone) const
+    std::tm Time::_get_time_zone(const TimeZone& zone)
     {
         try
         {
@@ -36,7 +36,7 @@ namespace QLogicaeCore
         }
     }
 
-    const char* Time::_get_format_string(const TimeFormat& format) const
+    const char* Time::_get_format_string(const TimeFormat& format)
     {
         try
         {
@@ -94,7 +94,7 @@ namespace QLogicaeCore
         }
     }
 
-    double Time::now() const
+    double Time::now()
     {
         try
         {
@@ -112,7 +112,7 @@ namespace QLogicaeCore
 
     std::string Time::now(
         const TimeFormat& format,
-        const TimeZone& zone) const
+        const TimeZone& zone)
     {
         try
         {
@@ -176,7 +176,7 @@ namespace QLogicaeCore
         }
     }
 
-    double Time::year(const TimeZone& zone) const
+    double Time::year(const TimeZone& zone)
     {
         try
         {
@@ -189,7 +189,7 @@ namespace QLogicaeCore
         }
     }
 
-    double Time::month(const TimeZone& zone) const
+    double Time::month(const TimeZone& zone)
     {
         try
         {
@@ -202,7 +202,7 @@ namespace QLogicaeCore
         }
     }
 
-    double Time::day(const TimeZone& zone) const
+    double Time::day(const TimeZone& zone)
     {
         try
         {
@@ -214,7 +214,7 @@ namespace QLogicaeCore
         }
     }
 
-    double Time::hour(const TimeZone& zone) const
+    double Time::hour(const TimeZone& zone)
     {
         try
         {
@@ -226,7 +226,7 @@ namespace QLogicaeCore
         }
     }
 
-    double Time::minute(const TimeZone& zone) const
+    double Time::minute(const TimeZone& zone)
     {
         try
         {
@@ -238,7 +238,7 @@ namespace QLogicaeCore
         return static_cast<double>(_get_time_zone(zone).tm_min);
     }
 
-    double Time::second(const TimeZone& zone) const
+    double Time::second(const TimeZone& zone)
     {
         try
         {
@@ -250,7 +250,7 @@ namespace QLogicaeCore
         }
     }
 
-    double Time::millisecond() const
+    double Time::millisecond()
     {
         try
         {
@@ -266,7 +266,7 @@ namespace QLogicaeCore
         }
     }
 
-    double Time::microsecond() const
+    double Time::microsecond()
     {
         try
         {
@@ -282,7 +282,7 @@ namespace QLogicaeCore
         }
     }
 
-    double Time::nanosecond() const
+    double Time::nanosecond()
     {
         try
         {
@@ -299,7 +299,7 @@ namespace QLogicaeCore
     }
 
     std::string_view Time::get_time_unit_full_name(
-        const TimeScaleUnit& format) const
+        const TimeScaleUnit& format)
     {
         try
         {
@@ -345,7 +345,7 @@ namespace QLogicaeCore
     }
 
     std::string_view Time::get_time_unit_abbreviation(
-        const TimeScaleUnit& format) const
+        const TimeScaleUnit& format)
     {
         try
         {
@@ -390,7 +390,7 @@ namespace QLogicaeCore
         }
     }
 
-    TimeScaleUnit Time::get_time_unit_abbreviation(const std::string& format) const
+    TimeScaleUnit Time::get_time_unit_abbreviation(const std::string& format)
     {
         try
         {
@@ -405,7 +405,7 @@ namespace QLogicaeCore
     }
 
     double Time::convert_seconds(
-        const double& time, const TimeScaleUnit& format) const
+        const double& time, const TimeScaleUnit& format)
     {
         try
         {
@@ -451,7 +451,7 @@ namespace QLogicaeCore
     }
 
     double Time::convert_nanoseconds(
-        const double& time, const TimeScaleUnit& format) const
+        const double& time, const TimeScaleUnit& format)
     {
         try
         {
@@ -497,7 +497,7 @@ namespace QLogicaeCore
         }
     }
 
-    std::string Time::_pad3(int value) const
+    std::string Time::_pad3(int value)
     {
         try
         {
@@ -513,7 +513,7 @@ namespace QLogicaeCore
     }
 
     std::string Time::_format_millisecond_level(
-        absl::Duration since_epoch, const std::string& sep) const
+        absl::Duration since_epoch, const std::string& sep)
     {
         try
         {
@@ -530,7 +530,7 @@ namespace QLogicaeCore
     }
 
     std::string Time::_format_microsecond_level(
-        absl::Duration since_epoch, const std::string& sep) const
+        absl::Duration since_epoch, const std::string& sep)
     {
         try
         {
@@ -550,7 +550,7 @@ namespace QLogicaeCore
     }
 
     std::string Time::_format_nanosecond_level(
-        absl::Duration since_epoch, const std::string& sep) const
+        absl::Duration since_epoch, const std::string& sep)
     {
         try
         {
@@ -571,7 +571,7 @@ namespace QLogicaeCore
     }
 
     std::string Time::_format_time(
-        const std::tm& tm, const char* fmt) const
+        const std::tm& tm, const char* fmt)
     {
         try
         {
@@ -598,7 +598,7 @@ namespace QLogicaeCore
 
     void Time::now(
         Result<double>& result
-    ) const
+    )
     {
         result.set_to_good_status_with_value(
             static_cast<double>(
@@ -610,7 +610,7 @@ namespace QLogicaeCore
 
     void Time::nanosecond(
         Result<double>& result
-    ) const
+    )
     {
         result.set_to_good_status_with_value(
             static_cast<double>(
@@ -622,7 +622,7 @@ namespace QLogicaeCore
 
     void Time::millisecond(
         Result<double>& result
-    ) const
+    )
     {
         result.set_to_good_status_with_value(
             static_cast<double>(
@@ -634,7 +634,7 @@ namespace QLogicaeCore
 
     void Time::microsecond(
         Result<double>& result
-    ) const
+    )
     {
         result.set_to_good_status_with_value(
             static_cast<double>(
@@ -647,7 +647,7 @@ namespace QLogicaeCore
     void Time::day(
         Result<double>& result,
         const TimeZone& zone
-    ) const
+    )
     {
         result.set_to_good_status_with_value(
             static_cast<double>(_get_time_zone(zone).tm_mday)
@@ -657,7 +657,7 @@ namespace QLogicaeCore
     void Time::hour(
         Result<double>& result,
         const TimeZone& zone
-    ) const
+    )
     {
         result.set_to_good_status_with_value
         (static_cast<double>(_get_time_zone(zone).tm_hour)
@@ -667,7 +667,7 @@ namespace QLogicaeCore
     void Time::year(
         Result<double>& result,
         const TimeZone& zone
-    ) const
+    )
     {
         result.set_to_good_status_with_value(
             static_cast<double>(_get_time_zone(zone).tm_year) +
@@ -677,7 +677,7 @@ namespace QLogicaeCore
     void Time::month(
         Result<double>& result,
         const TimeZone& zone
-    ) const
+    )
     {
         result.set_to_good_status_with_value(
             static_cast<double>(_get_time_zone(zone).tm_mon) + 1
@@ -687,7 +687,7 @@ namespace QLogicaeCore
     void Time::second(
         Result<double>& result,
         const TimeZone& zone
-    ) const
+    )
     {
         result.set_to_good_status_with_value(
             static_cast<double>(_get_time_zone(zone).tm_sec)
@@ -697,7 +697,7 @@ namespace QLogicaeCore
     void Time::minute(
         Result<double>& result,
         const TimeZone& zone
-    ) const
+    )
     {
         result.set_to_good_status_with_value(
             static_cast<double>(_get_time_zone(zone).tm_min)
@@ -708,7 +708,7 @@ namespace QLogicaeCore
         Result<std::string>& result,
         const TimeFormat& format,
         const TimeZone& zone
-    ) const
+    )
     {
         absl::Time now_time = absl::Now();
         absl::Duration since_epoch = now_time - absl::UnixEpoch();
@@ -772,7 +772,7 @@ namespace QLogicaeCore
     void Time::get_time_unit_full_name(
         Result<std::string>& result,
         const TimeScaleUnit& format
-    ) const
+    )
     {
         switch (format)
         {
@@ -793,7 +793,7 @@ namespace QLogicaeCore
     void Time::get_time_unit_abbreviation(
         Result<std::string>& result,
         const TimeScaleUnit& format
-    ) const
+    )
     {
         switch (format)
         {
@@ -814,7 +814,7 @@ namespace QLogicaeCore
     void Time::get_time_unit_abbreviation(
         Result<TimeScaleUnit>& result,
         const std::string& format
-    ) const
+    )
     {
         if (UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_STRINGS.contains(format))
             result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_STRINGS.at(format));
@@ -826,7 +826,7 @@ namespace QLogicaeCore
         Result<double>& result,
         const double& time,
         const TimeScaleUnit& format
-    ) const
+    )
     {
         switch (format)
         {
@@ -848,7 +848,7 @@ namespace QLogicaeCore
         Result<double>& result,
         const double& time,
         const TimeScaleUnit& format
-    ) const
+    )
     {
         switch (format)
         {

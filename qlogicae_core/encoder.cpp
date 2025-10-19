@@ -23,7 +23,7 @@ namespace QLogicaeCore
 
     std::string Encoder::from_bytes_to_base64(
         const unsigned char* text,
-        const size_t& length) const
+        const size_t& length)
     {
         try
         {
@@ -54,7 +54,7 @@ namespace QLogicaeCore
     }
 
     std::vector<unsigned char> Encoder::from_base64_to_bytes(
-        const std::string_view& text) const
+        const std::string_view& text)
     {
         try
         {
@@ -91,7 +91,7 @@ namespace QLogicaeCore
 
     std::string Encoder::from_bytes_to_hex(
         const unsigned char* text,
-        const size_t& length) const
+        const size_t& length)
     {
         try
         {
@@ -119,7 +119,7 @@ namespace QLogicaeCore
     }
 
     std::vector<unsigned char> Encoder::from_hex_to_bytes(
-        const std::string_view& text) const
+        const std::string_view& text)
     {
         try
         {
@@ -151,7 +151,7 @@ namespace QLogicaeCore
     }
 
     std::string Encoder::from_utf16_to_utf8(
-        const std::wstring_view& text) const
+        const std::wstring_view& text)
     {
         try
         {
@@ -187,7 +187,7 @@ namespace QLogicaeCore
     }
 
     std::wstring Encoder::from_utf8_to_utf16(
-        const std::string_view& text) const
+        const std::string_view& text)
     {
         try
         {
@@ -221,7 +221,7 @@ namespace QLogicaeCore
     }
 
     std::string Encoder::from_utf8_to_hex(
-        const std::string_view& text) const
+        const std::string_view& text)
     {
         try
         {
@@ -242,7 +242,7 @@ namespace QLogicaeCore
     }
 
     std::string Encoder::from_utf8_to_base64(
-        const std::string_view& text) const
+        const std::string_view& text)
     {
         try
         {
@@ -263,7 +263,7 @@ namespace QLogicaeCore
     }
 
     std::string Encoder::from_hex_to_utf8(
-        const std::string_view& text) const
+        const std::string_view& text)
     {
         try
         {
@@ -296,7 +296,7 @@ namespace QLogicaeCore
     }
 
     std::string Encoder::from_hex_to_base64(
-        const std::string_view& text) const
+        const std::string_view& text)
     {
         try
         {
@@ -317,7 +317,7 @@ namespace QLogicaeCore
     }
 
     std::string Encoder::from_base64_to_utf8(
-        const std::string_view& text) const
+        const std::string_view& text)
     {
         try
         {
@@ -350,7 +350,7 @@ namespace QLogicaeCore
     }
 
     std::string Encoder::from_base64_to_hex(
-        const std::string_view& text) const
+        const std::string_view& text)
     {
         try
         {
@@ -371,7 +371,7 @@ namespace QLogicaeCore
     }
 
     std::string Encoder::_to_hex(
-        const std::string_view& text) const
+        const std::string_view& text)
     {
         try
         {
@@ -400,7 +400,7 @@ namespace QLogicaeCore
     }
 
     std::string Encoder::_to_base64(
-        const std::string_view& text) const
+        const std::string_view& text)
     {
         try
         {
@@ -445,7 +445,7 @@ namespace QLogicaeCore
         Result<std::string>& result,
         const unsigned char* text,
         const size_t& length
-    ) const
+    )
     {
         std::string base64(sodium_base64_encoded_len(
             length,
@@ -468,7 +468,7 @@ namespace QLogicaeCore
     void Encoder::from_base64_to_bytes(
         Result<std::vector<unsigned char>>& result,
         const std::string_view& text
-    ) const
+    )
     {
         if (text.empty())
         {
@@ -501,7 +501,7 @@ namespace QLogicaeCore
         Result<std::string>& result,
         const unsigned char* text,
         const size_t& length
-    ) const
+    )
     {
         const char* hex_chars = UTILITIES.HEXADECIMAL_CHARACTERSET_1.c_str();
         std::string output;
@@ -521,7 +521,7 @@ namespace QLogicaeCore
     void Encoder::from_hex_to_bytes(
         Result<std::vector<unsigned char>>& result,
         const std::string_view& text
-    ) const
+    )
     {
         if (text.empty())
         {
@@ -547,7 +547,7 @@ namespace QLogicaeCore
     void Encoder::from_utf16_to_utf8(
         Result<std::string>& result,
         const std::wstring_view& text
-    ) const
+    )
     {
         if (text.empty())
         {
@@ -577,7 +577,7 @@ namespace QLogicaeCore
     void Encoder::from_utf8_to_utf16(
         Result<std::wstring>& result,
         const std::string_view& text
-    ) const
+    )
     {
         if (text.empty())
         {
@@ -605,7 +605,7 @@ namespace QLogicaeCore
     void Encoder::from_utf8_to_hex(
         Result<std::string>& result,
         const std::string_view& text
-    ) const
+    )
     {
         if (text.empty())
         {
@@ -620,7 +620,7 @@ namespace QLogicaeCore
     void Encoder::from_utf8_to_base64(
         Result<std::string>& result,
         const std::string_view& text
-    ) const
+    )
     {
         if (text.empty())
         {
@@ -635,7 +635,7 @@ namespace QLogicaeCore
     void Encoder::from_hex_to_utf8(
         Result<std::string>& result,
         const std::string_view& text
-    ) const
+    )
     {
         if (text.empty())
         {
@@ -667,7 +667,7 @@ namespace QLogicaeCore
     void Encoder::from_hex_to_base64(
         Result<std::string>& result,
         const std::string_view& text
-    ) const
+    )
     {
         if (text.empty())
         {
@@ -683,7 +683,7 @@ namespace QLogicaeCore
     void Encoder::from_base64_to_utf8(
         Result<std::string>& result,
         const std::string_view& text
-    ) const
+    )
     {
         if (text.empty())
         {
@@ -714,7 +714,7 @@ namespace QLogicaeCore
     void Encoder::from_base64_to_hex(
         Result<std::string>& result,
         const std::string_view& text
-    ) const
+    )
     {
         if (text.empty())
         {
@@ -729,7 +729,7 @@ namespace QLogicaeCore
     void Encoder::_to_hex(
         Result<std::string>& result,
         const std::string_view& text
-    ) const
+    )
     {
         if (text.empty())
         {
@@ -761,7 +761,7 @@ namespace QLogicaeCore
     void Encoder::_to_base64(
         Result<std::string>& result,
         const std::string_view& text
-    ) const
+    )
     {
         if (text.empty())
         {

@@ -115,7 +115,7 @@ namespace QLogicaeCore
         }
     }
 
-    bool Timeout::is_cancelled() const
+    bool Timeout::is_cancelled()
     {
         try
         {
@@ -164,7 +164,7 @@ namespace QLogicaeCore
 
     void Timeout::is_cancelled(
         Result<bool>& result
-    ) const
+    )
     {
         result.set_to_good_status_with_value(
             _is_cancelled.load()

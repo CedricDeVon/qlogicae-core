@@ -40,7 +40,7 @@ namespace QLogicaeCore
 
         void clear_bindings();
 
-        bool is_valid() const;
+        bool is_valid();
 
         std::optional<SQLiteRow> row();
 
