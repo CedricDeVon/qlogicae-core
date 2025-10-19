@@ -46,7 +46,7 @@ namespace QLogicaeCore
             return;
         }
 
-        QLOGICAE_APPLICATION_IO.setup(
+        QLOGICAE_APPLICATION_FILE_IO.setup(
             void_result
         );
         if (void_result.is_status_unsafe())

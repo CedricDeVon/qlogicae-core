@@ -17,9 +17,11 @@ namespace QLogicaeCore
 
     bool ApplicationCryptographer::setup()
     {
-        set_is_enabled(true);
+        Result<void> void_result;
 
-        return true;
+        setup(void_result);
+
+        return void_result.is_status_safe();
     }
 
     void ApplicationCryptographer::setup(
@@ -37,9 +39,7 @@ namespace QLogicaeCore
             std::launch::async,
             [this]() -> bool
             {
-                set_is_enabled(true);
-
-                return true;
+                return setup();
             }
         );
     }
@@ -53,7 +53,9 @@ namespace QLogicaeCore
                 std::launch::async,
                 [this]() -> void
                 {
-                    set_is_enabled(true);
+                    Result<void> void_result;
+
+                    setup(void_result);
                 }
             )
         );

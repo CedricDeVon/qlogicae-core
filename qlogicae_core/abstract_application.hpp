@@ -47,6 +47,6 @@ namespace QLogicaeCore
 
         bool _is_enabled;
 
-        std::mutex _mutex;
+        mutable std::mutex _mutex;
     };
 }

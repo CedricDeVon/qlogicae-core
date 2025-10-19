@@ -1,28 +1,30 @@
 #include "pch.hpp"
 
-#include "application_io.hpp"
+#include "application_file_io.hpp"
 
 namespace QLogicaeCore
 {
-    ApplicationIO::ApplicationIO() :
+    ApplicationFileIO::ApplicationFileIO() :
         AbstractApplication()
     {
 
     }
 
-    ApplicationIO::~ApplicationIO()
+    ApplicationFileIO::~ApplicationFileIO()
     {
 
     }
 
-    bool ApplicationIO::setup()
+    bool ApplicationFileIO::setup()
     {
-        set_is_enabled(true);
+        Result<void> void_result;
 
-        return true;
+        setup(void_result);
+
+        return void_result.is_status_safe();
     }
 
-    void ApplicationIO::setup(
+    void ApplicationFileIO::setup(
         Result<void>& result
     )
     {
@@ -31,20 +33,18 @@ namespace QLogicaeCore
         result.set_to_good_status_without_value();
     }
 
-    std::future<bool> ApplicationIO::setup_async()
+    std::future<bool> ApplicationFileIO::setup_async()
     {
         return std::async(
             std::launch::async,
             [this]() -> bool
             {
-                set_is_enabled(true);
-
-                return true;
+                return setup();
             }
         );
     }
 
-    void ApplicationIO::setup_async(
+    void ApplicationFileIO::setup_async(
         Result<std::future<void>>& result
     )
     {
@@ -53,24 +53,26 @@ namespace QLogicaeCore
                 std::launch::async,
                 [this]() -> void
                 {
-                    set_is_enabled(true);
+                    Result<void> void_result;
+
+                    setup(void_result);
                 }
             )
         );
     }
 
-    ApplicationIO& ApplicationIO::get_instance()
+    ApplicationFileIO& ApplicationFileIO::get_instance()
     {
-        static ApplicationIO instance;
+        static ApplicationFileIO instance;
 
         return instance;
     }
 
-    void ApplicationIO::get_instance(
-        Result<ApplicationIO*>& result
+    void ApplicationFileIO::get_instance(
+        Result<ApplicationFileIO*>& result
     )
     {
-        static ApplicationIO instance;
+        static ApplicationFileIO instance;
 
         result.set_to_good_status_with_value(
             &instance
