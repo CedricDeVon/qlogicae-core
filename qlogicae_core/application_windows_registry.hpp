@@ -1,6 +1,7 @@
 #pragma once
 
 #include "result.hpp"
+#include "windows_registry.hpp"
 #include "abstract_application.hpp"
 
 namespace QLogicaeCore
@@ -20,7 +21,7 @@ namespace QLogicaeCore
         void setup_async(
             Result<std::future<void>>& result
         );
-
+        
         static ApplicationWindowsRegistry& get_instance();
 
         static void get_instance(
@@ -42,11 +43,11 @@ namespace QLogicaeCore
 
         ApplicationWindowsRegistry& operator = (
             ApplicationWindowsRegistry&& instance
-            ) = default;
+        ) = default;
 
         ApplicationWindowsRegistry& operator = (
             const ApplicationWindowsRegistry& instance
-            ) = delete;
+        ) = delete;
     };
 
     inline static ApplicationWindowsRegistry& QLOGICAE_APPLICATION_WINDOWS_REGISTRY =

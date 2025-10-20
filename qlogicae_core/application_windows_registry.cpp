@@ -17,15 +17,34 @@ namespace QLogicaeCore
 
     bool ApplicationWindowsRegistry::setup()
     {
-        set_is_enabled(true);
+        Result<void> result;
 
-        return true;
+        setup(result);
+
+        return result.is_status_safe();
     }
 
     void ApplicationWindowsRegistry::setup(
         Result<void>& result
     )
     {
+        if (_is_enabled)
+        {
+            return result.set_to_bad_status_without_value();
+        }
+
+        WindowsRegistry::hkcu().setup(result);
+        if (result.is_status_unsafe())
+        {
+            return result.set_to_bad_status_without_value();
+        }
+
+        WindowsRegistry::hklm().setup(result);
+        if (result.is_status_unsafe())
+        {
+            return result.set_to_bad_status_without_value();
+        }
+
         set_is_enabled(true);
 
         result.set_to_good_status_without_value();
@@ -36,10 +55,8 @@ namespace QLogicaeCore
         return std::async(
             std::launch::async,
             [this]() -> bool
-            {
-                set_is_enabled(true);
-
-                return true;
+            {                
+                return setup();
             }
         );
     }
@@ -53,7 +70,9 @@ namespace QLogicaeCore
                 std::launch::async,
                 [this]() -> void
                 {
-                    set_is_enabled(true);
+                    Result<void> result;
+
+                    setup(result);
                 }
             )
         );

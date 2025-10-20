@@ -1,5 +1,7 @@
 #pragma once
 
+#include "time_format.hpp"
+#include "log_medium.hpp"
 #include "time_scale_unit.hpp"
 #include "environment_variable.hpp"
 #include "temperature_unit_type.hpp"
@@ -233,48 +235,6 @@ namespace QLogicaeCore
         const std::string TIME_SCALE_UNIT_FULL_NAME_YEARS =
             "Year(s)";
 
-        const std::string TIME_SCALE_UNIT_ABBREVIATION_NANOSECONDS =
-            "ns";
-
-        const std::string TIME_SCALE_UNIT_ABBREVIATION_MICROSECONDS =
-            "us";
-
-        const std::string TIME_SCALE_UNIT_ABBREVIATION_MILLISECONDS =
-            "ms";
-
-        const std::string TIME_SCALE_UNIT_ABBREVIATION_SECONDS =
-            "s";
-
-        const std::string TIME_SCALE_UNIT_ABBREVIATION_MINUTES =
-            "min";
-
-        const std::string TIME_SCALE_UNIT_ABBREVIATION_HOURS =
-            "h";
-
-        const std::string TIME_SCALE_UNIT_ABBREVIATION_DAYS =
-            "d";
-
-        const std::string TIME_SCALE_UNIT_ABBREVIATION_WEEKS =
-            "wk";
-
-        const std::string TIME_SCALE_UNIT_ABBREVIATION_MONTHS =
-            "mo";
-
-        const std::string TIME_SCALE_UNIT_ABBREVIATION_YEARS =
-            "yr";
-
-        const std::string TEMPERATURE_UNIT_TYPE_CELSIUS =
-            "celsius";
-
-        const std::string TEMPERATURE_UNIT_TYPE_FAHRENHEIT =
-            "fahrenheit";
-
-        const std::string TEMPERATURE_UNIT_TYPE_KELVIN =
-            "kelvin";
-
-        const std::string TEMPERATURE_UNIT_TYPE_NONE =
-            "none";
-
         const std::string DEFAULT_FILE_URI_IO_MIMETYPE =
             "application/octet-stream";
 
@@ -349,35 +309,430 @@ namespace QLogicaeCore
 
         const double EPSILON = 1e-12;
 
-        const std::string INNO_SETUP = "inno-setup";
+        const std::string TIME_FORMAT_UNIX_1 = "unix";
 
-        const std::string VISUAL_STUDIO_2022_1 = "vs2022";
+        const std::string TIME_FORMAT_UNIX_2 = "UNIX";
 
-        const std::string VISUAL_STUDIO_2022_2 = "Visual Studio 2022";
+        const std::string TIME_FORMAT_UNIX_3 = "Unix";
 
-        const std::string VISUAL_STUDIO_2022_X64_BUILD_ARCHITECTURE = "x64";
 
-        const std::string VISUAL_STUDIO_2022_X86_BUILD_ARCHITECTURE = "x86";
+        const std::string TIME_FORMAT_ISO8601_1 = "iso8601";
 
-        const std::string VISUAL_STUDIO_2022_RELEASE_BUILD = "Release";
+        const std::string TIME_FORMAT_ISO8601_2 = "ISO8601";
 
-        const std::string VISUAL_STUDIO_2022_DEBUG_BUILD = "Debug";
+        const std::string TIME_FORMAT_ISO8601_3 = "Iso8601";
 
-        const std::string WINDOWS_REGISTRY_HKCU_ROOT_PATH_1 = "hkcu";
 
-        const std::string WINDOWS_REGISTRY_HKLM_ROOT_PATH_1 = "hklm";
+        const std::string TIME_FORMAT_SECOND_LEVEL_TIMESTAMP_1 = "second_level_timestamp";
 
-        const std::string WINDOWS_REGISTRY_HKCU_ROOT_PATH_2 = "HKCU";
+        const std::string TIME_FORMAT_SECOND_LEVEL_TIMESTAMP_2 = "SECOND_LEVEL_TIMESTAMP";
 
-        const std::string WINDOWS_REGISTRY_HKLM_ROOT_PATH_2 = "HKLM";
+        const std::string TIME_FORMAT_SECOND_LEVEL_TIMESTAMP_3 = "Second Level Timestamp";
 
-        const std::string ENVIRONMENT_VARIABLE_USER_1 = "user";
 
-        const std::string ENVIRONMENT_VARIABLE_SYSTEM_1 = "system";
+        const std::string TIME_FORMAT_MILLISECOND_LEVEL_TIMESTAMP_1 = "millisecond_level_timestamp";
 
-        const std::string ENVIRONMENT_VARIABLE_USER_2 = "USER";
+        const std::string TIME_FORMAT_MILLISECOND_LEVEL_TIMESTAMP_2 = "MILLISECOND_LEVEL_TIMESTAMP";
 
-        const std::string ENVIRONMENT_VARIABLE_SYSTEM_2 = "SYSTEM";
+        const std::string TIME_FORMAT_MILLISECOND_LEVEL_TIMESTAMP_3 = "Millisecond Level Timestamp";
+
+
+        const std::string TIME_FORMAT_MICROSECOND_LEVEL_TIMESTAMP_1 = "microsecond_level_timestamp";
+
+        const std::string TIME_FORMAT_MICROSECOND_LEVEL_TIMESTAMP_2 = "MICROSECOND_LEVEL_TIMESTAMP";
+
+        const std::string TIME_FORMAT_MICROSECOND_LEVEL_TIMESTAMP_3 = "Microsecond Level Timestamp";
+
+
+        const std::string TIME_FORMAT_FULL_TIMESTAMP_1 = "full_timestamp";
+
+        const std::string TIME_FORMAT_FULL_TIMESTAMP_2 = "FULL_TIMESTAMP";
+
+        const std::string TIME_FORMAT_FULL_TIMESTAMP_3 = "Full Timestamp";
+
+
+        const std::string TIME_FORMAT_FULL_DASHED_TIMESTAMP_1 = "full_dashed_timestamp";
+
+        const std::string TIME_FORMAT_FULL_DASHED_TIMESTAMP_2 = "FULL_DASHED_TIMESTAMP";
+
+        const std::string TIME_FORMAT_FULL_DASHED_TIMESTAMP_3 = "Full Dashed Timestamp";
+
+
+        const std::string TIME_FORMAT_HOUR_12_1 = "hour_12";
+
+        const std::string TIME_FORMAT_HOUR_12_2 = "HOUR_12";
+
+        const std::string TIME_FORMAT_HOUR_12_3 = "Hour 12";
+
+
+        const std::string TIME_FORMAT_HOUR_24_1 = "hour_24";
+
+        const std::string TIME_FORMAT_HOUR_24_2 = "HOUR_24";
+
+        const std::string TIME_FORMAT_HOUR_24_3 = "Hour 24";
+
+
+        const std::string TIME_FORMAT_MILLISECOND_MICROSECOND_NANOSECOND_1 = "millisecond_microsecond_nanosecond";
+
+        const std::string TIME_FORMAT_MILLISECOND_MICROSECOND_NANOSECOND_2 = "MILLISECOND_MICROSECOND_NANOSECOND";
+
+        const std::string TIME_FORMAT_MILLISECOND_MICROSECOND_NANOSECOND_3 = "Millisecond Microsecond Nanosecond";
+
+
+        const std::string TIME_FORMAT_DATE_DASHED_1 = "date_dashed";
+
+        const std::string TIME_FORMAT_DATE_DASHED_2 = "DATE_DASHED";
+
+        const std::string TIME_FORMAT_DATE_DASHED_3 = "Date Dashed";
+
+
+        const std::string TIME_FORMAT_DATE_MDY_SLASHED_1 = "date_mdy_slashed";
+
+        const std::string TIME_FORMAT_DATE_MDY_SLASHED_2 = "DATE_MDY_SLASHED";
+
+        const std::string TIME_FORMAT_DATE_MDY_SLASHED_3 = "Date MDY Slashed";
+
+
+        const std::string TIME_FORMAT_DATE_DMY_SLASHED_1 = "date_dmy_slashed";
+
+        const std::string TIME_FORMAT_DATE_DMY_SLASHED_2 = "DATE_DMY_SLASHED";
+
+        const std::string TIME_FORMAT_DATE_DMY_SLASHED_3 = "Date DMY Slashed";
+
+
+        const std::string TIME_FORMAT_DATE_DMY_SPACED_1 = "date_dmy_spaced";
+
+        const std::string TIME_FORMAT_DATE_DMY_SPACED_2 = "DATE_DMY_SPACED";
+
+        const std::string TIME_FORMAT_DATE_DMY_SPACED_3 = "Date DMY Spaced";
+
+
+        const std::string TIME_FORMAT_DATE_VERBOSE_1 = "date_verbose";
+
+        const std::string TIME_FORMAT_DATE_VERBOSE_2 = "DATE_VERBOSE";
+
+        const std::string TIME_FORMAT_DATE_VERBOSE_3 = "Date Verbose";
+
+        const std::unordered_map<TimeFormat, std::string> TIME_FORMAT_ENUMS_1 =
+        {
+            { TimeFormat::UNIX, TIME_FORMAT_UNIX_1 },
+
+            { TimeFormat::ISO8601, TIME_FORMAT_ISO8601_1 },
+
+            { TimeFormat::SECOND_LEVEL_TIMESTAMP, TIME_FORMAT_SECOND_LEVEL_TIMESTAMP_1 },
+
+            { TimeFormat::MILLISECOND_LEVEL_TIMESTAMP, TIME_FORMAT_MILLISECOND_LEVEL_TIMESTAMP_1 },
+
+            { TimeFormat::MICROSECOND_LEVEL_TIMESTAMP, TIME_FORMAT_MICROSECOND_LEVEL_TIMESTAMP_1 },
+
+            { TimeFormat::FULL_TIMESTAMP, TIME_FORMAT_FULL_TIMESTAMP_1 },
+
+            { TimeFormat::FULL_DASHED_TIMESTAMP, TIME_FORMAT_FULL_DASHED_TIMESTAMP_1 },
+
+            { TimeFormat::HOUR_12, TIME_FORMAT_HOUR_12_1 },
+
+            { TimeFormat::HOUR_24, TIME_FORMAT_HOUR_24_1 },
+
+            { TimeFormat::MILLISECOND_MICROSECOND_NANOSECOND, TIME_FORMAT_MILLISECOND_MICROSECOND_NANOSECOND_1 },
+
+            { TimeFormat::DATE_DASHED, TIME_FORMAT_DATE_DASHED_1 },
+
+            { TimeFormat::DATE_MDY_SLASHED, TIME_FORMAT_DATE_MDY_SLASHED_1 },
+
+            { TimeFormat::DATE_DMY_SLASHED, TIME_FORMAT_DATE_DMY_SLASHED_1 },
+
+            { TimeFormat::DATE_DMY_SPACED, TIME_FORMAT_DATE_DMY_SPACED_1 },
+
+            { TimeFormat::DATE_VERBOSE, TIME_FORMAT_DATE_VERBOSE_1 }
+        };
+
+        const std::unordered_map<std::string, TimeFormat> TIME_FORMAT_STRINGS_1 =
+        {
+            { TIME_FORMAT_UNIX_1, TimeFormat::UNIX },
+
+            { TIME_FORMAT_ISO8601_1, TimeFormat::ISO8601 },
+
+            { TIME_FORMAT_SECOND_LEVEL_TIMESTAMP_1, TimeFormat::SECOND_LEVEL_TIMESTAMP },
+
+            { TIME_FORMAT_MILLISECOND_LEVEL_TIMESTAMP_1, TimeFormat::MILLISECOND_LEVEL_TIMESTAMP },
+
+            { TIME_FORMAT_MICROSECOND_LEVEL_TIMESTAMP_1, TimeFormat::MICROSECOND_LEVEL_TIMESTAMP },
+
+            { TIME_FORMAT_FULL_TIMESTAMP_1, TimeFormat::FULL_TIMESTAMP },
+
+            { TIME_FORMAT_FULL_DASHED_TIMESTAMP_1, TimeFormat::FULL_DASHED_TIMESTAMP },
+
+            { TIME_FORMAT_HOUR_12_1, TimeFormat::HOUR_12 },
+
+            { TIME_FORMAT_HOUR_24_1, TimeFormat::HOUR_24 },
+
+            { TIME_FORMAT_MILLISECOND_MICROSECOND_NANOSECOND_1, TimeFormat::MILLISECOND_MICROSECOND_NANOSECOND },
+
+            { TIME_FORMAT_DATE_DASHED_1, TimeFormat::DATE_DASHED },
+
+            { TIME_FORMAT_DATE_MDY_SLASHED_1, TimeFormat::DATE_MDY_SLASHED },
+
+            { TIME_FORMAT_DATE_DMY_SLASHED_1, TimeFormat::DATE_DMY_SLASHED },
+
+            { TIME_FORMAT_DATE_DMY_SPACED_1, TimeFormat::DATE_DMY_SPACED },
+
+            { TIME_FORMAT_DATE_VERBOSE_1, TimeFormat::DATE_VERBOSE }
+        };
+
+        const std::unordered_map<TimeFormat, std::string> TIME_FORMAT_ENUMS_2 =
+        {
+            { TimeFormat::UNIX, TIME_FORMAT_UNIX_2 },
+
+            { TimeFormat::ISO8601, TIME_FORMAT_ISO8601_2 },
+
+            { TimeFormat::SECOND_LEVEL_TIMESTAMP, TIME_FORMAT_SECOND_LEVEL_TIMESTAMP_2 },
+
+            { TimeFormat::MILLISECOND_LEVEL_TIMESTAMP, TIME_FORMAT_MILLISECOND_LEVEL_TIMESTAMP_2 },
+
+            { TimeFormat::MICROSECOND_LEVEL_TIMESTAMP, TIME_FORMAT_MICROSECOND_LEVEL_TIMESTAMP_2 },
+
+            { TimeFormat::FULL_TIMESTAMP, TIME_FORMAT_FULL_TIMESTAMP_2 },
+
+            { TimeFormat::FULL_DASHED_TIMESTAMP, TIME_FORMAT_FULL_DASHED_TIMESTAMP_2 },
+
+            { TimeFormat::HOUR_12, TIME_FORMAT_HOUR_12_2 },
+
+            { TimeFormat::HOUR_24, TIME_FORMAT_HOUR_24_2 },
+
+            { TimeFormat::MILLISECOND_MICROSECOND_NANOSECOND, TIME_FORMAT_MILLISECOND_MICROSECOND_NANOSECOND_2 },
+
+            { TimeFormat::DATE_DASHED, TIME_FORMAT_DATE_DASHED_2 },
+
+            { TimeFormat::DATE_MDY_SLASHED, TIME_FORMAT_DATE_MDY_SLASHED_2 },
+
+            { TimeFormat::DATE_DMY_SLASHED, TIME_FORMAT_DATE_DMY_SLASHED_2 },
+
+            { TimeFormat::DATE_DMY_SPACED, TIME_FORMAT_DATE_DMY_SPACED_2 },
+
+            { TimeFormat::DATE_VERBOSE, TIME_FORMAT_DATE_VERBOSE_2 }
+        };
+
+        const std::unordered_map<std::string, TimeFormat> TIME_FORMAT_STRINGS_2 =
+        {
+            { TIME_FORMAT_UNIX_2, TimeFormat::UNIX },
+
+            { TIME_FORMAT_ISO8601_2, TimeFormat::ISO8601 },
+
+            { TIME_FORMAT_SECOND_LEVEL_TIMESTAMP_2, TimeFormat::SECOND_LEVEL_TIMESTAMP },
+
+            { TIME_FORMAT_MILLISECOND_LEVEL_TIMESTAMP_2, TimeFormat::MILLISECOND_LEVEL_TIMESTAMP },
+
+            { TIME_FORMAT_MICROSECOND_LEVEL_TIMESTAMP_2, TimeFormat::MICROSECOND_LEVEL_TIMESTAMP },
+
+            { TIME_FORMAT_FULL_TIMESTAMP_2, TimeFormat::FULL_TIMESTAMP },
+
+            { TIME_FORMAT_FULL_DASHED_TIMESTAMP_2, TimeFormat::FULL_DASHED_TIMESTAMP },
+
+            { TIME_FORMAT_HOUR_12_2, TimeFormat::HOUR_12 },
+
+            { TIME_FORMAT_HOUR_24_2, TimeFormat::HOUR_24 },
+
+            { TIME_FORMAT_MILLISECOND_MICROSECOND_NANOSECOND_2, TimeFormat::MILLISECOND_MICROSECOND_NANOSECOND },
+
+            { TIME_FORMAT_DATE_DASHED_2, TimeFormat::DATE_DASHED },
+
+            { TIME_FORMAT_DATE_MDY_SLASHED_2, TimeFormat::DATE_MDY_SLASHED },
+
+            { TIME_FORMAT_DATE_DMY_SLASHED_2, TimeFormat::DATE_DMY_SLASHED },
+
+            { TIME_FORMAT_DATE_DMY_SPACED_2, TimeFormat::DATE_DMY_SPACED },
+
+            { TIME_FORMAT_DATE_VERBOSE_2, TimeFormat::DATE_VERBOSE }
+        };
+
+        const std::unordered_map<TimeFormat, std::string> TIME_FORMAT_ENUMS_3 =
+        {
+            { TimeFormat::UNIX, TIME_FORMAT_UNIX_3 },
+
+            { TimeFormat::ISO8601, TIME_FORMAT_ISO8601_3 },
+
+            { TimeFormat::SECOND_LEVEL_TIMESTAMP, TIME_FORMAT_SECOND_LEVEL_TIMESTAMP_3 },
+
+            { TimeFormat::MILLISECOND_LEVEL_TIMESTAMP, TIME_FORMAT_MILLISECOND_LEVEL_TIMESTAMP_3 },
+
+            { TimeFormat::MICROSECOND_LEVEL_TIMESTAMP, TIME_FORMAT_MICROSECOND_LEVEL_TIMESTAMP_3 },
+
+            { TimeFormat::FULL_TIMESTAMP, TIME_FORMAT_FULL_TIMESTAMP_3 },
+
+            { TimeFormat::FULL_DASHED_TIMESTAMP, TIME_FORMAT_FULL_DASHED_TIMESTAMP_3 },
+
+            { TimeFormat::HOUR_12, TIME_FORMAT_HOUR_12_3 },
+
+            { TimeFormat::HOUR_24, TIME_FORMAT_HOUR_24_3 },
+
+            { TimeFormat::MILLISECOND_MICROSECOND_NANOSECOND, TIME_FORMAT_MILLISECOND_MICROSECOND_NANOSECOND_3 },
+
+            { TimeFormat::DATE_DASHED, TIME_FORMAT_DATE_DASHED_3 },
+
+            { TimeFormat::DATE_MDY_SLASHED, TIME_FORMAT_DATE_MDY_SLASHED_3 },
+
+            { TimeFormat::DATE_DMY_SLASHED, TIME_FORMAT_DATE_DMY_SLASHED_3 },
+
+            { TimeFormat::DATE_DMY_SPACED, TIME_FORMAT_DATE_DMY_SPACED_3 },
+
+            { TimeFormat::DATE_VERBOSE, TIME_FORMAT_DATE_VERBOSE_3 }
+        };
+
+        const std::unordered_map<std::string, TimeFormat> TIME_FORMAT_STRINGS_3 =
+        {
+            { TIME_FORMAT_UNIX_3, TimeFormat::UNIX },
+
+            { TIME_FORMAT_ISO8601_3, TimeFormat::ISO8601 },
+
+            { TIME_FORMAT_SECOND_LEVEL_TIMESTAMP_3, TimeFormat::SECOND_LEVEL_TIMESTAMP },
+
+            { TIME_FORMAT_MILLISECOND_LEVEL_TIMESTAMP_3, TimeFormat::MILLISECOND_LEVEL_TIMESTAMP },
+
+            { TIME_FORMAT_MICROSECOND_LEVEL_TIMESTAMP_3, TimeFormat::MICROSECOND_LEVEL_TIMESTAMP },
+
+            { TIME_FORMAT_FULL_TIMESTAMP_3, TimeFormat::FULL_TIMESTAMP },
+
+            { TIME_FORMAT_FULL_DASHED_TIMESTAMP_3, TimeFormat::FULL_DASHED_TIMESTAMP },
+
+            { TIME_FORMAT_HOUR_12_3, TimeFormat::HOUR_12 },
+
+            { TIME_FORMAT_HOUR_24_3, TimeFormat::HOUR_24 },
+
+            { TIME_FORMAT_MILLISECOND_MICROSECOND_NANOSECOND_3, TimeFormat::MILLISECOND_MICROSECOND_NANOSECOND },
+
+            { TIME_FORMAT_DATE_DASHED_3, TimeFormat::DATE_DASHED },
+
+            { TIME_FORMAT_DATE_MDY_SLASHED_3, TimeFormat::DATE_MDY_SLASHED },
+
+            { TIME_FORMAT_DATE_DMY_SLASHED_3, TimeFormat::DATE_DMY_SLASHED },
+
+            { TIME_FORMAT_DATE_DMY_SPACED_3, TimeFormat::DATE_DMY_SPACED },
+
+            { TIME_FORMAT_DATE_VERBOSE_3, TimeFormat::DATE_VERBOSE }
+        };
+
+        const std::string LOG_MEDIUM_ALL_1 = "all";
+
+        const std::string LOG_MEDIUM_ALL_2 = "ALL";
+
+        const std::string LOG_MEDIUM_ALL_3 = "All";
+
+
+        const std::string LOG_MEDIUM_FILE_1 = "file";
+
+        const std::string LOG_MEDIUM_FILE_2 = "FILE";
+
+        const std::string LOG_MEDIUM_FILE_3 = "File";
+
+
+        const std::string LOG_MEDIUM_CONSOLE_1 = "console";
+
+        const std::string LOG_MEDIUM_CONSOLE_2 = "CONSOLE";
+
+        const std::string LOG_MEDIUM_CONSOLE_3 = "Console";
+
+
+        const std::string LOG_MEDIUM_NONE_1 = "none";
+
+        const std::string LOG_MEDIUM_NONE_2 = "NONE";
+
+        const std::string LOG_MEDIUM_NONE_3 = "None";
+
+        const std::unordered_map<LogMedium, std::string> LOG_MEDIUM_ENUMS_1 =
+        {
+            { LogMedium::ALL, LOG_MEDIUM_ALL_1 },
+
+            { LogMedium::FILE, LOG_MEDIUM_FILE_1 },
+
+            { LogMedium::CONSOLE, LOG_MEDIUM_CONSOLE_1 },
+
+            { LogMedium::NONE, LOG_MEDIUM_NONE_1 },
+        };
+
+        const std::unordered_map<std::string, LogMedium> LOG_MEDIUM_STRINGS_1 =
+        {
+            { LOG_MEDIUM_ALL_1, LogMedium::ALL },
+
+            { LOG_MEDIUM_FILE_1, LogMedium::FILE },
+
+            { LOG_MEDIUM_CONSOLE_1, LogMedium::CONSOLE },
+
+            { LOG_MEDIUM_NONE_1, LogMedium::NONE }
+        };
+
+        const std::unordered_map<LogMedium, std::string> LOG_MEDIUM_ENUMS_2 =
+        {
+            { LogMedium::ALL, LOG_MEDIUM_ALL_2 },
+
+            { LogMedium::FILE, LOG_MEDIUM_FILE_2 },
+
+            { LogMedium::CONSOLE, LOG_MEDIUM_CONSOLE_2 },
+
+            { LogMedium::NONE, LOG_MEDIUM_NONE_2 },
+        };
+
+        const std::unordered_map<std::string, LogMedium> LOG_MEDIUM_STRINGS_2 =
+        {
+            { LOG_MEDIUM_ALL_2, LogMedium::ALL },
+
+            { LOG_MEDIUM_FILE_2, LogMedium::FILE },
+
+            { LOG_MEDIUM_CONSOLE_2, LogMedium::CONSOLE },
+
+            { LOG_MEDIUM_NONE_2, LogMedium::NONE }
+        };
+
+        const std::unordered_map<LogMedium, std::string> LOG_MEDIUM_ENUMS_3 =
+        {
+            { LogMedium::ALL, LOG_MEDIUM_ALL_3 },
+
+            { LogMedium::FILE, LOG_MEDIUM_FILE_3 },
+
+            { LogMedium::CONSOLE, LOG_MEDIUM_CONSOLE_3 },
+
+            { LogMedium::NONE, LOG_MEDIUM_NONE_3 },
+        };
+
+        const std::unordered_map<std::string, LogMedium> LOG_MEDIUM_STRINGS_3 =
+        {
+            { LOG_MEDIUM_ALL_3, LogMedium::ALL },
+
+            { LOG_MEDIUM_FILE_3, LogMedium::FILE },
+
+            { LOG_MEDIUM_CONSOLE_3, LogMedium::CONSOLE },
+
+            { LOG_MEDIUM_NONE_3, LogMedium::NONE }
+        };
+
+        const std::string TIME_SCALE_UNIT_ABBREVIATION_NANOSECONDS =
+            "ns";
+
+        const std::string TIME_SCALE_UNIT_ABBREVIATION_MICROSECONDS =
+            "us";
+
+        const std::string TIME_SCALE_UNIT_ABBREVIATION_MILLISECONDS =
+            "ms";
+
+        const std::string TIME_SCALE_UNIT_ABBREVIATION_SECONDS =
+            "s";
+
+        const std::string TIME_SCALE_UNIT_ABBREVIATION_MINUTES =
+            "min";
+
+        const std::string TIME_SCALE_UNIT_ABBREVIATION_HOURS =
+            "h";
+
+        const std::string TIME_SCALE_UNIT_ABBREVIATION_DAYS =
+            "d";
+
+        const std::string TIME_SCALE_UNIT_ABBREVIATION_WEEKS =
+            "wk";
+
+        const std::string TIME_SCALE_UNIT_ABBREVIATION_MONTHS =
+            "mo";
+
+        const std::string TIME_SCALE_UNIT_ABBREVIATION_YEARS =
+            "yr";
 
         const std::unordered_map<TimeScaleUnit, std::string_view> TIME_SCALE_UNIT_ABBREVIATION_ENUMS =
         {
@@ -425,6 +780,18 @@ namespace QLogicaeCore
             { TIME_SCALE_UNIT_ABBREVIATION_YEARS, TimeScaleUnit::YEARS }
         };
 
+        const std::string TEMPERATURE_UNIT_TYPE_CELSIUS =
+            "celsius";
+
+        const std::string TEMPERATURE_UNIT_TYPE_FAHRENHEIT =
+            "fahrenheit";
+
+        const std::string TEMPERATURE_UNIT_TYPE_KELVIN =
+            "kelvin";
+
+        const std::string TEMPERATURE_UNIT_TYPE_NONE =
+            "none";
+
         const std::unordered_map<TemperatureUnitType, std::string_view> TEMPERATURE_UNIT_TYPE_ENUMS =
         {
             { TemperatureUnitType::CELSIUS, TEMPERATURE_UNIT_TYPE_CELSIUS },
@@ -447,6 +814,10 @@ namespace QLogicaeCore
             { TEMPERATURE_UNIT_TYPE_NONE, TemperatureUnitType::NONE }
         };
 
+        const std::string VISUAL_STUDIO_2022_X64_BUILD_ARCHITECTURE = "x64";
+
+        const std::string VISUAL_STUDIO_2022_X86_BUILD_ARCHITECTURE = "x86";
+
         const std::unordered_map<QLogicaeVisualStudio2022BuildArchitecture, std::string_view> VISUAL_STUDIO_2022_BUILD_ARCHITECTURE_ENUMS =
         {
             { QLogicaeVisualStudio2022BuildArchitecture::X64, VISUAL_STUDIO_2022_X64_BUILD_ARCHITECTURE },
@@ -460,7 +831,11 @@ namespace QLogicaeCore
            
             { VISUAL_STUDIO_2022_X86_BUILD_ARCHITECTURE, QLogicaeVisualStudio2022BuildArchitecture::X86 },
         };
-        
+
+        const std::string VISUAL_STUDIO_2022_RELEASE_BUILD = "Release";
+
+        const std::string VISUAL_STUDIO_2022_DEBUG_BUILD = "Debug";
+
         const std::unordered_map<QLogicaeVisualStudio2022Build, std::string_view> VISUAL_STUDIO_2022_BUILD_ENUMS =
         {
             { QLogicaeVisualStudio2022Build::RELEASE, VISUAL_STUDIO_2022_RELEASE_BUILD },
@@ -474,6 +849,14 @@ namespace QLogicaeCore
 
             { VISUAL_STUDIO_2022_DEBUG_BUILD, QLogicaeVisualStudio2022Build::DEBUG },
         };
+
+        const std::string WINDOWS_REGISTRY_HKCU_ROOT_PATH_1 = "hkcu";
+
+        const std::string WINDOWS_REGISTRY_HKLM_ROOT_PATH_1 = "hklm";
+
+        const std::string WINDOWS_REGISTRY_HKCU_ROOT_PATH_2 = "HKCU";
+
+        const std::string WINDOWS_REGISTRY_HKLM_ROOT_PATH_2 = "HKLM";
 
         const std::unordered_map<WindowsRegistryRootPath, std::string_view> WINDOWS_REGISTRY_ROOT_PATH_ENUMS =
         {
@@ -489,6 +872,14 @@ namespace QLogicaeCore
             { WINDOWS_REGISTRY_HKLM_ROOT_PATH_1, WindowsRegistryRootPath::HKLM },
         };
 
+        const std::string ENVIRONMENT_VARIABLE_USER_1 = "user";
+
+        const std::string ENVIRONMENT_VARIABLE_SYSTEM_1 = "system";
+
+        const std::string ENVIRONMENT_VARIABLE_USER_2 = "USER";
+
+        const std::string ENVIRONMENT_VARIABLE_SYSTEM_2 = "SYSTEM";
+
         const std::unordered_map<EnvironmentVariable, std::string_view> ENVIRONMENT_VARIABLE_ENUMS =
         {
             { EnvironmentVariable::USER, ENVIRONMENT_VARIABLE_USER_1 },
@@ -503,6 +894,10 @@ namespace QLogicaeCore
             { ENVIRONMENT_VARIABLE_SYSTEM_1, EnvironmentVariable::SYSTEM },
         };
 
+        const std::string VISUAL_STUDIO_2022_1 = "vs2022";
+
+        const std::string VISUAL_STUDIO_2022_2 = "Visual Studio 2022";
+
         const std::unordered_map<SupportedQLogicaeIDE, std::string_view> SUPPORTED_IDE_ENUMS =
         {
             { SupportedQLogicaeIDE::VISUAL_STUDIO_2022, VISUAL_STUDIO_2022_1 }
@@ -512,6 +907,8 @@ namespace QLogicaeCore
         {
             { VISUAL_STUDIO_2022_1, SupportedQLogicaeIDE::VISUAL_STUDIO_2022 }
         };
+
+        const std::string INNO_SETUP = "inno-setup";
 
         const std::unordered_map<SupportedQLogicaeInstaller, std::string_view> SUPPORTED_INSTALLER_ENUMS =
         {
@@ -631,11 +1028,44 @@ namespace QLogicaeCore
         const std::string DEFAULT_BOOST_INTERPROCESS_CACHE_SEGMENT_NAME =
             "BoostInterprocessCacheSharedData";
 
-		const std::string RELATIVE_DOT_QLOGICAE_FOLDER_PATH =
+		const std::string RELATIVE_DOT_QLOGICAE_FOLDER_PATH_1 =
 			".qlogicae";
 
-		const std::string RELATIVE_QLOGICAE_FOLDER_PATH =
+        const std::string RELATIVE_DOT_QLOGICAE_FOLDER_PATH_2 =
+            ".QLOGICAE";
+
+        const std::string RELATIVE_DOT_QLOGICAE_FOLDER_PATH_3 =
+            ".QLogicae";
+
+		const std::string RELATIVE_QLOGICAE_FOLDER_PATH_1 =
 			"qlogicae";
+
+        const std::string RELATIVE_QLOGICAE_FOLDER_PATH_2 =
+            "QLOGICAE";
+
+        const std::string RELATIVE_QLOGICAE_FOLDER_PATH_3 =
+            "QLogicae";
+        
+        const std::string RELATIVE_QLOGICAE_LOGS_FOLDER_PATH_1 =
+            "logs";
+
+        const std::string RELATIVE_QLOGICAE_LOGS_FOLDER_PATH_2 =
+            "LOGS";
+
+        const std::string RELATIVE_QLOGICAE_LOGS_FOLDER_PATH_3 =
+            "Logs";
+        
+        const std::string RELATIVE_QLOGICAE_LOGS_FRAGMENTS_FOLDER_PATH_1 =
+            "fragments";
+
+        const std::string RELATIVE_QLOGICAE_LOGS_FRAGMENTS_FOLDER_PATH_2 =
+            "FRAGMENTS";
+
+        const std::string RELATIVE_QLOGICAE_LOGS_FRAGMENTS_FOLDER_PATH_3 =
+            "Fragments";
+
+        const std::string RELATIVE_QLOGICAE_ALL_LOGS_FILE_PATH =
+            "all.log";
 
 		const std::string RELATIVE_APPLICATION_FOLDER_PATH =
 			"application";

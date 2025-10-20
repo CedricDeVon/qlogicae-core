@@ -12,6 +12,10 @@ namespace QLogicaeCore
     class WindowsRegistry
     {
     public:
+        bool setup(
+            const HKEY hkey = UTILITIES.DEFAULT_HKEY
+        );
+
         std::unordered_map<std::string, std::string>
             get_values_via_utf8(
                 std::string_view value
@@ -72,6 +76,11 @@ namespace QLogicaeCore
             std::wstring_view sub_path,
             std::wstring_view name,
             const std::wstring_view value
+        );
+
+        void setup(
+            Result<void>& result,
+            const HKEY hkey = UTILITIES.DEFAULT_HKEY
         );
 
         void get_values_via_utf8(
@@ -144,11 +153,6 @@ namespace QLogicaeCore
             const std::wstring_view sub_path,
             const std::wstring_view name,
             const std::wstring_view value
-        );
-
-        void setup(
-            Result<void>& result,
-            const HKEY hkey = UTILITIES.DEFAULT_HKEY
         );
 
         static WindowsRegistry& hkcu();

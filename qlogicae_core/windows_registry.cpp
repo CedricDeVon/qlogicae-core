@@ -2,24 +2,37 @@
 
 #include "windows_registry.hpp"
 
-struct RegularKeyDeleteHandler
-{
-    void operator() (HKEY handler)
-    {
-        if (handler)
-        {
-            RegCloseKey(handler);
-        }
-    }
-};
-
 namespace QLogicaeCore
 {
-    WindowsRegistry::WindowsRegistry(const HKEY root_hkey)
+    struct RegularKeyDeleteHandler
     {
-        _root_key = root_hkey;
-        _sub_key.assign(UTILITIES.DEFAULT_SUB_KEY);
-        _name_key.assign(UTILITIES.DEFAULT_NAME_KEY);
+        void operator() (HKEY handler)
+        {
+            if (handler)
+            {
+                RegCloseKey(handler);
+            }
+        }
+    };
+
+    WindowsRegistry::WindowsRegistry(
+        const HKEY root_hkey
+    )
+    {
+        Result<void> void_result;
+
+        setup(void_result, root_hkey);
+    }
+
+    bool WindowsRegistry::setup(
+        const HKEY hkey
+    )
+    {
+        Result<void> void_result;
+
+        setup(void_result, hkey);
+
+        return void_result.is_status_safe();
     }
 
     WindowsRegistry& WindowsRegistry::hkcu()
@@ -38,7 +51,8 @@ namespace QLogicaeCore
 
     bool WindowsRegistry::set_sub_and_name_keys_via_utf16(
         const std::wstring_view sub_key,
-        const std::wstring_view name_key)
+        const std::wstring_view name_key
+    )
     {
         _sub_key.assign(sub_key);
         _name_key.assign(name_key);
@@ -48,7 +62,8 @@ namespace QLogicaeCore
 
     bool WindowsRegistry::set_sub_and_name_keys_via_utf8(
         const std::string_view sub_key,
-        const std::string_view name_key)
+        const std::string_view name_key
+    )
     {
         return set_sub_and_name_keys_via_utf16(
             ENCODER.from_utf8_to_utf16(sub_key),
@@ -58,7 +73,8 @@ namespace QLogicaeCore
 
     std::optional<std::wstring> WindowsRegistry::get_value_via_utf16(
         std::wstring_view sub_key,
-        std::wstring_view name_key)
+        std::wstring_view name_key
+    )
     {
         sub_key = (sub_key.empty()) ? _sub_key : sub_key;
         name_key = (name_key.empty()) ? _name_key : name_key;
@@ -272,12 +288,16 @@ namespace QLogicaeCore
         return utf8_result;
     }
 
+
+
     void WindowsRegistry::setup(
         Result<void>& result,
         const HKEY hkey
     )
     {
         _root_key = hkey;
+        _sub_key.assign(UTILITIES.DEFAULT_SUB_KEY);
+        _name_key.assign(UTILITIES.DEFAULT_NAME_KEY);
 
         result.set_to_good_status_without_value();
     }
@@ -450,4 +470,3 @@ namespace QLogicaeCore
         result.set_to_good_status_without_value();
     }
 }
-

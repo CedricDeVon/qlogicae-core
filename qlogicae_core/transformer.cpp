@@ -67,8 +67,41 @@ namespace QLogicaeCore
 
     std::string Transformer::to_log_format(
         const std::string& text,
-        const LogLevel& level,
-        const size_t& output_size)
+        const LogLevel& log_level,
+        const TimeFormat& time_format,
+        const size_t& output_size        
+    )
+    {
+        try
+        {
+            std::string result;
+            result.reserve(output_size);
+
+            result =
+                "[" +
+                TIME.now(time_format) +
+                "] [" +
+                get_log_level_string(log_level) +
+                "]\t" +
+                text +
+                "\n";
+
+            return result;
+        }
+        catch (const std::exception& exception)
+        {
+            throw std::runtime_error(
+                std::string("Exception at Transformer::to_log_format(): ") +
+                exception.what()
+            );
+        }
+    }
+
+    std::string Transformer::to_log_format(
+        const std::string& text,
+        const LogLevel& log_level,
+        const size_t& output_size
+    )
     {
         try
         {
@@ -79,7 +112,7 @@ namespace QLogicaeCore
                 "[" +
                 TIME.now(TimeFormat::FULL_TIMESTAMP) +
                 "] [" +
-                get_log_level_string(level) +
+                get_log_level_string(log_level) +
                 "]\t" +
                 text +
                 "\n";
@@ -210,39 +243,39 @@ namespace QLogicaeCore
         {
             case LogLevel::ALL:
             {
-                result.set_to_good_status_with_value("");
+                return result.set_to_good_status_with_value("");
             }
             case LogLevel::INFO:
             {
-                result.set_to_good_status_with_value("");
+                return result.set_to_good_status_with_value("");
             }
             case LogLevel::DEBUG:
             {
-                result.set_to_good_status_with_value("\033[94m");
+                return result.set_to_good_status_with_value("\033[94m");
             }
             case LogLevel::WARNING:
             {
-                result.set_to_good_status_with_value("\033[93m");
+                return result.set_to_good_status_with_value("\033[93m");
             }
             case LogLevel::EXCEPTION:
             {
-                result.set_to_good_status_with_value("\033[91m");
+                return result.set_to_good_status_with_value("\033[91m");
             }
             case LogLevel::CRITICAL:
             {
-                result.set_to_good_status_with_value("\033[95m");
+                return result.set_to_good_status_with_value("\033[95m");
             }
             case LogLevel::SUCCESS:
             {
-                result.set_to_good_status_with_value("\033[92m");
+                return result.set_to_good_status_with_value("\033[92m");
             }
             case LogLevel::HIGHLIGHTED_INFO:
             {
-                result.set_to_good_status_with_value("\033[94m");
+                return result.set_to_good_status_with_value("\033[94m");
             }
             default:
             {
-                result.set_to_good_status_with_value("");
+                return result.set_to_good_status_with_value("");
             }
         }
     }

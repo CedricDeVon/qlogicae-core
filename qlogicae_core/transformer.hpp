@@ -5,6 +5,7 @@
 #include "result_status.hpp"
 #include "cli_io.hpp"
 #include "log_level.hpp"
+#include "time_format.hpp"
 
 namespace QLogicaeCore
 {
@@ -28,6 +29,13 @@ namespace QLogicaeCore
             const std::string& delimeters
         );
         
+        std::string to_log_format(
+            const std::string& text = "",
+            const LogLevel& log_level = LogLevel::INFO,
+            const TimeFormat& time_format = TimeFormat::FULL_TIMESTAMP,
+            const size_t& length = 256
+        );
+
         std::string to_log_format(
             const std::string& text = "",
             const LogLevel& log_level = LogLevel::INFO,

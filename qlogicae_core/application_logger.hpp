@@ -1,6 +1,8 @@
 #pragma once
 
 #include "result.hpp"
+#include "logger.hpp"
+#include "application_logger.hpp"
 #include "abstract_application.hpp"
 
 namespace QLogicaeCore
@@ -9,16 +11,22 @@ namespace QLogicaeCore
         public AbstractApplication
     {
     public:
-        bool setup();
-
-        void setup(
-            Result<void>& result
+        bool setup(
+            const LoggerConfigurations& logger_configurations
         );
 
-        std::future<bool> setup_async();
+        void setup(
+            Result<void>& result,
+            const LoggerConfigurations& logger_configurations
+        );
+
+        std::future<bool> setup_async(
+            const LoggerConfigurations& logger_configurations
+        );
 
         void setup_async(
-            Result<std::future<void>>& result
+            Result<std::future<void>>& result,
+            const LoggerConfigurations& logger_configurations
         );
 
         static ApplicationLogger& get_instance();

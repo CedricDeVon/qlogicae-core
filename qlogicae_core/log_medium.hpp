@@ -11,6 +11,8 @@ namespace QLogicaeCore
 
         FILE,
 
-        CONSOLE
+        CONSOLE,
+
+        NONE
     };
 }

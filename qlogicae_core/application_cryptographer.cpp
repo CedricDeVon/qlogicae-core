@@ -28,10 +28,15 @@ namespace QLogicaeCore
         Result<void>& result
     )
     {
+        if (_is_enabled)
+        {
+            return result.set_to_bad_status_without_value();
+        }
+
         AES256_CIPHER_CRYPTOGRAPHER.setup(
             result
         );
-        if (result.is_status_safe())
+        if (result.is_status_unsafe())
         {
             return result.set_to_bad_status_without_value();
         }
@@ -39,7 +44,7 @@ namespace QLogicaeCore
         AES256_SIGNATURE_CRYPTOGRAPHER.setup(
             result
         );
-        if (result.is_status_safe())
+        if (result.is_status_unsafe())
         {
             return result.set_to_bad_status_without_value();
         }
@@ -47,7 +52,7 @@ namespace QLogicaeCore
         ARGON2ID_HASH_CRYPTOGRAPHER.setup(
             result
         );
-        if (result.is_status_safe())
+        if (result.is_status_unsafe())
         {
             return result.set_to_bad_status_without_value();
         }
@@ -55,7 +60,7 @@ namespace QLogicaeCore
         BCRYPT_HASH_CRYPTOGRAPHER.setup(
             result
         );
-        if (result.is_status_safe())
+        if (result.is_status_unsafe())
         {
             return result.set_to_bad_status_without_value();
         }
@@ -63,7 +68,7 @@ namespace QLogicaeCore
         SHA256_HASH_CRYPTOGRAPHER.setup(
             result
         );
-        if (result.is_status_safe())
+        if (result.is_status_unsafe())
         {
             return result.set_to_bad_status_without_value();
         }
@@ -71,7 +76,7 @@ namespace QLogicaeCore
         XCHACHA20_POLY1305_CIPHER_CRYPTOGRAPHER.setup(
             result
         );
-        if (result.is_status_safe())
+        if (result.is_status_unsafe())
         {
             return result.set_to_bad_status_without_value();
         }
@@ -79,7 +84,7 @@ namespace QLogicaeCore
         JSONWEBTOKEN_SIGNATURE_CRYPTOGRAPHER.setup(
             result
         );
-        if (result.is_status_safe())
+        if (result.is_status_unsafe())
         {
             return result.set_to_bad_status_without_value();
         }

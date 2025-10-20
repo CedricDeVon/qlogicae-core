@@ -123,7 +123,7 @@ namespace QLogicaeCore
 		);
 
 		void print_async(
-			Result< std::future<void>>& result,
+			Result<std::future<void>>& result,
 			const std::string& text = ""
 		);
 

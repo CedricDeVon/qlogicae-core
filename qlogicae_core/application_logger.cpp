@@ -15,45 +15,75 @@ namespace QLogicaeCore
 
     }
 
-    bool ApplicationLogger::setup()
+    bool ApplicationLogger::setup(
+        const LoggerConfigurations& logger_configurations
+    )
     {
-        set_is_enabled(true);
+        Result<void> result;
 
-        return true;
+        setup(
+            result,
+            logger_configurations
+        );
+
+        return result.is_status_safe();
     }
 
     void ApplicationLogger::setup(
-        Result<void>& result
+        Result<void>& result,
+        const LoggerConfigurations& logger_configurations
     )
     {
+        if (_is_enabled)
+        {
+            return result.set_to_bad_status_without_value();
+        }
+
+        LOGGER.setup(
+            result,
+            logger_configurations
+        );
+        if (result.is_status_unsafe())
+        {
+            return result.set_to_bad_status_without_value();
+        }
+
         set_is_enabled(true);
 
         result.set_to_good_status_without_value();
     }
 
-    std::future<bool> ApplicationLogger::setup_async()
+    std::future<bool> ApplicationLogger::setup_async(
+        const LoggerConfigurations& logger_configurations
+    )
     {
         return std::async(
             std::launch::async,
-            [this]() -> bool
+            [this, logger_configurations]() -> bool
             {
-                set_is_enabled(true);
-
-                return true;
+                return setup(
+                    logger_configurations
+                );
             }
         );
     }
 
     void ApplicationLogger::setup_async(
-        Result<std::future<void>>& result
+        Result<std::future<void>>& result,
+        const LoggerConfigurations& logger_configurations
     )
     {
         result.set_to_good_status_with_value(
             std::async(
                 std::launch::async,
-                [this]() -> void
+                [this, logger_configurations]() -> void
                 {
-                    set_is_enabled(true);
+                    Result<void> result;
+
+                    setup(
+                        result,
+                        logger_configurations
+                    );
                 }
             )
         );

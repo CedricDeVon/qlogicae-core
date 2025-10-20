@@ -1,14 +1,28 @@
 #pragma once
 
+#include "time.hpp"
 #include "result.hpp"
-#include "utilities.hpp"
 #include "cli_io.hpp"
+#include "utilities.hpp"
 #include "log_medium.hpp"
+#include "time_format.hpp"
 #include "transformer.hpp"
 #include "text_file_io.hpp"
 
 namespace QLogicaeCore
 {
+	struct LoggerConfigurations
+	{
+		std::string name = "";
+		LogMedium log_medium = LogMedium::CONSOLE;
+		TimeFormat log_format = TimeFormat::FULL_TIMESTAMP;
+		bool is_simplified = false;
+		std::vector<std::string> output_paths = {};
+		bool is_log_file_fragmentation_enabled = false;
+		std::string log_file_fragmentation_output_folder_path = "";
+		TimeFormat log_file_fragmentation_format = TimeFormat::DATE_DMY_SLASHED;
+	};
+
 	class Logger
 	{
 	public:
@@ -17,7 +31,7 @@ namespace QLogicaeCore
 		~Logger() = default;
 		
 		Logger(
-			const bool is_simplified
+			const bool& is_simplified
 		);
 		
 		Logger(
@@ -40,7 +54,11 @@ namespace QLogicaeCore
 			const std::string& name,
 			const LogMedium& medium = LogMedium::CONSOLE,
 			const std::vector<std::string>& output_paths = {},
-			const bool is_simplified = false
+			const bool& is_simplified = false
+		);
+
+		Logger(
+			const LoggerConfigurations& configurations
 		);
 
 		bool setup();
@@ -62,7 +80,7 @@ namespace QLogicaeCore
 			const std::string& name,
 			const LogMedium& medium = LogMedium::CONSOLE,
 			const std::vector<std::string>& output_paths = {},
-			const bool is_simplified = false
+			const bool& is_simplified = false
 		);
 
 		void setup(
@@ -70,7 +88,16 @@ namespace QLogicaeCore
 			const std::string& name,
 			const LogMedium& medium = LogMedium::CONSOLE,
 			const std::vector<std::string>& output_paths = {},
-			const bool is_simplified = false
+			const bool& is_simplified = false
+		);
+
+		bool setup(
+			const LoggerConfigurations& configurations
+		);
+
+		void setup(
+			Result<void>& result,
+			const LoggerConfigurations& configurations
 		);
 
 		LogMedium get_medium();
@@ -88,13 +115,13 @@ namespace QLogicaeCore
 		void log(
 			const std::string& message,
 			const LogLevel& log_level = LogLevel::INFO,
-			const bool is_simplified = false
+			const bool& is_simplified = false
 		);
 
 		std::future<void> log_async(
 			const std::string& message,
 			const LogLevel& log_level = LogLevel::INFO,
-			const bool is_simplified = false
+			const bool& is_simplified = false
 		);
 
 		void get_medium(
@@ -122,25 +149,35 @@ namespace QLogicaeCore
 			Result<void>& result,
 			const std::string& message,
 			const LogLevel& log_level = LogLevel::INFO,
-			const bool is_simplified = false
+			const bool& is_simplified = false
 		);
 
 		void log_async(
 			Result<std::future<void>>& result,
 			const std::string& message,
 			const LogLevel& log_level = LogLevel::INFO,
-			const bool is_simplified = false
+			const bool& is_simplified = false
 		);
 
 	protected:
 		TextFileIO _log_file_io;
 
-		LogMedium _medium;
+		LogMedium _log_medium;
+
+		TimeFormat _log_format;
+
+		TimeFormat _log_file_fragmentation_format;
+
+		std::string _log_file_fragmentation_output_folder;
 		
 		std::string _name;
 		
 		bool _is_simplified;
+
+		bool _is_log_file_fragmentation_enabled;
 		
+		std::string _log_file_fragmentation_output_folder_path;
+
 		mutable std::shared_mutex _mutex;
 
 		std::vector<std::string> _output_paths;

@@ -55,7 +55,18 @@ namespace QLogicaeCore
         }
 
         QLOGICAE_APPLICATION_LOGGER.setup(
-            void_result
+            void_result,
+            LoggerConfigurations
+            {
+                .name = QLOGICAE_APPLICATION_UTILITIES.CONFIGURATIONS_ENVIRONMENT_LOG_NAME,
+                .log_medium = QLOGICAE_APPLICATION_UTILITIES.CONFIGURATIONS_ENVIRONMENT_LOG_MEDIUM,
+                .log_format = QLOGICAE_APPLICATION_UTILITIES.CONFIGURATIONS_ENVIRONMENT_LOG_FORMAT,
+                .is_simplified = QLOGICAE_APPLICATION_UTILITIES.CONFIGURATIONS_ENVIRONMENT_LOG_IS_SIMPLIFIED,
+                .output_paths = QLOGICAE_APPLICATION_UTILITIES.CONFIGURATIONS_ENVIRONMENT_LOG_FILE_OUTPUT_PATHS,
+                .is_log_file_fragmentation_enabled = QLOGICAE_APPLICATION_UTILITIES.CONFIGURATIONS_ENVIRONMENT_LOG_FILE_IS_FRAGMENTATION_ENABLED,
+                .log_file_fragmentation_output_folder_path = QLOGICAE_APPLICATION_UTILITIES.CONFIGURATIONS_ENVIRONMENT_LOG_FILE_FRAGMENTATION_OUTPUT_FOLDER_PATH,
+                .log_file_fragmentation_format = QLOGICAE_APPLICATION_UTILITIES.CONFIGURATIONS_ENVIRONMENT_LOG_FILE_FRAGMENTATION_FORMAT
+            }
         );
         if (void_result.is_status_unsafe())
         {

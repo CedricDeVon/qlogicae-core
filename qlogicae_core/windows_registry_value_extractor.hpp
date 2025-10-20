@@ -42,23 +42,31 @@ namespace QLogicaeCore
             windows_registry_value_extractor
         ) = delete;
 
+        bool setup(
+            const std::string sub_key,
+            const std::string name_key
+        );
+
+        bool setup(
+            const std::wstring sub_key,
+            const std::wstring name_key
+        );
+
+        std::future<bool> setup_async(
+            const std::string sub_key,
+            const std::string name_key
+        );
+
+        std::future<bool> setup_async(
+            const std::wstring sub_key,
+            const std::wstring name_key
+        );
+
         std::optional<std::string> get_value();
         
         std::optional<std::string> get_sub_key();
         
         std::optional<std::string> get_name_key();
-
-        void get_value(
-            Result<std::string>& result
-        );
-
-        void get_sub_key(
-            Result<std::string>& result
-        );
-
-        void get_name_key(
-            Result<std::string>& result
-        );
 
         void setup(
             Result<void>& result,
@@ -70,6 +78,30 @@ namespace QLogicaeCore
             Result<void>& result,
             const std::wstring sub_key,
             const std::wstring name_key
+        );
+
+        void setup(
+            Result<std::future<void>>& result,
+            const std::string sub_key,
+            const std::string name_key
+        );
+
+        void setup(
+            Result<std::future<void>>& result,
+            const std::wstring sub_key,
+            const std::wstring name_key
+        );
+
+        void get_value(
+            Result<std::string>& result
+        );
+
+        void get_sub_key(
+            Result<std::string>& result
+        );
+
+        void get_name_key(
+            Result<std::string>& result
         );
 
     protected:
