@@ -34,23 +34,35 @@ namespace QLogicaeCore
         const LoggerConfigurations& logger_configurations
     )
     {
-        if (_is_enabled)
+        try
         {
-            return result.set_to_bad_status_without_value();
-        }
+            if (_is_enabled)
+            {
+                return result.set_to_bad_status_without_value(
+                    "Exception at ApplicationLogger::setup() - Can only be called once"
+                );
+            }
 
-        LOGGER.setup(
-            result,
-            logger_configurations
-        );
-        if (result.is_status_unsafe())
+            LOGGER.setup(
+                result,
+                logger_configurations
+            );
+            if (result.is_status_unsafe())
+            {
+                return result.set_to_bad_status_without_value();
+            }
+
+            set_is_enabled(true);
+
+            result.set_to_good_status_without_value();
+        }
+        catch (const std::exception& exception)
         {
-            return result.set_to_bad_status_without_value();
-        }
-
-        set_is_enabled(true);
-
-        result.set_to_good_status_without_value();
+            result.set_to_bad_status_without_value(
+                std::string("Exception at ApplicationLogger::setup() - ") +
+                exception.what()
+            );
+        }        
     }
 
     std::future<bool> ApplicationLogger::setup_async(

@@ -1,8 +1,8 @@
 #include "pch.hpp"
 
-#include "application_startup_inputs.hpp"
+#include "logger_configurations.hpp"
 
 namespace QLogicaeCore
 {
-
+	
 }

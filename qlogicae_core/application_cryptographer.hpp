@@ -60,3 +60,4 @@ namespace QLogicaeCore
     inline static ApplicationCryptographer& QLOGICAE_APPLICATION_CRYPTOGRAPHER =
         ApplicationCryptographer::get_instance();    
 }
+

@@ -27,7 +27,8 @@ namespace QLogicaeCore
     }
 
 	std::string BcryptHashCryptographer::transform(
-		const std::string& va)
+		const std::string& va
+	)
 	{
 		try
 		{
@@ -53,7 +54,9 @@ namespace QLogicaeCore
 	}
 
 	bool BcryptHashCryptographer::reverse(
-		const std::string& va, const std::string& vb)
+		const std::string& va,
+		const std::string& vb
+	)
 	{
 		try
 		{
@@ -75,7 +78,8 @@ namespace QLogicaeCore
 
 	std::future<bool> BcryptHashCryptographer::reverse_async(
 		const std::string& va,
-		const std::string& vb)
+		const std::string& vb
+	)
 	{
 		return std::async(std::launch::async, [this, va, vb]() -> bool
 			{

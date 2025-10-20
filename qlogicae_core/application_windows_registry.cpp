@@ -28,26 +28,38 @@ namespace QLogicaeCore
         Result<void>& result
     )
     {
-        if (_is_enabled)
+        try
         {
-            return result.set_to_bad_status_without_value();
-        }
+            if (_is_enabled)
+            {
+                return result.set_to_bad_status_without_value(
+                    "Exception at ApplicationWindowsRegistry::setup() - Can only be called once"
+                );
+            }
 
-        WindowsRegistry::hkcu().setup(result);
-        if (result.is_status_unsafe())
+            WindowsRegistry::hkcu().setup(result);
+            if (result.is_status_unsafe())
+            {
+                return;
+            }
+
+            WindowsRegistry::hklm().setup(result);
+            if (result.is_status_unsafe())
+            {
+                return;
+            }
+
+            set_is_enabled(true);
+
+            result.set_to_good_status_without_value();
+        }
+        catch (const std::exception& exception)
         {
-            return result.set_to_bad_status_without_value();
+            result.set_to_bad_status_without_value(
+                std::string("Exception at ApplicationWindowsRegistry::setup() - ") +
+                exception.what()
+            );
         }
-
-        WindowsRegistry::hklm().setup(result);
-        if (result.is_status_unsafe())
-        {
-            return result.set_to_bad_status_without_value();
-        }
-
-        set_is_enabled(true);
-
-        result.set_to_good_status_without_value();
     }
 
     std::future<bool> ApplicationWindowsRegistry::setup_async()
@@ -96,3 +108,4 @@ namespace QLogicaeCore
         );
     }
 }
+

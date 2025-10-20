@@ -28,70 +28,92 @@ namespace QLogicaeCore
         Result<void>& result
     )
     {
-        Result<void> void_result;
-
-        QLOGICAE_APPLICATION_UTILITIES.setup(
-            void_result
-        );
-        if (void_result.is_status_unsafe())
+        try
         {
-            return;
-        }
-
-        QLOGICAE_APPLICATION_CACHE.setup(
-            void_result
-        );
-        if (void_result.is_status_unsafe())
-        {
-            return;
-        }
-
-        QLOGICAE_APPLICATION_FILE_IO.setup(
-            void_result
-        );
-        if (void_result.is_status_unsafe())
-        {
-            return;
-        }
-
-        QLOGICAE_APPLICATION_LOGGER.setup(
-            void_result,
-            LoggerConfigurations
+            QLOGICAE_APPLICATION_UTILITIES.setup(
+                result
+            );
+            if (result.is_status_unsafe())
             {
-                .name = QLOGICAE_APPLICATION_UTILITIES.CONFIGURATIONS_ENVIRONMENT_LOG_NAME,
-                .log_medium = QLOGICAE_APPLICATION_UTILITIES.CONFIGURATIONS_ENVIRONMENT_LOG_MEDIUM,
-                .log_format = QLOGICAE_APPLICATION_UTILITIES.CONFIGURATIONS_ENVIRONMENT_LOG_FORMAT,
-                .is_simplified = QLOGICAE_APPLICATION_UTILITIES.CONFIGURATIONS_ENVIRONMENT_LOG_IS_SIMPLIFIED,
-                .output_paths = QLOGICAE_APPLICATION_UTILITIES.CONFIGURATIONS_ENVIRONMENT_LOG_FILE_OUTPUT_PATHS,
-                .is_log_file_fragmentation_enabled = QLOGICAE_APPLICATION_UTILITIES.CONFIGURATIONS_ENVIRONMENT_LOG_FILE_IS_FRAGMENTATION_ENABLED,
-                .log_file_fragmentation_output_folder_path = QLOGICAE_APPLICATION_UTILITIES.CONFIGURATIONS_ENVIRONMENT_LOG_FILE_FRAGMENTATION_OUTPUT_FOLDER_PATH,
-                .log_file_fragmentation_format = QLOGICAE_APPLICATION_UTILITIES.CONFIGURATIONS_ENVIRONMENT_LOG_FILE_FRAGMENTATION_FORMAT
+                return;
             }
-        );
-        if (void_result.is_status_unsafe())
-        {
-            return;
+
+            QLOGICAE_APPLICATION_FILE_IO.setup(
+                result
+            );
+            if (result.is_status_unsafe())
+            {
+                return;
+            }
+
+            QLOGICAE_APPLICATION_LOGGER.setup(
+                result,
+                {
+                    .name = QLOGICAE_APPLICATION_UTILITIES
+                        .CONFIGURATIONS_ENVIRONMENT_LOG_NAME,
+
+                    .log_medium = QLOGICAE_APPLICATION_UTILITIES
+                        .CONFIGURATIONS_ENVIRONMENT_LOG_MEDIUM,
+
+                    .log_format = QLOGICAE_APPLICATION_UTILITIES
+                        .CONFIGURATIONS_ENVIRONMENT_LOG_FORMAT,
+
+                    .is_simplified = QLOGICAE_APPLICATION_UTILITIES
+                        .CONFIGURATIONS_ENVIRONMENT_LOG_IS_SIMPLIFIED,
+
+                    .output_paths = QLOGICAE_APPLICATION_UTILITIES
+                        .CONFIGURATIONS_ENVIRONMENT_LOG_FILE_OUTPUT_PATHS,
+
+                    .is_log_file_fragmentation_enabled = QLOGICAE_APPLICATION_UTILITIES
+                        .CONFIGURATIONS_ENVIRONMENT_LOG_FILE_IS_FRAGMENTATION_ENABLED,
+
+                    .log_file_fragmentation_output_folder_path = QLOGICAE_APPLICATION_UTILITIES
+                        .CONFIGURATIONS_ENVIRONMENT_LOG_FILE_FRAGMENTATION_OUTPUT_FOLDER_PATH,
+
+                    .log_file_fragmentation_format = QLOGICAE_APPLICATION_UTILITIES
+                        .CONFIGURATIONS_ENVIRONMENT_LOG_FILE_FRAGMENTATION_FORMAT
+                }
+            );
+            if (result.is_status_unsafe())
+            {
+                return;
+            }
+
+            QLOGICAE_APPLICATION_WINDOWS_REGISTRY.setup(
+                result
+            );
+            if (result.is_status_unsafe())
+            {
+                return;
+            }
+
+            QLOGICAE_APPLICATION_CRYPTOGRAPHER.setup(
+                result
+            );
+            if (result.is_status_unsafe())
+            {
+                return;
+            }
+
+            QLOGICAE_APPLICATION_CACHE.setup(
+                result
+            );
+            if (result.is_status_unsafe())
+            {
+                return;
+            }
+
+            set_is_enabled(true);
+
+            result.set_to_good_status_without_value();
         }
-
-        QLOGICAE_APPLICATION_CRYPTOGRAPHER.setup(
-            void_result
-        );
-        if (void_result.is_status_unsafe())
+        catch (const std::exception& exception)
         {
-            return;
+            result.set_to_bad_status_without_value(
+                std::string("Exception at Application::setup() - ") +
+                exception.what()
+            );
         }
-
-        QLOGICAE_APPLICATION_WINDOWS_REGISTRY.setup(
-            void_result
-        );
-        if (void_result.is_status_unsafe())
-        {
-            return;
-        }
-
-        set_is_enabled(true);
-
-        result.set_to_good_status_without_value();
     }
 
     std::future<bool> Application::setup_async()

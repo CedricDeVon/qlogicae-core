@@ -28,9 +28,26 @@ namespace QLogicaeCore
         Result<void>& result
     )
     {
-        set_is_enabled(true);
+        try
+        {
+            if (_is_enabled)
+            {
+                return result.set_to_bad_status_without_value(
+                    "Exception at ApplicationFileIO::setup() - Can only be called once"
+                );
+            }
 
-        result.set_to_good_status_without_value();
+            set_is_enabled(true);
+
+            result.set_to_good_status_without_value();
+        }
+        catch (const std::exception& exception)
+        {
+            result.set_to_bad_status_without_value(
+                std::string("Exception at ApplicationFileIO::setup() - ") +
+                exception.what()
+            );
+        }
     }
 
     std::future<bool> ApplicationFileIO::setup_async()

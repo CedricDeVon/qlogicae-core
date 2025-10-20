@@ -17,18 +17,37 @@ namespace QLogicaeCore
 
     bool ApplicationCache::setup()
     {
-        set_is_enabled(true);
+        Result<void> void_result;
 
-        return true;
+        setup(void_result);
+
+        return void_result.is_status_safe();
     }
 
     void ApplicationCache::setup(
         Result<void>& result
     )
     {
-        set_is_enabled(true);
+        try
+        {
+            if (_is_enabled)
+            {
+                return result.set_to_bad_status_without_value(
+                    "Exception at ApplicationCache::setup() - Can only be called once"
+                );
+            }
 
-        result.set_to_good_status_without_value();
+            set_is_enabled(true);
+
+            result.set_to_good_status_without_value();
+        }
+        catch (const std::exception& exception)
+        {
+            result.set_to_bad_status_without_value(
+                std::string("Exception at ApplicationCache::setup() - ") +
+                exception.what()
+            );
+        }
     }
 
     std::future<bool> ApplicationCache::setup_async()
@@ -37,9 +56,7 @@ namespace QLogicaeCore
             std::launch::async,
             [this]() -> bool
             {
-                set_is_enabled(true);
-
-                return true;
+                return setup();
             }
         );
     }
@@ -53,7 +70,9 @@ namespace QLogicaeCore
                 std::launch::async,
                 [this]() -> void
                 {
-                    set_is_enabled(true);
+                    Result<void> void_result;
+
+                    setup(void_result);
                 }
             )
         );

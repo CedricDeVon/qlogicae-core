@@ -176,10 +176,10 @@ namespace QLogicaeCore
                 std::launch::async,
                 [this, sub_key, name_key]() -> void
                 {
-                    Result<void> result;
+                    Result<void> void_result;
 
                     setup(
-                        result,
+                        void_result,
                         sub_key,
                         name_key
                     );

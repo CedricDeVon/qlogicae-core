@@ -19,14 +19,17 @@ namespace QLogicaeCore
         return result.is_status_safe();
     }
 
-    void AES256SignatureCryptographer::setup(Result<void>& result)
+    void AES256SignatureCryptographer::setup(
+        Result<void>& result
+    )
     {
         result.set_to_good_status_without_value();
     }
 
 	std::string AES256SignatureCryptographer::reverse(
 		const std::string& va,
-		const std::string& vb)
+		const std::string& vb
+    )
 	{
 		return reverse(
 			va,
@@ -37,7 +40,8 @@ namespace QLogicaeCore
 	std::string AES256SignatureCryptographer::transform(
 		const std::string& va,
 		const std::string& vb,
-		const std::string& vc)
+		const std::string& vc
+    )
 	{
 		return transform(
 			va,
@@ -48,7 +52,8 @@ namespace QLogicaeCore
 
 	std::future<std::string> AES256SignatureCryptographer::reverse_async(
 		const std::string& va,
-		const std::string& vb)
+		const std::string& vb
+    )
 	{
 		return std::async(std::launch::async,
 			[this, va, vb]() -> std::string
@@ -60,7 +65,8 @@ namespace QLogicaeCore
 	std::future<std::string> AES256SignatureCryptographer::transform_async(
 		const std::string& va,
 		const std::string& vb,
-		const std::string& vc)
+		const std::string& vc
+    )
 	{
 		return std::async(std::launch::async,
 			[this, va, vb, vc]() -> std::string
@@ -72,7 +78,8 @@ namespace QLogicaeCore
 	std::string AES256SignatureCryptographer::transform(
 		const std::string& va,
 		unsigned char* vb,
-		unsigned char* vc)
+		unsigned char* vc
+    )
 	{
 		try
 		{
@@ -107,7 +114,8 @@ namespace QLogicaeCore
 
 	std::string AES256SignatureCryptographer::reverse(
 		const std::string& va,
-		unsigned char* vb)
+		unsigned char* vb
+    )
 	{
 		try
 		{
@@ -142,7 +150,8 @@ namespace QLogicaeCore
 
 	std::future<std::string> AES256SignatureCryptographer::reverse_async(
 		const std::string& va,
-		unsigned char* vb)
+		unsigned char* vb
+    )
 	{
 		return std::async(std::launch::async, [this, va, vb]() -> std::string
 		{
@@ -153,7 +162,8 @@ namespace QLogicaeCore
 	std::future<std::string> AES256SignatureCryptographer::transform_async(
 		const std::string& va,
 		unsigned char* vb,
-		unsigned char* vc)
+		unsigned char* vc
+    )
 	{
 		return std::async(std::launch::async, [this, va, vb, vc]() -> std::string
 		{

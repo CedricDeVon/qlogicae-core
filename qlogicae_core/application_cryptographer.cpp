@@ -28,70 +28,82 @@ namespace QLogicaeCore
         Result<void>& result
     )
     {
-        if (_is_enabled)
+        try
         {
-            return result.set_to_bad_status_without_value();
-        }
+            if (_is_enabled)
+            {
+                return result.set_to_bad_status_without_value(
+                    "Exception at ApplicationCryptographer::setup() - Can only be called once"
+                );
+            }
 
-        AES256_CIPHER_CRYPTOGRAPHER.setup(
-            result
-        );
-        if (result.is_status_unsafe())
+            AES256_CIPHER_CRYPTOGRAPHER.setup(
+                result
+            );
+            if (result.is_status_unsafe())
+            {
+                return;
+            }
+
+            AES256_SIGNATURE_CRYPTOGRAPHER.setup(
+                result
+            );
+            if (result.is_status_unsafe())
+            {
+                return;
+            }
+
+            ARGON2ID_HASH_CRYPTOGRAPHER.setup(
+                result
+            );
+            if (result.is_status_unsafe())
+            {
+                return;
+            }
+
+            BCRYPT_HASH_CRYPTOGRAPHER.setup(
+                result
+            );
+            if (result.is_status_unsafe())
+            {
+                return;
+            }
+
+            SHA256_HASH_CRYPTOGRAPHER.setup(
+                result
+            );
+            if (result.is_status_unsafe())
+            {
+                return;
+            }
+
+            XCHACHA20_POLY1305_CIPHER_CRYPTOGRAPHER.setup(
+                result
+            );
+            if (result.is_status_unsafe())
+            {
+                return;
+            }
+
+            JSONWEBTOKEN_SIGNATURE_CRYPTOGRAPHER.setup(
+                result
+            );
+            if (result.is_status_unsafe())
+            {
+                return;
+            }
+
+            set_is_enabled(true);
+
+            result.set_to_good_status_without_value();
+        }
+        catch (const std::exception& exception)
         {
-            return result.set_to_bad_status_without_value();
+            result.set_to_bad_status_without_value(
+                std::string("Exception at ApplicationCryptographer::setup() - ") +
+                exception.what()
+            );
         }
-
-        AES256_SIGNATURE_CRYPTOGRAPHER.setup(
-            result
-        );
-        if (result.is_status_unsafe())
-        {
-            return result.set_to_bad_status_without_value();
-        }
-
-        ARGON2ID_HASH_CRYPTOGRAPHER.setup(
-            result
-        );
-        if (result.is_status_unsafe())
-        {
-            return result.set_to_bad_status_without_value();
-        }
-
-        BCRYPT_HASH_CRYPTOGRAPHER.setup(
-            result
-        );
-        if (result.is_status_unsafe())
-        {
-            return result.set_to_bad_status_without_value();
-        }
-
-        SHA256_HASH_CRYPTOGRAPHER.setup(
-            result
-        );
-        if (result.is_status_unsafe())
-        {
-            return result.set_to_bad_status_without_value();
-        }
-
-        XCHACHA20_POLY1305_CIPHER_CRYPTOGRAPHER.setup(
-            result
-        );
-        if (result.is_status_unsafe())
-        {
-            return result.set_to_bad_status_without_value();
-        }
-
-        JSONWEBTOKEN_SIGNATURE_CRYPTOGRAPHER.setup(
-            result
-        );
-        if (result.is_status_unsafe())
-        {
-            return result.set_to_bad_status_without_value();
-        }
-
-        set_is_enabled(true);
-
-        result.set_to_good_status_without_value();
     }
 
     std::future<bool> ApplicationCryptographer::setup_async()
@@ -140,3 +152,4 @@ namespace QLogicaeCore
         );
     }
 }
+

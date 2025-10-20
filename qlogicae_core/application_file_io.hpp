@@ -59,3 +59,4 @@ namespace QLogicaeCore
     inline static ApplicationFileIO& QLOGICAE_APPLICATION_FILE_IO =
         ApplicationFileIO::get_instance();
 }
+

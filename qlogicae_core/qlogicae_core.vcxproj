@@ -238,6 +238,7 @@
     <ClInclude Include="jsonwebtoken_reverse_input.hpp" />
     <ClInclude Include="jsonwebtoken_reverse_result.hpp" />
     <ClInclude Include="jsonwebtoken_transform_input.hpp" />
+    <ClInclude Include="logger_configurations.hpp" />
     <ClInclude Include="log_level.hpp" />
     <ClInclude Include="log_medium.hpp" />
     <ClInclude Include="network_ping_response.hpp" />
@@ -386,6 +387,7 @@
     <ClCompile Include="groq_cloud_client_api.cpp" />
     <ClCompile Include="jsonwebtoken_cryptographer.cpp" />
     <ClCompile Include="application.cpp" />
+    <ClCompile Include="logger_configurations.cpp" />
     <ClCompile Include="result.cpp" />
     <ClCompile Include="result_status.cpp" />
     <ClCompile Include="sha256_hash_cryptographer.cpp" />

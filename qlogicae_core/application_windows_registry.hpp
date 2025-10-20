@@ -53,3 +53,4 @@ namespace QLogicaeCore
     inline static ApplicationWindowsRegistry& QLOGICAE_APPLICATION_WINDOWS_REGISTRY =
         ApplicationWindowsRegistry::get_instance();
 }
+

@@ -52,4 +52,3 @@ namespace QLogicaeCore
     inline static ApplicationCache& QLOGICAE_APPLICATION_CACHE =
         ApplicationCache::get_instance();
 }
-

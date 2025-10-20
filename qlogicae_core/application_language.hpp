@@ -52,3 +52,4 @@ namespace QLogicaeCore
     inline static ApplicationLanguage& QLOGICAE_APPLICATION_LANGUAGE =
         ApplicationLanguage::get_instance();
 }
+

@@ -62,11 +62,15 @@ namespace QLogicaeCore
         Application::get_instance();
 }
 
+
+
+
+
 /*
 
-        void _get_full_windows_registry_sub_path(
-            Result<std::string>& result
-        );
+    void _get_full_windows_registry_sub_path(
+        Result<std::string>& result
+    );
 
     class Application
     {

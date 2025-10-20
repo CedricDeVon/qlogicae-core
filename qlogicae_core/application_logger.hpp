@@ -60,3 +60,4 @@ namespace QLogicaeCore
     inline static ApplicationLogger& QLOGICAE_APPLICATION_LOGGER =
         ApplicationLogger::get_instance();
 }
+
