@@ -100,6 +100,4 @@ namespace QLogicaeCore
             const std::string& public_key
         );
     };
-
-    static inline JsonWebTokenCryptographer JSONWEBTOKEN_SIGNATURE_CRYPTOGRAPHER;
 }

@@ -4,7 +4,8 @@
 
 namespace QLogicaeCore
 {
-    Utilities::Utilities()
+    Utilities::Utilities() :
+		BOOST_ASIO_POOL(std::thread::hardware_concurrency())
     {
 		FULL_EXECUTABLE_FOLDER_PATH =
 			SYSTEM_ACCESS.get_executable_folder();
@@ -65,12 +66,86 @@ namespace QLogicaeCore
 			"\\" + RELATIVE_LICENSE_FILE_PATH;
     }
 
+
+    bool Utilities::setup()
+    {
+		try
+		{
+			Result<void> void_result;
+
+			setup(void_result);
+
+			return void_result.is_status_safe();
+		}
+		catch (const std::exception& exception)
+		{
+
+		}
+    }
+
+    void Utilities::setup(
+        Result<void>& result
+    )
+    {        
+		result.set_to_good_status_without_value();
+    }
+
+    std::future<bool> Utilities::setup_async()
+    {
+		std::promise<bool> promise;
+		
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, promise = std::move(promise)]() mutable
+			{				
+				promise.set_value(
+					setup()
+				);
+			}
+		);
+
+		return promise.get_future();
+    }
+
+    void Utilities::setup_async(
+        Result<std::future<void>>& result
+    )
+    {
+		std::promise<void> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, promise = std::move(promise)]() mutable
+			{
+				Result<void> void_result;
+
+				setup(void_result);
+
+				promise.set_value();
+			}
+		);
+
+		result.set_to_good_status_with_value(
+			std::move(future)
+		);
+    }
+
     Utilities& Utilities::get_instance()
     {
         static Utilities instance;
 
         return instance;
     }
+
+	void Utilities::get_instance(
+		Result<Utilities*>& result
+	)
+	{
+		static Utilities instance;
+
+		result.set_to_good_status_with_value(
+			&instance
+		);
+	}
 }
-
-

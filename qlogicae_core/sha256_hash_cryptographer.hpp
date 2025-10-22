@@ -81,6 +81,4 @@ namespace QLogicaeCore
             const std::string& key
         );
     };
-
-    static inline SHA256HashCryptographer SHA256_HASH_CRYPTOGRAPHER;
 }

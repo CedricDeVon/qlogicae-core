@@ -283,7 +283,5 @@ namespace QLogicaeCore
 
         std::optional<rapidcsv::Document> _temporary_csv_document_1;
     };
-
-    static inline CsvFileIO CSV_FILE_IO;
 }
 

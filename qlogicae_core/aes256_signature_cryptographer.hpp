@@ -136,6 +136,4 @@ namespace QLogicaeCore
             const std::string& private_key
         );
     };
-
-    static inline AES256SignatureCryptographer AES256_SIGNATURE_CRYPTOGRAPHER;
 }

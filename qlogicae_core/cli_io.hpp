@@ -1,6 +1,9 @@
 #pragma once
 
 #include "result.hpp"
+#include "utilities.hpp"
+
+#include <boost/asio.hpp>
 
 #include <future>
 #include <shared_mutex>
@@ -165,7 +168,8 @@ namespace QLogicaeCore
 
 		mutable std::mutex _mutex;		
     };
-
-	inline static CliIO& CLI_IO = CliIO::get_instance();
+	
+	inline static CliIO& CLI_IO =
+		CliIO::get_instance();
 }
 

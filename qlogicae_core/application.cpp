@@ -29,8 +29,8 @@ namespace QLogicaeCore
     )
     {
         try
-        {
-            QLOGICAE_APPLICATION_UTILITIES.setup(
+        {  
+            QLOGICAE_APPLICATION_FILE_IO.setup(
                 result
             );
             if (result.is_status_unsafe())
@@ -38,7 +38,7 @@ namespace QLogicaeCore
                 return;
             }
 
-            QLOGICAE_APPLICATION_FILE_IO.setup(
+            QLOGICAE_APPLICATION_UTILITIES.setup(
                 result
             );
             if (result.is_status_unsafe())
@@ -71,7 +71,16 @@ namespace QLogicaeCore
                         .CONFIGURATIONS_ENVIRONMENT_LOG_FILE_FRAGMENTATION_OUTPUT_FOLDER_PATH,
 
                     .log_file_fragmentation_format = QLOGICAE_APPLICATION_UTILITIES
-                        .CONFIGURATIONS_ENVIRONMENT_LOG_FILE_FRAGMENTATION_FORMAT
+                        .CONFIGURATIONS_ENVIRONMENT_LOG_FILE_FRAGMENTATION_FORMAT,
+
+                    .is_log_file_collectivization_enabled = QLOGICAE_APPLICATION_UTILITIES
+                        .CONFIGURATIONS_ENVIRONMENT_LOG_FILE_IS_COLLECTIVIZATION_ENABLED,
+
+                    .log_file_collectivization_output_file_name = QLOGICAE_APPLICATION_UTILITIES
+                        .CONFIGURATIONS_ENVIRONMENT_LOG_FILE_COLLECTIVIZATION_FILE_NAME,
+
+                    .log_file_collectivization_output_folder_path = QLOGICAE_APPLICATION_UTILITIES
+                        .CONFIGURATIONS_ENVIRONMENT_LOG_FILE_COLLECTIVIZATION_OUTPUT_FOLDER_PATH,
                 }
             );
             if (result.is_status_unsafe())
@@ -143,6 +152,32 @@ namespace QLogicaeCore
             )
         );
     }
+
+    bool Application::is_qlogicae_project_found()
+    {
+        Result<void> result;
+
+        is_qlogicae_project_found(result);
+
+        return result.is_status_safe();
+    }
+
+    void Application::is_qlogicae_project_found(
+        Result<void>& result
+    )
+    {
+        if (!std::filesystem::exists(
+            UTILITIES.RELATIVE_QLOGICAE_FOLDER_PATH_1
+        ))
+        {
+            return result.set_to_bad_status_without_value(
+                "Exception at Application::is_qlogicae_project_found() - QLogicae based applications must be run ajacent with a 'qlogicae' folder at their root path"
+            );
+        }
+
+        result.set_to_good_status_without_value();
+    }
+
 
     Application& Application::get_instance()
     {

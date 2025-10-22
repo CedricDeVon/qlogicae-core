@@ -79,6 +79,4 @@ namespace QLogicaeCore
             const std::string& key
         );
     };
-
-    static inline BcryptHashCryptographer BCRYPT_HASH_CRYPTOGRAPHER;
 }

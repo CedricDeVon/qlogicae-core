@@ -556,6 +556,4 @@ namespace QLogicaeCore
             rapidjson::Document::AllocatorType&
         );
     };
-
-    static inline JsonFileIO JSON_FILE_IO;
 }

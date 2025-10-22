@@ -8,64 +8,28 @@ namespace QLogicaeCore
     class Encoder
     {
     public:
-        std::string from_utf8_to_hex(
-            const std::string_view& text
-        );
-
-        std::string from_hex_to_utf8(
-            const std::string_view& text
-        );
-
-        std::string from_hex_to_base64(
-            const std::string_view& text
-        );
-
-        std::string from_base64_to_hex(
-            const std::string_view& text
-        );
-
-        std::wstring from_utf8_to_utf16(
-            const std::string_view& text
-        );
-
-        std::string from_utf16_to_utf8(
-            const std::wstring_view& text
-        );
-
-        std::string from_base64_to_utf8(
-            const std::string_view& text
-        );
-
-        std::string from_utf8_to_base64(
-            const std::string_view& text
-        );
-
-        std::string from_bytes_to_hex(
-            const unsigned char* bytes,
-            const size_t& length
-        );
-
-        std::vector<unsigned char> from_hex_to_bytes(
-            const std::string_view& text
-        );
-
-        std::string from_bytes_to_base64(
-            const unsigned char* bytes,
-            const size_t& length
-        );
-
-        std::vector<unsigned char> from_base64_to_bytes(
-            const std::string_view& text
-        );
-
-        static Encoder& get_instance();
+        bool setup();
 
         void setup(
             Result<void>& result
         );
 
+        std::future<bool> setup_async();
+
+        void setup_async(
+            Result<std::future<void>>& result
+        );
+
+        std::string from_utf8_to_hex(
+            const std::string_view& text
+        );
+
         void from_utf8_to_hex(
             Result<std::string>& result,
+            const std::string_view& text
+        );
+
+        std::string from_hex_to_utf8(
             const std::string_view& text
         );
 
@@ -74,8 +38,16 @@ namespace QLogicaeCore
             const std::string_view& text
         );
 
+        std::string from_hex_to_base64(
+            const std::string_view& text
+        );
+
         void from_hex_to_base64(
             Result<std::string>& result,
+            const std::string_view& text
+        );
+
+        std::string from_base64_to_hex(
             const std::string_view& text
         );
 
@@ -84,18 +56,34 @@ namespace QLogicaeCore
             const std::string_view& text
         );
 
+        std::wstring from_utf8_to_utf16(
+            const std::string_view& text
+        );
+
         void from_utf8_to_utf16(
             Result<std::wstring>& result,
             const std::string_view& text
+        );
+
+        std::string from_utf16_to_utf8(
+            const std::wstring_view& text
         );
 
         void from_utf16_to_utf8(
             Result<std::string>& result,
             const std::wstring_view& text
         );
-        
+
+        std::string from_base64_to_utf8(
+            const std::string_view& text
+        );
+
         void from_base64_to_utf8(
             Result<std::string>& result,
+            const std::string_view& text
+        );
+
+        std::string from_utf8_to_base64(
             const std::string_view& text
         );
 
@@ -104,15 +92,29 @@ namespace QLogicaeCore
             const std::string_view& text
         );
 
+        std::string from_bytes_to_hex(
+            const unsigned char* bytes,
+            const size_t& length
+        );
+
         void from_bytes_to_hex(
             Result<std::string>& result,
             const unsigned char* bytes,
             const size_t& length
         );
 
+        std::vector<unsigned char> from_hex_to_bytes(
+            const std::string_view& text
+        );
+
         void from_hex_to_bytes(
             Result<std::vector<unsigned char>>& result,
             const std::string_view& text
+        );
+
+        std::string from_bytes_to_base64(
+            const unsigned char* bytes,
+            const size_t& length
         );
 
         void from_bytes_to_base64(
@@ -121,33 +123,59 @@ namespace QLogicaeCore
             const size_t& length
         );
 
+        std::vector<unsigned char> from_base64_to_bytes(
+            const std::string_view& text
+        );
+
         void from_base64_to_bytes(
             Result<std::vector<unsigned char>>& result,
             const std::string_view& text
         );
 
-        static void get_instance(Result<Encoder*>& result);
+        static Encoder& get_instance();
+
+        static void get_instance(
+            Result<Encoder*>& result
+        );
 
     protected:
         Encoder();
 
         ~Encoder() = default;
 
-        Encoder(const Encoder& encoder) = delete;
+        Encoder(
+            const Encoder& instance
+        ) = delete;
 
-        Encoder(Encoder&& encoder) noexcept = delete;
+        Encoder(
+            Encoder&& instance
+        ) noexcept = delete;
 
-        Encoder& operator = (Encoder&& encoder) = delete;
+        Encoder& operator = (
+            Encoder&& instance
+        ) = delete;
 
-        Encoder& operator = (const Encoder& encoder) = delete;
+        Encoder& operator = (
+            const Encoder& instance
+        ) = delete;
 
-        std::string _to_hex(const std::string_view& text);
+        std::string _to_hex(
+            const std::string_view& text
+        );
 
-        std::string _to_base64(const std::string_view& text);
+        void _to_hex(
+            Result<std::string>& result,
+            const std::string_view& text
+        );
 
-        void _to_hex(Result<std::string>& result, const std::string_view& text);
+        std::string _to_base64(
+            const std::string_view& text
+        );
 
-        void _to_base64(Result<std::string>& result, const std::string_view& text);
+        void _to_base64(
+            Result<std::string>& result,
+            const std::string_view& text
+        );
     };
 
     inline static Encoder& ENCODER = Encoder::get_instance();

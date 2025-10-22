@@ -318,9 +318,7 @@ namespace QLogicaeCore
 	void CliIO::print(Result<void>& result,
 		const std::string& text
 	)
-	{
-		std::scoped_lock lock(_mutex);
-
+	{		
 		fast_io::io::print(fast_io::out(), text);
 	}
 
@@ -369,7 +367,8 @@ namespace QLogicaeCore
 	}
 
 	void CliIO::builtin_scan_async(
-		Result<std::future<std::string>>& result)
+		Result<std::future<std::string>>& result
+	)
 	{
 		result.set_to_good_status_with_value(
 			std::async(std::launch::async,
@@ -388,15 +387,24 @@ namespace QLogicaeCore
 		const std::string& text
 	)
 	{
-		result.set_to_good_status_with_value(
-			std::async(std::launch::async,
-			[this, text]() -> void
+		std::promise<void> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text, promise = std::move(promise)]() mutable
 			{
-				Result<void> result;
+				Result<void> inner_result;
 				
-				print(result, text);				
+				print(inner_result, text);
+		
+				promise.set_value();
 			}
-		));
+		);
+
+		result.set_to_good_status_with_value(
+			std::move(future)
+		);
 	}
 
 	void CliIO::builtin_print_async(

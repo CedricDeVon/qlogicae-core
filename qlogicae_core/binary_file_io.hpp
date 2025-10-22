@@ -168,7 +168,5 @@ namespace QLogicaeCore
 
         std::optional<fast_io::native_file_loader> _read_file;
     };
-
-    static inline BinaryFileIO BINARY_FILE_IO;
 }
 

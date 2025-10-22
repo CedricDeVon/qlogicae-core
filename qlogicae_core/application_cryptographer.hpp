@@ -16,7 +16,21 @@ namespace QLogicaeCore
     class ApplicationCryptographer :
         public AbstractApplication
     {
-    public:                                    
+    public:                      
+        AES256CipherCryptographer AES256_CIPHER_CRYPTOGRAPHER;
+        
+        AES256SignatureCryptographer AES256_SIGNATURE_CRYPTOGRAPHER;
+
+        Argon2idHashCryptographer ARGON2ID_HASH_CRYPTOGRAPHER;
+
+        BcryptHashCryptographer BCRYPT_HASH_CRYPTOGRAPHER;
+
+        SHA256HashCryptographer SHA256_HASH_CRYPTOGRAPHER;
+
+        XChaCha20Poly1305CipherCryptographer XCHACHA20_POLY1305_CIPHER_CRYPTOGRAPHER;
+         
+        JsonWebTokenCryptographer JSONWEBTOKEN_SIGNATURE_CRYPTOGRAPHER;
+
         bool setup();
 
         void setup(

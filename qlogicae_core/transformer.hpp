@@ -2,58 +2,24 @@
 
 #include "time.hpp"
 #include "result.hpp"
-#include "result_status.hpp"
 #include "cli_io.hpp"
 #include "log_level.hpp"
 #include "time_format.hpp"
+#include "result_status.hpp"
 
 namespace QLogicaeCore
 {
     class Transformer
     {
     public:
+        bool setup();
+        
+        void setup(
+            Result<void>& result
+        );
+
         std::string color_type(
             const LogLevel& log_level
-        );
-        
-        std::string to_na_format(
-            const std::string& text = ""
-        );
-        
-        std::string to_none_format(
-            const std::string& text = ""
-        );
-        
-        std::vector<std::string> split(
-            const std::string& text,
-            const std::string& delimeters
-        );
-        
-        std::string to_log_format(
-            const std::string& text = "",
-            const LogLevel& log_level = LogLevel::INFO,
-            const TimeFormat& time_format = TimeFormat::FULL_TIMESTAMP,
-            const size_t& length = 256
-        );
-
-        std::string to_log_format(
-            const std::string& text = "",
-            const LogLevel& log_level = LogLevel::INFO,
-            const size_t& length = 256
-        );
-
-        std::string to_result_message_format(
-            const std::string& text = "",
-            const ResultStatus& result_status = ResultStatus::INFO,
-            const TimeFormat& time_format =
-            TimeFormat::FULL_TIMESTAMP,
-            const size_t& length = 256
-        );
-
-        std::string to_log_level_color_format(
-            const std::string& text = "",
-            const LogLevel& log_level = LogLevel::INFO,
-            const size_t& length = 256
         );
 
         void color_type(
@@ -61,8 +27,16 @@ namespace QLogicaeCore
             const LogLevel& log_level
         );
 
+        std::string to_na_format(
+            const std::string& text = ""
+        );
+
         void to_na_format(
             Result<std::string>& result,
+            const std::string& text = ""
+        );
+
+        std::string to_none_format(
             const std::string& text = ""
         );
 
@@ -71,19 +45,64 @@ namespace QLogicaeCore
             const std::string& text = ""
         );
 
+        std::vector<std::string> split(
+            const std::string& text,
+            const std::string& delimeters
+        );
+
         void split(
             Result<std::vector<std::string>>& result,
             const std::string& text,
             const std::string& delimeters
         );
 
+        std::string to_log_format(
+            const std::string& text,
+            const LogLevel& log_level,
+            const size_t& length = 128
+        );
+
         void to_log_format(
+            Result<std::string>& result,
+            const std::string& text,
+            const LogLevel& log_level,
+            const size_t& length = 128
+        );
+
+        std::string to_log_format(
+            const std::string& text,
+            const LogLevel& log_level,
+            const TimeFormat& time_format,
+            const size_t& length = 128
+        );
+
+        void to_log_format(
+            Result<std::string>& result,
+            const std::string& text,
+            const LogLevel& log_level,
+            const TimeFormat& time_format,
+            const size_t& length = 128
+        );
+
+        std::string to_log_level_color_format(
+            const std::string& text = "",
+            const LogLevel& log_level = LogLevel::INFO,
+            const size_t& length = 128
+        );
+
+        void to_log_level_color_format(
             Result<std::string>& result,
             const std::string& text = "",
             const LogLevel& log_level = LogLevel::INFO,
+            const size_t& length = 128
+        );
+
+        std::string to_result_message_format(
+            const std::string& text = "",
+            const ResultStatus& result_status = ResultStatus::INFO,
             const TimeFormat& time_format =
-                TimeFormat::FULL_TIMESTAMP,
-            const size_t& length = 256
+            TimeFormat::FULL_TIMESTAMP,
+            const size_t& length = 128
         );
 
         void to_result_message_format(
@@ -91,19 +110,23 @@ namespace QLogicaeCore
             const std::string& text = "",
             const ResultStatus& result_status = ResultStatus::INFO,
             const TimeFormat& time_format =
-                TimeFormat::FULL_TIMESTAMP,
-            const size_t& length = 256
+            TimeFormat::FULL_TIMESTAMP,
+            const size_t& length = 128
         );
 
-        void to_log_level_color_format(
+        std::string to_exception_text_format(
+            const std::string& origin,
+            const std::string& message
+        );
+
+        void to_exception_text_format(
             Result<std::string>& result,
-            const std::string& text = "",
-            const LogLevel& log_level = LogLevel::INFO,
-            const size_t& length = 256
+            const std::string& origin,
+            const std::string& message
         );
 
-        void setup(
-            Result<void>& result
+        static void get_instance(
+            Result<Transformer*>& result
         );
 
         static Transformer& get_instance();
@@ -114,19 +137,19 @@ namespace QLogicaeCore
         ~Transformer() = default;
         
         Transformer(
-            const Transformer& transformer
+            const Transformer& instance
         ) = delete;
         
         Transformer(
-            Transformer&& transformer
+            Transformer&& instance
         ) noexcept = delete;
         
         Transformer& operator = (
-            Transformer&& transformer
+            Transformer&& instance
             ) = delete;
         
         Transformer& operator = (
-            const Transformer& transformer
+            const Transformer& instance
             ) = delete;
     };
 

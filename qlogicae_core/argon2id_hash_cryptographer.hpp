@@ -99,7 +99,5 @@ namespace QLogicaeCore
     protected:
         CryptographerProperties _cryptographer_properties;
     };
-
-    static inline Argon2idHashCryptographer ARGON2ID_HASH_CRYPTOGRAPHER;
 }
 

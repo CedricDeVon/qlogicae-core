@@ -120,7 +120,5 @@ namespace QLogicaeCore
 
         result.set_to_good_status_with_value(*derived_pointer);
     }
-
-    inline static FileIOs& FILE_IOS = FileIOs::get_instance();
 }
 

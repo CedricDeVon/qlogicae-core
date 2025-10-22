@@ -3,243 +3,55 @@
 #include "transformer.hpp"
 
 namespace QLogicaeCore
-{
-    Transformer& Transformer::get_instance()
+{    
+    bool Transformer::setup()
     {
-        static Transformer singleton;
+        try
+        {
+            Result<void> result;
 
-        return singleton;
+            setup(result);
+
+            return result.is_status_safe();
+        }
+        catch (const std::exception& exception)
+        {
+
+        }
+    }
+
+    void Transformer::setup(
+        Result<void>& result
+    )
+    {
+        result.set_to_good_status_without_value();
     }
 
     std::string Transformer::color_type(
-        const LogLevel& level)
-    {
-        try
-        {
-            switch(level)
-            {
-                case LogLevel::ALL:
-                {
-                    return "";
-                }
-                case LogLevel::INFO:
-                {
-                    return "";
-                }
-                case LogLevel::DEBUG:
-                {
-                    return "\033[94m";
-                }
-                case LogLevel::WARNING:
-                {
-                    return "\033[93m";
-                }
-                case LogLevel::EXCEPTION:
-                {
-                    return "\033[91m";
-                }
-                case LogLevel::CRITICAL:
-                {
-                    return "\033[95m";
-                }
-                case LogLevel::SUCCESS:
-                {
-                    return "\033[92m";
-                }
-                case LogLevel::HIGHLIGHTED_INFO:
-                {
-                    return "\033[94m";
-                }
-                default:
-                {
-                    return "";
-                }
-            }
-        }
-        catch (const std::exception& exception)
-        {
-            throw std::runtime_error(
-                std::string("Exception at Transformer::color_type(): ") +
-                exception.what()
-            );
-        }
-    }
-
-    std::string Transformer::to_log_format(
-        const std::string& text,
-        const LogLevel& log_level,
-        const TimeFormat& time_format,
-        const size_t& output_size        
+        const LogLevel& level
     )
     {
         try
         {
-            std::string result;
-            result.reserve(output_size);
+            Result<std::string> string_result;
 
-            result =
-                "[" +
-                TIME.now(time_format) +
-                "] [" +
-                get_log_level_string(log_level) +
-                "]\t" +
-                text +
-                "\n";
+            color_type(string_result, level);
 
-            return result;
+            return string_result.get_value();
+
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(
-                std::string("Exception at Transformer::to_log_format(): ") +
-                exception.what()
-            );
-        }
-    }
-
-    std::string Transformer::to_log_format(
-        const std::string& text,
-        const LogLevel& log_level,
-        const size_t& output_size
-    )
-    {
-        try
-        {
-            std::string result;
-            result.reserve(output_size);
-
-            result =
-                "[" +
-                TIME.now(TimeFormat::FULL_TIMESTAMP) +
-                "] [" +
-                get_log_level_string(log_level) +
-                "]\t" +
-                text +
-                "\n";
-
-            return result;
-        }
-        catch (const std::exception& exception)
-        {
-            throw std::runtime_error(
-                std::string("Exception at Transformer::to_log_format(): ") +
-                exception.what()
-            );
-        }
-    }
-
-    std::string Transformer::to_result_message_format(
-        const std::string& text,
-        const ResultStatus& result_status,
-        const TimeFormat& time_format,
-        const size_t& output_size
-    )
-    {
-        std::string content;
-        content.reserve(output_size);
-
-        content =
-            "[" +
-            TIME.now(time_format) +
-            "] [" +
-            UTILITIES.RESULT_STATUS_ENUMS_2.at(result_status) +
-            "]\t" +
-            text +
-            "\n";
-        
-        return content;
-    }
-
-    std::string Transformer::to_log_level_color_format(
-        const std::string& text,
-        const LogLevel& level,
-        const size_t& output_size)
-    {
-        try
-        {
-            std::string result;
-            result.reserve(output_size);
-
-            result = text;
-
-            return result;
-        }
-        catch (const std::exception& exception)
-        {
-            throw std::runtime_error(
-                std::string("Exception at Transformer::to_log_level_color_format(): ") +
-                exception.what()
-            );
-        }
-    }
-
-    std::string Transformer::to_none_format(
-        const std::string& text)
-    {
-        try
-        {
-            if (text.empty())
-            {
-                return UTILITIES.STRING_NONE_1;
-            }
-
-            return text;
-        }
-        catch (const std::exception& exception)
-        {
-            throw std::runtime_error(
-                std::string("Exception at Transformer::to_none_format(): ") +
-                exception.what()
-            );
-        }
-    }
-
-    std::string Transformer::to_na_format(
-        const std::string& text)
-    {
-        try
-        {
-            if (text.empty())
-            {
-                return UTILITIES.STRING_NONE_2;
-            }
-
-            return text;
-        }
-        catch (const std::exception& exception)
-        {
-            throw std::runtime_error(
-                std::string("Exception at Transformer::to_na_format(): ") +
-                exception.what()
-            );
-        }
-    }
-
-    std::vector<std::string> Transformer::split(
-        const std::string& text,
-        const std::string& delimeter)
-    {
-        try
-        {
-            auto result = absl::StrSplit(text, delimeter);
-
-            return std::vector<std::string>(result.begin(), result.end());
-        }
-        catch (const std::exception& exception)
-        {
-            throw std::runtime_error
-            (std::string("Exception at Transformer::split(): ") +
-                exception.what()
-            );
+            
         }
     }
 
     void Transformer::color_type(
         Result<std::string>& result,
-        const LogLevel& level
+        const LogLevel& log_level
     )
     {
-        switch (level)
+        switch (log_level)
         {
             case LogLevel::ALL:
             {
@@ -280,64 +92,50 @@ namespace QLogicaeCore
         }
     }
 
-    void Transformer::to_log_format(
-        Result<std::string>& result,
-        const std::string& text,
-        const LogLevel& level,
-        const TimeFormat& time_format,
-        const size_t& output_size
+    std::string Transformer::to_na_format(
+        const std::string& text
     )
     {
-        std::string content;
-        content.reserve(output_size);
+        try
+        {
+            Result<std::string> string_result;
 
-        content =
-            "[" +
-            TIME.now(time_format) +
-            "] [" +
-            get_log_level_string(level) +
-            "]\t" +
-            text +
-            "\n";
+            to_na_format(string_result, text);
 
-        result.set_to_good_status_with_value(content);
+            return string_result.get_value();
+        }
+        catch (const std::exception& exception)
+        {
+            
+        }
     }
 
-    void Transformer::to_result_message_format(
+    void Transformer::to_na_format(
         Result<std::string>& result,
-        const std::string& text,
-        const ResultStatus& result_status,
-        const TimeFormat& time_format,
-        const size_t& output_size
+        const std::string& text
     )
-    {
-        std::string content;
-        content.reserve(output_size);
-
-        content =
-            "[" +
-            TIME.now(time_format) +
-            "] [" +
-            UTILITIES.RESULT_STATUS_ENUMS_2.at(result_status) +
-            "]\t" +
-            text +
-            "\n";
-
-        result.set_to_good_status_with_value(content);
+    {        
+        result.set_to_good_status_with_value(
+            (!text.empty()) ? text : UTILITIES.STRING_NONE_2
+        );
     }
 
-    void Transformer::to_log_level_color_format(
-        Result<std::string>& result,
-        const std::string& text,
-        const LogLevel& level,
-        const size_t& output_size
+    std::string Transformer::to_none_format(
+        const std::string& text
     )
     {
-        std::string content;
-        content.reserve(output_size);
-        content = text;
+        try
+        {
+            Result<std::string> string_result;
 
-        result.set_to_good_status_with_value(content);
+            to_none_format(string_result, text);
+
+            return string_result.get_value();
+        }
+        catch (const std::exception& exception)
+        {
+            
+        }
     }
 
     void Transformer::to_none_format(
@@ -345,29 +143,32 @@ namespace QLogicaeCore
         const std::string& text
     )
     {
-        if (text.empty())
-        {
-            return result.set_to_good_status_with_value(
-                UTILITIES.STRING_NONE_1
-            );            
-        }
-
-        result.set_to_good_status_with_value(text);
+        result.set_to_good_status_with_value(
+            (!text.empty()) ? text : UTILITIES.STRING_NONE_1
+        );
     }
 
-    void Transformer::to_na_format(
-        Result<std::string>& result,
-        const std::string& text
+    std::vector<std::string> Transformer::split(
+        const std::string& text,
+        const std::string& delimeter
     )
     {
-        if (text.empty())
+        try
         {
-            return result.set_to_good_status_with_value(
-                UTILITIES.STRING_NONE_2
-            );
-        }
+            Result<std::vector<std::string>> string_vector_result;
 
-        result.set_to_good_status_with_value(text);
+            split(
+                string_vector_result,
+                text,
+                delimeter
+            );
+
+            return string_vector_result.get_value();
+        }
+        catch (const std::exception& exception)
+        {
+            
+        }
     }
 
     void Transformer::split(
@@ -376,15 +177,248 @@ namespace QLogicaeCore
         const std::string& delimeter
     )
     {
-        auto content = absl::StrSplit(text, delimeter);
+        auto content = absl::StrSplit(
+            text,
+            delimeter
+        );
 
         result.set_to_good_status_with_value(
-            std::vector<std::string>(content.begin(), content.end())
+            std::vector<std::string>(
+                content.begin(),
+                content.end()
+            )
         );
     }
 
-    void Transformer::setup(Result<void>& result)
+    std::string Transformer::to_log_format(
+        const std::string& text,
+        const LogLevel& log_level,
+        const TimeFormat& time_format,
+        const size_t& output_length        
+    )
     {
-        result.set_to_good_status_without_value();
+        try
+        {
+            Result<std::string> string_result;
+
+            to_log_format(
+                string_result,
+                text,
+                log_level,
+                time_format,
+                output_length
+            );
+
+            return string_result.get_value();
+        }
+        catch (const std::exception& exception)
+        {
+            
+        }
+    }
+
+    void Transformer::to_log_format(
+        Result<std::string>& result,
+        const std::string& text,
+        const LogLevel& level,
+        const TimeFormat& time_format,
+        const size_t& output_length
+    )
+    {
+        result.get_value().reserve(output_length);
+        result.set_value(
+            "[" +
+            TIME.now(time_format) +
+            "] [" +
+            get_log_level_string(level) +
+            "]\t" +
+            text +
+            "\n"
+        );
+        result.set_status_to_good();
+    }
+
+    std::string Transformer::to_log_format(
+        const std::string& text,
+        const LogLevel& log_level,
+        const size_t& output_length
+    )
+    {
+        try
+        {
+            Result<std::string> string_result;
+
+            to_log_format(
+                string_result,
+                text,
+                log_level,
+                output_length
+            );
+
+            return string_result.get_value();
+        }
+        catch (const std::exception& exception)
+        {
+            
+        }
+    }
+
+    void Transformer::to_log_format(
+        Result<std::string>& result,
+        const std::string& text,
+        const LogLevel& log_level,
+        const size_t& output_length
+    )
+    {
+        result.get_value().reserve(output_length);
+        result.set_value(
+            "[" +
+            TIME.now(TimeFormat::FULL_TIMESTAMP) +
+            "] [" +
+            get_log_level_string(log_level) +
+            "]\t" +
+            text +
+            "\n"
+        );
+        result.set_status_to_good();
+    }
+
+    std::string Transformer::to_log_level_color_format(
+        const std::string& text,
+        const LogLevel& log_level,
+        const size_t& output_length
+    )
+    {
+        try
+        {
+            Result<std::string> string_result;
+
+            to_log_level_color_format(
+                string_result,
+                text,
+                log_level,
+                output_length
+            );
+
+            return string_result.get_value();
+        }
+        catch (const std::exception& exception)
+        {
+            
+        }
+    }
+
+    void Transformer::to_log_level_color_format(
+        Result<std::string>& result,
+        const std::string& text,
+        const LogLevel& log_level,
+        const size_t& output_length
+    )
+    {
+        result.get_value().reserve(output_length);
+        result.set_value(
+            result.get_value()
+        );
+        result.set_status_to_good();
+    }
+
+
+
+    std::string Transformer::to_result_message_format(
+        const std::string& text,
+        const ResultStatus& result_status,
+        const TimeFormat& time_format,
+        const size_t& output_length
+    )
+    {
+        try
+        {
+            Result<std::string> string_result;
+
+            to_result_message_format(
+                string_result,
+                text,
+                result_status,
+                time_format,
+                output_length
+            );
+
+            return string_result.get_value();
+        }
+        catch (const std::exception& exception)
+        {
+
+        }
+    }
+
+    void Transformer::to_result_message_format(
+        Result<std::string>& result,
+        const std::string& text,
+        const ResultStatus& result_status,
+        const TimeFormat& time_format,
+        const size_t& output_length
+    )
+    {
+        result.get_value().reserve(output_length);
+        result.set_value(
+            "[" +
+            TIME.now(time_format) +
+            "] [" +
+            UTILITIES.RESULT_STATUS_ENUMS_2.at(result_status) +
+            "]\t" +
+            text +
+            "\n"
+        );
+        result.set_status_to_good();
+    }
+
+    std::string Transformer::to_exception_text_format(
+        const std::string& origin,
+        const std::string& text
+    )
+    {
+        try
+        {
+            Result<std::string> string_result;
+
+            to_exception_text_format(
+                string_result,
+                origin,
+                text
+            );
+
+            return string_result.get_value();
+        }
+        catch (const std::exception& exception)
+        {
+
+        }
+    }
+
+    void Transformer::to_exception_text_format(
+        Result<std::string>& result,
+        const std::string& origin,
+        const std::string& text
+    )
+    {
+        result.set_to_good_status_with_value(
+            "Exception at " + origin + " - " + text
+        );
+    }
+
+    Transformer& Transformer::get_instance()
+    {
+        static Transformer instance;
+
+        return instance;
+    }
+
+    void Transformer::get_instance(
+        Result<Transformer*>& result
+    )
+    {
+        static Transformer instance;
+
+        result.set_to_good_status_with_value(&instance);
     }
 }

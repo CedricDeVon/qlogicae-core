@@ -15,7 +15,13 @@ namespace QLogicaeCore
     class ApplicationFileIO :
         public AbstractApplication
     {
-    public:                
+    public:         
+        JsonFileIO JSON_FILE_IO;
+
+        TextFileIO TEXT_FILE_IO;
+
+        BinaryFileIO BINARY_FILE_IO;
+        
         bool setup();
 
         void setup(

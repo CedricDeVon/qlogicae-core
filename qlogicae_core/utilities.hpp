@@ -1,7 +1,8 @@
 #pragma once
 
-#include "time_format.hpp"
 #include "log_medium.hpp"
+#include "time_format.hpp"
+#include "system_access.hpp"
 #include "time_scale_unit.hpp"
 #include "environment_variable.hpp"
 #include "temperature_unit_type.hpp"
@@ -11,7 +12,9 @@
 #include "qlogicae_visual_studio_2022_build.hpp"
 #include "qlogicae_visual_studio_2022_build_architecture.hpp"
 
+
 #include <sqlite3.h>
+#include <boost/asio.hpp>
 #include <absl/time/time.h>
 #include <rapidjson/document.h>
 
@@ -19,6 +22,7 @@
 #include <map>
 #include <mutex>
 #include <queue>
+#include <thread>
 #include <future>
 #include <chrono>
 #include <vector>
@@ -30,13 +34,14 @@
 #include <unordered_map>
 #include <condition_variable>
 
-#include "system_access.hpp"
 
 namespace QLogicaeCore
 {                
 	class Utilities
 	{
 	public:
+        boost::asio::thread_pool BOOST_ASIO_POOL;
+
         const unsigned int DEFAULT_MILLISECONDS_PER_CALLBACK =
             1000;
         
@@ -1126,22 +1131,44 @@ namespace QLogicaeCore
 			
 		std::string FULL_APPLICATION_QLOGICAE_PUBLIC_APPLICATION_DOCUMENTATION_LICENSE_FILE_PATH;
 			
+        bool setup();
+
+        void setup(
+            Result<void>& result
+        );
+
+        std::future<bool> setup_async();
+
+        void setup_async(
+            Result<std::future<void>>& result
+        );
+
 		static Utilities& get_instance();
+
+        void get_instance(
+            Result<Utilities*>& result
+        );
 
 	protected:
 		Utilities();
 		
         ~Utilities() = default;
 		
-        Utilities(const Utilities&) = default;
+        Utilities(
+            const Utilities&
+        ) = default;
 		
-        Utilities(Utilities&&) noexcept = delete;
+        Utilities(
+            Utilities&&
+        ) noexcept = delete;
 		
-        Utilities& operator = (Utilities&&) = default;
+        Utilities& operator = (
+            Utilities&&
+        ) = default;
 
-		Utilities& operator = (const Utilities&) = delete;
-
-		std::mutex _mutex;
+		Utilities& operator = (
+            const Utilities&
+        ) = delete;
 	};
 
     inline static Utilities& UTILITIES =

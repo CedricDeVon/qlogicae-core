@@ -144,7 +144,5 @@ namespace QLogicaeCore
             const std::string_view& nonce
         );
     };
-
-    static inline XChaCha20Poly1305CipherCryptographer XCHACHA20_POLY1305_CIPHER_CRYPTOGRAPHER;
 }
 

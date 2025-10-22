@@ -701,7 +701,5 @@ namespace QLogicaeCore
                 return this->set_value<ValueType>(key_path, value);
             });
     }
-
-    static inline XmlFileIO XML_FILE_IO;
 }
 

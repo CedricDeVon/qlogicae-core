@@ -15,284 +15,20 @@ namespace QLogicaeCore
         }
     }
 
-    Generator& Generator::get_instance()
-    {
-        static Generator get_instance;
-
-        return get_instance;
-    }
-    
-    std::string Generator::random_hex(
-        const size_t& length,
-        const std::string_view& character_set)
+    bool Generator::setup()
     {
         try
         {
-            if (character_set.empty() || length < 1)
-            {
-                return "";
-            }
+            Result<void> void_result;
 
-            const std::string raw = random_string(length, character_set);
-            return ENCODER.from_utf8_to_hex(raw);
+            setup(void_result);
+
+            return void_result.is_status_safe();
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(
-                std::string() + "Exception at Generator::random_hex(): " + exception.what()
-            );
+
         }
-    }
-
-    std::string Generator::random_rgb_hex()
-    {
-        try
-        {
-            std::string result;
-            fmt::format_to(
-                std::back_inserter(result),
-                "#{}",
-                random_hex(6)
-            );
-
-            return result;
-        }
-        catch (const std::exception& exception)
-        {
-            throw std::runtime_error(
-                std::string() + "Exception at Generator::random_rgb_hex(): " + exception.what()
-            );
-        }
-    }
-
-    std::string Generator::random_rgba_hex()
-    {
-        try
-        {
-            std::string result;
-            fmt::format_to(
-                std::back_inserter(result),
-                "#{}",
-                random_hex(8)
-            );
-
-            return result;
-        }
-        catch (const std::exception& exception)
-        {
-            throw std::runtime_error(
-                std::string() + "Exception at Generator::random_rgba_hex(): " + exception.what()
-            );
-        }
-    }
-
-    std::string Generator::random_base64(
-        const size_t& length,
-        const std::string_view& character_set)
-    {
-        try
-        {
-            if (character_set.size() < 64 || length < 1)
-            {
-                return "";
-            }
-
-            const std::string raw = random_string(length, character_set);
-            return ENCODER.from_utf8_to_base64(raw);
-        }
-        catch (const std::exception& exception)
-        {
-            throw std::runtime_error(
-                std::string() + "Exception at Generator::random_base64(): " + exception.what()
-            );
-        }
-    }
-
-    std::string Generator::random_uuid4()
-    {
-        try
-        {
-            thread_local uuids::uuid_random_generator uuid_generator(
-                _random_m19937()
-            );
-
-            return uuids::to_string(uuid_generator());
-        }
-        catch (const std::exception& exception)
-        {
-            throw std::runtime_error(
-                std::string() + "Exception at Generator::random_uuid4(): " + exception.what()
-            );
-        }
-    }
-
-    std::array<unsigned char, 16> Generator::random_salt()
-    {
-        try
-        {
-            std::array<unsigned char, 16> salt{};
-            randombytes_buf(salt.data(), salt.size());
-            return salt;
-        }
-        catch (const std::exception& exception)
-        {
-            throw std::runtime_error(
-                std::string() + "Exception at Generator::random_salt(): " + exception.what()
-            );
-        }
-    }
-
-    bool Generator::random_bool(const double& true_probability)
-    {
-        try
-        {
-            if (true_probability < 1)
-            {
-                return false;
-            }
-
-            return std::bernoulli_distribution(
-                true_probability)(_random_m19937());
-        }
-        catch (const std::exception& exception)
-        {
-            throw std::runtime_error(
-                std::string() + "Exception at Generator::random_bool(): " + exception.what()
-            );
-        }
-    }
-
-    std::vector<std::string> Generator::random_string_vector(
-        const size_t& size,
-        const size_t& length)
-    {
-        try
-        {
-            size_t index;
-            std::vector<std::string> result;
-            result.reserve(size);
-
-            for (index = 0; index < size; ++index)
-            {
-                result.emplace_back(random_string(length));
-            }
-
-            return result;
-        }
-        catch (const std::exception& exception)
-        {
-            throw std::runtime_error(
-                std::string() + "Exception at Generator::random_string_vector(): " + exception.what()
-            );
-        }
-    }
-
-    std::string Generator::random_string(
-        const size_t& length,
-        const std::string_view& character_set)
-    {
-        try
-        {
-            if (character_set.empty() || length < 1)
-            {
-                return "";
-            }
-
-            std::string result;
-            result.reserve(length);
-
-            std::mt19937& random_engine = _random_m19937();
-
-            std::uniform_int_distribution<std::size_t> distribution(
-                0, character_set.size() - 1);
-
-            for (std::size_t index = 0; index < length; ++index)
-            {
-                result += character_set[distribution(random_engine)];
-            }
-
-            return result;
-        }
-        catch (const std::exception& exception)
-        {
-            throw std::runtime_error(
-                std::string() + "Exception at Generator::random_string(): " + exception.what()
-            );
-        }
-
-    }
-
-    int Generator::random_int(
-        const int& minimum, const int& maximum)
-    {
-        try
-        {
-            if (maximum < minimum)
-            {
-                return 0;
-            }
-
-            return std::uniform_int_distribution<int>(
-                minimum, maximum)(_random_m19937());
-        }
-        catch (const std::exception& exception)
-        {
-            throw std::runtime_error(
-                std::string() + "Exception at Generator::random_int(): " + exception.what()
-            );
-        }
-    }
-
-    double Generator::random_double(
-        const double& minimum, const double& maximum)
-    {
-        try
-        {
-            if (maximum < minimum)
-            {
-                return 0;
-            }
-
-            return std::uniform_real_distribution<double>(
-                minimum, maximum)(_random_m19937());
-        }
-        catch (const std::exception& exception)
-        {
-            throw std::runtime_error(
-                std::string() + "Exception at Generator::random_double(): " + exception.what()
-            );
-        }
-    }
-
-    void Generator::random_bytes(
-        unsigned char* buffer, size_t size)
-    {
-
-        try
-        {
-            if (buffer == nullptr && size > 0)
-            {
-                return;
-            }
-
-            randombytes_buf(buffer, size);
-        }
-        catch (const std::exception& exception)
-        {
-            throw std::runtime_error(
-                std::string() + "Exception at Generator::random_bytes(): " + exception.what()
-            );
-        }
-    }
-
-    std::mt19937& Generator::_random_m19937()
-    {
-        static thread_local std::mt19937 generator
-        {
-            std::random_device{}()
-        };
-
-        return generator;
     }
 
     void Generator::setup(
@@ -302,17 +38,154 @@ namespace QLogicaeCore
         result.set_to_good_status_without_value();
     }
 
-    void Generator::random_uuid4(
-        Result<std::string>& result
+    std::future<bool> Generator::setup_async()
+    {
+        std::promise<bool> promise;
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    setup()
+                );
+            }
+        );
+
+        return promise.get_future();
+    }
+
+    void Generator::setup_async(
+        Result<std::future<void>>& result
     )
     {
-        thread_local uuids::uuid_random_generator uuid_generator(
-            _random_m19937()
+        std::promise<void> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, promise = std::move(promise)]() mutable
+            {
+                Result<void> void_result;
+
+                setup(void_result);
+
+                promise.set_value();
+            }
         );
 
         result.set_to_good_status_with_value(
-            uuids::to_string(uuid_generator())
+            std::move(future)
         );
+    }
+
+    std::string Generator::random_hex(
+        const size_t& length,
+        const std::string_view& character_set
+    )
+    {
+        try
+        {
+            Result<std::string> string_result;
+
+            random_hex(
+                string_result,
+                length,
+                character_set
+            );
+
+            return string_result.get_value();
+        }
+        catch (const std::exception& exception)
+        {
+            
+        }
+    }
+
+    void Generator::random_hex(
+        Result<std::string>& result,
+        const size_t& length,
+        const std::string_view& character_set
+    )
+    {
+        if (character_set.empty() || length < 1)
+        {
+            return result.set_to_bad_status_without_value(
+                "Either character set is empty or output length is less than 1"
+            );
+        }
+
+        ENCODER.from_utf8_to_hex(
+            result,
+            random_string(
+                length, character_set
+            )
+        );
+    }
+
+    std::string Generator::random_base64(
+        const size_t& length,
+        const std::string_view& character_set
+    )
+    {
+        try
+        {
+            Result<std::string> string_result;
+
+            random_hex(
+                string_result,
+                length,
+                character_set
+            );
+
+            return string_result.get_value();
+        }
+        catch (const std::exception& exception)
+        {
+            
+        }
+    }
+
+    void Generator::random_base64(
+        Result<std::string>& result,
+        const size_t& length,
+        const std::string_view& character_set
+    )
+    {
+        if (character_set.size() < 64 || length < 1)
+        {
+            return result.set_to_bad_status_without_value(
+                "Either character set length is less than 64 or length is less than 1"
+            );
+        }
+
+        random_string(
+            result,
+            length,
+            character_set
+        );
+        ENCODER.from_utf8_to_base64(
+            result,
+            result.get_value()
+        );
+    }
+
+    std::string Generator::random_rgb_hex()
+    {
+        try
+        {
+            Result<std::string> string_result;
+
+            random_rgb_hex(
+                string_result
+            );
+
+            return string_result.get_value();
+        }
+        catch (const std::exception& exception)
+        {
+            
+        }
     }
 
     void Generator::random_rgb_hex(
@@ -331,6 +204,24 @@ namespace QLogicaeCore
         );
     }
 
+    std::string Generator::random_rgba_hex()
+    {
+        try
+        {
+            Result<std::string> string_result;
+
+            random_rgba_hex(
+                string_result
+            );
+
+            return string_result.get_value();
+        }
+        catch (const std::exception& exception)
+        {
+            
+        }
+    }
+
     void Generator::random_rgba_hex(
         Result<std::string>& result
     )
@@ -347,33 +238,87 @@ namespace QLogicaeCore
         );
     }
 
+    std::string Generator::random_uuid4()
+    {
+        try
+        {
+            Result<std::string> string_result;
+
+            random_rgba_hex(
+                string_result
+            );
+
+            return string_result.get_value();
+        }
+        catch (const std::exception& exception)
+        {
+            
+        }
+    }
+
+    void Generator::random_uuid4(
+        Result<std::string>& result
+    )
+    {
+        thread_local uuids::uuid_random_generator uuid_generator(
+            _random_m19937()
+        );
+
+        result.set_to_good_status_with_value(
+            uuids::to_string(uuid_generator())
+        );
+    }
+
+
+    std::array<unsigned char, 16> Generator::random_salt()
+    {
+        try
+        {
+            Result<std::array<unsigned char, 16>> result;
+
+            random_salt(
+                result
+            );
+
+            return result.get_value();
+        }
+        catch (const std::exception& exception)
+        {
+            
+        }
+    }
+
     void Generator::random_salt(
         Result<std::array<unsigned char, 16>>& result
     )
     {
         std::array<unsigned char, 16> salt{};
         randombytes_buf(salt.data(), salt.size());
-        
+
         result.set_to_good_status_with_value(
             salt
         );
     }
 
-    void Generator::random_bytes(
-        Result<void>& result,
-        unsigned char* buffer,
-        size_t size
+    bool Generator::random_bool(
+        const double& true_probability
     )
     {
-        if (buffer == nullptr && size > 0)
+        try
         {
-            return result.set_to_bad_status_without_value(
-                "Buffer is empty and size is greater than 0"
+            Result<bool> result;
+
+            random_bool(
+                result,
+                true_probability
             );
+
+            return result.get_value();
         }
-        
-        randombytes_buf(buffer, size);
-        result.set_to_good_status_without_value();
+        catch (const std::exception& exception)
+        {
+            
+        }
     }
 
     void Generator::random_bool(
@@ -395,6 +340,29 @@ namespace QLogicaeCore
         );
     }
 
+    std::vector<std::string> Generator::random_string_vector(
+        const size_t& size,
+        const size_t& length
+    )
+    {
+        try
+        {
+            Result<std::vector<std::string>> result;
+
+            random_string_vector(
+                result,
+                size,
+                length
+            );
+
+            return result.get_value();
+        }
+        catch (const std::exception& exception)
+        {
+            
+        }
+    }
+
     void Generator::random_string_vector(
         Result<std::vector<std::string>>& result,
         const size_t& size,
@@ -413,22 +381,27 @@ namespace QLogicaeCore
         result.set_to_good_status_with_value(content);
     }
 
-    void Generator::random_hex(
-        Result<std::string>& result,
+    std::string Generator::random_string(
         const size_t& length,
         const std::string_view& character_set
     )
     {
-        if (character_set.empty() || length < 1)
+        try
         {
-            return result.set_to_bad_status_without_value(
-                "Either character set is empty or output length is less than 1"
-            );
-        }
+            Result<std::string> result;
 
-        ENCODER.from_utf8_to_hex(
-            result, random_string(length, character_set)
-        );
+            random_string(
+                result,
+                length,
+                character_set
+            );
+
+            return result.get_value();
+        }
+        catch (const std::exception& exception)
+        {
+            
+        }
     }
 
     void Generator::random_string(
@@ -460,21 +433,27 @@ namespace QLogicaeCore
         result.set_to_good_status_with_value(content);
     }
 
-    void Generator::random_base64(
-        Result<std::string>& result,
-        const size_t& length,
-        const std::string_view& character_set
+    int Generator::random_int(
+        const int& minimum,
+        const int& maximum
     )
     {
-        if (character_set.size() < 64 || length < 1)
+        try
         {
-            return result.set_to_bad_status_without_value(
-                "Either character set length is less than 64 or length is less than 1"
-            );
-        }
+            Result<int> result;
 
-        random_string(result, length, character_set);
-        ENCODER.from_utf8_to_base64(result, result.get_value());
+            random_int(
+                result,
+                minimum,
+                maximum
+            );
+
+            return result.get_value();
+        }
+        catch (const std::exception& exception)
+        {
+            
+        }
     }
 
     void Generator::random_int(
@@ -492,8 +471,31 @@ namespace QLogicaeCore
 
         result.set_to_good_status_with_value(
             std::uniform_int_distribution<int>(
-            minimum, maximum)(_random_m19937())
+                minimum, maximum)(_random_m19937())
         );
+    }
+
+    double Generator::random_double(
+        const double& minimum,
+        const double& maximum
+    )
+    {
+        try
+        {
+            Result<double> result;
+
+            random_double(
+                result,
+                minimum,
+                maximum
+            );
+
+            return result.get_value();
+        }
+        catch (const std::exception& exception)
+        {
+            
+        }
     }
 
     void Generator::random_double(
@@ -515,6 +517,51 @@ namespace QLogicaeCore
         );
     }
 
+    void Generator::random_bytes(
+        unsigned char* buffer,
+        size_t size
+    )
+    {
+        try
+        {
+            Result<void> result;
+
+            random_bytes(
+                result,
+                buffer,
+                size
+            );
+        }
+        catch (const std::exception& exception)
+        {
+            
+        }
+    }
+
+    void Generator::random_bytes(
+        Result<void>& result,
+        unsigned char* buffer,
+        size_t size
+    )
+    {
+        if (buffer == nullptr && size > 0)
+        {
+            return result.set_to_bad_status_without_value(
+                "Buffer is empty and size is greater than 0"
+            );
+        }
+        
+        randombytes_buf(buffer, size);
+        result.set_to_good_status_without_value();
+    }
+
+    Generator& Generator::get_instance()
+    {
+        static Generator get_instance;
+
+        return get_instance;
+    }
+
     void Generator::get_instance(
         Result<Generator*>& result
     )
@@ -522,6 +569,16 @@ namespace QLogicaeCore
         static Generator instance;
 
         result.set_to_good_status_with_value(&instance);
+    }
+
+    std::mt19937& Generator::_random_m19937()
+    {
+        static thread_local std::mt19937 generator
+        {
+            std::random_device{}()
+        };
+
+        return generator;
     }
 }
 

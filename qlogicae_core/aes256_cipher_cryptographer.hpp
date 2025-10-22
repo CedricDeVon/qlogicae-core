@@ -144,6 +144,4 @@ namespace QLogicaeCore
             const std::string& nonce
         );
     };
-
-    static inline AES256CipherCryptographer AES256_CIPHER_CRYPTOGRAPHER;
 }

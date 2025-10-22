@@ -43,7 +43,7 @@ namespace QLogicaeCore
                 );
             }
 
-            LOGGER.setup(
+            MAIN_LOGGER.setup(
                 result,
                 logger_configurations
             );

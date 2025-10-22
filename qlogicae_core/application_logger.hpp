@@ -11,6 +11,8 @@ namespace QLogicaeCore
         public AbstractApplication
     {
     public:
+        Logger MAIN_LOGGER;
+
         bool setup(
             const LoggerConfigurations& logger_configurations
         );
@@ -54,7 +56,7 @@ namespace QLogicaeCore
 
         ApplicationLogger& operator = (
             const ApplicationLogger& instance
-        ) = delete;
+        ) = delete;        
     };
 
     inline static ApplicationLogger& QLOGICAE_APPLICATION_LOGGER =

@@ -922,7 +922,7 @@ namespace QLogicaeCore
         void is_strong_password(
             Result<bool>& result,
             const std::string_view& value,
-const ValidationPasswordRules& rules
+            const ValidationPasswordRules& rules
         );
         
         void is_character_repeated(
@@ -934,34 +934,34 @@ const ValidationPasswordRules& rules
         void is_blacklisted_word_found(
             Result<bool>& result,
             const std::string_view& value,
-const std::vector<std::string>& blacklist
+            const std::vector<std::string>& blacklist
         );
 
         template<std::ranges::input_range Range,
-typename Predicate>
-        void is_valid_range(
-            Result<bool>& result,
-const Range& range,
-Predicate predicate
+        typename Predicate>
+            void is_valid_range(
+                Result<bool>& result,
+                const Range& range,
+                Predicate predicate
         );
 
         template<typename Type>
         void is_enum_value(
             Result<bool>& result,
-Type value,
-std::span<const Type> allowed
+            Type value,
+            std::span<const Type> allowed
         );
 
         template<typename Type>
         void is_unique(
             Result<bool>& result,
-const std::vector<Type>& values
+            const std::vector<Type>& values
         );
 
         template<typename Type>
         void is_sorted(
             Result<bool>& result,
-const std::vector<Type>& values
+            const std::vector<Type>& values
         );
 
         template<typename Type>
@@ -1118,17 +1118,18 @@ const std::vector<Type>& values
     }
 
     template void Validators::is_valid_range<std::vector<int>, bool(*)(int)>(
-                    Result<bool>&, const std::vector<int>&, bool(*)(int));
+        Result<bool>&, const std::vector<int>&, bool(*)(int));
     
-                template void Validators::is_enum_value<int>(Result<bool>&, int,
+        template void Validators::is_enum_value<int>(Result<bool>&, int,
         std::span<const int>);
 
-                template void Validators::is_unique<int>(Result<bool>&, const std::vector<int>&);
+        template void Validators::is_unique<int>(Result<bool>&, const std::vector<int>&);
     
-                template void Validators::is_sorted<int>(Result<bool>&, const std::vector<int>&);
+        template void Validators::is_sorted<int>(Result<bool>&, const std::vector<int>&);
     
-                template void Validators::is_empty<int>(Result<bool>&, const std::vector<int>&);
+        template void Validators::is_empty<int>(Result<bool>&, const std::vector<int>&);
     
-                template void Validators::is_found<int>(Result<bool>&,
+        template void Validators::is_found<int>(Result<bool>&,
+        
         const std::vector<int>&, std::function<bool(const int&)>);
 }

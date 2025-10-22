@@ -30,6 +30,12 @@ namespace QLogicaeCore
             Result<std::future<void>>& result
         );
 
+        bool is_qlogicae_project_found();
+
+        void is_qlogicae_project_found(
+            Result<void>& result
+        );
+
         static Application& get_instance();
 
         static void get_instance(
