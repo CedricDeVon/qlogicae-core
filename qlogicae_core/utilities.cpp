@@ -66,7 +66,6 @@ namespace QLogicaeCore
 			"\\" + RELATIVE_LICENSE_FILE_PATH;
     }
 
-
     bool Utilities::setup()
     {
 		try

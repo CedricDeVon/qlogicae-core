@@ -41,6 +41,7 @@ namespace QLogicaeCore
     std::future<bool> Generator::setup_async()
     {
         std::promise<bool> promise;
+        auto future = promise.get_future();
 
         boost::asio::post(
             UTILITIES.BOOST_ASIO_POOL,
@@ -52,7 +53,7 @@ namespace QLogicaeCore
             }
         );
 
-        return promise.get_future();
+        return future;
     }
 
     void Generator::setup_async(

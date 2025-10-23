@@ -9,239 +9,32 @@ namespace QLogicaeCore
 		_is_scan_enabled = _is_print_enabled = true;
 	}
 
-	bool CliIO::is_scan_enabled()
+	CliIO::~CliIO()
 	{
-		return _is_scan_enabled;
-	}
-	
-	void CliIO::set_scan_enabled(
-		const bool& value
-	)
-	{
-		_is_scan_enabled = value;
-	}
-	
-	bool CliIO::is_print_enabled()
-	{
-		return _is_print_enabled;
-	}
-	
-	void CliIO::set_print_enabled(
-		const bool& value
-	)
-	{
-		_is_print_enabled = value;
-	}
-	
-	std::string CliIO::scan()
-	{
-		try
-		{
-			std::scoped_lock lock(_mutex);
-
-			std::string result;
-
-			std::getline(std::cin, result);
-			if (!result.empty() && result.back() == '\r')
-			{
-				result.pop_back();
-			}
-			
-			return result;
-		}
-		catch (const std::exception& exception)
-		{
-			std::cout << std::string("Exception at CliIO::scan(): ") + exception.what() << "\n";
-
-			return "";
-		}
-		catch (...)
-		{
-			std::cout << "Exception at CliIO::scan(): " << "\n";
-
-			return "";
-		}
-	}
-	
-	void CliIO::print(const std::string& text)
-	{
-		try
-		{
-			std::scoped_lock lock(_mutex);
-
-			fast_io::io::print(fast_io::out(), text);
-		}
-		catch (const std::exception& exception)
-		{
-			std::cout << std::string("Exception at CliIO::print(): ") + exception.what() << "\n";
-		}
-	}
-	
-	std::future<std::string> CliIO::scan_async()
-	{
-		return std::async(
-			std::launch::async,
-				[this]() -> std::string
-		{
-			try
-			{
-				return scan();
-			}
-			catch (const std::exception& exception)
-			{
-				std::cout << std::string("Exception at CliIO::scan_async(): ") + exception.what() << "\n";
-
-				return "";
-			}
-		});
+		
 	}
 
-	void CliIO::print_with_new_line(
-		const std::string& text
+	bool CliIO::setup(
+		const bool& is_scan_enabled,
+		const bool& is_print_enabled
 	)
 	{
 		try
 		{
-			std::scoped_lock lock(_mutex);
+			Result<void> result;
 
-			fast_io::io::println(fast_io::out(), text);
+			setup(
+				result,
+				is_scan_enabled,
+				is_print_enabled
+			);
+
+			return result.is_status_safe();
 		}
 		catch (const std::exception& exception)
 		{
-			std::cout << std::string("Exception at CliIO::print_with_new_line(): ") + exception.what() << "\n";
+
 		}
-	}
-
-	std::future<void> CliIO::print_with_new_line_async(
-		const std::string& text
-	)
-	{
-		return std::async(
-			std::launch::async,
-				[this, text]() -> void
-		{
-			try
-			{
-				print_with_new_line(text);
-			}
-			catch (const std::exception& exception)
-			{
-				std::cout << std::string("Exception at CliIO::print_with_new_line_async(): ") + exception.what() << "\n";
-			}
-		});
-	}
-
-	void CliIO::builtin_print_with_new_line(
-		const std::string& text
-	)
-	{
-		try
-		{
-			std::scoped_lock lock(_mutex);
-
-			std::cout << text;
-		}
-		catch (const std::exception& exception)
-		{
-			std::cout << std::string("Exception at CliIO::builtin_print_with_new_line(): ") + exception.what() << "\n";
-		}
-	}
-
-	std::future<void> CliIO::builtin_print_with_new_line_async(
-		const std::string& text
-	)
-	{
-		return std::async(
-			std::launch::async,
-				[this, text]() -> void
-		{
-			try
-			{
-				builtin_print_with_new_line(text);
-			}
-			catch (const std::exception& exception)
-			{
-				std::cout << std::string("Exception at CliIO::builtin_print_with_new_line_async(): ") + exception.what() << "\n";
-			}
-		});
-	}
-	
-	std::future<void> CliIO::print_async(
-		const std::string& text
-	)
-	{
-		return std::async(
-			std::launch::async,
-				[this, text]() -> void
-		{
-			try
-			{
-				print(text);
-			}
-			catch (const std::exception& exception)
-			{
-				std::cout << std::string("Exception at CliIO::print_async(): ") + exception.what() << "\n";
-			}
-		});
-	}
-
-	std::future<std::string> CliIO::builtin_scan_async()
-	{
-		return std::async(
-			std::launch::async,
-				[this]() -> std::string
-		{
-			try
-			{
-				return builtin_scan();
-			}
-			catch (const std::exception& exception)
-			{
-				std::cout << std::string("Exception at CliIO::builtin_scan_async(): ") + exception.what() << "\n";
-
-				return "";
-			}
-		});
-	}
-
-	std::future<void> CliIO::builtin_print_async(
-		const std::string& text
-	)
-	{
-		return std::async(
-			std::launch::async,
-				[this, text]() -> void
-		{
-			try
-			{
-				builtin_print(text);
-			}
-			catch (const std::exception& exception)
-			{
-				std::cout << std::string("Exception at CliIO::builtin_print_async(): ") + exception.what() << "\n";
-			}
-		});
-	}
-
-	void CliIO::builtin_print(
-		const std::string& text)
-	{
-		std::cout << text;
-	}
-
-	std::string CliIO::builtin_scan()
-	{
-		std::string result;
-		std::cin >> result;
-
-		return result;
-	}
-
-	CliIO& CliIO::get_instance()
-	{
-		static CliIO singleton;
-
-		return singleton;
 	}
 
 	void CliIO::setup(
@@ -256,6 +49,64 @@ namespace QLogicaeCore
 		result.set_to_good_status_without_value();
 	}
 
+	std::future<bool> CliIO::setup_async(
+		const bool& is_scan_enabled,
+		const bool& is_print_enabled
+	)
+	{
+		std::promise<bool> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, promise = std::move(promise)]() mutable
+			{
+				promise.set_value(
+					setup()
+				);
+			}
+		);
+
+		return future;
+	}
+
+	void CliIO::setup_async(
+		Result<std::future<void>>& result,
+		const bool& is_scan_enabled,
+		const bool& is_print_enabled
+	)
+	{
+		std::promise<void> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, is_scan_enabled, is_print_enabled, promise = std::move(promise)]() mutable
+			{
+				Result<void> result;
+
+				setup(
+					result,
+					is_scan_enabled,
+					is_print_enabled
+				);
+
+				promise.set_value();
+			}
+		);
+
+		result.set_to_good_status_with_value(
+			std::move(
+				future
+			)
+		);
+	}
+
+	bool CliIO::is_scan_enabled()
+	{
+		return _is_scan_enabled;
+	}
+
 	void CliIO::is_scan_enabled(
 		Result<bool>& result)
 	{
@@ -264,12 +115,24 @@ namespace QLogicaeCore
 		);
 	}
 
+	bool CliIO::is_print_enabled()
+	{
+		return _is_print_enabled;
+	}
+
 	void CliIO::is_print_enabled(
 		Result<bool>& result)
 	{
 		result.set_to_good_status_with_value(
 			_is_print_enabled
 		);
+	}
+
+	void CliIO::set_scan_enabled(
+		const bool& value
+	)
+	{
+		_is_scan_enabled = value;
 	}
 
 	void CliIO::set_scan_enabled(
@@ -283,6 +146,13 @@ namespace QLogicaeCore
 	}
 
 	void CliIO::set_print_enabled(
+		const bool& value
+	)
+	{
+		_is_print_enabled = value;
+	}
+
+	void CliIO::set_print_enabled(
 		Result<void>& result,
 		const bool& value
 	)
@@ -292,10 +162,60 @@ namespace QLogicaeCore
 		result.set_to_good_status_without_value();
 	}
 
-	void CliIO::scan(Result<std::string>& result)
+	std::string CliIO::builtin_scan()
 	{
-		std::scoped_lock lock(_mutex);
+		try
+		{
+			std::scoped_lock lock(_mutex);
 
+			Result<std::string> result;
+
+			builtin_scan(
+				result
+			);
+
+			return result.get_value();
+		}
+		catch (const std::exception& exception)
+		{
+			
+		}		
+	}
+
+	void CliIO::builtin_scan(
+		Result<std::string>& result
+	)
+	{
+		std::string content;
+		std::cin >> content;
+
+		result.set_to_good_status_with_value(content);
+	}
+
+	std::string CliIO::scan()
+	{
+		try
+		{
+			std::scoped_lock lock(_mutex);
+
+			Result<std::string> result;
+
+			scan(
+				result
+			);
+
+			return result.get_value();
+		}
+		catch (const std::exception& exception)
+		{
+			
+		}
+	}
+
+	void CliIO::scan(
+		Result<std::string>& result
+	)
+	{		
 		std::string content;
 
 		std::getline(std::cin, content);
@@ -307,19 +227,116 @@ namespace QLogicaeCore
 		result.set_to_good_status_with_value(content);
 	}
 
-	void CliIO::builtin_scan(Result<std::string>& result)
+	void CliIO::print(
+		const std::string& text
+	)
 	{
-		std::string content;
-		std::cin >> content;
+		try
+		{
+			std::scoped_lock lock(_mutex);
 
-		result.set_to_good_status_with_value(content);
+			Result<void> result;
+
+			print(
+				result,
+				text
+			);
+		}
+		catch (const std::exception& exception)
+		{
+
+		}
 	}
 
-	void CliIO::print(Result<void>& result,
+	void CliIO::print(
+		Result<void>& result,
 		const std::string& text
 	)
 	{		
 		fast_io::io::print(fast_io::out(), text);
+
+		result.set_to_good_status_without_value();
+	}
+
+	void CliIO::print_with_new_line(
+		const std::string& text
+	)
+	{
+		try
+		{
+			std::scoped_lock lock(_mutex);
+
+			Result<void> result;
+
+			print_with_new_line(
+				result,
+				text
+			);
+		}
+		catch (const std::exception& exception)
+		{
+
+		}
+	}
+
+	void CliIO::print_with_new_line(
+		Result<void>& result,
+		const std::string& text
+	)
+	{		
+		fast_io::io::println(fast_io::out(), text);
+
+		result.set_to_good_status_without_value();
+	}
+
+	void CliIO::builtin_print_with_new_line(
+		const std::string& text
+	)
+	{
+		try
+		{
+			std::scoped_lock lock(_mutex);
+
+			Result<void> result;
+
+			builtin_print_with_new_line(
+				result,
+				text
+			);
+		}
+		catch (const std::exception& exception)
+		{
+
+		}
+	}
+
+	void CliIO::builtin_print_with_new_line(
+		Result<void>& result,
+		const std::string& text
+	)
+	{
+		std::cout << text;
+	}
+
+	void CliIO::builtin_print(
+		const std::string& text
+	)
+	{
+		try
+		{
+			std::scoped_lock lock(_mutex);
+
+			Result<void> result;
+
+			builtin_print(
+				result,
+				text
+			);
+		}
+		catch (const std::exception& exception)
+		{
+
+		}
 	}
 
 	void CliIO::builtin_print(
@@ -332,54 +349,162 @@ namespace QLogicaeCore
 		result.set_to_good_status_without_value();
 	}
 
-	void CliIO::print_with_new_line(
-		Result<void>& result,
-		const std::string& text
-	)
+	std::future<std::string> CliIO::scan_async()
 	{
-		std::scoped_lock lock(_mutex);
+		std::promise<std::string> promise;
+		auto future = promise.get_future();
 
-		fast_io::io::println(fast_io::out(), text);
-	}
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, promise = std::move(promise)]() mutable
+			{
+				promise.set_value(
+					scan()
+				);
+			}
+		);
 
-	void CliIO::builtin_print_with_new_line(
-		Result<void>& result,
-		const std::string& text
-	)
-	{
-		std::scoped_lock lock(_mutex);
-
-		std::cout << text;
+		return future;
 	}
 
 	void CliIO::scan_async(
-		Result<std::future<std::string>>& result)
-	{
-		result.set_to_good_status_with_value(std::async(
-			std::launch::async, [this]() -> std::string
-			{
-				Result<std::string> result;
-				scan(result);
-
-				return result.get_value();
-			}
-		));
-	}
-
-	void CliIO::builtin_scan_async(
 		Result<std::future<std::string>>& result
 	)
 	{
-		result.set_to_good_status_with_value(
-			std::async(std::launch::async,
-			[this]() -> std::string
+		std::promise<std::string> promise;
+		auto future = promise.get_future();
+		
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, promise = std::move(promise)]() mutable
 			{
 				Result<std::string> result;
-				builtin_scan(result);
 
-				return result.get_value();
+				scan(result);
+
+				promise.set_value(result.get_value());
 			}
-		));
+		);
+
+		result.set_to_good_status_with_value(
+			std::move(
+				future
+			)
+		);
+	}
+
+	std::future<void> CliIO::print_with_new_line_async(
+		const std::string& text
+	)
+	{
+		std::promise<void> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, promise = std::move(promise)]() mutable
+			{
+				print_with_new_line();
+
+				promise.set_value();
+			}
+		);
+
+		return future;
+	}
+
+	void CliIO::print_with_new_line_async(
+		Result<std::future<void>>& result,
+		const std::string& text
+	)
+	{
+		std::promise<void> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, promise = std::move(promise)]() mutable
+			{
+				Result<void> result;
+
+				print_with_new_line(result);
+
+				promise.set_value();
+			}
+		);
+
+		result.set_to_good_status_with_value(
+			std::move(
+				future
+			)
+		);
+	}
+
+	std::future<void> CliIO::builtin_print_with_new_line_async(
+		const std::string& text
+	)
+	{
+		std::promise<void> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, promise = std::move(promise)]() mutable
+			{
+				builtin_print_with_new_line();
+
+				promise.set_value();
+			}
+		);
+
+		return future;
+	}
+
+	void CliIO::builtin_print_with_new_line_async(
+		Result<std::future<void>>& result,
+		const std::string& text
+	)
+	{
+		std::promise<void> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, promise = std::move(promise)]() mutable
+			{
+				Result<void> result;
+
+				builtin_print_with_new_line(result);
+
+				promise.set_value();
+			}
+		);
+
+		result.set_to_good_status_with_value(
+			std::move(
+				future
+			)
+		);
+	}
+
+	std::future<void> CliIO::print_async(
+		const std::string& text
+	)
+	{
+		std::promise<void> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text, promise = std::move(promise)]() mutable
+			{
+				print(text);
+
+				promise.set_value();
+			}
+		);
+
+		return future;
 	}
 
 	void CliIO::print_async(
@@ -395,16 +520,84 @@ namespace QLogicaeCore
 			[this, text, promise = std::move(promise)]() mutable
 			{
 				Result<void> inner_result;
-				
+
 				print(inner_result, text);
-		
+
 				promise.set_value();
 			}
 		);
 
 		result.set_to_good_status_with_value(
-			std::move(future)
+			std::move(
+				future
+			)
 		);
+	}
+
+	std::future<std::string> CliIO::builtin_scan_async()
+	{
+		std::promise<std::string> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, promise = std::move(promise)]() mutable
+			{
+				promise.set_value(
+					builtin_scan()
+				);
+			}
+		);
+
+		return future;
+	}
+
+	void CliIO::builtin_scan_async(
+		Result<std::future<std::string>>& result
+	)
+	{
+		std::promise<std::string> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, promise = std::move(promise)]() mutable
+			{
+				Result<std::string> inner_result;
+
+				builtin_scan(inner_result);
+
+				promise.set_value(
+					inner_result.get_value()
+				);
+			}
+		);
+
+		result.set_to_good_status_with_value(
+			std::move(
+				future
+			)
+		);
+	}
+
+	std::future<void> CliIO::builtin_print_async(
+		const std::string& text
+	)
+	{
+		std::promise<void> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text, promise = std::move(promise)]() mutable
+			{
+				builtin_print(text);
+
+				promise.set_value();
+			}
+		);
+
+		return future;
 	}
 
 	void CliIO::builtin_print_async(
@@ -412,48 +605,36 @@ namespace QLogicaeCore
 		const std::string& text
 	)
 	{
-		result.set_to_good_status_with_value(
-			std::async(std::launch::async,
-			[this, text]() -> void
+		std::promise<void> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text, promise = std::move(promise)]() mutable
 			{
-				Result<void> result;
-				
-				builtin_print(result, text);
+				Result<void> inner_result;
+
+				builtin_print(
+					inner_result,
+					text
+				);
+
+				promise.set_value();
 			}
-		));
-	
+		);
+
+		result.set_to_good_status_with_value(
+			std::move(
+				future
+			)
+		);
 	}
 
-	void CliIO::print_with_new_line_async(
-		Result<std::future<void>>& result,
-		const std::string& text
-	)
+	CliIO& CliIO::get_instance()
 	{
-		result.set_to_good_status_with_value(
-			std::async(std::launch::async,
-			[this, text]() -> void
-			{
-				Result<void> result;
+		static CliIO singleton;
 
-				print_with_new_line(result, text);
-			}
-		));
-	}
-
-	void CliIO::builtin_print_with_new_line_async(
-		Result<std::future<void>>& result,
-		const std::string& text
-	)
-	{
-		result.set_to_good_status_with_value(
-			std::async(std::launch::async,
-			[this, text]() -> void
-			{
-				Result<void> result;
-				
-				builtin_print_with_new_line(result, text);
-			}
-		));
+		return singleton;
 	}
 
 	void CliIO::get_instance(

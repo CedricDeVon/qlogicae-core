@@ -13,6 +13,28 @@ namespace QLogicaeCore
     class CliIO
     {
     public:
+		bool setup(
+			const bool& is_scan_enabled = true,
+			const bool& is_print_enabled = true
+		);
+
+		void setup(
+			Result<void>& result,
+			const bool& is_scan_enabled = true,
+			const bool& is_print_enabled = true
+		);
+
+		std::future<bool> setup_async(
+			const bool& is_scan_enabled = true,
+			const bool& is_print_enabled = true
+		);
+
+		void setup_async(
+			Result<std::future<void>>& result,
+			const bool& is_scan_enabled = true,
+			const bool& is_print_enabled = true
+		);
+
 		bool is_scan_enabled();
 
 		bool is_print_enabled();
@@ -63,14 +85,6 @@ namespace QLogicaeCore
 
 		std::future<void> builtin_print_with_new_line_async(
 			const std::string& text = ""
-		);
-
-		static CliIO& get_instance();
-
-		void setup(
-			Result<void>& result,
-			const bool& is_scan_enabled = true,
-			const bool& is_print_enabled = true
 		);
 
 		void is_scan_enabled(
@@ -145,6 +159,8 @@ namespace QLogicaeCore
 			const std::string& text = ""
 		);
 
+		static CliIO& get_instance();
+
 		static void get_instance(
 			Result<CliIO*>& result
 		);
@@ -152,15 +168,23 @@ namespace QLogicaeCore
     protected:
         CliIO();
 
-        ~CliIO() = default;
+        ~CliIO();
 
-        CliIO(const CliIO& cli_io) = delete;
+        CliIO(
+			const CliIO& instance
+		) = delete;
 
-        CliIO(CliIO&& cli_io) noexcept = delete;
+        CliIO(
+			CliIO&& instance
+		) noexcept = delete;
 
-        CliIO& operator = (CliIO&& cli_io) = delete;
+        CliIO& operator = (
+			CliIO&& instance
+		) = delete;
 
-        CliIO& operator = (const CliIO& cli_io) = delete;
+        CliIO& operator = (
+			const CliIO& instance
+		) = delete;
 		
 		bool _is_scan_enabled;
 		
