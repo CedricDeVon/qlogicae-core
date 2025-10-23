@@ -5,16 +5,23 @@
 namespace QLogicaeCore
 {
     TextFileIO::TextFileIO(
-        const std::string& file_path) :
-        AbstractFileIO(file_path)
+        const std::string& file_path
+    ) :
+        AbstractFileIO(
+            file_path
+        )
     {
 
     }
 
     TextFileIO::TextFileIO(
         const std::string& name,
-        const std::string& file_path) :
-            AbstractFileIO(name, file_path)
+        const std::string& file_path
+    ) :
+            AbstractFileIO(
+                name,
+                file_path
+            )
     {
 
     }
@@ -30,271 +37,83 @@ namespace QLogicaeCore
         const std::string& file_path
     )
     {
-        Result<void> void_result;
+        try
+        {
+            Result<void> result;
 
-        setup(void_result, file_path);
+            setup(
+                result,
+                file_path
+            );
 
-        return void_result.is_status_safe();
+            return result.is_status_safe();
+        }
+        catch (const std::exception& exception)
+        {
+
+        }
     }
 
+    void TextFileIO::setup(
+        Result<void>& result,
+        const std::string& file_path
+    )
+    {
+        _file_path = file_path;
+
+        result.set_to_good_status_without_value();
+    }
 
     bool TextFileIO::setup(
         const std::string& name,
         const std::string& file_path
     )
     {
-        Result<void> void_result;
-
-        setup(void_result, name, file_path);
-
-        return void_result.is_status_safe();
-    }
-
-    bool TextFileIO::open(const FileMode& file_mode)
-    {
         try
         {
-            switch (file_mode)
-            {
-            case FileMode::READ:
-                if (!std::filesystem::exists(_file_path))
-                {
-                    return false;
-                }
-                if (!_read_file)
-                {
-                    _read_file.emplace(_file_path);
-                }
-                return true;
+            Result<void> result;
 
-            case FileMode::WRITE:
-                if (!_write_file)
-                {
-                    _write_file.emplace(_file_path);
-                }
-                return true;
+            setup(result, name, file_path);
 
-            case FileMode::APPEND:
-                if (!_append_file)
-                {
-                    _append_file.emplace(
-                        _file_path,
-                        fast_io::open_mode::app
-                    );
-                }
-                return true;
-
-            default:
-                return false;
-            }
+            return result.is_status_safe();
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at TextFileIO::open(): " + exception.what());
+
         }
     }
 
-    bool TextFileIO::close(const FileMode& file_mode)
+    void TextFileIO::setup(
+        Result<void>& result,
+        const std::string& name,
+        const std::string& file_path
+    )
+    {
+        _name = name;
+        _file_path = file_path;
+
+        result.set_to_good_status_without_value();
+    }
+
+    bool TextFileIO::open(
+        const FileMode& file_mode
+    )
     {
         try
         {
-            switch (file_mode)
-            {
-            case FileMode::READ:
-                if (_read_file)
-                {
-                    _read_file.reset();
-                }
-                return true;
+            Result<bool> result;
 
-            case FileMode::WRITE:
-                if (_write_file)
-                {
-                    _write_file.reset();
-                }
-                return true;
+            open(
+                result,
+                file_mode
+            );
 
-            case FileMode::APPEND:
-                if (_append_file)
-                {
-                    _append_file.reset();
-                }
-                return true;
-
-            default:
-                return false;
-            }
+            return result.get_value();
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at TextFileIO::close(): " + exception.what());
+
         }
-    }
-
-    bool TextFileIO::is_open(const FileMode& file_mode)
-    {
-        try
-        {
-            switch (file_mode)
-            {
-            case FileMode::READ:
-                return _read_file.has_value();
-
-            case FileMode::WRITE:
-                return _write_file.has_value();
-
-            case FileMode::APPEND:
-                return _append_file.has_value();
-
-            default:
-                return false;
-            }
-        }
-        catch (const std::exception& exception)
-        {
-            throw std::runtime_error(std::string() + "Exception at TextFileIO::is_open(): " + exception.what());
-        }
-    }
-
-    std::string TextFileIO::read()
-    {
-        try
-        {
-            std::scoped_lock lock(_mutex);
-
-            if (!open(FileMode::READ))
-            {
-                return "";
-            }
-
-            fast_io::native_file_loader& file_loader =
-                _read_file.value();
-            std::string content{
-                file_loader.begin(),
-                file_loader.end()
-            };
-
-            return content;
-        }
-        catch (const std::exception& exception)
-        {
-            throw std::runtime_error(std::string() + "Exception at TextFileIO::read(): " + exception.what());
-        }
-    }
-
-    bool TextFileIO::write(const std::string& content)
-    {
-        try
-        {
-            std::scoped_lock lock(_mutex);
-
-            if (!open(FileMode::WRITE))
-            {
-                return false;
-            }
-
-            fast_io::io::print(_write_file.value(), content);
-
-            close(FileMode::READ);
-            close(FileMode::WRITE);
-            close(FileMode::APPEND);
-
-            return true;
-        }
-        catch (const std::exception& exception)
-        {
-            throw std::runtime_error(std::string() + "Exception at TextFileIO::write(): " + exception.what());
-        }
-    }
-
-    bool TextFileIO::append(const std::string& content)
-    {
-        try
-        {
-            std::scoped_lock lock(_mutex);
-
-            if (!open(FileMode::APPEND))
-            {
-                return false;
-            }
-
-            fast_io::io::print(_append_file.value(), content);
-
-            close(FileMode::READ);
-            close(FileMode::WRITE);
-            close(FileMode::APPEND);
-
-            return true;
-        }
-        catch (const std::exception& exception)
-        {
-            throw std::runtime_error(std::string() + "Exception at TextFileIO::append(): " + exception.what());
-        }
-    }
-
-    std::future<std::string> TextFileIO::read_async()
-    {
-        return std::async(std::launch::async,
-            [this]() -> std::string
-        {
-            return read();            
-        });
-    }
-
-    std::future<bool> TextFileIO::write_async(
-        const std::string& content)
-    {
-        return std::async(std::launch::async,
-            [this, content]() -> bool
-        {
-            return write(content);            
-        });
-    }
-
-    std::future<bool> TextFileIO::append_async(
-        const std::string& content)
-    {
-        std::promise<bool> promise;
-        auto future = promise.get_future();
-
-        boost::asio::post(
-            UTILITIES.BOOST_ASIO_POOL,
-            [this, content, promise = std::move(promise)]() mutable
-            {
-                Result<bool> result;
-
-                append(
-                    result,
-                    content
-                );
-
-                promise.set_value(
-                    result.get_value()
-                );
-            }
-        );
-
-        return future;
-    }
-
-    std::future<bool> TextFileIO::open_async(
-        const FileMode& file_mode)
-    {
-        return std::async(std::launch::async,
-            [this, file_mode]() -> bool
-        {
-            return open(file_mode);            
-        });
-    }
-
-    std::future<bool> TextFileIO::close_async(
-        const FileMode& file_mode)
-    {
-        return std::async(std::launch::async,
-            [this, file_mode]() -> bool
-        {
-            return close(file_mode);            
-        });
     }
 
     void TextFileIO::open(
@@ -316,7 +135,7 @@ namespace QLogicaeCore
                 {
                     _read_file.emplace(_file_path);
                 }
-            
+
                 return result.set_to_good_status_with_value(
                     true
                 );
@@ -327,7 +146,7 @@ namespace QLogicaeCore
                 {
                     _write_file.emplace(_file_path);
                 }
-            
+
                 return result.set_to_good_status_with_value(
                     true
                 );
@@ -352,6 +171,27 @@ namespace QLogicaeCore
                     "File open failed"
                 );
             }
+        }
+    }
+
+    bool TextFileIO::close(
+        const FileMode& file_mode
+    )
+    {
+        try
+        {
+            Result<bool> result;
+
+            close(
+                result,
+                file_mode
+            );
+
+            return result.get_value();
+        }
+        catch (const std::exception& exception)
+        {
+
         }
     }
 
@@ -404,6 +244,27 @@ namespace QLogicaeCore
         }
     }
 
+    bool TextFileIO::is_open(
+        const FileMode& file_mode
+    )
+    {
+        try
+        {
+            Result<bool> result;
+
+            is_open(
+                result,
+                file_mode
+            );
+
+            return result.get_value();
+        }
+        catch (const std::exception& exception)
+        {
+
+        }
+    }
+
     void TextFileIO::is_open(
         Result<bool>& result,
         const FileMode& file_mode
@@ -438,12 +299,30 @@ namespace QLogicaeCore
         }
     }
 
+    std::string TextFileIO::read()
+    {
+        try
+        {
+            std::scoped_lock lock(_mutex);
+
+            Result<std::string> result;
+
+            read(
+                result
+            );
+
+            return result.get_value();
+        }
+        catch (const std::exception& exception)
+        {
+
+        }
+    }
+
     void TextFileIO::read(
         Result<std::string>& result
     )
     {
-        std::scoped_lock lock(_mutex);
-
         if (!open(FileMode::READ))
         {
             return result.set_to_bad_status_without_value(
@@ -463,13 +342,34 @@ namespace QLogicaeCore
         );
     }
 
+    bool TextFileIO::write(
+        const std::string& content
+    )
+    {
+        try
+        {
+            std::scoped_lock lock(_mutex);
+
+            Result<bool> result;
+
+            write(
+                result,
+                content
+            );
+
+            return result.get_value();
+        }
+        catch (const std::exception& exception)
+        {
+
+        }
+    }
+
     void TextFileIO::write(
         Result<bool>& result,
         const std::string& content
     )
-    {
-        std::scoped_lock lock(_mutex);
-
+    {        
         if (!open(FileMode::WRITE))
         {
             return result.set_to_bad_status_without_value(
@@ -486,16 +386,38 @@ namespace QLogicaeCore
         close(FileMode::WRITE);
         close(FileMode::APPEND);
 
-         result.set_to_good_status_with_value(
+        result.set_to_good_status_with_value(
             true
         );
+    }
+    bool TextFileIO::append(
+        const std::string& content
+    )
+    {
+        try
+        {
+            std::scoped_lock lock(_mutex);
+
+            Result<bool> result;
+
+            append(
+                result,
+                content
+            );
+
+            return result.get_value();
+        }
+        catch (const std::exception& exception)
+        {
+
+        }
     }
 
     void TextFileIO::append(
         Result<bool>& result,
         const std::string& content
     )
-    {        
+    {
         if (!open(FileMode::APPEND))
         {
             return result.set_to_bad_status_without_value(
@@ -517,21 +439,68 @@ namespace QLogicaeCore
         );
     }
 
+    std::future<std::string> TextFileIO::read_async()
+    {
+        std::promise<std::string> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    read()
+                );
+            }
+        );
+
+        return future;
+    }
+
     void TextFileIO::read_async(
         Result<std::future<std::string>>& result
     )
     {
-        result.set_to_good_status_with_value(
-            std::async(std::launch::async,
-                [this]() -> std::string
-                {
-                    Result<std::string> result;
+        std::promise<std::string> promise;
+        auto future = promise.get_future();
 
-                    read(result);
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, promise = std::move(promise)]() mutable
+            {
+                Result<std::string> result;
 
-                    return result.get_value();
-                })
+                read(result);
+
+                promise.set_value(
+                    result.get_value()
+                );
+            }
         );
+
+        result.set_to_good_status_with_value(
+            std::move(future)
+        );
+    }
+
+    std::future<bool> TextFileIO::write_async(
+        const std::string& content
+    )
+    {
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, content, promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    write(content)
+                );
+            }
+        );
+
+        return future;
     }
 
     void TextFileIO::write_async(
@@ -539,20 +508,46 @@ namespace QLogicaeCore
         const std::string& content
     )
     {
-        result.set_to_good_status_with_value(
-            std::async(std::launch::async,
-                [this, content]() -> bool
-                {
-                    Result<bool> result;
+        std::promise<bool> promise;
+        auto future = promise.get_future();
 
-                    write(
-                        result,
-                        content
-                    );
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, content, promise = std::move(promise)]() mutable
+            {
+                Result<bool> result;
 
-                    return result.get_value();
-                })
+                write(result, content);
+
+                promise.set_value(
+                    result.get_value()
+                );
+            }
         );
+
+        result.set_to_good_status_with_value(
+            std::move(future)
+        );
+    }
+
+    std::future<bool> TextFileIO::append_async(
+        const std::string& content
+    )
+    {
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, content, promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    append(content)
+                );
+            }
+        );
+
+        return future;
     }
 
     void TextFileIO::append_async(
@@ -569,10 +564,7 @@ namespace QLogicaeCore
             {
                 Result<bool> result;
 
-                append(
-                    result,
-                    content
-                );
+                append(result, content);
 
                 promise.set_value(
                     result.get_value()
@@ -585,25 +577,71 @@ namespace QLogicaeCore
         );
     }
 
+    std::future<bool> TextFileIO::open_async(
+        const FileMode& file_mode
+    )
+    {
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, file_mode, promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    open(file_mode)
+                );
+            }
+        );
+
+        return future;
+    }
+
     void TextFileIO::open_async(
         Result<std::future<bool>>& result,
         const FileMode& file_mode
     )
     {
-        result.set_to_good_status_with_value(
-            std::async(std::launch::async,
-                [this, file_mode]() -> bool
-                {
-                    Result<bool> result;
+        std::promise<bool> promise;
+        auto future = promise.get_future();
 
-                    open(
-                        result,
-                        file_mode
-                    );
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, file_mode, promise = std::move(promise)]() mutable
+            {
+                Result<bool> result;
 
-                    return result.get_value();
-                })
+                open(result, file_mode);
+
+                promise.set_value(
+                    result.get_value()
+                );
+            }
         );
+
+        result.set_to_good_status_with_value(
+            std::move(future)
+        );
+    }
+
+    std::future<bool> TextFileIO::close_async(
+        const FileMode& file_mode
+    )
+    {
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, file_mode, promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    close(file_mode)
+                );
+            }
+        );
+
+        return future;
     }
 
     void TextFileIO::close_async(
@@ -611,42 +649,25 @@ namespace QLogicaeCore
         const FileMode& file_mode
     )
     {
-        result.set_to_good_status_with_value(
-            std::async(std::launch::async,
-                [this, file_mode]() -> bool
-                {
-                    Result<bool> result;
+        std::promise<bool> promise;
+        auto future = promise.get_future();
 
-                    close(
-                        result,
-                        file_mode
-                    );
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, file_mode, promise = std::move(promise)]() mutable
+            {
+                Result<bool> result;
 
-                    return result.get_value();
-                })
+                close(result, file_mode);
+
+                promise.set_value(
+                    result.get_value()
+                );
+            }
         );
-    }
 
-    void TextFileIO::setup(
-        Result<void>& result,
-        const std::string& file_path
-    )
-    {
-        _file_path = file_path;
-
-        result.set_to_good_status_without_value();
-    }
-
-
-    void TextFileIO::setup(
-        Result<void>& result,
-        const std::string& name,
-        const std::string& file_path
-    )
-    {
-        _name = name;
-        _file_path = file_path;
-
-        result.set_to_good_status_without_value();
+        result.set_to_good_status_with_value(
+            std::move(future)
+        );
     }
 }

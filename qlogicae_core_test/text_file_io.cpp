@@ -109,7 +109,7 @@ namespace QLogicaeCoreTest
 
     TEST(TextFileIOEdgeTest, Should_Expect_Empty_When_ReadingNonexistentFile)
     {
-        QLogicaeCore::TextFileIO file("nonexistent.txt");
+        QLogicaeCore::TextFileIO file("nonexistet.txt");
         EXPECT_EQ(file.read(), "");
     }
 
