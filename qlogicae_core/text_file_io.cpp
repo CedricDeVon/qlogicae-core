@@ -254,11 +254,27 @@ namespace QLogicaeCore
     std::future<bool> TextFileIO::append_async(
         const std::string& content)
     {
-        return std::async(std::launch::async,
-            [this, content]() -> bool
-        {
-            return append(content);            
-        });
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, content, promise = std::move(promise)]() mutable
+            {
+                Result<bool> result;
+
+                append(
+                    result,
+                    content
+                );
+
+                promise.set_value(
+                    result.get_value()
+                );
+            }
+        );
+
+        return future;
     }
 
     std::future<bool> TextFileIO::open_async(
@@ -479,9 +495,7 @@ namespace QLogicaeCore
         Result<bool>& result,
         const std::string& content
     )
-    {
-        std::scoped_lock lock(_mutex);
-
+    {        
         if (!open(FileMode::APPEND))
         {
             return result.set_to_bad_status_without_value(
@@ -546,19 +560,28 @@ namespace QLogicaeCore
         const std::string& content
     )
     {
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, content, promise = std::move(promise)]() mutable
+            {
+                Result<bool> result;
+
+                append(
+                    result,
+                    content
+                );
+
+                promise.set_value(
+                    result.get_value()
+                );
+            }
+        );
+
         result.set_to_good_status_with_value(
-            std::async(std::launch::async,
-                [this, content]() -> bool
-                {
-                    Result<bool> result;
-
-                    append(
-                        result,
-                        content
-                    );
-
-                    return result.get_value();
-                })
+            std::move(future)
         );
     }
 

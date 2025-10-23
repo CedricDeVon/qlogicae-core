@@ -25,22 +25,6 @@ namespace QLogicaeCore
 		);
 
 		Logger(
-			const Logger& logger
-		) = delete;
-
-		Logger(
-			Logger&& logger
-		) noexcept = default;
-
-		Logger& operator = (
-			const Logger& logger
-			) = delete;
-
-		Logger& operator = (
-			Logger&& logger
-			) noexcept = default;
-
-		Logger(
 			const std::string& name,
 			const LogMedium& medium = LogMedium::CONSOLE,
 			const std::vector<std::string>& output_paths = {},
@@ -50,6 +34,22 @@ namespace QLogicaeCore
 		Logger(
 			const LoggerConfigurations& configurations
 		);
+
+		Logger(
+			const Logger& logger
+		) = delete;
+
+		Logger(
+			Logger&& logger
+		) noexcept = default;
+
+		Logger& operator = (
+			const Logger& logger
+		) = delete;
+
+		Logger& operator = (
+			Logger&& logger
+		) noexcept = default;
 
 		bool setup();
 
@@ -308,6 +308,12 @@ namespace QLogicaeCore
 			const std::exception& exception
 		);
 
+		static Logger& get_instance();
+
+		void get_instance(
+			Result<Logger*>& result
+		);
+
 	protected:		
 		bool _is_enabled;
 		
@@ -376,10 +382,3 @@ namespace QLogicaeCore
 		std::string _generate_log_collectivization_file_path();
 	};
 }
-
-/*
-
-
-
-		
-*/
