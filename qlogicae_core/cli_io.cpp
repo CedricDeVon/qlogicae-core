@@ -59,10 +59,13 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, promise = std::move(promise)]() mutable
+			[this, is_scan_enabled, is_print_enabled, promise = std::move(promise)]() mutable
 			{
 				promise.set_value(
-					setup()
+					setup(
+						is_scan_enabled,
+						is_print_enabled
+					)
 				);
 			}
 		);

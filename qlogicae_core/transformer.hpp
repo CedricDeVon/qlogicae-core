@@ -18,6 +18,12 @@ namespace QLogicaeCore
             Result<void>& result
         );
 
+        std::future<bool> setup_async();
+
+        void setup_async(
+            Result<std::future<void>>& result
+        );
+
         std::string color_type(
             const LogLevel& log_level
         );

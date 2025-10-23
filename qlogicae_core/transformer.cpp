@@ -46,6 +46,51 @@ namespace QLogicaeCore
         }
     }
 
+    std::future<bool> Transformer::setup_async()
+    {
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    setup()
+                );
+            }
+        );
+
+        return future;
+    }
+
+    void Transformer::setup_async(
+        Result<std::future<void>>& result
+    )
+    {
+        std::promise<void> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, promise = std::move(promise)]() mutable
+            {
+                Result<void> result;
+
+                setup(
+                    result
+                );
+
+                promise.set_value();
+            }
+        );
+
+        result.set_to_good_status_with_value(
+            std::move(
+                future
+            )
+        );
+    }
     void Transformer::color_type(
         Result<std::string>& result,
         const LogLevel& log_level
