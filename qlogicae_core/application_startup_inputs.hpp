@@ -3,7 +3,6 @@
 namespace QLogicaeCore
 {
     struct ApplicationStartupInputs
-    {
-        
+    {        
     };
 }

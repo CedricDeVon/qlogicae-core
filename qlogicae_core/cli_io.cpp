@@ -51,7 +51,8 @@ namespace QLogicaeCore
 
 	std::future<bool> CliIO::setup_async(
 		const bool& is_scan_enabled,
-		const bool& is_print_enabled
+		const bool& is_print_enabled,
+		const std::function<void(const bool& result)>& callback
 	)
 	{
 		std::promise<bool> promise;
@@ -59,14 +60,23 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, is_scan_enabled, is_print_enabled, promise = std::move(promise)]() mutable
+			[this, callback, is_scan_enabled, is_print_enabled, promise = std::move(promise)]() mutable
 			{
-				promise.set_value(
-					setup(
-						is_scan_enabled,
-						is_print_enabled
-					)
+				bool value = setup(
+					is_scan_enabled,
+					is_print_enabled
 				);
+
+				promise.set_value(
+					value
+				);
+
+				if (callback)
+				{
+					callback(
+						value
+					);
+				}
 			}
 		);
 
@@ -76,7 +86,8 @@ namespace QLogicaeCore
 	void CliIO::setup_async(
 		Result<std::future<void>>& result,
 		const bool& is_scan_enabled,
-		const bool& is_print_enabled
+		const bool& is_print_enabled,
+		const std::function<void(Result<void>& result)>& callback
 	)
 	{
 		std::promise<void> promise;
@@ -84,7 +95,7 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, is_scan_enabled, is_print_enabled, promise = std::move(promise)]() mutable
+			[this, callback, is_scan_enabled, is_print_enabled, promise = std::move(promise)]() mutable
 			{
 				Result<void> result;
 
@@ -95,6 +106,10 @@ namespace QLogicaeCore
 				);
 
 				promise.set_value();
+
+				callback(
+					result
+				);
 			}
 		);
 
@@ -352,18 +367,29 @@ namespace QLogicaeCore
 		result.set_to_good_status_without_value();
 	}
 
-	std::future<std::string> CliIO::scan_async()
+	std::future<std::string> CliIO::scan_async(
+		const std::function<void(const std::string& result)>& callback
+	)
 	{
 		std::promise<std::string> promise;
 		auto future = promise.get_future();
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, promise = std::move(promise)]() mutable
+			[this, callback, promise = std::move(promise)]() mutable
 			{
+				std::string value = scan();
+
 				promise.set_value(
-					scan()
+					value
 				);
+
+				if (callback)
+				{
+					callback(
+						value
+					);
+				}
 			}
 		);
 
@@ -371,7 +397,8 @@ namespace QLogicaeCore
 	}
 
 	void CliIO::scan_async(
-		Result<std::future<std::string>>& result
+		Result<std::future<std::string>>& result,
+		const std::function<void(const std::string& result)>& callback
 	)
 	{
 		std::promise<std::string> promise;
@@ -379,13 +406,19 @@ namespace QLogicaeCore
 		
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, promise = std::move(promise)]() mutable
+			[this, callback, promise = std::move(promise)]() mutable
 			{
 				Result<std::string> result;
 
 				scan(result);
 
-				promise.set_value(result.get_value());
+				promise.set_value(
+					result.get_value()
+				);
+
+				callback(
+					result.get_value()
+				);
 			}
 		);
 
@@ -397,7 +430,8 @@ namespace QLogicaeCore
 	}
 
 	std::future<void> CliIO::print_with_new_line_async(
-		const std::string& text
+		const std::string& text,
+		const std::function<void()>& callback
 	)
 	{
 		std::promise<void> promise;
@@ -405,11 +439,16 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, promise = std::move(promise)]() mutable
+			[this, callback, promise = std::move(promise)]() mutable
 			{
 				print_with_new_line();
 
 				promise.set_value();
+
+				if (callback)
+				{
+					callback();
+				}
 			}
 		);
 
@@ -418,7 +457,8 @@ namespace QLogicaeCore
 
 	void CliIO::print_with_new_line_async(
 		Result<std::future<void>>& result,
-		const std::string& text
+		const std::string& text,
+		const std::function<void(Result<void> result)>& callback
 	)
 	{
 		std::promise<void> promise;
@@ -426,13 +466,17 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, promise = std::move(promise)]() mutable
+			[this, callback, promise = std::move(promise)]() mutable
 			{
 				Result<void> result;
 
 				print_with_new_line(result);
 
 				promise.set_value();
+
+				callback(
+					result
+				);
 			}
 		);
 
@@ -444,7 +488,8 @@ namespace QLogicaeCore
 	}
 
 	std::future<void> CliIO::builtin_print_with_new_line_async(
-		const std::string& text
+		const std::string& text,
+		const std::function<void()>& callback
 	)
 	{
 		std::promise<void> promise;
@@ -452,11 +497,16 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, promise = std::move(promise)]() mutable
+			[this, callback, promise = std::move(promise)]() mutable
 			{
 				builtin_print_with_new_line();
 
 				promise.set_value();
+
+				if (callback)
+				{
+					callback();
+				}
 			}
 		);
 
@@ -465,7 +515,8 @@ namespace QLogicaeCore
 
 	void CliIO::builtin_print_with_new_line_async(
 		Result<std::future<void>>& result,
-		const std::string& text
+		const std::string& text,
+		const std::function<void(Result<void> result)>& callback
 	)
 	{
 		std::promise<void> promise;
@@ -473,13 +524,17 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, promise = std::move(promise)]() mutable
+			[this, callback, promise = std::move(promise)]() mutable
 			{
 				Result<void> result;
 
 				builtin_print_with_new_line(result);
 
 				promise.set_value();
+
+				callback(
+					result
+				);
 			}
 		);
 
@@ -491,7 +546,8 @@ namespace QLogicaeCore
 	}
 
 	std::future<void> CliIO::print_async(
-		const std::string& text
+		const std::string& text,
+		const std::function<void()>& callback
 	)
 	{
 		std::promise<void> promise;
@@ -499,11 +555,16 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, text, promise = std::move(promise)]() mutable
+			[this, callback, text, promise = std::move(promise)]() mutable
 			{
 				print(text);
 
 				promise.set_value();
+
+				if (callback)
+				{
+					callback();
+				}
 			}
 		);
 
@@ -512,7 +573,8 @@ namespace QLogicaeCore
 
 	void CliIO::print_async(
 		Result<std::future<void>>& result,
-		const std::string& text
+		const std::string& text,
+		const std::function<void(Result<void> result)>& callback
 	)
 	{
 		std::promise<void> promise;
@@ -520,13 +582,17 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, text, promise = std::move(promise)]() mutable
+			[this, callback, text, promise = std::move(promise)]() mutable
 			{
-				Result<void> inner_result;
+				Result<void> result;
 
-				print(inner_result, text);
+				print(result, text);
 
 				promise.set_value();
+
+				callback(
+					result
+				);
 			}
 		);
 
@@ -537,26 +603,8 @@ namespace QLogicaeCore
 		);
 	}
 
-	std::future<std::string> CliIO::builtin_scan_async()
-	{
-		std::promise<std::string> promise;
-		auto future = promise.get_future();
-
-		boost::asio::post(
-			UTILITIES.BOOST_ASIO_POOL,
-			[this, promise = std::move(promise)]() mutable
-			{
-				promise.set_value(
-					builtin_scan()
-				);
-			}
-		);
-
-		return future;
-	}
-
-	void CliIO::builtin_scan_async(
-		Result<std::future<std::string>>& result
+	std::future<std::string> CliIO::builtin_scan_async(
+		const std::function<void(const std::string& result)>& callback
 	)
 	{
 		std::promise<std::string> promise;
@@ -564,14 +612,46 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, promise = std::move(promise)]() mutable
+			[this, callback, promise = std::move(promise)]() mutable
 			{
-				Result<std::string> inner_result;
-
-				builtin_scan(inner_result);
+				std::string value = builtin_scan();
 
 				promise.set_value(
-					inner_result.get_value()
+					value
+				);
+
+				if (callback)
+				{
+					callback(value);
+				}
+			}
+		);
+
+		return future;
+	}
+
+	void CliIO::builtin_scan_async(
+		Result<std::future<std::string>>& result,
+		const std::function<void(const std::string& result)>& callback
+	)
+	{
+		std::promise<std::string> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, callback, promise = std::move(promise)]() mutable
+			{
+				Result<std::string> result;
+
+				builtin_scan(result);
+
+				promise.set_value(
+					result.get_value()
+				);
+
+				callback(
+					result.get_value()
 				);
 			}
 		);
@@ -584,7 +664,8 @@ namespace QLogicaeCore
 	}
 
 	std::future<void> CliIO::builtin_print_async(
-		const std::string& text
+		const std::string& text,
+		const std::function<void()>& callback
 	)
 	{
 		std::promise<void> promise;
@@ -592,11 +673,16 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, text, promise = std::move(promise)]() mutable
+			[this, callback, text, promise = std::move(promise)]() mutable
 			{
 				builtin_print(text);
 
 				promise.set_value();
+
+				if (callback)
+				{
+					callback();
+				}
 			}
 		);
 
@@ -605,7 +691,8 @@ namespace QLogicaeCore
 
 	void CliIO::builtin_print_async(
 		Result<std::future<void>>& result,
-		const std::string& text
+		const std::string& text,
+		const std::function<void(Result<void> result)>& callback
 	)
 	{
 		std::promise<void> promise;
@@ -613,16 +700,20 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, text, promise = std::move(promise)]() mutable
+			[this, callback, text, promise = std::move(promise)]() mutable
 			{
-				Result<void> inner_result;
+				Result<void> result;
 
 				builtin_print(
-					inner_result,
+					result,
 					text
 				);
 
 				promise.set_value();
+
+				callback(
+					result
+				);
 			}
 		);
 

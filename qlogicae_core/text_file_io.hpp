@@ -119,46 +119,67 @@ namespace QLogicaeCore
             const std::string& text
         );
 
-        std::future<std::string> read_async();
+        std::future<std::string> read_async(
+            const std::function<void(const std::string& result)>& callback =
+                [](const std::string& result) {}
+        );
 
         void read_async(
-            Result<std::future<std::string>>& result
+            Result<std::future<std::string>>& result,
+            const std::function<void(Result<std::string>& result)>& callback =
+                [](Result<std::string>& result) {}
         );
 
         std::future<bool> open_async(
-            const FileMode& file_mode
+            const FileMode& file_mode,
+            const std::function<void(const bool& result)>& callback =
+                [](const bool& result) {}
         );
 
         void open_async(
             Result<std::future<bool>>& result,
-            const FileMode& file_mode
+            const FileMode& file_mode,
+            const std::function<void(Result<bool>& result)>& callback =
+                [](Result<bool>& result) {}
         );
 
         std::future<bool> close_async(
-            const FileMode& file_mode
+            const FileMode& file_mode,
+            const std::function<void(const bool& result)>& callback =
+                [](const bool& result) {}
         );
 
         void close_async(
             Result<std::future<bool>>& result,
-            const FileMode& file_mode
+            const FileMode& file_mode,
+            const std::function<void(Result<bool>& result)>& callback =
+                [](Result<bool>& result) {}
         );
 
         std::future<bool> write_async(
-            const std::string& text
+            const std::string& text,
+            const std::function<void(const bool& result)>& callback =
+                [](const bool& result) {}
         );
 
         void write_async(
             Result<std::future<bool>>& result,
-            const std::string& text
+            const std::string& text,
+            const std::function<void(Result<bool>& result)>& callback =
+                [](Result<bool>& result) {}
         );
 
         std::future<bool> append_async(
-            const std::string& text
+            const std::string& text,
+            const std::function<void(const bool& result)>& callback =
+                [](const bool& result) {}
         );
 
         void append_async(
             Result<std::future<bool>>& result,
-            const std::string& text
+            const std::string& text,
+            const std::function<void(Result<bool>& result)>& callback =
+                [](Result<bool>& result) {}
         );
 
         static TextFileIO& get_instance();
@@ -166,6 +187,7 @@ namespace QLogicaeCore
         void get_instance(
             Result<TextFileIO*>& result
         );
+
     protected:
         std::optional<fast_io::obuf_file> _write_file;
         

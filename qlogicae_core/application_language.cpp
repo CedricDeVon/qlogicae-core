@@ -1,5 +1,6 @@
 #include "pch.hpp"
 
+#include "utilities.hpp"
 #include "application_language.hpp"
 
 namespace QLogicaeCore
@@ -50,31 +51,61 @@ namespace QLogicaeCore
         }
     }
 
-    std::future<bool> ApplicationLanguage::setup_async()
+    std::future<bool> ApplicationLanguage::setup_async(
+        const std::function<void(const bool& value)>& callback
+    )
     {
-        return std::async(
-            std::launch::async,
-            [this]() -> bool
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, callback, promise = std::move(promise)]() mutable
             {
-                return setup();
+                bool value = setup();
+
+                promise.set_value(
+                    value
+                );
+
+                if (callback)
+                {
+                    callback(
+                        value
+                    );
+                }
             }
         );
+
+        return future;
     }
 
     void ApplicationLanguage::setup_async(
-        Result<std::future<void>>& result
+        Result<std::future<void>>& result,
+        const std::function<void(Result<void>& result)>& callback
     )
     {
-        result.set_to_good_status_with_value(
-            std::async(
-                std::launch::async,
-                [this]() -> void
-                {
-                    Result<void> void_result;
+        std::promise<void> promise;
+        auto future = promise.get_future();
 
-                    setup(void_result);
-                }
-            )
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, callback, promise = std::move(promise)]() mutable
+            {
+                Result<void> result;
+
+                setup(result);
+
+                promise.set_value();
+
+                callback(
+                    result
+                );
+            }
+        );
+
+        result.set_to_good_status_with_value(
+            std::move(future)
         );
     }
 

@@ -439,26 +439,8 @@ namespace QLogicaeCore
         );
     }
 
-    std::future<std::string> TextFileIO::read_async()
-    {
-        std::promise<std::string> promise;
-        auto future = promise.get_future();
-
-        boost::asio::post(
-            UTILITIES.BOOST_ASIO_POOL,
-            [this, promise = std::move(promise)]() mutable
-            {
-                promise.set_value(
-                    read()
-                );
-            }
-        );
-
-        return future;
-    }
-
-    void TextFileIO::read_async(
-        Result<std::future<std::string>>& result
+    std::future<std::string> TextFileIO::read_async(
+        const std::function<void(const std::string& result)>& callback
     )
     {
         std::promise<std::string> promise;
@@ -466,7 +448,35 @@ namespace QLogicaeCore
 
         boost::asio::post(
             UTILITIES.BOOST_ASIO_POOL,
-            [this, promise = std::move(promise)]() mutable
+            [this, callback, promise = std::move(promise)]() mutable
+            {
+                std::string result = read();
+
+                promise.set_value(
+                    result
+                );
+
+                if (callback)
+                {
+                    callback(result);
+                }
+            }
+        );
+
+        return future;
+    }
+
+    void TextFileIO::read_async(
+        Result<std::future<std::string>>& result,
+        const std::function<void(Result<std::string>& result)>& callback
+    )
+    {
+        std::promise<std::string> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, callback, promise = std::move(promise)]() mutable
             {
                 Result<std::string> result;
 
@@ -475,6 +485,8 @@ namespace QLogicaeCore
                 promise.set_value(
                     result.get_value()
                 );
+
+                callback(result);
             }
         );
 
@@ -484,7 +496,8 @@ namespace QLogicaeCore
     }
 
     std::future<bool> TextFileIO::write_async(
-        const std::string& content
+        const std::string& content,
+        const std::function<void(const bool& result)>& callback
     )
     {
         std::promise<bool> promise;
@@ -492,11 +505,18 @@ namespace QLogicaeCore
 
         boost::asio::post(
             UTILITIES.BOOST_ASIO_POOL,
-            [this, content, promise = std::move(promise)]() mutable
+            [this, callback, content, promise = std::move(promise)]() mutable
             {
+                bool result = write(content);
+
                 promise.set_value(
-                    write(content)
+                    result
                 );
+
+                if (callback)
+                {
+                    callback(result);
+                }
             }
         );
 
@@ -505,7 +525,8 @@ namespace QLogicaeCore
 
     void TextFileIO::write_async(
         Result<std::future<bool>>& result,
-        const std::string& content
+        const std::string& content,
+        const std::function<void(Result<bool>& result)>& callback
     )
     {
         std::promise<bool> promise;
@@ -513,7 +534,7 @@ namespace QLogicaeCore
 
         boost::asio::post(
             UTILITIES.BOOST_ASIO_POOL,
-            [this, content, promise = std::move(promise)]() mutable
+            [this, callback, content, promise = std::move(promise)]() mutable
             {
                 Result<bool> result;
 
@@ -522,6 +543,8 @@ namespace QLogicaeCore
                 promise.set_value(
                     result.get_value()
                 );
+
+                callback(result);
             }
         );
 
@@ -531,7 +554,8 @@ namespace QLogicaeCore
     }
 
     std::future<bool> TextFileIO::append_async(
-        const std::string& content
+        const std::string& content,
+        const std::function<void(const bool& result)>& callback
     )
     {
         std::promise<bool> promise;
@@ -539,11 +563,18 @@ namespace QLogicaeCore
 
         boost::asio::post(
             UTILITIES.BOOST_ASIO_POOL,
-            [this, content, promise = std::move(promise)]() mutable
+            [this, callback, content, promise = std::move(promise)]() mutable
             {
+                bool result = append(content);
+
                 promise.set_value(
-                    append(content)
+                    result
                 );
+
+                if (callback)
+                {
+                    callback(result);
+                }
             }
         );
 
@@ -552,7 +583,8 @@ namespace QLogicaeCore
 
     void TextFileIO::append_async(
         Result<std::future<bool>>& result,
-        const std::string& content
+        const std::string& content,
+        const std::function<void(Result<bool>& result)>& callback
     )
     {
         std::promise<bool> promise;
@@ -560,7 +592,7 @@ namespace QLogicaeCore
 
         boost::asio::post(
             UTILITIES.BOOST_ASIO_POOL,
-            [this, content, promise = std::move(promise)]() mutable
+            [this, callback, content, promise = std::move(promise)]() mutable
             {
                 Result<bool> result;
 
@@ -569,6 +601,8 @@ namespace QLogicaeCore
                 promise.set_value(
                     result.get_value()
                 );
+
+                callback(result);
             }
         );
 
@@ -578,7 +612,8 @@ namespace QLogicaeCore
     }
 
     std::future<bool> TextFileIO::open_async(
-        const FileMode& file_mode
+        const FileMode& file_mode,
+        const std::function<void(const bool& result)>& callback
     )
     {
         std::promise<bool> promise;
@@ -586,11 +621,18 @@ namespace QLogicaeCore
 
         boost::asio::post(
             UTILITIES.BOOST_ASIO_POOL,
-            [this, file_mode, promise = std::move(promise)]() mutable
+            [this, callback, file_mode, promise = std::move(promise)]() mutable
             {
+                bool result = open(file_mode);
+
                 promise.set_value(
-                    open(file_mode)
+                    result
                 );
+
+                if (callback)
+                {
+                    callback(result);
+                }
             }
         );
 
@@ -599,7 +641,8 @@ namespace QLogicaeCore
 
     void TextFileIO::open_async(
         Result<std::future<bool>>& result,
-        const FileMode& file_mode
+        const FileMode& file_mode,
+        const std::function<void(Result<bool>& result)>& callback
     )
     {
         std::promise<bool> promise;
@@ -607,7 +650,7 @@ namespace QLogicaeCore
 
         boost::asio::post(
             UTILITIES.BOOST_ASIO_POOL,
-            [this, file_mode, promise = std::move(promise)]() mutable
+            [this, callback, file_mode, promise = std::move(promise)]() mutable
             {
                 Result<bool> result;
 
@@ -616,6 +659,8 @@ namespace QLogicaeCore
                 promise.set_value(
                     result.get_value()
                 );
+
+                callback(result);
             }
         );
 
@@ -625,7 +670,8 @@ namespace QLogicaeCore
     }
 
     std::future<bool> TextFileIO::close_async(
-        const FileMode& file_mode
+        const FileMode& file_mode,
+        const std::function<void(const bool& result)>& callback
     )
     {
         std::promise<bool> promise;
@@ -633,11 +679,18 @@ namespace QLogicaeCore
 
         boost::asio::post(
             UTILITIES.BOOST_ASIO_POOL,
-            [this, file_mode, promise = std::move(promise)]() mutable
+            [this, callback, file_mode, promise = std::move(promise)]() mutable
             {
+                bool result = close(file_mode);
+
                 promise.set_value(
-                    close(file_mode)
+                    result
                 );
+
+                if (callback)
+                {
+                    callback(result);
+                }
             }
         );
 
@@ -646,7 +699,8 @@ namespace QLogicaeCore
 
     void TextFileIO::close_async(
         Result<std::future<bool>>& result,
-        const FileMode& file_mode
+        const FileMode& file_mode,
+        const std::function<void(Result<bool>& result)>& callback
     )
     {
         std::promise<bool> promise;
@@ -654,7 +708,7 @@ namespace QLogicaeCore
 
         boost::asio::post(
             UTILITIES.BOOST_ASIO_POOL,
-            [this, file_mode, promise = std::move(promise)]() mutable
+            [this, callback, file_mode, promise = std::move(promise)]() mutable
             {
                 Result<bool> result;
 
@@ -663,6 +717,8 @@ namespace QLogicaeCore
                 promise.set_value(
                     result.get_value()
                 );
+
+                callback(result);
             }
         );
 
@@ -671,3 +727,4 @@ namespace QLogicaeCore
         );
     }
 }
+

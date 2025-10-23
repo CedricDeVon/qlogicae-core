@@ -46,18 +46,29 @@ namespace QLogicaeCore
         }
     }
 
-    std::future<bool> Transformer::setup_async()
+    std::future<bool> Transformer::setup_async(
+        const std::function<void(const bool& value)>& callback
+    )
     {
         std::promise<bool> promise;
         auto future = promise.get_future();
 
         boost::asio::post(
             UTILITIES.BOOST_ASIO_POOL,
-            [this, promise = std::move(promise)]() mutable
+            [this, callback, promise = std::move(promise)]() mutable
             {
+                bool value = setup();
+
                 promise.set_value(
-                    setup()
+                    value
                 );
+
+                if (callback)
+                {
+                    callback(
+                        value
+                    );
+                }
             }
         );
 
@@ -65,7 +76,8 @@ namespace QLogicaeCore
     }
 
     void Transformer::setup_async(
-        Result<std::future<void>>& result
+        Result<std::future<void>>& result,
+        const std::function<void(Result<void>& result)>& callback
     )
     {
         std::promise<void> promise;
@@ -73,15 +85,17 @@ namespace QLogicaeCore
 
         boost::asio::post(
             UTILITIES.BOOST_ASIO_POOL,
-            [this, promise = std::move(promise)]() mutable
+            [this, callback, promise = std::move(promise)]() mutable
             {
                 Result<void> result;
 
-                setup(
-                    result
-                );
+                setup(result);
 
                 promise.set_value();
+
+                callback(
+                    result
+                );
             }
         );
 

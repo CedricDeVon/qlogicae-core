@@ -26,13 +26,17 @@ namespace QLogicaeCore
 
 		std::future<bool> setup_async(
 			const bool& is_scan_enabled = true,
-			const bool& is_print_enabled = true
+			const bool& is_print_enabled = true,
+			const std::function<void(const bool& result)>& callback =
+				[](const bool& result) {}
 		);
 
 		void setup_async(
 			Result<std::future<void>>& result,
 			const bool& is_scan_enabled = true,
-			const bool& is_print_enabled = true
+			const bool& is_print_enabled = true,
+			const std::function<void(Result<void>& result)>& callback =
+				[](Result<void>& result) {}
 		);
 
 		bool is_scan_enabled();
@@ -67,24 +71,38 @@ namespace QLogicaeCore
 			const std::string& text = ""
 		);
 
-		std::future<std::string> scan_async();
+		std::future<std::string> scan_async(
+			const std::function<void(const std::string& result)>& callback =
+				[](const std::string& result) {}
+		);
 
-		std::future<std::string> builtin_scan_async();
+		std::future<std::string> builtin_scan_async(
+			const std::function<void(const std::string& result)>& callback =
+				[](const std::string& result) {}
+		);
 
 		std::future<void> print_async(
-			const std::string& text = ""
+			const std::string& text = "",
+			const std::function<void()>& callback =
+				[]() {}
 		);
 
 		std::future<void> builtin_print_async(
-			const std::string& text = ""
+			const std::string& text = "",
+			const std::function<void()>& callback =
+				[]() {}
 		);
 
 		std::future<void> print_with_new_line_async(
-			const std::string& text = ""
+			const std::string& text = "",
+			const std::function<void()>& callback =
+				[]() {}
 		);
 
 		std::future<void> builtin_print_with_new_line_async(
-			const std::string& text = ""
+			const std::string& text = "",
+			const std::function<void()>& callback =
+				[]() {}
 		);
 
 		void is_scan_enabled(
@@ -106,10 +124,12 @@ namespace QLogicaeCore
 		);
 
 		void scan(
-			Result<std::string>& result);
+			Result<std::string>& result
+		);
 
 		void builtin_scan(
-			Result<std::string>& result);
+			Result<std::string>& result
+		);
 
 		void print(
 			Result<void>& result,
@@ -132,31 +152,43 @@ namespace QLogicaeCore
 		);
 
 		void scan_async(
-			Result<std::future<std::string>>& result
+			Result<std::future<std::string>>& result,
+			const std::function<void(const std::string& result)>& callback =
+				[](const std::string& result) {}
 		);
 
 		void builtin_scan_async(
-			Result<std::future<std::string>>& result
+			Result<std::future<std::string>>& result,
+			const std::function<void(const std::string& result)>& callback =
+				[](const std::string& result) {}
 		);
 
 		void print_async(
 			Result<std::future<void>>& result,
-			const std::string& text = ""
+			const std::string& text = "",
+			const std::function<void(Result<void> result)>& callback =
+				[](Result<void> result) {}
 		);
 
 		void builtin_print_async(
 			Result<std::future<void>>& result,
-			const std::string& text = ""
+			const std::string& text = "",
+			const std::function<void(Result<void> result)>& callback =
+				[](Result<void> result) {}
 		);
 
 		void print_with_new_line_async(
 			Result<std::future<void>>& result,
-			const std::string& text = ""
+			const std::string& text = "",
+			const std::function<void(Result<void> result)>& callback =
+				[](Result<void> result) {}
 		);
 
 		void builtin_print_with_new_line_async(
 			Result<std::future<void>>& result,
-			const std::string& text = ""
+			const std::string& text = "",
+			const std::function<void(Result<void> result)>& callback =
+				[](Result<void> result) {}
 		);
 
 		static CliIO& get_instance();

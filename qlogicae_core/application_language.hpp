@@ -15,10 +15,15 @@ namespace QLogicaeCore
             Result<void>& result
         );
 
-        std::future<bool> setup_async();
+        std::future<bool> setup_async(
+            const std::function<void(const bool& result)>& callback =
+            [](const bool& result) {}
+        );
 
         void setup_async(
-            Result<std::future<void>>& result
+            Result<std::future<void>>& result,
+            const std::function<void(Result<void>& result)>& callback =
+            [](Result<void>& result) {}
         );
 
         static ApplicationLanguage& get_instance();

@@ -23,12 +23,16 @@ namespace QLogicaeCore
         );
 
         std::future<bool> setup_async(
-            const LoggerConfigurations& logger_configurations
+            const LoggerConfigurations& logger_configurations,
+            const std::function<void(const bool& result)>& callback =
+            [](const bool& result) {}
         );
 
         void setup_async(
             Result<std::future<void>>& result,
-            const LoggerConfigurations& logger_configurations
+            const LoggerConfigurations& logger_configurations,
+            const std::function<void(Result<void>& result)>& callback =
+            [](Result<void>& result) {}
         );
 
         static ApplicationLogger& get_instance();

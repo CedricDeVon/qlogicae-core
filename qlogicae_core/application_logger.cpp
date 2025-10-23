@@ -66,38 +66,63 @@ namespace QLogicaeCore
     }
 
     std::future<bool> ApplicationLogger::setup_async(
-        const LoggerConfigurations& logger_configurations
+        const LoggerConfigurations& logger_configurations,
+        const std::function<void(const bool& value)>& callback
     )
     {
-        return std::async(
-            std::launch::async,
-            [this, logger_configurations]() -> bool
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, logger_configurations, callback, promise = std::move(promise)]() mutable
             {
-                return setup(
+                bool value = setup(
                     logger_configurations
                 );
+
+                promise.set_value(
+                    value
+                );
+
+                if (callback)
+                {
+                    callback(
+                        value
+                    );
+                }
             }
         );
+
+        return future;
     }
 
     void ApplicationLogger::setup_async(
         Result<std::future<void>>& result,
-        const LoggerConfigurations& logger_configurations
+        const LoggerConfigurations& logger_configurations,
+        const std::function<void(Result<void>& result)>& callback
     )
     {
-        result.set_to_good_status_with_value(
-            std::async(
-                std::launch::async,
-                [this, logger_configurations]() -> void
-                {
-                    Result<void> result;
+        std::promise<void> promise;
+        auto future = promise.get_future();
 
-                    setup(
-                        result,
-                        logger_configurations
-                    );
-                }
-            )
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, logger_configurations, callback, promise = std::move(promise)]() mutable
+            {
+                Result<void> result;
+
+                setup(
+                    result,
+                    logger_configurations
+                );
+
+                promise.set_value();
+
+                callback(
+                    result
+                );
+            }
         );
     }
 
