@@ -518,6 +518,8 @@ namespace QLogicaeCore
 
 		TimeFormat _log_format;
 
+		TextFileIO _text_file_io;
+
 		mutable std::shared_mutex _mutex;
 
 		std::vector<std::string> _output_paths;

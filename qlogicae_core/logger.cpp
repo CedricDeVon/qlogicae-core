@@ -729,8 +729,7 @@ namespace QLogicaeCore
 	)
 	{
 		try
-		{
-			std::scoped_lock lock(_mutex);
+		{	// std::scoped_lock lock(_mutex);
 
 			Result<void> result;
 			
@@ -759,6 +758,8 @@ namespace QLogicaeCore
 		const bool& is_simplified
 	)
 	{
+		std::scoped_lock lock(_mutex);
+
 		if ((!is_enabled || !_is_enabled) ||
 			_log_medium == LogMedium::NONE
 		)
@@ -767,7 +768,7 @@ namespace QLogicaeCore
 		}
 		
 		Result<std::string> string_result;
-		Result<std::future<void>> future_void_result;
+		Result<void> future_void_result;
 		
 		if (is_simplified || _is_simplified)
 		{
@@ -789,25 +790,28 @@ namespace QLogicaeCore
 		{
 			case LogMedium::ALL:
 			{
-				CLI_IO.print_with_new_line(
+				CLI_IO.print(
 					result,
 					string_result.get_value()
 				);
 
-				_log_to_output_files_async(
-					future_void_result,
+				/*
+				*/
+
+				_log_to_output_files(
+ 					future_void_result,
 					string_result.get_value()
 				);
 				if (_is_log_file_fragmentation_enabled)
 				{
-					_log_to_fragmentation_file_async(
+					_log_to_fragmentation_file(
 						future_void_result,
 						string_result.get_value()
 					);
 				}
 				if (_is_log_file_collectivization_enabled)
 				{
-					_log_to_collectivization_file_async(
+					_log_to_collectivization_file(
 						future_void_result,
 						string_result.get_value()
 					);
@@ -817,7 +821,7 @@ namespace QLogicaeCore
 			}
 			case LogMedium::CONSOLE:
 			{
-				CLI_IO.print_with_new_line(
+				CLI_IO.print(
 					result,
 					string_result.get_value()
 				);
@@ -826,20 +830,24 @@ namespace QLogicaeCore
 			}
 			case LogMedium::FILE:
 			{
-				_log_to_output_files_async(
+
+				/*
+				*/
+
+				_log_to_output_files(
 					future_void_result,
 					string_result.get_value()
 				);
 				if (_is_log_file_fragmentation_enabled)
 				{
-					_log_to_fragmentation_file_async(
+					_log_to_fragmentation_file(
 						future_void_result,
 						string_result.get_value()
 					);
 				}
 				if (_is_log_file_collectivization_enabled)
 				{
-					_log_to_collectivization_file_async(
+					_log_to_collectivization_file(
 						future_void_result,
 						string_result.get_value()
 					);
@@ -857,8 +865,8 @@ namespace QLogicaeCore
 	)
 	{
 		try
-		{
-			std::scoped_lock lock(_mutex);
+		{			
+			// std::scoped_lock lock(_mutex);
 
 			Result<void> result;
 
@@ -870,7 +878,7 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
-			force_log_to_console_and_file_async(
+			force_log_to_console_and_file(
 				"Logger::log()",
 				exception
 			);
@@ -883,6 +891,8 @@ namespace QLogicaeCore
 		const LogConfigurations& configurations
 	)
 	{
+		std::scoped_lock lock(_mutex);
+
 		LogLevel log_level = configurations.log_level;
 		bool is_enabled = configurations.is_enabled;
 		bool is_simplified = configurations.is_simplified;
@@ -894,7 +904,7 @@ namespace QLogicaeCore
 			return result.set_to_good_status_without_value();
 		}
 
-		Result<std::future<void>> future_void_result;
+		Result<void> future_void_result;
 
 		std::string transformed_text =
 			(is_simplified || _is_simplified) ?
@@ -909,26 +919,28 @@ namespace QLogicaeCore
 		{
 			case LogMedium::ALL:
 			{
-				CLI_IO.print_with_new_line(
+				CLI_IO.print(
 					result,
 					transformed_text
 				);
 
-				_log_to_output_files_async(
+				/*
+				*/
+
+				_log_to_output_files(
 					future_void_result,
 					transformed_text
 				);
-
 				if (_is_log_file_fragmentation_enabled)
 				{
-					_log_to_fragmentation_file_async(
+					_log_to_fragmentation_file(
 						future_void_result,
 						transformed_text
 					);
 				}
 				if (_is_log_file_collectivization_enabled)
 				{
-					_log_to_collectivization_file_async(
+					_log_to_collectivization_file(
 						future_void_result,
 						transformed_text
 					);
@@ -938,7 +950,7 @@ namespace QLogicaeCore
 			}
 			case LogMedium::CONSOLE:
 			{
-				CLI_IO.print_with_new_line(
+				CLI_IO.print(
 					result,
 					transformed_text
 				);
@@ -947,21 +959,24 @@ namespace QLogicaeCore
 			}
 			case LogMedium::FILE:
 			{
-				_log_to_output_files_async(
+
+				/*
+				*/
+				_log_to_output_files(
 					future_void_result,
 					transformed_text
 				);
 
 				if (_is_log_file_fragmentation_enabled)
 				{
-					_log_to_fragmentation_file_async(
+					_log_to_fragmentation_file(
 						future_void_result,
 						transformed_text
 					);
 				}
 				if (_is_log_file_collectivization_enabled)
 				{
-					_log_to_collectivization_file_async(
+					_log_to_collectivization_file(
 						future_void_result,
 						transformed_text
 					);
@@ -1755,7 +1770,7 @@ namespace QLogicaeCore
 			exception.what()
 		);
 
-		CLI_IO.print_with_new_line(
+		CLI_IO.print(
 			result,
 			string_result.get_value()
 		);
@@ -1870,16 +1885,17 @@ namespace QLogicaeCore
 		const std::string& text
 	)
 	{
-		TextFileIO text_file_io;
+ 		// TextFileIO text_file_io;
 
 		Result<void> void_result;
-		Result<std::future<bool>> bool_result;
+		Result<bool> bool_result;
+		// Result<std::future<bool>> future_bool_result;
 
-		text_file_io.set_file_path(
+		_text_file_io.set_file_path(
 			void_result,
 			_log_file_collectivization_output_file_path
 		);
-		text_file_io.append_async(
+		_text_file_io.append(
 			bool_result,
 			text
 		);
@@ -1953,7 +1969,7 @@ namespace QLogicaeCore
 		catch (const std::exception& exception)
 		{
 
-		}		
+		}
 	}
 
 	void Logger::_log_to_fragmentation_file(
@@ -1961,21 +1977,21 @@ namespace QLogicaeCore
 		const std::string& text
 	)
 	{
-		TextFileIO text_file_io;
+ 		// TextFileIO text_file_io;
 
 		Result<void> void_result;
+		Result<bool> bool_result;
 		Result<std::string> string_result;
-		Result<std::future<bool>> bool_result;
 
 		_generate_log_fragmentation_file_path(
 			string_result
 		);
 
-		text_file_io.set_file_path(
+		_text_file_io.set_file_path(
 			void_result,
 			string_result.get_value()
 		);
-		text_file_io.append_async(
+		_text_file_io.append(
 			bool_result,
 			text
 		);
@@ -2060,15 +2076,15 @@ namespace QLogicaeCore
 		const std::string& text
 	)
 	{
-		TextFileIO text_file_io;
+ 		// TextFileIO text_file_io;
 
-		Result<std::future<bool>> bool_result;
+		Result<bool> bool_result;
 
-		text_file_io.set_file_path(
+		_text_file_io.set_file_path(
 			result,
 			path
 		);
-		text_file_io.append_async(
+		_text_file_io.append(
 			bool_result,
 			text
 		);
