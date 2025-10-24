@@ -90,6 +90,89 @@ namespace QLogicaeCore
 			const LoggerConfigurations& configurations
 		);
 
+		std::future<bool> setup_async();
+
+		void setup_async(
+			const std::function<void(const bool& result)>& callback
+		);
+
+		void setup_async(
+			Result<std::future<void>>& result
+		);
+
+		void setup_async(
+			const std::function<void(Result<void>& result)>& callback
+		);
+
+		std::future<bool> setup_async(
+			const bool& is_simplified
+		);
+
+		void setup_async(
+			const std::function<void(const bool& result)>& callback,
+			const bool& is_simplified
+		);
+
+		void setup_async(
+			Result<std::future<void>>& result,
+			const bool& is_simplified
+		);
+
+		void setup_async(
+			const std::function<void(Result<void>& result)>& callback,
+			const bool& is_simplified
+		);
+
+		std::future<bool> setup_async(
+			const std::string& name,
+			const LogMedium& medium = LogMedium::CONSOLE,
+			const std::vector<std::string>& output_paths = {},
+			const bool& is_simplified = false
+		);
+
+		void setup_async(
+			const std::function<void(const bool& result)>& callback,
+			const std::string& name,
+			const LogMedium& medium = LogMedium::CONSOLE,
+			const std::vector<std::string>& output_paths = {},
+			const bool& is_simplified = false
+		);
+
+		void setup_async(
+			Result<std::future<void>>& result,
+			const std::string& name,
+			const LogMedium& medium = LogMedium::CONSOLE,
+			const std::vector<std::string>& output_paths = {},
+			const bool& is_simplified = false
+		);
+
+		void setup_async(
+			const std::function<void(Result<void>& result)>& callback,
+			const std::string& name,
+			const LogMedium& medium = LogMedium::CONSOLE,
+			const std::vector<std::string>& output_paths = {},
+			const bool& is_simplified = false
+		);
+
+		std::future<bool> setup_async(
+			const LoggerConfigurations& configurations
+		);
+
+		void setup_async(
+			const std::function<void(const bool& result)>& callback,
+			const LoggerConfigurations& configurations
+		);
+
+		void setup_async(
+			Result<std::future<void>>& result,
+			const LoggerConfigurations& configurations
+		);		
+
+		void setup_async(
+			const std::function<void(Result<void>& result)>& callback,
+			const LoggerConfigurations& configurations
+		);
+
 		bool get_is_simplified();
 
 		void get_is_simplified(
@@ -150,6 +233,13 @@ namespace QLogicaeCore
 				DEFAULT_LOG_CONFIGURATIONS
 		);
 
+		void log_async(
+			const std::function<void()>& callback,
+			const std::string& text,
+			const LogConfigurations& configurations =
+				DEFAULT_LOG_CONFIGURATIONS
+		);
+
 		void log(
 			Result<void>& result,
 			const std::string& text,
@@ -159,6 +249,13 @@ namespace QLogicaeCore
 
 		void log_async(
 			Result<std::future<void>>& result,
+			const std::string& text,
+			const LogConfigurations& configurations =
+				DEFAULT_LOG_CONFIGURATIONS
+		);
+
+		void log_async(
+			const std::function<void(Result<void>& result)>& callback,
 			const std::string& text,
 			const LogConfigurations& configurations =
 				DEFAULT_LOG_CONFIGURATIONS
@@ -178,6 +275,14 @@ namespace QLogicaeCore
 			const bool& is_simplified = false
 		);
 
+		void log_async(
+			const std::function<void()>& callback,
+			const std::string& text,
+			const LogLevel& log_level,
+			const bool& is_enabled = true,
+			const bool& is_simplified = false
+		);
+
 		void log(
 			Result<void>& result,
 			const std::string& text,
@@ -194,6 +299,14 @@ namespace QLogicaeCore
 			const bool& is_simplified = false
 		);
 
+		void log_async(
+			const std::function<void(Result<void>& result)>& callback,
+			const std::string& text,
+			const LogLevel& log_level,
+			const bool& is_enabled = true,
+			const bool& is_simplified = false
+		);
+
 		void log_info(
 			const std::string& text,
 			const InfoLogConfigurations& configurations =
@@ -205,45 +318,6 @@ namespace QLogicaeCore
 			const std::string& text,
 			const InfoLogConfigurations& configurations =
 				DEFAULT_INFO_LOG_CONFIGURATIONS
-		);
-
-		void log_success(
-			const std::string& text,
-			const SuccessLogConfigurations& configurations =
-				DEFAULT_SUCCESS_LOG_CONFIGURATIONS
-		);
-
-		void log_success(
-			Result<void>& result,
-			const std::string& text,
-			const SuccessLogConfigurations& configurations =
-				DEFAULT_SUCCESS_LOG_CONFIGURATIONS
-		);
-
-		void log_warning(
-			const std::string& text,
-			const WarningLogConfigurations& configurations =
-				DEFAULT_WARNING_LOG_CONFIGURATIONS
-		);
-
-		void log_warning(
-			Result<void>& result,
-			const std::string& text,
-			const WarningLogConfigurations& configurations =
-				DEFAULT_WARNING_LOG_CONFIGURATIONS
-		);
-
-		void log_exception(
-			const std::string& text,
-			const ExceptionLogConfigurations& configurations =
-				DEFAULT_EXCEPTION_LOG_CONFIGURATIONS
-		);
-
-		void log_exception(
-			Result<void>& result,
-			const std::string& text,
-			const ExceptionLogConfigurations& configurations =
-				DEFAULT_EXCEPTION_LOG_CONFIGURATIONS
 		);
 
 		std::future<void> log_info_async(
@@ -259,6 +333,33 @@ namespace QLogicaeCore
 				DEFAULT_INFO_LOG_CONFIGURATIONS
 		);
 
+		void log_info_async(
+			const std::function<void()>& callback,
+			const std::string& text,
+			const InfoLogConfigurations& configurations =
+				DEFAULT_INFO_LOG_CONFIGURATIONS
+		);
+
+		void log_info_async(
+			const std::function<void(Result<void>& result)>& callback,
+			const std::string& text,
+			const InfoLogConfigurations& configurations =
+				DEFAULT_INFO_LOG_CONFIGURATIONS
+		);
+
+		void log_success(
+			const std::string& text,
+			const SuccessLogConfigurations& configurations =
+				DEFAULT_SUCCESS_LOG_CONFIGURATIONS
+		);
+
+		void log_success(
+			Result<void>& result,
+			const std::string& text,
+			const SuccessLogConfigurations& configurations =
+				DEFAULT_SUCCESS_LOG_CONFIGURATIONS
+		);
+
 		std::future<void> log_success_async(
 			const std::string& text,
 			const SuccessLogConfigurations& configurations =
@@ -270,6 +371,33 @@ namespace QLogicaeCore
 			const std::string& text,
 			const SuccessLogConfigurations& configurations =
 				DEFAULT_SUCCESS_LOG_CONFIGURATIONS
+		);
+
+		void log_success_async(
+			const std::function<void()>& callback,
+			const std::string& text,
+			const SuccessLogConfigurations& configurations =
+				DEFAULT_SUCCESS_LOG_CONFIGURATIONS
+		);
+
+		void log_success_async(
+			const std::function<void(Result<void>& result)>& callback,
+			const std::string& text,
+			const SuccessLogConfigurations& configurations =
+				DEFAULT_SUCCESS_LOG_CONFIGURATIONS
+		);
+
+		void log_warning(
+			const std::string& text,
+			const WarningLogConfigurations& configurations =
+				DEFAULT_WARNING_LOG_CONFIGURATIONS
+		);
+
+		void log_warning(
+			Result<void>& result,
+			const std::string& text,
+			const WarningLogConfigurations& configurations =
+				DEFAULT_WARNING_LOG_CONFIGURATIONS
 		);
 
 		std::future<void> log_warning_async(
@@ -285,6 +413,33 @@ namespace QLogicaeCore
 				DEFAULT_WARNING_LOG_CONFIGURATIONS
 		);
 
+		void log_warning_async(
+			const std::function<void()>& callback,
+			const std::string& text,
+			const WarningLogConfigurations& configurations =
+				DEFAULT_WARNING_LOG_CONFIGURATIONS
+		);
+
+		void log_warning_async(
+			const std::function<void(Result<void>& result)>& callback,
+			const std::string& text,
+			const WarningLogConfigurations& configurations =
+				DEFAULT_WARNING_LOG_CONFIGURATIONS
+		);
+
+		void log_exception(
+			const std::string& text,
+			const ExceptionLogConfigurations& configurations =
+				DEFAULT_EXCEPTION_LOG_CONFIGURATIONS
+		);
+
+		void log_exception(
+			Result<void>& result,
+			const std::string& text,
+			const ExceptionLogConfigurations& configurations =
+				DEFAULT_EXCEPTION_LOG_CONFIGURATIONS
+		);
+
 		std::future<void> log_exception_async(
 			const std::string& text,
 			const ExceptionLogConfigurations& configurations =
@@ -298,12 +453,50 @@ namespace QLogicaeCore
 				DEFAULT_EXCEPTION_LOG_CONFIGURATIONS
 		);
 
+		void log_exception_async(
+			const std::function<void()>& callback,
+			const std::string& text,
+			const ExceptionLogConfigurations& configurations =
+				DEFAULT_EXCEPTION_LOG_CONFIGURATIONS
+		);
+
+		void log_exception_async(
+			const std::function<void(Result<void>& result)>& callback,
+			const std::string& text,
+			const ExceptionLogConfigurations& configurations =
+				DEFAULT_EXCEPTION_LOG_CONFIGURATIONS
+		);
+
 		void force_log_to_console_and_file(
 			const std::string& origin,
 			const std::exception& exception
 		);
 
 		std::future<void> force_log_to_console_and_file_async(
+			const std::string& origin,
+			const std::exception& exception
+		);
+
+		void force_log_to_console_and_file_async(
+			const std::function<void()>& callback,
+			const std::string& origin,
+			const std::exception& exception
+		);
+
+		void force_log_to_console_and_file(
+			Result<void>& result,
+			const std::string& origin,
+			const std::exception& exception
+		);
+
+		void force_log_to_console_and_file_async(
+			Result<std::future<void>>& result,
+			const std::string& origin,
+			const std::exception& exception
+		);
+
+		void force_log_to_console_and_file_async(
+			const std::function<void(Result<void>& result)>& callback,
 			const std::string& origin,
 			const std::exception& exception
 		);
@@ -346,20 +539,46 @@ namespace QLogicaeCore
 		void _log_to_collectivization_file(
 			const std::string& text
 		);
+		
+		void _log_to_collectivization_file(
+			Result<void>& result,
+			const std::string& text
+		);
 
 		std::future<void> _log_to_collectivization_file_async(
+			const std::string& text
+		);
+
+		void _log_to_collectivization_file_async(
+			Result<std::future<void>>& result,
 			const std::string& text
 		);
 
 		void _log_to_fragmentation_file(
 			const std::string& text
 		);
+		
+		void _log_to_fragmentation_file(
+			Result<void>& result,
+			const std::string& text
+		);
 
 		std::future<void> _log_to_fragmentation_file_async(
 			const std::string& text
 		);
+		
+		void _log_to_fragmentation_file_async(
+			Result<std::future<void>>& result,
+			const std::string& text
+		);
 
 		void _log_to_file(
+			const std::string& path,
+			const std::string& text
+		);
+
+		void _log_to_file(
+			Result<void>& result,
 			const std::string& path,
 			const std::string& text
 		);
@@ -376,9 +595,27 @@ namespace QLogicaeCore
 		std::future<void> _log_to_output_files_async(
 			const std::string& text
 		);
+		
+		void _log_to_output_files(
+			Result<void>& result,
+			const std::string& text
+		);
+
+		std::future<void> _log_to_output_files_async(
+			Result<std::future<void>>& result,
+			const std::string& text
+		);
 
 		std::string _generate_log_fragmentation_file_path();
 
+		void _generate_log_fragmentation_file_path(
+			Result<std::string>& result
+		);
+
 		std::string _generate_log_collectivization_file_path();
+
+		void _generate_log_collectivization_file_path(
+			Result<std::string>& result
+		);
 	};
 }

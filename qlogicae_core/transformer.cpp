@@ -374,11 +374,14 @@ namespace QLogicaeCore
         const size_t& output_length
     )
     {
-        result.get_value().reserve(output_length);
-        result.set_value(
-            result.get_value()
+        std::string output;
+        output.reserve(output_length);
+
+        output = text;
+
+        result.set_to_good_status_with_value(
+            output
         );
-        result.set_status_to_good();
     }
 
 

@@ -544,8 +544,10 @@ namespace QLogicaeCore
             );
         }
 
+        from_hex_to_utf8(result, text);
+        _to_base64(result, result.get_value());
         result.set_to_good_status_with_value(
-            _to_base64(from_hex_to_utf8(text))
+            result.get_value()
         );
     }
 
@@ -597,7 +599,8 @@ namespace QLogicaeCore
 
         result.set_to_good_status_with_value(
             std::string(reinterpret_cast<const char*>(
-                buffer.data()), bin_len)
+                buffer.data()), bin_len
+            )
         );
     }
 
