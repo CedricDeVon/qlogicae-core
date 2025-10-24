@@ -40,6 +40,20 @@ namespace QLogicaeCore
             Result<void>& result
         );
 
+        std::future<bool> setup_async();
+
+        void setup_async(
+            const std::function<void(const bool& result)>& callback
+        );
+
+        void setup_async(
+            Result<std::future<void>>& result
+        );
+
+        void setup_async(
+            const std::function<void(Result<void>& result)>& callback
+        );
+
         std::string reverse(
             const std::string_view& cipher,
             const unsigned char* key,
@@ -86,6 +100,34 @@ namespace QLogicaeCore
             const std::string_view& text,
             const std::string_view& key,
             const std::string_view& nonce
+        );
+
+        void reverse_async(
+            const std::function<void(const std::string& result)>& callback,
+            const std::string& cipher,
+            const unsigned char* key,
+            const unsigned char* nonce
+        );
+
+        void transform_async(
+            const std::function<void(const std::string& result)>& callback,
+            const std::string& text,
+            const unsigned char* key,
+            const unsigned char* nonce
+        );
+
+        void reverse_async(
+            const std::function<void(const std::string& result)>& callback,
+            const std::string& cipher,
+            const std::string& key,
+            const std::string& nonce
+        );
+
+        void transform_async(
+            const std::function<void(const std::string& result)>& callback,
+            const std::string& text,
+            const std::string& key,
+            const std::string& nonce
         );
 
         void reverse(
@@ -142,7 +184,44 @@ namespace QLogicaeCore
             const std::string_view& text,
             const std::string_view& key,
             const std::string_view& nonce
+        );
+
+        void reverse_async(
+            const std::function<void(Result<std::string>& result)>& callback,
+            const std::string& cipher,
+            const unsigned char* key,
+            const unsigned char* nonce
+        );
+
+        void transform_async(
+            const std::function<void(Result<std::string>& result)>& callback,
+            const std::string& text,
+            const unsigned char* key,
+            const unsigned char* nonce
+        );
+
+        void reverse_async(
+            const std::function<void(Result<std::string>& result)>& callback,
+            const std::string& cipher,
+            const std::string& key,
+            const std::string& nonce
+        );
+
+        void transform_async(
+            const std::function<void(Result<std::string>& result)>& callback,
+            const std::string& text,
+            const std::string& key,
+            const std::string& nonce
+        );
+
+        static XChaCha20Poly1305CipherCryptographer& get_instance();
+
+        void get_instance(
+            Result<XChaCha20Poly1305CipherCryptographer*>& result
         );
     };
+
+    inline static XChaCha20Poly1305CipherCryptographer& XCHACHA20_POLY1305_CIPHER_CRYPTOGRAPHER =
+        XChaCha20Poly1305CipherCryptographer::get_instance();
 }
 

@@ -26,6 +26,84 @@ namespace QLogicaeCore
         result.set_to_good_status_without_value();
     }
 
+	std::future<bool> BcryptHashCryptographer::setup_async()
+	{
+		std::promise<bool> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this,
+			promise = std::move(promise)]() mutable
+			{
+				promise.set_value(
+					setup()
+				);
+			}
+		);
+
+		return future;
+	}
+
+	void BcryptHashCryptographer::setup_async(
+		const std::function<void(const bool& result)>& callback
+	)
+	{
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, callback]() mutable
+			{
+				callback(
+					setup()
+				);
+			}
+		);
+	}
+
+	void BcryptHashCryptographer::setup_async(
+		Result<std::future<void>>& result
+	)
+	{
+		std::promise<void> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this,
+			promise = std::move(promise)]() mutable
+			{
+				Result<void> result;
+
+				setup(result);
+
+				promise.set_value();
+			}
+		);
+
+		result.set_to_good_status_with_value(
+			std::move(future)
+		);
+	}
+
+	void BcryptHashCryptographer::setup_async(
+		const std::function<void(Result<void>& result)>& callback
+	)
+	{
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, callback]() mutable
+			{
+				Result<void> result;
+
+				setup(result);
+
+				callback(
+					result
+				);
+			}
+		);
+	}
+
 	std::string BcryptHashCryptographer::transform(
 		const std::string& va
 	)
@@ -45,11 +123,7 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
-			throw std::runtime_error(
-				std::string() +
-				"Exception at BcryptHashCryptographer::transform(): " +
-				exception.what()
-			);
+			
 		}
 	}
 
@@ -68,11 +142,7 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
-			throw std::runtime_error(
-				std::string() +
-				"Exception at BcryptHashCryptographer::reverse(): " +
-				exception.what()
-			);
+			
 		}
 	}
 
@@ -81,23 +151,47 @@ namespace QLogicaeCore
 		const std::string& vb
 	)
 	{
-		return std::async(std::launch::async, [this, va, vb]() -> bool
+		std::promise<bool> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, va, vb,
+			promise = std::move(promise)]() mutable
 			{
-				return reverse(va, vb);
-			});
+				promise.set_value(
+					reverse(
+						va,
+						vb
+					)
+				);
+			}
+		);
+
+		return future;
 	}
 
 	std::future<std::string> BcryptHashCryptographer::transform_async(
 		const std::string& va
 	)
 	{
-		return std::async(
-			std::launch::async,
-			[this, va]() -> std::string
+		std::promise<std::string> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, va,
+			promise = std::move(promise)]() mutable
 			{
-				return transform(va);
+				promise.set_value(
+					transform(
+						va
+					)
+				);
 			}
 		);
+
+		return future;
 	}
 
 
@@ -146,18 +240,30 @@ namespace QLogicaeCore
         const std::string& text
 	)
     {
-        result.set_to_good_status_with_value(
-			std::async(
-				std::launch::async,
-				[this, text]() -> std::string
-            {
-                Result<std::string> result;
+		std::promise<std::string> promise;
+		auto future = promise.get_future();
 
-                transform(result, text);
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text,
+			promise = std::move(promise)]() mutable
+			{
+				Result<std::string> result;
 
-                return result.get_value();
-            })
-        );
+				transform(
+					result,
+					text
+				);
+
+				promise.set_value(
+					result.get_value()
+				);
+			}
+		);
+
+		result.set_to_good_status_with_value(
+			std::move(future)
+		);
     }
 
     void BcryptHashCryptographer::reverse_async(
@@ -166,17 +272,132 @@ namespace QLogicaeCore
         const std::string& key
 	)
     {
-        result.set_to_good_status_with_value(
-			std::async(
-				std::launch::async,
-				[this, hash, key]() -> bool
+		std::promise<bool> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, hash, key,
+			promise = std::move(promise)]() mutable
+			{
+				Result<bool> result;
+
+				reverse(
+					result,
+					hash,
+					key
+				);
+
+				promise.set_value(
+					result.get_value()
+				);
+			}
+		);
+
+		result.set_to_good_status_with_value(
+			std::move(future)
+		);
+    }
+    
+    void BcryptHashCryptographer::reverse_async(
+        const std::function<void(const bool& result)>& callback,
+        const std::string& hash,
+        const std::string& key
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, hash, key, callback]() mutable
+            {
+                callback(
+                    reverse(
+                        hash,
+                        key
+                    )
+                );
+            }
+        );
+    }
+
+    void BcryptHashCryptographer::transform_async(
+        const std::function<void(const std::string& result)>& callback,
+        const std::string& text
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, text, callback]() mutable
+            {
+                callback(
+                    transform(
+                        text
+                    )
+                );
+            }
+        );
+    }
+
+    void BcryptHashCryptographer::reverse_async(
+        const std::function<void(Result<bool>& result)>& callback,
+        const std::string& hash,
+        const std::string& key
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, hash, key, callback]() mutable
             {
                 Result<bool> result;
 
-                reverse(result, hash, key);
+                reverse(
+                    result,
+                    hash,
+                    key
+                );
 
-                return result.get_value();
-            })
+                callback(
+                    result
+                );
+            }
         );
     }
+
+    void BcryptHashCryptographer::transform_async(
+        const std::function<void(Result<std::string>& result)>& callback,
+        const std::string& text
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, text, callback]() mutable
+            {
+                Result<std::string> result;
+
+                transform(
+                    result,
+                    text
+                );
+
+                callback(
+                    result
+                );
+            }
+        );
+    }
+
+	BcryptHashCryptographer& BcryptHashCryptographer::get_instance()
+	{
+		static BcryptHashCryptographer instance;
+
+		return instance;
+	}
+
+	void BcryptHashCryptographer::get_instance(
+		QLogicaeCore::Result<BcryptHashCryptographer*>& result
+	)
+	{
+		static BcryptHashCryptographer instance;
+
+		result.set_to_good_status_with_value(&instance);
+	}
 }

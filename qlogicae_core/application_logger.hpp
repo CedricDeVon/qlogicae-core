@@ -11,8 +11,6 @@ namespace QLogicaeCore
         public AbstractApplication
     {
     public:
-        Logger MAIN_LOGGER;
-
         bool setup(
             const LoggerConfigurations& logger_configurations
         );

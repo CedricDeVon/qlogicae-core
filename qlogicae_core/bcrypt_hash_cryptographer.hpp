@@ -40,6 +40,20 @@ namespace QLogicaeCore
         void setup(
             Result<void>& result
         );
+        
+        std::future<bool> setup_async();
+
+        void setup_async(
+            const std::function<void(const bool& result)>& callback
+        );
+
+        void setup_async(
+            Result<std::future<void>>& result
+        );
+
+        void setup_async(
+            const std::function<void(Result<void>& result)>& callback
+        );
 
         std::string transform(
             const std::string& text
@@ -59,11 +73,35 @@ namespace QLogicaeCore
             const std::string& key
         );
 
-        void transform(Result<std::string>& result,
+        void reverse_async(
+            const std::function<void(const bool& result)>& callback,
+            const std::string& hash,
+            const std::string& key
+        );
+
+        void transform_async(
+            const std::function<void(const std::string& result)>& callback,
             const std::string& text
         );
 
-        void reverse(Result<bool>& result,
+        void reverse_async(
+            const std::function<void(Result<bool>& result)>& callback,
+            const std::string& hash,
+            const std::string& key
+        );
+
+        void transform_async(
+            const std::function<void(Result<std::string>& result)>& callback,
+            const std::string& text
+        );
+
+        void transform(
+            Result<std::string>& result,
+            const std::string& text
+        );
+
+        void reverse(
+            Result<bool>& result,
             const std::string& hash,
             const std::string& key
         );
@@ -78,5 +116,14 @@ namespace QLogicaeCore
             const std::string& hash,
             const std::string& key
         );
+
+        static BcryptHashCryptographer& get_instance();
+
+        void get_instance(
+            Result<BcryptHashCryptographer*>& result
+        );
     };
+
+    inline static BcryptHashCryptographer& BCRYPT_HASH_CRYPTOGRAPHER =
+        BcryptHashCryptographer::get_instance();
 }

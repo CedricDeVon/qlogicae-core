@@ -48,12 +48,45 @@ namespace QLogicaeCore
         );
 
         bool setup(
-            const CryptographerProperties& va
+            const CryptographerProperties& properties
         );
 
         void setup(
             Result<void>& result,
-            const CryptographerProperties& va
+            const CryptographerProperties& properties
+        );
+
+        std::future<bool> setup_async();
+
+        void setup_async(
+            const std::function<void(const bool& result)>& callback
+        );
+
+        void setup_async(
+            Result<std::future<void>>& result
+        );
+
+        void setup_async(
+            const std::function<void(Result<void>& result)>& callback
+        );
+
+        void setup_async(
+            Result<std::future<void>>& result,
+            const CryptographerProperties& properties
+        );
+
+        void setup_async(
+            const std::function<void(Result<void>& result)>& callback,
+            const CryptographerProperties& properties
+        );
+
+        std::future<bool> setup_async(
+            const CryptographerProperties& properties
+        );
+
+        void setup_async(
+            const std::function<void(const bool& result)>& callback,
+            const CryptographerProperties& properties
         );
 
         std::string transform(
@@ -96,8 +129,39 @@ namespace QLogicaeCore
             const std::string& key
         );
 
+        void reverse_async(
+            const std::function<void(const bool& result)>& callback,
+            const std::string& hash,
+            const std::string& key
+        );
+
+        void transform_async(
+            const std::function<void(const std::string& result)>& callback,
+            const std::string& text
+        );
+
+        void reverse_async(
+            const std::function<void(Result<bool>& result)>& callback,
+            const std::string& hash,
+            const std::string& key
+        );
+
+        void transform_async(
+            const std::function<void(Result<std::string>& result)>& callback,
+            const std::string& text
+        );
+
+        static Argon2idHashCryptographer& get_instance();
+
+        void get_instance(
+            Result<Argon2idHashCryptographer*>& result
+        );
+
     protected:
         CryptographerProperties _cryptographer_properties;
     };
+
+    inline static Argon2idHashCryptographer& ARGON2ID_HASH_CRYPTOGRAPHER =
+        Argon2idHashCryptographer::get_instance();
 }
 

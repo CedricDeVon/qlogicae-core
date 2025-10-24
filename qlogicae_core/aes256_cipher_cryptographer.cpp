@@ -26,6 +26,84 @@ namespace QLogicaeCore
 		result.set_to_good_status_without_value();
 	}
 
+	std::future<bool> AES256CipherCryptographer::setup_async()
+	{
+		std::promise<bool> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this,
+			promise = std::move(promise)]() mutable
+			{
+				promise.set_value(
+					setup()
+				);
+			}
+		);
+
+		return future;
+	}
+
+	void AES256CipherCryptographer::setup_async(
+		const std::function<void(const bool& result)>& callback
+	)
+	{
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, callback]() mutable
+			{
+				callback(
+					setup()
+				);
+			}
+		);
+	}
+
+	void AES256CipherCryptographer::setup_async(
+		Result<std::future<void>>& result
+	)
+	{
+		std::promise<void> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this,
+			promise = std::move(promise)]() mutable
+			{
+				Result<void> result;
+
+				setup(result);
+
+				promise.set_value();
+			}
+		);
+
+		result.set_to_good_status_with_value(
+			std::move(future)
+		);
+	}
+
+	void AES256CipherCryptographer::setup_async(
+		const std::function<void(Result<void>& result)>& callback
+	)
+	{
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, callback]() mutable
+			{
+				Result<void> result;
+
+				setup(result);
+
+				callback(
+					result
+				);
+			}
+		);
+	}
+
 	std::string AES256CipherCryptographer::reverse(
 		const std::string& va,
 		const std::string& vb,
@@ -56,12 +134,25 @@ namespace QLogicaeCore
 		const std::string& vc
 	)
 	{
-		return std::async(std::launch::async,
-			[this, va, vb, vc]() -> std::string
+		std::promise<std::string> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, va, vb, vc,
+				promise = std::move(promise)]() mutable
 			{
-				return reverse(va, vb, vc);				
+				promise.set_value(
+					reverse(
+						va,
+						vb,
+						vc
+					)
+				);
 			}
 		);
+
+		return future;
 	}
 
 	std::future<std::string> AES256CipherCryptographer::transform_async(
@@ -70,12 +161,25 @@ namespace QLogicaeCore
 		const std::string& vc
 	)
 	{
-		return std::async(std::launch::async,
-			[this, va, vb, vc]() -> std::string
+		std::promise<std::string> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, va, vb, vc,
+			promise = std::move(promise)]() mutable
 			{
-				return transform(va, vb, vc);				
+				promise.set_value(
+					transform(
+						va,
+						vb,
+						vc
+					)
+				);
 			}
 		);
+
+		return future;
 	}
 
 	std::string AES256CipherCryptographer::transform(
@@ -170,12 +274,25 @@ namespace QLogicaeCore
 		const unsigned char* vc
 	)
 	{
-		return std::async(
-			std::launch::async,
-				[this, va, vb, vc]() -> std::string
-		{
-			return reverse(va, vb, vc);			
-		});
+		std::promise<std::string> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, va, vb, vc,
+			promise = std::move(promise)]() mutable
+			{
+				promise.set_value(
+					reverse(
+						va,
+						vb,
+						vc
+					)
+				);
+			}
+		);
+
+		return future;
 	}
 
 	std::future<std::string> AES256CipherCryptographer::transform_async(
@@ -184,12 +301,25 @@ namespace QLogicaeCore
 		const unsigned char* vc
 	)
 	{
-		return std::async(
-			std::launch::async,
-				[this, va, vb, vc]() -> std::string
-		{
-			return transform(va, vb, vc);			
-		});
+		std::promise<std::string> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, va, vb, vc,
+			promise = std::move(promise)]() mutable
+			{
+				promise.set_value(
+					transform(
+						va,
+						vb,
+						vc
+					)
+				);
+			}
+		);
+
+		return future;
 	}
 
 
@@ -303,15 +433,31 @@ namespace QLogicaeCore
 		const unsigned char* nonce
 	)
 	{
-		result.set_to_good_status_with_value(
-			std::async(std::launch::async, [this, cipher, key, nonce]()
+		std::promise<std::string> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, cipher, key, nonce,
+			promise = std::move(promise)]() mutable
 			{
 				Result<std::string> result;
 
-				reverse(result, cipher, key, nonce);
+				reverse(
+					result,
+					cipher,
+					key,
+					nonce
+				);
 
-				return result.get_value();
-			})
+				promise.set_value(
+					result.get_value()
+				);
+			}
+		);
+
+		result.set_to_good_status_with_value(
+			std::move(future)
 		);
 	}
 
@@ -322,15 +468,31 @@ namespace QLogicaeCore
 		const unsigned char* nonce
 	)
 	{
-		result.set_to_good_status_with_value(
-			std::async(std::launch::async, [this, text, key, nonce]()
+		std::promise<std::string> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text, key, nonce,
+			promise = std::move(promise)]() mutable
 			{
 				Result<std::string> result;
 
-				transform(result, text, key, nonce);
+				transform(
+					result,
+					text,
+					key,
+					nonce
+				);
 
-				return result.get_value();
-			})
+				promise.set_value(
+					result.get_value()
+				);
+			}
+		);
+
+		result.set_to_good_status_with_value(
+			std::move(future)
 		);
 	}
 
@@ -341,16 +503,31 @@ namespace QLogicaeCore
 		const std::string& nonce
 	)
 	{
-		result.set_to_good_status_with_value(
-			std::async(std::launch::async,
-				[this, cipher, key, nonce]()
+		std::promise<std::string> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, cipher, key, nonce,
+			promise = std::move(promise)]() mutable
 			{
 				Result<std::string> result;
 
-				reverse(result, cipher, key, nonce);
+				reverse(
+					result,
+					cipher,
+					key,
+					nonce
+				);
 
-				return result.get_value();
-			})
+				promise.set_value(
+					result.get_value()
+				);
+			}
+		);
+
+		result.set_to_good_status_with_value(
+			std::move(future)
 		);
 	}
 
@@ -361,21 +538,243 @@ namespace QLogicaeCore
 		const std::string& nonce
 	)
 	{
-		result.set_to_good_status_with_value(
-			std::async(std::launch::async,
-				[this, text, key, nonce]()
+		std::promise<std::string> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text, key, nonce,
+			promise = std::move(promise)]() mutable
 			{
 				Result<std::string> result;
 
 				transform(
 					result,
 					text,
-					reinterpret_cast<const unsigned char*>(key.data()),
-					reinterpret_cast<const unsigned char*>(nonce.data())
+					key,
+					nonce
 				);
 
-				return result.get_value();
-			})
+				promise.set_value(
+					result.get_value()
+				);
+			}
 		);
+
+		result.set_to_good_status_with_value(
+			std::move(future)
+		);
+	}
+
+	void AES256CipherCryptographer::reverse_async(
+		const std::function<void(const std::string& result)>& callback,
+		const std::string& cipher,
+		const unsigned char* key,
+		const unsigned char* nonce
+	)
+	{
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, cipher, key, nonce, callback]() mutable
+			{
+				callback(
+					reverse(
+						cipher,
+						key,
+						nonce
+					)
+				);
+			}
+		);
+	}
+
+	void AES256CipherCryptographer::transform_async(
+		const std::function<void(const std::string& result)>& callback,
+		const std::string& text,
+		const unsigned char* key,
+		const unsigned char* nonce
+	)
+	{
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text, key, nonce, callback]() mutable
+			{
+				callback(
+					transform(
+						text,
+						key,
+						nonce
+					)
+				);
+			}
+		);
+	}
+
+	void AES256CipherCryptographer::reverse_async(
+		const std::function<void(const std::string& result)>& callback,
+		const std::string& cipher,
+		const std::string& key,
+		const std::string& nonce
+	)
+	{
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, cipher, key, nonce, callback]() mutable
+			{
+				callback(
+					reverse(
+						cipher,
+						key,
+						nonce
+					)
+				);
+			}
+		);
+	}
+
+	void AES256CipherCryptographer::transform_async(
+		const std::function<void(const std::string& result)>& callback,
+		const std::string& text,
+		const std::string& key,
+		const std::string& nonce
+	)
+	{
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text, key, nonce, callback]() mutable
+			{
+				callback(
+					transform(
+						text,
+						key,
+						nonce
+					)
+				);
+			}
+		);
+	}
+
+	void AES256CipherCryptographer::reverse_async(
+		const std::function<void(Result<std::string>& result)>& callback,
+		const std::string& cipher,
+		const unsigned char* key,
+		const unsigned char* nonce
+	)
+	{
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, cipher, key, nonce, callback]() mutable
+			{
+				Result<std::string> result;
+
+				reverse(
+					result,
+					cipher,
+					key,
+					nonce
+				);
+
+				callback(
+					result
+				);
+			}
+		);
+	}
+
+	void AES256CipherCryptographer::transform_async(
+		const std::function<void(Result<std::string>& result)>& callback,
+		const std::string& text,
+		const unsigned char* key,
+		const unsigned char* nonce
+	)
+	{
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text, key, nonce, callback]() mutable
+			{
+				Result<std::string> result;
+
+				transform(
+					result,
+					text,
+					key,
+					nonce
+				);
+
+				callback(
+					result
+				);
+			}
+		);
+	}
+
+	void AES256CipherCryptographer::reverse_async(
+		const std::function<void(Result<std::string>& result)>& callback,
+		const std::string& cipher,
+		const std::string& key,
+		const std::string& nonce
+	)
+	{
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, cipher, key, nonce, callback]() mutable
+			{
+				Result<std::string> result;
+
+				reverse(
+					result,
+					cipher,
+					key,
+					nonce
+				);
+
+				callback(
+					result
+				);
+			}
+		);
+	}
+
+	void AES256CipherCryptographer::transform_async(
+		const std::function<void(Result<std::string>& result)>& callback,
+		const std::string& text,
+		const std::string& key,
+		const std::string& nonce
+	)
+	{
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text, key, nonce, callback]() mutable
+			{
+				Result<std::string> result;
+
+				transform(
+					result,
+					text,
+					key,
+					nonce
+				);
+
+				callback(
+					result
+				);
+			}
+		);
+	}
+
+	AES256CipherCryptographer& AES256CipherCryptographer::get_instance()
+	{
+		static AES256CipherCryptographer instance;
+
+		return instance;
+	}
+
+	void AES256CipherCryptographer::get_instance(
+		QLogicaeCore::Result<AES256CipherCryptographer*>& result
+	)
+	{
+		static AES256CipherCryptographer instance;
+
+		result.set_to_good_status_with_value(&instance);
 	}
 }

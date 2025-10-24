@@ -4,9 +4,10 @@ OPTION CASEMAP: NONE
 .DATA
 .DATA?
 .CODE
-qlogicae_core__assembly PROC
+function__x64_masm_assembly PROC
 	RET
 
-qlogicae_core__assembly ENDP
+function__x64_masm_assembly ENDP
 
 END
+

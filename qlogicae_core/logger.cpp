@@ -251,7 +251,8 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, promise = std::move(promise)]() mutable
+			[this, 
+				promise = std::move(promise)]() mutable
 			{
 				promise.set_value(
 					setup()
@@ -286,7 +287,8 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, promise = std::move(promise)]() mutable
+			[this, 
+				promise = std::move(promise)]() mutable
 			{
 				Result<void> result;
 
@@ -329,7 +331,8 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, is_simplified, promise = std::move(promise)]() mutable
+			[this, is_simplified, 
+				promise = std::move(promise)]() mutable
 			{
 				promise.set_value(
 					setup(
@@ -370,7 +373,8 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, is_simplified, promise = std::move(promise)]() mutable
+			[this, is_simplified, 
+				promise = std::move(promise)]() mutable
 			{
 				Result<void> result;
 
@@ -423,7 +427,8 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, name, medium, output_paths, is_simplified, promise = std::move(promise)]() mutable
+			[this, name, medium, output_paths, is_simplified, 
+				promise = std::move(promise)]() mutable
 			{
 				promise.set_value(
 					setup(
@@ -476,7 +481,8 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, name, medium, output_paths, is_simplified, promise = std::move(promise)]() mutable
+			[this, name, medium, output_paths, is_simplified, 
+				promise = std::move(promise)]() mutable
 			{
 				Result<void> result;
 
@@ -535,7 +541,8 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, configurations, promise = std::move(promise)]() mutable
+			[this, configurations, 
+				promise = std::move(promise)]() mutable
 			{				
 				promise.set_value(
 					setup(
@@ -576,7 +583,8 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, configurations, promise = std::move(promise)]() mutable
+			[this, configurations, 
+				promise = std::move(promise)]() mutable
 			{
 				Result<void> result;
 
@@ -1009,7 +1017,8 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, text, log_level, is_enabled, is_simplified, promise = std::move(promise)]() mutable
+			[this, text, log_level, is_enabled, is_simplified,				
+				promise = std::move(promise)]() mutable
 			{
 				log(
 					text,
@@ -1038,7 +1047,8 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, text, log_level, is_enabled, is_simplified, promise = std::move(promise)]() mutable
+			[this, text, log_level, is_enabled, is_simplified,
+				promise = std::move(promise)]() mutable
 			{
 				Result<void> result;
 
@@ -1069,7 +1079,8 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, text, configurations, promise = std::move(promise)]() mutable
+			[this, text, configurations,
+				promise = std::move(promise)]() mutable
 			{
 				log(
 					text,
@@ -1094,7 +1105,8 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, text, configurations, promise = std::move(promise)]() mutable
+			[this, text, configurations,
+				promise = std::move(promise)]() mutable
 			{
 				Result<void> result;
 
@@ -1241,7 +1253,8 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, text, configurations, promise = std::move(promise)]() mutable
+			[this, text, configurations,
+				promise = std::move(promise)]() mutable
 			{
 				log_info(
 					text,
@@ -1266,7 +1279,8 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, text, configurations, promise = std::move(promise)]() mutable
+			[this, text, configurations,
+				promise = std::move(promise)]() mutable
 			{
 				Result<void> result;
 
@@ -1364,7 +1378,8 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, text, configurations, promise = std::move(promise)]() mutable
+			[this, text, configurations,
+				promise = std::move(promise)]() mutable
 			{
 				log_success(
 					text,
@@ -1389,7 +1404,8 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, text, configurations, promise = std::move(promise)]() mutable
+			[this, text, configurations,
+				promise = std::move(promise)]() mutable
 			{
 				Result<void> result;
 
@@ -1487,7 +1503,8 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, text, configurations, promise = std::move(promise)]() mutable
+			[this, text, configurations,
+				promise = std::move(promise)]() mutable
 			{
 				log_warning(
 					text,
@@ -1512,7 +1529,8 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, text, configurations, promise = std::move(promise)]() mutable
+			[this, text, configurations,
+				promise = std::move(promise)]() mutable
 			{
 				Result<void> result;
 
@@ -1610,7 +1628,8 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, text, configurations, promise = std::move(promise)]() mutable
+			[this, text, configurations,
+				promise = std::move(promise)]() mutable
 			{
 				log_exception(
 					text,
@@ -1635,7 +1654,8 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, text, configurations, promise = std::move(promise)]() mutable
+			[this, text, configurations,
+				promise = std::move(promise)]() mutable
 			{
 				Result<void> result;
 
@@ -1730,7 +1750,8 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, origin, exception, promise = std::move(promise)]() mutable
+			[this, origin, exception,
+				promise = std::move(promise)]() mutable
 			{
 				force_log_to_console_and_file(
 					origin,
@@ -1808,7 +1829,8 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, origin, exception, promise = std::move(promise)]() mutable
+			[this, origin, exception, 
+				promise = std::move(promise)]() mutable
 			{
 				Result<void> result;
 
@@ -1919,7 +1941,8 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, text, promise = std::move(promise)]() mutable
+			[this, text, 
+				promise = std::move(promise)]() mutable
 			{
 				_log_to_collectivization_file(
 					text
@@ -1942,7 +1965,8 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, text, promise = std::move(promise)]() mutable
+			[this, text, 
+				promise = std::move(promise)]() mutable
 			{
 				Result<void> result;
 
@@ -2014,7 +2038,8 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, text, promise = std::move(promise)]() mutable
+			[this, text, 
+				promise = std::move(promise)]() mutable
 			{
 				_log_to_fragmentation_file(
 					text
@@ -2037,7 +2062,8 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, text, promise = std::move(promise)]() mutable
+			[this, text, 
+				promise = std::move(promise)]() mutable
 			{
 				Result<void> result;
 
@@ -2106,7 +2132,8 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, path, text, promise = std::move(promise)]() mutable
+			[this, path, text, 
+				promise = std::move(promise)]() mutable
 			{
 				_log_to_file(
 					path,
@@ -2148,7 +2175,8 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, text, promise = std::move(promise)]() mutable
+			[this, text, 
+				promise = std::move(promise)]() mutable
 			{				
 				_log_to_output_files(
 					text
@@ -2188,7 +2216,8 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, text, promise = std::move(promise)]() mutable
+			[this, text, 
+				promise = std::move(promise)]() mutable
 			{
 				Result<void> result;
 

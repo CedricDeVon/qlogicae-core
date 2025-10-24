@@ -26,6 +26,84 @@ namespace QLogicaeCore
         result.set_to_good_status_without_value();
     }
 
+    std::future<bool> AES256SignatureCryptographer::setup_async()
+    {
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    setup()
+                );
+            }
+        );
+
+        return future;
+    }
+
+    void AES256SignatureCryptographer::setup_async(
+        const std::function<void(const bool& result)>& callback
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, callback]() mutable
+            {
+                callback(
+                    setup()
+                );
+            }
+        );
+    }
+
+    void AES256SignatureCryptographer::setup_async(
+        Result<std::future<void>>& result
+    )
+    {
+        std::promise<void> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this,
+            promise = std::move(promise)]() mutable
+            {
+                Result<void> result;
+
+                setup(result);
+
+                promise.set_value();
+            }
+        );
+
+        result.set_to_good_status_with_value(
+            std::move(future)
+        );
+    }
+
+    void AES256SignatureCryptographer::setup_async(
+        const std::function<void(Result<void>& result)>& callback
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, callback]() mutable
+            {
+                Result<void> result;
+
+                setup(result);
+
+                callback(
+                    result
+                );
+            }
+        );
+    }
+
 	std::string AES256SignatureCryptographer::reverse(
 		const std::string& va,
 		const std::string& vb
@@ -55,11 +133,24 @@ namespace QLogicaeCore
 		const std::string& vb
     )
 	{
-		return std::async(std::launch::async,
-			[this, va, vb]() -> std::string
-			{
-				return reverse(va, vb);				
-			});
+        std::promise<std::string> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, va, vb,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    reverse(
+                        va,
+                        vb
+                    )
+                );
+            }
+        );
+
+        return future;
 	}
 
 	std::future<std::string> AES256SignatureCryptographer::transform_async(
@@ -68,11 +159,25 @@ namespace QLogicaeCore
 		const std::string& vc
     )
 	{
-		return std::async(std::launch::async,
-			[this, va, vb, vc]() -> std::string
-			{
-				return transform(va, vb, vc);				
-			});
+        std::promise<std::string> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, va, vb, vc,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    transform(
+                        va,
+                        vb,
+                        vc
+                    )
+                );
+            }
+        );
+
+        return future;
 	}
 
 	std::string AES256SignatureCryptographer::transform(
@@ -153,10 +258,24 @@ namespace QLogicaeCore
 		unsigned char* vb
     )
 	{
-		return std::async(std::launch::async, [this, va, vb]() -> std::string
-		{
-			return reverse(va, vb);			
-		});
+        std::promise<std::string> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, va, vb,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    reverse(
+                        va,
+                        vb
+                    )
+                );
+            }
+        );
+
+        return future;
 	}
 
 	std::future<std::string> AES256SignatureCryptographer::transform_async(
@@ -165,10 +284,25 @@ namespace QLogicaeCore
 		unsigned char* vc
     )
 	{
-		return std::async(std::launch::async, [this, va, vb, vc]() -> std::string
-		{
-			return transform(va, vb, vc);			
-		});
+        std::promise<std::string> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, va, vb, vc,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    transform(
+                        va,
+                        vb,
+                        vc
+                    )
+                );
+            }
+        );
+
+        return future;
 	}
 
     void AES256SignatureCryptographer::reverse(
@@ -287,20 +421,30 @@ namespace QLogicaeCore
         unsigned char* public_key
     )
     {
-        result.set_to_good_status_with_value(
-            std::async(std::launch::async,
-                [this, cipher, public_key]() -> std::string
+        std::promise<std::string> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, cipher, public_key,
+            promise = std::move(promise)]() mutable
             {
-                Result<std::string> inner_result;
-                
+                Result<std::string> result;
+
                 reverse(
-                    inner_result,
+                    result,
                     cipher,
                     public_key
                 );
 
-                return inner_result.get_value();
-            })
+                promise.set_value(
+                    result.get_value()
+                );
+            }
+        );
+
+        result.set_to_good_status_with_value(
+            std::move(future)
         );
     }
 
@@ -310,20 +454,30 @@ namespace QLogicaeCore
         const std::string& public_key
     )
     {
-        result.set_to_good_status_with_value(
-            std::async(std::launch::async,
-                [this, cipher, public_key]() -> std::string
-                {
-                    Result<std::string> inner_result;
-                    
-                    reverse(
-                        inner_result,
-                        cipher,
-                        public_key
-                    );
+        std::promise<std::string> promise;
+        auto future = promise.get_future();
 
-                    return inner_result.get_value();
-                })
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, cipher, public_key,
+            promise = std::move(promise)]() mutable
+            {
+                Result<std::string> result;
+
+                reverse(
+                    result,
+                    cipher,
+                    public_key
+                );
+
+                promise.set_value(
+                    result.get_value()
+                );
+            }
+        );
+
+        result.set_to_good_status_with_value(
+            std::move(future)
         );
     }
 
@@ -334,24 +488,34 @@ namespace QLogicaeCore
         unsigned char* private_key
     )
     {
-        result.set_to_good_status_with_value(
-            std::async(std::launch::async,
-                [this, text, public_key, private_key]() -> std::string
-                {
-                    Result<std::string> inner_result;
-                    
-                    transform(
-                        inner_result,
-                        text,
-                        public_key,
-                        private_key
-                    );
+        std::promise<std::string> promise;
+        auto future = promise.get_future();
 
-                    return inner_result.get_value();
-                })
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, text, public_key, private_key,
+            promise = std::move(promise)]() mutable
+            {
+                Result<std::string> result;
+
+                transform(
+                    result,
+                    text,
+                    public_key,
+                    private_key
+                );
+
+                promise.set_value(
+                    result.get_value()
+                );
+            }
+        );
+
+        result.set_to_good_status_with_value(
+            std::move(future)
         );
     }
-
+    
     void AES256SignatureCryptographer::transform_async(
         Result<std::future<std::string>>& result,
         const std::string& text,
@@ -359,22 +523,236 @@ namespace QLogicaeCore
         const std::string& private_key
     )
     {
+        std::promise<std::string> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, text, public_key, private_key,
+            promise = std::move(promise)]() mutable
+            {
+                Result<std::string> result;
+
+                transform(
+                    result,
+                    text,
+                    public_key,
+                    private_key
+                );
+
+                promise.set_value(
+                    result.get_value()
+                );
+            }
+        );
+
         result.set_to_good_status_with_value(
-            std::async(std::launch::async,
-                [this, text, public_key, private_key]() -> std::string
-                {
-                    Result<std::string> inner_result;
-                    
+            std::move(future)
+        );
+    }
+
+    void AES256SignatureCryptographer::reverse_async(
+        const std::function<void(const std::string& result)>& callback,
+        const std::string& cipher,
+        unsigned char* public_key
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, cipher, public_key, callback]() mutable
+            {
+                callback(
+                    reverse(
+                        cipher,
+                        public_key
+                    )
+                );
+            }
+        );
+    }
+
+    void AES256SignatureCryptographer::transform_async(
+        const std::function<void(const std::string& result)>& callback,
+        const std::string& text,
+        unsigned char* public_key,
+        unsigned char* private_key
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, callback, text, public_key, private_key]() mutable
+            {
+                callback(
                     transform(
-                        inner_result,
                         text,
                         public_key,
                         private_key
-                    );
-
-                    return inner_result.get_value();
-                })
+                    )
+                );
+            }
         );
+    }
+
+    void AES256SignatureCryptographer::reverse_async(
+        const std::function<void(const std::string& result)>& callback,
+        const std::string& cipher,
+        const std::string& public_key
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, cipher, public_key, callback]() mutable
+            {
+                callback(
+                    reverse(
+                        cipher,
+                        public_key
+                    )
+                );
+            }
+        );
+    }
+
+    void AES256SignatureCryptographer::transform_async(
+        const std::function<void(const std::string& result)>& callback,
+        const std::string& text,
+        const std::string& public_key,
+        const std::string& private_key
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, callback, text, public_key, private_key]() mutable
+            {
+                callback(
+                    transform(
+                        text,
+                        public_key,
+                        private_key
+                    )
+                );
+            }
+        );
+    }
+
+    void AES256SignatureCryptographer::reverse_async(
+        const std::function<void(Result<std::string>& result)>& callback,
+        const std::string& cipher,
+        unsigned char* public_key
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, callback, cipher, public_key]() mutable
+            {
+                Result<std::string> result;
+                
+                reverse(
+                    result,
+                    cipher,
+                    public_key
+                );
+
+                callback(
+                    result
+                );
+            }
+        );
+    }
+
+    void AES256SignatureCryptographer::transform_async(
+        const std::function<void(Result<std::string>& result)>& callback,
+        const std::string& text,
+        unsigned char* public_key,
+        unsigned char* private_key
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, callback, text, public_key, private_key]() mutable
+            {
+                Result<std::string> result;
+
+                transform(
+                    result,
+                    text,
+                    public_key,
+                    private_key
+                );
+
+                callback(
+                    result
+                );
+            }
+        );
+    }
+
+    void AES256SignatureCryptographer::reverse_async(
+        const std::function<void(Result<std::string>& result)>& callback,
+        const std::string& cipher,
+        const std::string& public_key
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, callback, cipher, public_key]() mutable
+            {
+                Result<std::string> result;
+
+                reverse(
+                    result,
+                    cipher,
+                    public_key
+                );
+
+                callback(
+                    result
+                );
+            }
+        );
+    }
+
+    void AES256SignatureCryptographer::transform_async(
+        const std::function<void(Result<std::string>& result)>& callback,
+        const std::string& text,
+        const std::string& public_key,
+        const std::string& private_key
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, callback, text, public_key, private_key]() mutable
+            {
+                Result<std::string> result;
+
+                transform(
+                    result,
+                    text,
+                    public_key,
+                    private_key
+                );
+
+                callback(
+                    result
+                );
+            }
+        );
+    }
+
+    AES256SignatureCryptographer& AES256SignatureCryptographer::get_instance()
+    {
+        static AES256SignatureCryptographer instance;
+
+        return instance;
+    }
+
+    void AES256SignatureCryptographer::get_instance(
+        QLogicaeCore::Result<AES256SignatureCryptographer*>& result
+    )
+    {
+        static AES256SignatureCryptographer instance;
+
+        result.set_to_good_status_with_value(&instance);
     }
 }
 

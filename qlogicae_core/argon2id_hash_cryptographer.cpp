@@ -55,8 +55,174 @@ namespace QLogicaeCore
 		result.set_to_good_status_without_value();
 	}
 
+	std::future<bool> Argon2idHashCryptographer::setup_async()
+	{
+		std::promise<bool> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this,
+			promise = std::move(promise)]() mutable
+			{
+				promise.set_value(
+					setup()
+				);
+			}
+		);
+
+		return future;
+	}
+
+	void Argon2idHashCryptographer::setup_async(
+		const std::function<void(const bool& result)>& callback
+	)
+	{
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, callback]() mutable
+			{
+				callback(
+					setup()
+				);
+			}
+		);
+	}
+
+	void Argon2idHashCryptographer::setup_async(
+		Result<std::future<void>>& result
+	)
+	{
+		std::promise<void> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this,
+			promise = std::move(promise)]() mutable
+			{
+				Result<void> result;
+
+				setup(result);
+
+				promise.set_value();
+			}
+		);
+
+		result.set_to_good_status_with_value(
+			std::move(future)
+		);
+	}
+
+	void Argon2idHashCryptographer::setup_async(
+		const std::function<void(Result<void>& result)>& callback
+	)
+	{
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, callback]() mutable
+			{
+				Result<void> result;
+
+				setup(result);
+
+				callback(
+					result
+				);
+			}
+		);
+	}
+
+	std::future<bool> Argon2idHashCryptographer::setup_async(
+		const CryptographerProperties& properties
+	)
+	{
+		std::promise<bool> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, properties,
+			promise = std::move(promise)]() mutable
+			{
+				promise.set_value(
+					setup(
+						properties
+					)
+				);
+			}
+		);
+
+		return future;
+	}
+
+	void Argon2idHashCryptographer::setup_async(
+		const std::function<void(const bool& result)>& callback,
+		const CryptographerProperties& properties
+	)
+	{
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, properties, callback]() mutable
+			{
+				callback(
+					setup(
+						properties
+					)
+				);
+			}
+		);
+	}
+
+	void Argon2idHashCryptographer::setup_async(
+		Result<std::future<void>>& result,
+		const CryptographerProperties& properties
+	)
+	{
+		std::promise<void> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, properties,
+			promise = std::move(promise)]() mutable
+			{
+				Result<void> result;
+
+				setup(result, properties);
+
+				promise.set_value();
+			}
+		);
+
+		result.set_to_good_status_with_value(
+			std::move(future)
+		);
+	}
+
+	void Argon2idHashCryptographer::setup_async(
+		const std::function<void(Result<void>& result)>& callback,
+		const CryptographerProperties& properties
+	)
+	{
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, callback, properties]() mutable
+			{
+				Result<void> result;
+
+				setup(result, properties);
+
+				callback(
+					result
+				);
+			}
+		);
+	}
+
 	std::string Argon2idHashCryptographer::transform(
-		const std::string& va)
+		const std::string& va
+	)
 	{
 		try
 		{
@@ -82,25 +248,37 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
-			throw std::runtime_error(
-				std::string("Exception at Argon2idHashCryptographer::transform(): ") +
-				exception.what()
-			);
+			
 		}
 	}
 
 	std::future<std::string> Argon2idHashCryptographer::transform_async(
-		const std::string& va)
+		const std::string& va
+	)
 	{
-		return std::async(std::launch::async, [this, va]() -> std::string
-		{
-			return transform(va);			
-		});
+		std::promise<std::string> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, va,
+			promise = std::move(promise)]() mutable
+			{
+				promise.set_value(
+					transform(
+						va
+					)
+				);
+			}
+		);
+
+		return future;
 	}
 
 	bool Argon2idHashCryptographer::reverse(
 		const std::string& va,
-		const std::string& vb)
+		const std::string& vb
+	)
 	{
 		try
 		{
@@ -112,23 +290,33 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
-			throw std::runtime_error(
-				std::string("Exception at Argon2idHashCryptographer::reverse(): ") +
-				exception.what()
-			);
+			
 		}
 	}
 	
 	std::future<bool> Argon2idHashCryptographer::reverse_async(
 		const std::string& va,
-		const std::string& vb)
+		const std::string& vb
+	)
 	{
-		return std::async(
-			std::launch::async,
-			[this, va, vb]() -> bool
-		{
-			return reverse(va, vb);			
-		});
+		std::promise<bool> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, va, vb,
+			promise = std::move(promise)]() mutable
+			{
+				promise.set_value(
+					reverse(
+						va,
+						vb
+					)
+				);
+			}
+		);
+
+		return future;
 	}
 
 	void Argon2idHashCryptographer::transform(
@@ -186,17 +374,29 @@ namespace QLogicaeCore
 		const std::string& text
 	)
 	{
-		result.set_to_good_status_with_value(
-			std::async(
-				std::launch::async,
-				[this, text]() -> std::string
+		std::promise<std::string> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text,
+			promise = std::move(promise)]() mutable
 			{
 				Result<std::string> result;
 
-				transform(result, text);
+				transform(
+					result,
+					text
+				);
 
-				return result.get_value();
-			})
+				promise.set_value(
+					result.get_value()
+				);
+			}
+		);
+
+		result.set_to_good_status_with_value(
+			std::move(future)
 		);
 	}
 
@@ -206,17 +406,132 @@ namespace QLogicaeCore
 		const std::string& key
 	)
 	{
-		result.set_to_good_status_with_value(
-			std::async(
-				std::launch::async,
-				[this, hash, key]() -> bool
+		std::promise<bool> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, hash, key,
+			promise = std::move(promise)]() mutable
 			{
 				Result<bool> result;
 
-				reverse(result, hash, key);
+				reverse(
+					result,
+					hash,
+					key
+				);
 
-				return result.get_value();
-			})
+				promise.set_value(
+					result.get_value()
+				);
+			}
 		);
+
+		result.set_to_good_status_with_value(
+			std::move(future)
+		);
+	}
+
+	void Argon2idHashCryptographer::reverse_async(
+		const std::function<void(const bool& result)>& callback,
+		const std::string& hash,
+		const std::string& key
+	)
+	{
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, hash, key, callback]() mutable
+			{
+				callback(
+					reverse(
+						hash,
+						key
+					)
+				);
+			}
+		);
+	}
+
+	void Argon2idHashCryptographer::transform_async(
+		const std::function<void(const std::string& result)>& callback,
+		const std::string& text
+	)
+	{
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text, callback]() mutable
+			{
+				callback(
+					transform(
+						text
+					)
+				);
+			}
+		);
+	}
+
+	void Argon2idHashCryptographer::reverse_async(
+		const std::function<void(Result<bool>& result)>& callback,
+		const std::string& hash,
+		const std::string& key
+	)
+	{
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, hash, key, callback]() mutable
+			{
+				Result<bool> result;
+
+				reverse(
+					result,
+					hash,
+					key
+				);
+
+				callback(
+					result
+				);
+			}
+		);
+	}
+
+	void Argon2idHashCryptographer::transform_async(
+		const std::function<void(Result<std::string>& result)>& callback,
+		const std::string& text
+	)
+	{
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text, callback]() mutable
+			{
+				Result<std::string> result;
+
+				transform(
+					result,
+					text
+				);
+
+				callback(
+					result
+				);
+			}
+		);
+	}
+
+	Argon2idHashCryptographer& Argon2idHashCryptographer::get_instance()
+	{
+		static Argon2idHashCryptographer instance;
+
+		return instance;
+	}
+
+	void Argon2idHashCryptographer::get_instance(
+		QLogicaeCore::Result<Argon2idHashCryptographer*>& result
+	)
+	{
+		static Argon2idHashCryptographer instance;
+
+		result.set_to_good_status_with_value(&instance);
 	}
 }

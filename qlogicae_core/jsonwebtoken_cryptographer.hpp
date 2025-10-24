@@ -54,6 +54,18 @@ namespace QLogicaeCore
             Result<void>& result
         );
 
+        void setup_async(
+            const std::function<void(const bool& result)>& callback
+        );
+
+        void setup_async(
+            Result<std::future<void>>& result
+        );
+
+        void setup_async(
+            const std::function<void(Result<void>& result)>& callback
+        );
+
         std::string transform(
             JsonWebTokenTransformInput options
         );
@@ -69,7 +81,27 @@ namespace QLogicaeCore
         std::future<JsonWebTokenReverseResult> reverse_async(
             JsonWebTokenReverseInput options
         );
-        
+
+        void reverse_async(
+            const std::function<void(const JsonWebTokenReverseResult& result)>& callback,
+            JsonWebTokenReverseInput options
+        );
+
+        void transform_async(
+            const std::function<void(const std::string& result)>& callback,
+            JsonWebTokenTransformInput options
+        );
+
+        void reverse_async(
+            const std::function<void(Result<JsonWebTokenReverseResult>& result)>& callback,
+            JsonWebTokenReverseInput options
+        );
+
+        void transform_async(
+            const std::function<void(Result<std::string>& result)>& callback,
+            JsonWebTokenTransformInput options
+        );
+
         void transform(
             Result<std::string>& result,
             JsonWebTokenTransformInput options
@@ -90,6 +122,12 @@ namespace QLogicaeCore
             JsonWebTokenReverseInput options
         );
 
+        static JsonWebTokenCryptographer& get_instance();
+
+        void get_instance(
+            Result<JsonWebTokenCryptographer*>& result
+        );
+
     protected:
         const jwt::algorithm::es256k& _get_es256k_signer(
             const std::string& public_key,
@@ -100,4 +138,7 @@ namespace QLogicaeCore
             const std::string& public_key
         );
     };
+
+    inline static JsonWebTokenCryptographer& JSONWEBTOKEN_CRYPTOGRAPHER =
+        JsonWebTokenCryptographer::get_instance();
 }

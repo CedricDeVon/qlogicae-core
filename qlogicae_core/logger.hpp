@@ -620,4 +620,7 @@ namespace QLogicaeCore
 			Result<std::string>& result
 		);
 	};
+
+	inline static Logger& LOGGER =
+		Logger::get_instance();
 }

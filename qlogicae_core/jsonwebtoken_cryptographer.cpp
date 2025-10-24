@@ -159,24 +159,46 @@ namespace QLogicaeCore
         JsonWebTokenTransformInput options
     )
     {
-        return std::async(
-            std::launch::async, [this, options]()
+        std::promise<std::string> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, options,
+            promise = std::move(promise)]() mutable
             {
-                return this->transform(options);
+                promise.set_value(
+                    transform(
+                        options
+                    )
+                );
             }
         );
+
+        return future;
     }
 
     std::future<JsonWebTokenReverseResult> JsonWebTokenCryptographer::reverse_async(
         JsonWebTokenReverseInput options
     )
     {
-        return std::async(
-            std::launch::async, [this, options]()
+        std::promise<JsonWebTokenReverseResult> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, options,
+            promise = std::move(promise)]() mutable
             {
-                return this->reverse(options);
+                promise.set_value(
+                    reverse(
+                        options
+                    )
+                );
             }
         );
+
+        return future;
     }
 
     bool JsonWebTokenCryptographer::setup()
@@ -301,16 +323,29 @@ namespace QLogicaeCore
         JsonWebTokenTransformInput options
     )
     {
-        result.set_to_good_status_with_value(
-            std::async(
-                std::launch::async, [this, options]()
+        std::promise<std::string> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, options,
+            promise = std::move(promise)]() mutable
             {
                 Result<std::string> result;
 
-                transform(result, options);
+                transform(
+                    result,
+                    options
+                );
 
-                return result.get_value();
-            })
+                promise.set_value(
+                    result.get_value()
+                );
+            }
+        );
+
+        result.set_to_good_status_with_value(
+            std::move(future)
         );
     }
 
@@ -319,16 +354,127 @@ namespace QLogicaeCore
         JsonWebTokenReverseInput options
     )
     {
-        result.set_to_good_status_with_value(
-            std::async(
-                std::launch::async, [this, options]()
+        std::promise<JsonWebTokenReverseResult> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, options,
+            promise = std::move(promise)]() mutable
             {
                 Result<JsonWebTokenReverseResult> result;
 
-                reverse(result, options);
+                reverse(
+                    result,
+                    options
+                );
 
-                return result.get_value();
-            })
+                promise.set_value(
+                    result.get_value()
+                );
+            }
         );
+
+        result.set_to_good_status_with_value(
+            std::move(future)
+        );
+    }
+
+    void JsonWebTokenCryptographer::reverse_async(
+        const std::function<void(const JsonWebTokenReverseResult& result)>& callback,
+        JsonWebTokenReverseInput options
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, options, callback]() mutable
+            {
+                callback(
+                    reverse(
+                        options
+                    )
+                );
+            }
+        );
+    }
+
+    void JsonWebTokenCryptographer::transform_async(
+        const std::function<void(const std::string& result)>& callback,
+        JsonWebTokenTransformInput options
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, options, callback]() mutable
+            {
+                callback(
+                    transform(
+                        options
+                    )
+                );
+            }
+        );
+    }
+
+    void JsonWebTokenCryptographer::reverse_async(
+        const std::function<void(Result<JsonWebTokenReverseResult>& result)>& callback,
+        JsonWebTokenReverseInput options
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, options, callback]() mutable
+            {
+                Result<JsonWebTokenReverseResult> result;
+
+                reverse(
+                    result,
+                    options
+                );
+
+                callback(
+                    result
+                );
+            }
+        );
+    }
+
+    void JsonWebTokenCryptographer::transform_async(
+        const std::function<void(Result<std::string>& result)>& callback,
+        JsonWebTokenTransformInput options
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, options, callback]() mutable
+            {
+                Result<std::string> result;
+
+                transform(
+                    result,
+                    options
+                );
+
+                callback(
+                    result
+                );
+            }
+        );
+    }
+
+    JsonWebTokenCryptographer& JsonWebTokenCryptographer::get_instance()
+    {
+        static JsonWebTokenCryptographer instance;
+
+        return instance;
+    }
+
+    void JsonWebTokenCryptographer::get_instance(
+        QLogicaeCore::Result<JsonWebTokenCryptographer*>& result
+    )
+    {
+        static JsonWebTokenCryptographer instance;
+
+        result.set_to_good_status_with_value(&instance);
     }
 }

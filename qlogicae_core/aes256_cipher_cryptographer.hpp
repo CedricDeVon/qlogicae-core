@@ -27,12 +27,12 @@ namespace QLogicaeCore
         AES256CipherCryptographer& operator = (
             AES256CipherCryptographer&&
                 aes256_cipher_cryptographer
-            ) = delete;
+        ) = delete;
 
         AES256CipherCryptographer& operator = (
             const AES256CipherCryptographer&
                 aes256_cipher_cryptographer
-            ) = delete;
+        ) = delete;
 
         bool setup();
 
@@ -40,6 +40,20 @@ namespace QLogicaeCore
             Result<void>& result
         );
 
+        std::future<bool> setup_async();
+
+        void setup_async(
+            const std::function<void(const bool& result)>& callback
+        );
+
+        void setup_async(
+            Result<std::future<void>>& result
+        );
+
+        void setup_async(
+            const std::function<void(Result<void>& result)>& callback
+        );
+
         std::string reverse(
             const std::string& cipher,
             const unsigned char* key,
@@ -83,6 +97,62 @@ namespace QLogicaeCore
         );
 
         std::future<std::string> transform_async(
+            const std::string& text,
+            const std::string& key,
+            const std::string& nonce
+        );
+
+        void reverse_async(
+            const std::function<void(const std::string& result)>& callback,
+            const std::string& cipher,
+            const unsigned char* key,
+            const unsigned char* nonce
+        );
+
+        void transform_async(
+            const std::function<void(const std::string& result)>& callback,
+            const std::string& text,
+            const unsigned char* key,
+            const unsigned char* nonce
+        );
+
+        void reverse_async(
+            const std::function<void(const std::string& result)>& callback,
+            const std::string& cipher,
+            const std::string& key,
+            const std::string& nonce
+        );
+
+        void transform_async(
+            const std::function<void(const std::string& result)>& callback,
+            const std::string& text,
+            const std::string& key,
+            const std::string& nonce
+        );
+
+        void reverse_async(
+            const std::function<void(Result<std::string>& result)>& callback,
+            const std::string& cipher,
+            const unsigned char* key,
+            const unsigned char* nonce
+        );
+
+        void transform_async(
+            const std::function<void(Result<std::string>& result)>& callback,
+            const std::string& text,
+            const unsigned char* key,
+            const unsigned char* nonce
+        );
+
+        void reverse_async(
+            const std::function<void(Result<std::string>& result)>& callback,
+            const std::string& cipher,
+            const std::string& key,
+            const std::string& nonce
+        );
+
+        void transform_async(
+            const std::function<void(Result<std::string>& result)>& callback,
             const std::string& text,
             const std::string& key,
             const std::string& nonce
@@ -142,6 +212,15 @@ namespace QLogicaeCore
             const std::string& text,
             const std::string& key,
             const std::string& nonce
+        );
+
+        static AES256CipherCryptographer& get_instance();
+
+        void get_instance(
+            Result<AES256CipherCryptographer*>& result
         );
     };
+
+    inline static AES256CipherCryptographer& AES256_CIPHER_CRYPTOGRAPHER =
+        AES256CipherCryptographer::get_instance();
 }

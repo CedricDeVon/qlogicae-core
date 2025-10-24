@@ -10,10 +10,89 @@ namespace QLogicaeCore
 
 	}
 
+    std::future<bool> XChaCha20Poly1305CipherCryptographer::setup_async()
+    {
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    setup()
+                );
+            }
+        );
+
+        return future;
+    }
+
+    void XChaCha20Poly1305CipherCryptographer::setup_async(
+        const std::function<void(const bool& result)>& callback
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, callback]() mutable
+            {
+                callback(
+                    setup()
+                );
+            }
+        );
+    }
+
+    void XChaCha20Poly1305CipherCryptographer::setup_async(
+        Result<std::future<void>>& result
+    )
+    {
+        std::promise<void> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this,
+            promise = std::move(promise)]() mutable
+            {
+                Result<void> result;
+
+                setup(result);
+
+                promise.set_value();
+            }
+        );
+
+        result.set_to_good_status_with_value(
+            std::move(future)
+        );
+    }
+
+    void XChaCha20Poly1305CipherCryptographer::setup_async(
+        const std::function<void(Result<void>& result)>& callback
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, callback]() mutable
+            {
+                Result<void> result;
+
+                setup(result);
+
+                callback(
+                    result
+                );
+            }
+        );
+    }
+
     std::string XChaCha20Poly1305CipherCryptographer::reverse(
         const std::string_view& va,
         const std::string_view& vb,
-        const std::string_view& vc)
+        const std::string_view& vc
+    )
     {
         return reverse(va,
             reinterpret_cast<const unsigned char*>(vb.data()),
@@ -24,7 +103,8 @@ namespace QLogicaeCore
     std::string XChaCha20Poly1305CipherCryptographer::transform(
         const std::string_view& va,
         const std::string_view& vb,
-        const std::string_view& vc)
+        const std::string_view& vc
+    )
     {
         return transform(va,
             reinterpret_cast<const unsigned char*>(vb.data()),
@@ -35,31 +115,58 @@ namespace QLogicaeCore
     std::future<std::string> XChaCha20Poly1305CipherCryptographer::reverse_async(
         const std::string_view& va,
         const std::string_view& vb,
-        const std::string_view& vc)
+        const std::string_view& vc
+    )
     {
-        return std::async(std::launch::async,
-            [this, va, vb, vc]() -> std::string
-        {
-            return reverse(va, vb, vc);            
-        });
+        std::promise<std::string> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, va, vb, vc,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    reverse(
+                        va,
+                        vb,
+                        vc
+                    )
+                );
+            }
+        );
     }
 
     std::future<std::string> XChaCha20Poly1305CipherCryptographer::transform_async(
         const std::string_view& va,
         const std::string_view& vb,
-        const std::string_view& vc)
+        const std::string_view& vc
+    )
     {
-        return std::async(std::launch::async,
-            [this, va, vb, vc]() -> std::string
-        {
-            return transform(va, vb, vc);            
-        });
+        std::promise<std::string> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, va, vb, vc,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    transform(
+                        va,
+                        vb,
+                        vc
+                    )
+                );
+            }
+        );
     }
 
     std::string XChaCha20Poly1305CipherCryptographer::transform(
         const std::string_view& va,
         const unsigned char* vb,
-        const unsigned char* vc)
+        const unsigned char* vc
+    )
     {
         try
         {
@@ -99,7 +206,8 @@ namespace QLogicaeCore
     std::string XChaCha20Poly1305CipherCryptographer::reverse(
         const std::string_view& va,
         const unsigned char* vb,
-        const unsigned char* vc)
+        const unsigned char* vc
+    )
     {
         try
         {
@@ -144,23 +252,51 @@ namespace QLogicaeCore
     std::future<std::string> XChaCha20Poly1305CipherCryptographer::reverse_async(
         const std::string_view& va,
         const unsigned char* vb,
-        const unsigned char* vc)
+        const unsigned char* vc
+    )
     {
-        return std::async(std::launch::async, [this, va, vb, vc]() -> std::string
-        {
-            return reverse(va, vb, vc);            
-        });
+        std::promise<std::string> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, va, vb, vc,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    reverse(
+                        va,
+                        vb,
+                        vc
+                    )
+                );
+            }
+        );
     }
 
     std::future<std::string> XChaCha20Poly1305CipherCryptographer::transform_async(
         const std::string_view& va,
         const unsigned char* vb,
-        const unsigned char* vc)
+        const unsigned char* vc
+    )
     {
-        return std::async(std::launch::async, [this, va, vb, vc]() -> std::string
-        {
-            return transform(va, vb, vc);            
-        });
+        std::promise<std::string> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, va, vb, vc,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    transform(
+                        va,
+                        vb,
+                        vc
+                    )
+                );
+            }
+        );
     }
 
     bool XChaCha20Poly1305CipherCryptographer::setup()
@@ -287,16 +423,31 @@ namespace QLogicaeCore
         const unsigned char* nonce
     )
     {
+        std::promise<std::string> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, cipher, key, nonce,
+            promise = std::move(promise)]() mutable
+            {
+                Result<std::string> result;
+
+                reverse(
+                    result,
+                    cipher,
+                    key,
+                    nonce
+                );
+
+                promise.set_value(
+                    result.get_value()
+                );
+            }
+        );
+
         result.set_to_good_status_with_value(
-            std::async(std::launch::async,
-                [this, cipher, key, nonce]() -> std::string
-                {
-                    Result<std::string> result;
-
-                    reverse(result, cipher, key, nonce);
-
-                    return result.get_value();
-                })
+            std::move(future)
         );
     }
 
@@ -307,16 +458,31 @@ namespace QLogicaeCore
         const unsigned char* nonce
     )
     {
+        std::promise<std::string> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, text, key, nonce,
+            promise = std::move(promise)]() mutable
+            {
+                Result<std::string> result;
+
+                transform(
+                    result,
+                    text,
+                    key,
+                    nonce
+                );
+
+                promise.set_value(
+                    result.get_value()
+                );
+            }
+        );
+
         result.set_to_good_status_with_value(
-            std::async(std::launch::async,
-                [this, text, key, nonce]() -> std::string
-                {
-                    Result<std::string> result;
-
-                    transform(result, text, key, nonce);
-
-                    return result.get_value();
-                })
+            std::move(future)
         );
     }
 
@@ -327,15 +493,31 @@ namespace QLogicaeCore
         const std::string_view& nonce
     )
     {
+        std::promise<std::string> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, cipher, key, nonce,
+            promise = std::move(promise)]() mutable
+            {
+                Result<std::string> result;
+
+                reverse(
+                    result,
+                    cipher,
+                    key,
+                    nonce
+                );
+
+                promise.set_value(
+                    result.get_value()
+                );
+            }
+        );
+
         result.set_to_good_status_with_value(
-            std::async(std::launch::async, [this, cipher, key, nonce]() -> std::string
-                {
-                    Result<std::string> result;
-
-                    reverse(result, cipher, key, nonce);
-
-                    return result.get_value();
-                })
+            std::move(future)
         );
     }
 
@@ -346,15 +528,243 @@ namespace QLogicaeCore
         const std::string_view& nonce
     )
     {
-        result.set_to_good_status_with_value(
-            std::async(std::launch::async, [this, text, key, nonce]() -> std::string
+        std::promise<std::string> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, text, key, nonce,
+            promise = std::move(promise)]() mutable
             {
-                    Result<std::string> result;
+                Result<std::string> result;
 
-                    transform(result, text, key, nonce);
+                transform(
+                    result,
+                    text,
+                    key,
+                    nonce
+                );
 
-                    return result.get_value();
-            })
+                promise.set_value(
+                    result.get_value()
+                );
+            }
         );
+
+        result.set_to_good_status_with_value(
+            std::move(future)
+        );
+    }
+
+    void XChaCha20Poly1305CipherCryptographer::reverse_async(
+        const std::function<void(const std::string& result)>& callback,
+        const std::string& cipher,
+        const unsigned char* key,
+        const unsigned char* nonce
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, cipher, key, nonce, callback]() mutable
+            {
+                callback(
+                    reverse(
+                        cipher,
+                        key,
+                        nonce
+                    )
+                );
+            }
+        );
+    }
+
+    void XChaCha20Poly1305CipherCryptographer::transform_async(
+        const std::function<void(const std::string& result)>& callback,
+        const std::string& text,
+        const unsigned char* key,
+        const unsigned char* nonce
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, text, key, nonce, callback]() mutable
+            {
+                callback(
+                    transform(
+                        text,
+                        key,
+                        nonce
+                    )
+                );
+            }
+        );
+    }
+
+    void XChaCha20Poly1305CipherCryptographer::reverse_async(
+        const std::function<void(const std::string& result)>& callback,
+        const std::string& cipher,
+        const std::string& key,
+        const std::string& nonce
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, cipher, key, nonce, callback]() mutable
+            {
+                callback(
+                    reverse(
+                        cipher,
+                        key,
+                        nonce
+                    )
+                );
+            }
+        );
+    }
+
+    void XChaCha20Poly1305CipherCryptographer::transform_async(
+        const std::function<void(const std::string& result)>& callback,
+        const std::string& text,
+        const std::string& key,
+        const std::string& nonce
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, text, key, nonce, callback]() mutable
+            {
+                callback(
+                    transform(
+                        text,
+                        key,
+                        nonce
+                    )
+                );
+            }
+        );
+    }
+
+    void XChaCha20Poly1305CipherCryptographer::reverse_async(
+        const std::function<void(Result<std::string>& result)>& callback,
+        const std::string& cipher,
+        const unsigned char* key,
+        const unsigned char* nonce
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, cipher, key, nonce, callback]() mutable
+            {
+                Result<std::string> result;
+
+                reverse(
+                    result,
+                    cipher,
+                    key,
+                    nonce
+                );
+
+                callback(
+                    result
+                );
+            }
+        );
+    }
+
+    void XChaCha20Poly1305CipherCryptographer::transform_async(
+        const std::function<void(Result<std::string>& result)>& callback,
+        const std::string& text,
+        const unsigned char* key,
+        const unsigned char* nonce
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, text, key, nonce, callback]() mutable
+            {
+                Result<std::string> result;
+
+                transform(
+                    result,
+                    text,
+                    key,
+                    nonce
+                );
+
+                callback(
+                    result
+                );
+            }
+        );
+    }
+
+    void XChaCha20Poly1305CipherCryptographer::reverse_async(
+        const std::function<void(Result<std::string>& result)>& callback,
+        const std::string& cipher,
+        const std::string& key,
+        const std::string& nonce
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, cipher, key, nonce, callback]() mutable
+            {
+                Result<std::string> result;
+
+                reverse(
+                    result,
+                    cipher,
+                    key,
+                    nonce
+                );
+
+                callback(
+                    result
+                );
+            }
+        );
+    }
+
+    void XChaCha20Poly1305CipherCryptographer::transform_async(
+        const std::function<void(Result<std::string>& result)>& callback,
+        const std::string& text,
+        const std::string& key,
+        const std::string& nonce
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, text, key, nonce, callback]() mutable
+            {
+                Result<std::string> result;
+
+                transform(
+                    result,
+                    text,
+                    key,
+                    nonce
+                );
+
+                callback(
+                    result
+                );
+            }
+        );
+    }
+
+    XChaCha20Poly1305CipherCryptographer& XChaCha20Poly1305CipherCryptographer::get_instance()
+    {
+        static XChaCha20Poly1305CipherCryptographer instance;
+
+        return instance;
+    }
+
+    void XChaCha20Poly1305CipherCryptographer::get_instance(
+        QLogicaeCore::Result<XChaCha20Poly1305CipherCryptographer*>& result
+    )
+    {
+        static XChaCha20Poly1305CipherCryptographer instance;
+
+        result.set_to_good_status_with_value(&instance);
     }
 }
