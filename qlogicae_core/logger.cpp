@@ -729,7 +729,8 @@ namespace QLogicaeCore
 	)
 	{
 		try
-		{	// std::scoped_lock lock(_mutex);
+		{	
+			std::scoped_lock lock(_mutex);
 
 			Result<void> result;
 			
@@ -757,9 +758,7 @@ namespace QLogicaeCore
 		const bool& is_enabled,
 		const bool& is_simplified
 	)
-	{
-		std::scoped_lock lock(_mutex);
-
+	{		
 		if ((!is_enabled || !_is_enabled) ||
 			_log_medium == LogMedium::NONE
 		)
@@ -768,7 +767,10 @@ namespace QLogicaeCore
 		}
 		
 		Result<std::string> string_result;
-		Result<void> future_void_result;
+		Result<std::future<void>> future_void_result_1;
+		Result<std::future<void>> future_void_result_2;
+		Result<std::future<void>> future_void_result_3;
+		Result<std::future<void>> future_void_result_4;
 		
 		if (is_simplified || _is_simplified)
 		{
@@ -790,29 +792,29 @@ namespace QLogicaeCore
 		{
 			case LogMedium::ALL:
 			{
-				CLI_IO.print(
-					result,
+				CLI_IO.print_async(
+					future_void_result_1,
 					string_result.get_value()
 				);
 
-				/*
-				*/
-
-				_log_to_output_files(
- 					future_void_result,
-					string_result.get_value()
-				);
+				if (!_output_paths.empty())
+				{
+					_log_to_output_files_async(
+						future_void_result_2,
+						string_result.get_value()
+					);
+				}
 				if (_is_log_file_fragmentation_enabled)
 				{
-					_log_to_fragmentation_file(
-						future_void_result,
+					_log_to_fragmentation_file_async(
+						future_void_result_3,
 						string_result.get_value()
 					);
 				}
 				if (_is_log_file_collectivization_enabled)
 				{
-					_log_to_collectivization_file(
-						future_void_result,
+					_log_to_collectivization_file_async(
+						future_void_result_4,
 						string_result.get_value()
 					);
 				}
@@ -821,8 +823,8 @@ namespace QLogicaeCore
 			}
 			case LogMedium::CONSOLE:
 			{
-				CLI_IO.print(
-					result,
+				CLI_IO.print_async(
+					future_void_result_1,
 					string_result.get_value()
 				);
 
@@ -830,25 +832,24 @@ namespace QLogicaeCore
 			}
 			case LogMedium::FILE:
 			{
-
-				/*
-				*/
-
-				_log_to_output_files(
-					future_void_result,
-					string_result.get_value()
-				);
+				if (!_output_paths.empty())
+				{
+					_log_to_output_files_async(
+						future_void_result_2,
+						string_result.get_value()
+					);
+				}
 				if (_is_log_file_fragmentation_enabled)
 				{
-					_log_to_fragmentation_file(
-						future_void_result,
+					_log_to_fragmentation_file_async(
+						future_void_result_3,
 						string_result.get_value()
 					);
 				}
 				if (_is_log_file_collectivization_enabled)
 				{
-					_log_to_collectivization_file(
-						future_void_result,
+					_log_to_collectivization_file_async(
+						future_void_result_4,
 						string_result.get_value()
 					);
 				}
@@ -866,7 +867,7 @@ namespace QLogicaeCore
 	{
 		try
 		{			
-			// std::scoped_lock lock(_mutex);
+			std::scoped_lock lock(_mutex);
 
 			Result<void> result;
 
@@ -890,9 +891,7 @@ namespace QLogicaeCore
 		const std::string& text,
 		const LogConfigurations& configurations
 	)
-	{
-		std::scoped_lock lock(_mutex);
-
+	{		
 		LogLevel log_level = configurations.log_level;
 		bool is_enabled = configurations.is_enabled;
 		bool is_simplified = configurations.is_simplified;
@@ -904,45 +903,56 @@ namespace QLogicaeCore
 			return result.set_to_good_status_without_value();
 		}
 
-		Result<void> future_void_result;
+		Result<std::string> string_result;
+		Result<std::future<void>> future_void_result_1;
+		Result<std::future<void>> future_void_result_2;
+		Result<std::future<void>> future_void_result_3;
+		Result<std::future<void>> future_void_result_4;
 
-		std::string transformed_text =
-			(is_simplified || _is_simplified) ?
-			text :
+		if (is_simplified || _is_simplified)
+		{
+			string_result.set_value(
+				text
+			);
+		}
+		else
+		{
 			TRANSFORMER.to_log_format(
+				string_result,
 				text,
 				log_level,
 				_log_format
 			);
+		}
 
 		switch (_log_medium)
 		{
 			case LogMedium::ALL:
 			{
-				CLI_IO.print(
-					result,
-					transformed_text
+				CLI_IO.print_async(
+					future_void_result_1,
+					string_result.get_value()
 				);
 
-				/*
-				*/
-
-				_log_to_output_files(
-					future_void_result,
-					transformed_text
-				);
+				if (!_output_paths.empty())
+				{
+					_log_to_output_files_async(
+						future_void_result_2,
+						string_result.get_value()
+					);
+				}
 				if (_is_log_file_fragmentation_enabled)
 				{
-					_log_to_fragmentation_file(
-						future_void_result,
-						transformed_text
+					_log_to_fragmentation_file_async(
+						future_void_result_3,
+						string_result.get_value()
 					);
 				}
 				if (_is_log_file_collectivization_enabled)
 				{
-					_log_to_collectivization_file(
-						future_void_result,
-						transformed_text
+					_log_to_collectivization_file_async(
+						future_void_result_4,
+						string_result.get_value()
 					);
 				}
 
@@ -950,35 +960,34 @@ namespace QLogicaeCore
 			}
 			case LogMedium::CONSOLE:
 			{
-				CLI_IO.print(
-					result,
-					transformed_text
+				CLI_IO.print_async(
+					future_void_result_1,
+					string_result.get_value()
 				);
 
 				break;
 			}
 			case LogMedium::FILE:
 			{
-
-				/*
-				*/
-				_log_to_output_files(
-					future_void_result,
-					transformed_text
-				);
-
+				if (!_output_paths.empty())
+				{
+					_log_to_output_files_async(
+						future_void_result_2,
+						string_result.get_value()
+					);
+				}
 				if (_is_log_file_fragmentation_enabled)
 				{
-					_log_to_fragmentation_file(
-						future_void_result,
-						transformed_text
+					_log_to_fragmentation_file_async(
+						future_void_result_3,
+						string_result.get_value()
 					);
 				}
 				if (_is_log_file_collectivization_enabled)
 				{
-					_log_to_collectivization_file(
-						future_void_result,
-						transformed_text
+					_log_to_collectivization_file_async(
+						future_void_result_4,
+						string_result.get_value()
 					);
 				}
 				break;
@@ -1885,17 +1894,15 @@ namespace QLogicaeCore
 		const std::string& text
 	)
 	{
- 		// TextFileIO text_file_io;
+ 		TextFileIO text_file_io;
 
-		Result<void> void_result;
 		Result<bool> bool_result;
-		// Result<std::future<bool>> future_bool_result;
-
-		_text_file_io.set_file_path(
-			void_result,
+		
+		text_file_io.set_file_path(
+			result,
 			_log_file_collectivization_output_file_path
 		);
-		_text_file_io.append(
+		text_file_io.append(
 			bool_result,
 			text
 		);
@@ -1977,9 +1984,8 @@ namespace QLogicaeCore
 		const std::string& text
 	)
 	{
- 		// TextFileIO text_file_io;
+ 		TextFileIO text_file_io;
 
-		Result<void> void_result;
 		Result<bool> bool_result;
 		Result<std::string> string_result;
 
@@ -1987,11 +1993,11 @@ namespace QLogicaeCore
 			string_result
 		);
 
-		_text_file_io.set_file_path(
-			void_result,
+		text_file_io.set_file_path(
+			result,
 			string_result.get_value()
 		);
-		_text_file_io.append(
+		text_file_io.append(
 			bool_result,
 			text
 		);
@@ -2076,15 +2082,15 @@ namespace QLogicaeCore
 		const std::string& text
 	)
 	{
- 		// TextFileIO text_file_io;
+ 		TextFileIO text_file_io;
 
 		Result<bool> bool_result;
 
-		_text_file_io.set_file_path(
+		text_file_io.set_file_path(
 			result,
 			path
 		);
-		_text_file_io.append(
+		text_file_io.append(
 			bool_result,
 			text
 		);
