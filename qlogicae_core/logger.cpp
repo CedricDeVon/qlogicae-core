@@ -6,16 +6,42 @@ namespace QLogicaeCore
 {	
 	Logger::Logger()
 	{
-		setup();
+		_name = "";
+		_log_medium = LogMedium::CONSOLE;
+		_log_format = TimeFormat::FULL_TIMESTAMP;
+		_log_file_fragmentation_format = TimeFormat::DATE_DMY_SLASHED;
+		_is_enabled = true;
+		_is_simplified = false;
+		_is_log_file_fragmentation_enabled = false;
+		_log_file_fragmentation_output_folder_path = "";
+		_log_file_collectivization_output_file_name = "";
+		_is_log_file_collectivization_enabled = false;
+		_log_file_collectivization_output_folder_path = "";
+		_output_paths = {};
+	}
+	
+	Logger::~Logger()
+	{
+		
 	}
 
 	Logger::Logger(
 		const bool& is_simplified
 	)
 	{
-		setup(
-			is_simplified
-		);
+		_name = "";
+		_log_medium = LogMedium::CONSOLE;
+		_log_format = TimeFormat::FULL_TIMESTAMP;
+		_log_file_fragmentation_format = TimeFormat::DATE_DMY_SLASHED;
+		_is_enabled = true;
+		_is_simplified = is_simplified;
+		_is_log_file_fragmentation_enabled = false;
+		_log_file_fragmentation_output_folder_path = "";
+		_is_log_file_collectivization_enabled = false;
+		_log_file_collectivization_output_file_name = "";
+		_log_file_collectivization_output_folder_path = "";
+		_log_file_collectivization_output_file_path = "";
+		_output_paths = {};
 	}
 
 	Logger::Logger(
@@ -25,21 +51,43 @@ namespace QLogicaeCore
 		const bool& is_simplified
 	)
 	{
-		setup(
-			name,
-			medium,
-			output_paths,
-			is_simplified
-		);
+		_name = name;
+		_log_medium = medium;
+		_log_format = TimeFormat::FULL_TIMESTAMP;
+		_log_file_fragmentation_format = TimeFormat::DATE_DMY_SLASHED;
+		_is_enabled = true;
+		_is_simplified = is_simplified;
+		_is_log_file_fragmentation_enabled = false;
+		_log_file_fragmentation_output_folder_path = "";
+		_is_log_file_collectivization_enabled = false;
+		_log_file_collectivization_output_file_name = "";
+		_log_file_collectivization_output_folder_path = "";
+		_log_file_collectivization_output_file_path = "";
+		_output_paths = output_paths;
 	}
 
 	Logger::Logger(
 		const LoggerConfigurations& configurations
 	)
 	{
-		setup(
-			configurations
-		);
+		_name = configurations.name;
+		_log_medium = configurations.log_medium;
+		_log_format = configurations.log_format;
+		_log_file_fragmentation_format = configurations.log_file_fragmentation_format;
+		_is_enabled = configurations.is_enabled;
+		_is_simplified = configurations.is_simplified;
+		_is_log_file_fragmentation_enabled = configurations.is_log_file_fragmentation_enabled;
+		_log_file_fragmentation_output_folder_path = configurations.log_file_fragmentation_output_folder_path;
+		_is_log_file_collectivization_enabled = configurations.is_log_file_collectivization_enabled;
+		_log_file_collectivization_output_file_name = configurations.log_file_collectivization_output_file_name;
+		_log_file_collectivization_output_folder_path = configurations.log_file_collectivization_output_folder_path;
+		_output_paths = configurations.output_paths;
+
+		if (_is_log_file_collectivization_enabled)
+		{
+			_log_file_collectivization_output_file_path =
+				_generate_log_collectivization_file_path();
+		}
 	}
 
 	bool Logger::setup()

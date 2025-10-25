@@ -7,7 +7,7 @@ namespace QLogicaeCore
     Application::Application() :
         AbstractApplication()
     {
-
+        
     }
 
     Application::~Application()

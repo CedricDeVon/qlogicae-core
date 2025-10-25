@@ -16,19 +16,19 @@ namespace QLogicaeCore
         );
 
         AbstractFileIO(
-            const AbstractFileIO& abstract_file_io
+            const AbstractFileIO& instance
         ) = delete;
 
         AbstractFileIO(
-            AbstractFileIO&& abstract_file_io
+            AbstractFileIO&& instance
         ) noexcept = default;
 
         AbstractFileIO& operator = (
-            const AbstractFileIO& abstract_file_io
+            const AbstractFileIO& instance
         ) = delete;
 
         AbstractFileIO& operator = (
-            AbstractFileIO&& abstract_file_io
+            AbstractFileIO&& instance
         ) noexcept = default;
 
         AbstractFileIO(

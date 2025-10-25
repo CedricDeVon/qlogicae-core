@@ -9,6 +9,118 @@ namespace QLogicaeCore
         
     }
 
+    Validators::~Validators()
+    {
+
+    }
+
+    bool Validators::setup()
+    {
+        try
+        {
+            Result<void> result;
+
+            setup(
+                result
+            );
+
+            return result.is_status_safe();
+        }
+        catch (const std::exception& exception)
+        {
+
+        }
+    }
+
+    void Validators::setup(
+        Result<void>& result
+    )
+    {
+        result.set_to_good_status_without_value();
+    }
+
+    std::future<bool> Validators::setup_async()
+    {
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    setup()
+                );
+            }
+        );
+
+        return future;
+    }
+
+    void Validators::setup_async(
+        Result<std::future<void>>& result
+    )
+    {
+        std::promise<void> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this,
+            promise = std::move(promise)]() mutable
+            {
+                Result<void> result;
+
+                setup(
+                    result
+                );
+
+                promise.set_value();
+            }
+        );
+
+        result.set_to_good_status_with_value(
+            std::move(future)
+        );
+    }
+
+    void Validators::setup_async(
+        const std::function<void(const bool& result)>& callback
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, callback]() mutable
+            {
+                callback(
+                    setup()
+                );
+            }
+        );
+    }
+
+    void Validators::setup_async(
+        const std::function<void(Result<void>& result)>& callback
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, callback]() mutable
+            {
+                Result<void> result;
+
+                setup(
+                    result
+                );
+
+                callback(
+                    result
+                );
+            }
+        );
+    }
+
     static bool match_std_regex(const std::string_view& input, const std::string_view& pattern)
     {
         try
@@ -737,12 +849,6 @@ namespace QLogicaeCore
             {
                 return value.find(word) != std::string_view::npos;
             });
-    }
-
-    Validators& Validators::get_instance()
-    {
-        static Validators singleton_instance;
-        return singleton_instance;
     }
 
     void Validators::is_not_empty(
@@ -1923,6 +2029,13 @@ namespace QLogicaeCore
             });
 
         result.set_to_good_status_with_value(found);
+    }
+
+    Validators& Validators::get_instance()
+    {
+        static Validators instance;
+
+        return instance;
     }
 
     void Validators::get_instance(

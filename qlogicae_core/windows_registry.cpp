@@ -15,38 +15,228 @@ namespace QLogicaeCore
         }
     };
 
+    WindowsRegistry::WindowsRegistry()
+    {
+
+    }
+
+    WindowsRegistry::~WindowsRegistry()
+    {
+
+    }
+
     WindowsRegistry::WindowsRegistry(
         const HKEY root_hkey
     )
     {
-        Result<void> void_result;
+        Result<void> result;
 
-        setup(void_result, root_hkey);
+        setup(result, root_hkey);
+    }
+
+    std::future<bool> WindowsRegistry::setup_async()
+    {
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    setup()
+                );
+            }
+        );
+
+        return future;
+    }
+
+    void WindowsRegistry::setup_async(
+        Result<std::future<void>>& result
+    )
+    {
+        std::promise<void> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this,
+            promise = std::move(promise)]() mutable
+            {
+                Result<void> result;
+
+                setup(
+                    result
+                );
+
+                promise.set_value();
+            }
+        );
+
+        result.set_to_good_status_with_value(
+            std::move(future)
+        );
+    }
+
+    void WindowsRegistry::setup_async(
+        const std::function<void(const bool& result)>& callback
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, callback]() mutable
+            {
+                callback(
+                    setup()
+                );
+            }
+        );
+    }
+
+    void WindowsRegistry::setup_async(
+        const std::function<void(Result<void>& result)>& callback
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, callback]() mutable
+            {
+                Result<void> result;
+
+                setup(
+                    result
+                );
+
+                callback(
+                    result
+                );
+            }
+        );
     }
 
     bool WindowsRegistry::setup(
         const HKEY hkey
     )
     {
-        Result<void> void_result;
+        try
+        {
+            Result<void> result;
 
-        setup(void_result, hkey);
+            setup(result, hkey);
 
-        return void_result.is_status_safe();
+            return result.is_status_safe();
+        }
+        catch (const std::exception& exception)
+        {
+
+        }
     }
 
-    WindowsRegistry& WindowsRegistry::hkcu()
+    void WindowsRegistry::setup(
+        Result<void>& result,
+        const HKEY hkey
+    )
     {
-        static WindowsRegistry hkcu(HKEY_CURRENT_USER);
+        _root_key = hkey;
+        _sub_key.assign(UTILITIES.DEFAULT_SUB_KEY);
+        _name_key.assign(UTILITIES.DEFAULT_NAME_KEY);
 
-        return hkcu;
+        result.set_to_good_status_without_value();
     }
 
-    WindowsRegistry& WindowsRegistry::hklm()
+    std::future<bool> WindowsRegistry::setup_async(
+        const HKEY hkey
+    )
     {
-        static WindowsRegistry hklm(HKEY_LOCAL_MACHINE);
+        std::promise<bool> promise;
+        auto future = promise.get_future();
 
-        return hklm;
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, hkey,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    setup(
+                        hkey
+                    )
+                );
+            }
+        );
+
+        return future;
+    }
+
+    void WindowsRegistry::setup_async(
+        const std::function<void(const bool& result)>& callback,
+        const HKEY hkey
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, hkey, callback]() mutable
+            {
+                callback(
+                    setup(
+                        hkey
+                    )
+                );
+            }
+        );
+    }
+
+    void WindowsRegistry::setup_async(
+        Result<std::future<void>>& result,
+        const HKEY hkey
+    )
+    {
+        std::promise<void> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, hkey,
+            promise = std::move(promise)]() mutable
+            {
+                Result<void> result;
+
+                setup(
+                    result,
+                    hkey
+                );
+
+                promise.set_value();
+            }
+        );
+
+        result.set_to_good_status_with_value(
+            std::move(future)
+        );        
+    }
+
+    void WindowsRegistry::setup_async(
+        const std::function<void(Result<void>& result)>& callback,
+        const HKEY hkey
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, hkey, callback]() mutable
+            {
+                Result<void> result;
+
+                setup(
+                    result,
+                    hkey
+                );
+
+                callback(
+                    result
+                );
+            }
+        );
     }
 
     bool WindowsRegistry::set_sub_and_name_keys_via_utf16(
@@ -288,20 +478,6 @@ namespace QLogicaeCore
         return utf8_result;
     }
 
-
-
-    void WindowsRegistry::setup(
-        Result<void>& result,
-        const HKEY hkey
-    )
-    {
-        _root_key = hkey;
-        _sub_key.assign(UTILITIES.DEFAULT_SUB_KEY);
-        _name_key.assign(UTILITIES.DEFAULT_NAME_KEY);
-
-        result.set_to_good_status_without_value();
-    }
-
     void WindowsRegistry::get_values_via_utf8(
         Result<std::unordered_map<std::string, std::string>>& result,
         const std::string_view value
@@ -468,5 +644,19 @@ namespace QLogicaeCore
         );
 
         result.set_to_good_status_without_value();
+    }
+
+    WindowsRegistry& WindowsRegistry::hkcu()
+    {
+        static WindowsRegistry hkcu(HKEY_CURRENT_USER);
+
+        return hkcu;
+    }
+
+    WindowsRegistry& WindowsRegistry::hklm()
+    {
+        static WindowsRegistry hklm(HKEY_LOCAL_MACHINE);
+
+        return hklm;
     }
 }

@@ -21,20 +21,20 @@ namespace QLogicaeCore
         public AbstractFileIO
     {
     public:
-        ~JsonFileIO();
-        
-        JsonFileIO() = default;
+        JsonFileIO();
+
+        ~JsonFileIO();        
         
         JsonFileIO(
             const std::string&
         );
         
         JsonFileIO(
-            const JsonFileIO&
+            const JsonFileIO& instance
         ) = delete;
         
         JsonFileIO(
-            JsonFileIO&&
+            JsonFileIO&& instance
         ) noexcept = delete;
         
         JsonFileIO(
@@ -43,11 +43,11 @@ namespace QLogicaeCore
         );
         
         JsonFileIO& operator=(
-            const JsonFileIO&
+            const JsonFileIO& instance
         ) = delete;
         
         JsonFileIO& operator=(
-            JsonFileIO&&
+            JsonFileIO&& instance
         ) noexcept = delete;
         
         JsonFileIO(
@@ -65,6 +65,23 @@ namespace QLogicaeCore
         );
 
         bool setup(
+            const std::string& name,
+            const std::string& file_path
+        );
+
+        void setup(
+            Result<void>& result,
+            const std::string& file_path
+        );
+
+        void setup(
+            Result<void>& result,
+            const std::string& file_path,
+            const bool& is_formatting_allowed
+        );
+
+        void setup(
+            Result<void>& result,
             const std::string& name,
             const std::string& file_path
         );
@@ -496,21 +513,10 @@ namespace QLogicaeCore
             const std::unordered_map<std::string, std::any>&
         );
 
-        void setup(
-            Result<void>& result,
-            const std::string& file_path
-        );
+        static JsonFileIO& get_instance();
 
-        void setup(
-            Result<void>& result,
-            const std::string& file_path,
-            const bool& is_formatting_allowed
-        );
-
-        void setup(
-            Result<void>& result,
-            const std::string& name,
-            const std::string& file_path
+        static void get_instance(
+            Result<JsonFileIO*>& result
         );
 
     protected:
@@ -556,4 +562,7 @@ namespace QLogicaeCore
             rapidjson::Document::AllocatorType&
         );
     };
+
+    inline static JsonFileIO& JSON_FILE_IO =
+        JsonFileIO::get_instance();
 }

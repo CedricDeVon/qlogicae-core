@@ -10,39 +10,71 @@ namespace QLogicaeCore
         public AbstractValueExtractor
     {
     public:
-        ~WindowsRegistryValueExtractor() = default;
+        WindowsRegistryValueExtractor();
+        
+        ~WindowsRegistryValueExtractor();
         
         WindowsRegistryValueExtractor(
-            const std::string&,
-            const std::string&
+            const std::string& sub_key,
+            const std::string& name_key
         );
         
         WindowsRegistryValueExtractor(
-            const std::wstring&,
-            const std::wstring&
+            const std::wstring& sub_key,
+            const std::wstring& name_key
         );
         
         WindowsRegistryValueExtractor(
             const WindowsRegistryValueExtractor&
-                windows_registry_value_extractor
+                instance
         ) = delete;
         
         WindowsRegistryValueExtractor(
             WindowsRegistryValueExtractor&&
-            windows_registry_value_extractor
+                instance
         ) noexcept = delete;
         
         WindowsRegistryValueExtractor& operator = (
             WindowsRegistryValueExtractor&&
-            windows_registry_value_extractor
+                instance
         ) = delete;
         
         WindowsRegistryValueExtractor& operator = (
             const WindowsRegistryValueExtractor&
-            windows_registry_value_extractor
+                instance
         ) = delete;
 
+        bool setup();
+
+        std::future<bool> setup_async();
+
+        void setup_async(
+            const std::function<void(const bool& result)>& callback
+        );
+
+        void setup(
+            Result<void>& result
+        );
+
+        void setup_async(
+            Result<std::future<void>>& result
+        );
+        void setup_async(
+            const std::function<void(Result<void>& result)>& callback
+        );
+
         bool setup(
+            const std::string& sub_key,
+            const std::string& name_key
+        );
+
+        std::future<bool> setup_async(
+            const std::string& sub_key,
+            const std::string& name_key
+        );
+
+        void setup_async(
+            const std::function<void(const bool& result)>& callback,
             const std::string& sub_key,
             const std::string& name_key
         );
@@ -53,11 +85,48 @@ namespace QLogicaeCore
         );
 
         std::future<bool> setup_async(
+            const std::wstring& sub_key,
+            const std::wstring& name_key
+        );
+
+        void setup_async(
+            const std::function<void(const bool& result)>& callback,
+            const std::wstring& sub_key,
+            const std::wstring& name_key
+        );
+
+        void setup(
+            Result<void>& result,
             const std::string& sub_key,
             const std::string& name_key
         );
 
-        std::future<bool> setup_async(
+        void setup_async(
+            Result<std::future<void>>& result,
+            const std::string& sub_key,
+            const std::string& name_key
+        );
+
+        void setup_async(
+            const std::function<void(Result<void>& result)>& callback,
+            const std::string& sub_key,
+            const std::string& name_key
+        );
+
+        void setup(
+            Result<void>& result,
+            const std::wstring& sub_key,
+            const std::wstring& name_key
+        );
+
+        void setup_async(
+            Result<std::future<void>>& result,
+            const std::wstring& sub_key,
+            const std::wstring& name_key
+        );
+
+        void setup_async(
+            const std::function<void(Result<void>& result)>& callback,
             const std::wstring& sub_key,
             const std::wstring& name_key
         );
@@ -67,30 +136,6 @@ namespace QLogicaeCore
         std::optional<std::string> get_sub_key();
         
         std::optional<std::string> get_name_key();
-
-        void setup(
-            Result<void>& result,
-            const std::string& sub_key,
-            const std::string& name_key
-        );
-
-        void setup(
-            Result<void>& result,
-            const std::wstring& sub_key,
-            const std::wstring& name_key
-        );
-
-        void setup_async(
-            Result<std::future<void>>& result,
-            const std::string& sub_key,
-            const std::string& name_key
-        );
-
-        void setup_async(
-            Result<std::future<void>>& result,
-            const std::wstring& sub_key,
-            const std::wstring& name_key
-        );
 
         void get_value(
             Result<std::string>& result
@@ -104,10 +149,19 @@ namespace QLogicaeCore
             Result<std::string>& result
         );
 
+        static WindowsRegistryValueExtractor& get_instance();
+
+        static void get_instance(
+            Result<WindowsRegistryValueExtractor*>& result
+        );
+
     protected:
         std::string _sub_key;
 
         std::string _name_key;
     };
+
+    inline static WindowsRegistryValueExtractor& WINDOWS_REGISTRY_VALUE_EXTRACTOR =
+        WindowsRegistryValueExtractor::get_instance();
 }
 

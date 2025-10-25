@@ -4,6 +4,16 @@
 
 namespace QLogicaeCore
 {
+    WindowsRegistryValueExtractor::WindowsRegistryValueExtractor()
+    {
+
+    }
+
+    WindowsRegistryValueExtractor::~WindowsRegistryValueExtractor()
+    {
+
+    }
+
     WindowsRegistryValueExtractor::WindowsRegistryValueExtractor(
         const std::string& sub_key,
         const std::string& name_key
@@ -28,67 +38,359 @@ namespace QLogicaeCore
 
     }
 
-    bool WindowsRegistryValueExtractor::setup(
-        const std::string& sub_key,
-        const std::string& name_key
-    )
-    {        
-        Result<void> void_result;
+    bool WindowsRegistryValueExtractor::setup()
+    {
+        try
+        {
+            Result<void> void_result;
 
-        setup(
-            void_result,
-            sub_key,
-            name_key
-        );
+            setup(
+                void_result
+            );
 
-        return void_result.is_status_safe();
+            return void_result.is_status_safe();
+        }
+        catch (const std::exception& exception)
+        {
+
+        }
     }
 
-    bool WindowsRegistryValueExtractor::setup(
-        const std::wstring& sub_key,
-        const std::wstring& name_key
+    void WindowsRegistryValueExtractor::setup(
+        Result<void>& result
     )
     {
-        Result<void> void_result;
+        _sub_key = "";
+        _name_key = "";
 
-        setup(
-            void_result,
-            sub_key,
-            name_key
-        );
-
-        return void_result.is_status_safe();
+        result.set_to_good_status_without_value();
     }
 
-    std::future<bool> WindowsRegistryValueExtractor::setup_async(
-        const std::string& sub_key,
-        const std::string& name_key
-    )
+    std::future<bool> WindowsRegistryValueExtractor::setup_async()
     {
-        return std::async(
-            std::launch::async,
-            [this, sub_key, name_key]() -> bool
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this,
+            promise = std::move(promise)]() mutable
             {
-                return setup(
-                    sub_key,
-                    name_key
+                promise.set_value(
+                    setup()
+                );
+            }
+        );
+
+        return future;
+    }
+
+    void WindowsRegistryValueExtractor::setup_async(
+        Result<std::future<void>>& result
+    )
+    {
+        std::promise<void> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this,
+            promise = std::move(promise)]() mutable
+            {
+                Result<void> result;
+
+                setup(
+                    result
+                );
+
+                promise.set_value();
+            }
+        );
+
+        result.set_to_good_status_with_value(
+            std::move(future)
+        );
+    }
+
+    void WindowsRegistryValueExtractor::setup_async(
+        const std::function<void(const bool& result)>& callback
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, callback]() mutable
+            {
+                callback(
+                    setup()
                 );
             }
         );
     }
 
+    void WindowsRegistryValueExtractor::setup_async(
+        const std::function<void(Result<void>& result)>& callback
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, callback]() mutable
+            {
+                Result<void> result;
+
+                setup(
+                    result
+                );
+
+                callback(
+                    result
+                );
+            }
+        );
+    }
+
+    bool WindowsRegistryValueExtractor::setup(
+        const std::string& sub_key,
+        const std::string& name_key
+    )
+    {   
+        try
+        {
+            Result<void> void_result;
+
+            setup(
+                void_result,
+                sub_key,
+                name_key
+            );
+
+            return void_result.is_status_safe();
+        }
+        catch (const std::exception& exception)
+        {
+
+        }        
+    }
+
+    bool WindowsRegistryValueExtractor::setup(
+        const std::wstring& sub_key,
+        const std::wstring& name_key
+    )
+    {
+        try
+        {
+            Result<void> void_result;
+
+            setup(
+                void_result,
+                sub_key,
+                name_key
+            );
+
+            return void_result.is_status_safe();
+        }
+        catch (const std::exception& exception)
+        {
+
+        }        
+    }
+
+    std::future<bool> WindowsRegistryValueExtractor::setup_async(
+        const std::string& sub_key,
+        const std::string& name_key
+    )
+    {
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, sub_key, name_key,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    setup(
+                        sub_key,
+                        name_key
+                    )
+                );
+            }
+        );
+
+        return future;
+    }
+
     std::future<bool> WindowsRegistryValueExtractor::setup_async(
         const std::wstring& sub_key,
         const std::wstring& name_key
     )
     {
-        return std::async(
-            std::launch::async,
-            [this, sub_key, name_key]() -> bool
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, sub_key, name_key,
+            promise = std::move(promise)]() mutable
             {
-                return setup(
+                promise.set_value(
+                    setup(
+                        sub_key,
+                        name_key
+                    )
+                );
+            }
+        );
+
+        return future;
+    }
+
+    void WindowsRegistryValueExtractor::setup_async(
+        Result<std::future<void>>& result,
+        const std::string& sub_key,
+        const std::string& name_key
+    )
+    {
+        std::promise<void> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, sub_key, name_key,
+            promise = std::move(promise)]() mutable
+            {
+                Result<void> result;
+
+                setup(
+                    result,
                     sub_key,
                     name_key
+                );
+
+                promise.set_value();
+            }
+        );
+
+        result.set_to_good_status_with_value(
+            std::move(future)
+        );
+    }
+
+    void WindowsRegistryValueExtractor::setup_async(
+        Result<std::future<void>>& result,
+        const std::wstring& sub_key,
+        const std::wstring& name_key
+    )
+    {
+        std::promise<void> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, sub_key, name_key,
+            promise = std::move(promise)]() mutable
+            {
+                Result<void> result;
+
+                setup(
+                    result,
+                    sub_key,
+                    name_key
+                );
+
+                promise.set_value();
+            }
+        );
+
+        result.set_to_good_status_with_value(
+            std::move(future)
+        );
+    }
+
+    void WindowsRegistryValueExtractor::setup_async(
+        const std::function<void(const bool& result)>& callback,
+        const std::string& sub_key,
+        const std::string& name_key
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, callback, sub_key, name_key]() mutable
+            {
+                callback(
+                    setup(
+                        sub_key,
+                        name_key
+                    )
+                );
+            }
+        );
+    }
+
+    void WindowsRegistryValueExtractor::setup_async(
+        const std::function<void(const bool& result)>& callback,
+        const std::wstring& sub_key,
+        const std::wstring& name_key
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, callback, sub_key, name_key]() mutable
+            {
+                callback(
+                    setup(
+                        sub_key,
+                        name_key
+                    )
+                );
+            }
+        );
+    }
+
+    void WindowsRegistryValueExtractor::setup_async(
+        const std::function<void(Result<void>& result)>& callback,
+        const std::string& sub_key,
+        const std::string& name_key
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, callback, sub_key, name_key]() mutable
+            {
+                Result<void> result;
+
+                setup(
+                    result,
+                    sub_key,
+                    name_key
+                );
+
+                callback(
+                    result
+                );
+            }
+        );
+    }
+
+    void WindowsRegistryValueExtractor::setup_async(
+        const std::function<void(Result<void>& result)>& callback,
+        const std::wstring& sub_key,
+        const std::wstring& name_key
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, callback, sub_key, name_key]() mutable
+            {
+                Result<void> result;
+
+                setup(
+                    result,
+                    sub_key,
+                    name_key
+                );
+
+                callback(
+                    result
                 );
             }
         );
@@ -165,52 +467,6 @@ namespace QLogicaeCore
         result.set_to_good_status_without_value();
     }
 
-    void WindowsRegistryValueExtractor::setup_async(
-        Result<std::future<void>>& result,
-        const std::string& sub_key,
-        const std::string& name_key
-    )
-    {
-        result.set_to_good_status_with_value(
-            std::async(
-                std::launch::async,
-                [this, sub_key, name_key]() -> void
-                {
-                    Result<void> void_result;
-
-                    setup(
-                        void_result,
-                        sub_key,
-                        name_key
-                    );
-                }
-            )
-        );
-    }
-
-    void WindowsRegistryValueExtractor::setup_async(
-        Result<std::future<void>>& result,
-        const std::wstring& sub_key,
-        const std::wstring& name_key
-    )
-    {
-        result.set_to_good_status_with_value(
-            std::async(
-                std::launch::async,
-                [this, sub_key, name_key]() -> void
-                {
-                    Result<void> result;
-
-                    setup(
-                        result,
-                        sub_key,
-                        name_key
-                    );
-                }
-            )
-        );
-    }
-
     void WindowsRegistryValueExtractor::get_sub_key(
         Result<std::string>& result
     )
@@ -232,5 +488,21 @@ namespace QLogicaeCore
         result.set_to_good_status_with_value(WindowsRegistry::hkcu()
             .get_value_via_utf8(_sub_key, _name_key).value()
         );        
+    }
+
+    WindowsRegistryValueExtractor& WindowsRegistryValueExtractor::get_instance()
+    {
+        static WindowsRegistryValueExtractor instance;
+
+        return instance;
+    }
+
+    void WindowsRegistryValueExtractor::get_instance(
+        QLogicaeCore::Result<WindowsRegistryValueExtractor*>& result
+    )
+    {
+        static WindowsRegistryValueExtractor instance;
+
+        result.set_to_good_status_with_value(&instance);
     }
 }

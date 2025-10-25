@@ -10,6 +10,11 @@ namespace QLogicaeCore
 
     }
 
+    JsonWebTokenCryptographer::~JsonWebTokenCryptographer()
+    {
+
+    }
+
     const jwt::algorithm::es256k& JsonWebTokenCryptographer::
         _get_es256k_signer(
             const std::string& public_key,

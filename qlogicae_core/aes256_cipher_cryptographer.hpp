@@ -12,7 +12,7 @@ namespace QLogicaeCore
     public:
         AES256CipherCryptographer();
 
-        ~AES256CipherCryptographer() = default;
+        ~AES256CipherCryptographer();
 
         AES256CipherCryptographer(
             const AES256CipherCryptographer&
@@ -216,7 +216,7 @@ namespace QLogicaeCore
 
         static AES256CipherCryptographer& get_instance();
 
-        void get_instance(
+        static void get_instance(
             Result<AES256CipherCryptographer*>& result
         );
     };

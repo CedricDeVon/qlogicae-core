@@ -19,9 +19,9 @@ namespace QLogicaeCore
         public AbstractFileIO
     {
     public:
-        ~TextFileIO();
-        
-        TextFileIO() = default;
+        TextFileIO();
+
+        ~TextFileIO();        
         
         TextFileIO(
             const std::string& file_path
@@ -184,7 +184,7 @@ namespace QLogicaeCore
 
         static TextFileIO& get_instance();
 
-        void get_instance(
+        static void get_instance(
             Result<TextFileIO*>& result
         );
 
@@ -195,4 +195,7 @@ namespace QLogicaeCore
 
         std::optional<fast_io::native_file_loader> _read_file;
     };
+
+    inline static TextFileIO& TEXT_FILE_IO =
+        TextFileIO::get_instance();
 }

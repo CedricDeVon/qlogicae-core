@@ -3,17 +3,122 @@
 #include "regular_expression.hpp"
 
 namespace QLogicaeCore
-{
-    RegularExpression& RegularExpression::get_instance()
+{    
+    RegularExpression::RegularExpression()
     {
-        static RegularExpression singleton;
-
-        return singleton;
+        
     }
 
     RegularExpression::~RegularExpression()
     {
         clear_all_patterns();
+    }
+
+    bool RegularExpression::setup()
+    {
+        try
+        {
+            Result<void> result;
+
+            setup(
+                result
+            );
+
+            return result.is_status_safe();
+        }
+        catch (const std::exception& exception)
+        {
+
+        }
+    }
+
+    void RegularExpression::setup(
+        Result<void>& result
+    )
+    {
+        result.set_to_good_status_without_value();
+    }
+
+    std::future<bool> RegularExpression::setup_async()
+    {
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    setup()
+                );
+            }
+        );
+
+        return future;
+    }
+
+    void RegularExpression::setup_async(
+        Result<std::future<void>>& result
+    )
+    {
+        std::promise<void> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this,
+            promise = std::move(promise)]() mutable
+            {
+                Result<void> result;
+
+                setup(
+                    result
+                );
+
+                promise.set_value();
+            }
+        );
+
+        result.set_to_good_status_with_value(
+            std::move(future)
+        );
+    }
+
+    void RegularExpression::setup_async(
+        const std::function<void(const bool& result)>& callback
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, callback]() mutable
+            {
+                callback(
+                    setup()
+                );
+            }
+        );
+    }
+
+    void RegularExpression::setup_async(
+        const std::function<void(Result<void>& result)>& callback
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, callback]() mutable
+            {
+                Result<void> result;
+
+                setup(
+                    result
+                );
+
+                callback(
+                    result
+                );
+            }
+        );
     }
 
     bool RegularExpression::add_pattern(
@@ -261,13 +366,6 @@ namespace QLogicaeCore
         }
     }
 
-    void RegularExpression::setup(
-        Result<void>& result
-    )
-    {
-        result.set_to_good_status_without_value();
-    }
-
     void RegularExpression::clear_all_patterns(
         Result<void>& result
     )
@@ -460,6 +558,13 @@ namespace QLogicaeCore
                 return result.get_value();
             }
         ));
+    }
+
+    RegularExpression& RegularExpression::get_instance()
+    {
+        static RegularExpression singleton;
+
+        return singleton;
     }
 
     void RegularExpression::get_instance(

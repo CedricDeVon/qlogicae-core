@@ -12,11 +12,11 @@ namespace QLogicaeCore
     public:
         bool setup();
 
+        std::future<bool> setup_async();
+
         void setup(
             Result<void>& result
         );
-
-        std::future<bool> setup_async();
 
         void setup_async(
             Result<std::future<void>>& result

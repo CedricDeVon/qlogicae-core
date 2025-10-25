@@ -15,6 +15,11 @@ namespace QLogicaeCore
         }
     }
 
+    Generator::~Generator()
+    {
+        
+    }
+
     bool Generator::setup()
     {
         try

@@ -1,12 +1,33 @@
 #pragma once
 
 #include "result.hpp"
+#include "utilities.hpp"
 
 namespace QLogicaeCore
 {
 	class DotEnv
 	{
 	public:
+		bool setup();
+		
+		std::future<bool> setup_async();
+
+		void setup_async(
+			const std::function<void(const bool& result)>& callback
+		);
+
+		void setup(
+			Result<void>& result
+		);
+
+		void setup_async(
+			Result<std::future<void>>& result
+		);
+
+		void setup_async(
+			const std::function<void(Result<void>& result)>& callback
+		);
+
 		bool remove(
 			const wchar_t* key
 		);
@@ -18,12 +39,6 @@ namespace QLogicaeCore
 
 		std::optional<std::wstring> get(
 			const wchar_t* key
-		);
-		
-		static DotEnv& get_instance();
-
-		void setup(
-			Result<void>& result
 		);
 
 		void remove(
@@ -42,6 +57,8 @@ namespace QLogicaeCore
 			const wchar_t* key
 		);
 
+		static DotEnv& get_instance();
+
 		static void get_instance(
 			Result<DotEnv*>& result
 		);
@@ -49,16 +66,25 @@ namespace QLogicaeCore
 	protected:
 		DotEnv();
 
-		~DotEnv() = default;
+		~DotEnv();
 
-		DotEnv(const DotEnv& dot_env) = delete;
+		DotEnv(
+			const DotEnv& instance
+		) = delete;
 
-		DotEnv(DotEnv&& dot_env) noexcept = delete;
+		DotEnv(
+			DotEnv&& instance
+		) noexcept = delete;
 
-		DotEnv& operator = (DotEnv&& dot_env) = delete;
+		DotEnv& operator = (
+			DotEnv&& instance
+		) = delete;
 
-		DotEnv& operator = (const DotEnv& dot_env) = delete;
+		DotEnv& operator = (
+			const DotEnv& instance
+		) = delete;
 	};
 
-	inline static DotEnv& DOT_ENV = DotEnv::get_instance();
+	inline static DotEnv& DOT_ENV =
+		DotEnv::get_instance();
 }

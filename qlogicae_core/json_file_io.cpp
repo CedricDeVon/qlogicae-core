@@ -4,7 +4,15 @@
 
 namespace QLogicaeCore
 {
-    JsonFileIO::~JsonFileIO() {}
+    JsonFileIO::JsonFileIO()
+    {
+
+    }
+
+    JsonFileIO::~JsonFileIO()
+    {
+    
+    }
 
     JsonFileIO::JsonFileIO(const std::string& path
     )
@@ -64,6 +72,40 @@ namespace QLogicaeCore
         setup(void_result, name, file_path);
 
         return void_result.is_status_safe();
+    }
+
+    void JsonFileIO::setup(
+        Result<void>& result,
+        const std::string& file_path
+    )
+    {
+        _file_path = file_path;
+
+        result.set_to_good_status_without_value();
+    }
+
+    void JsonFileIO::setup(
+        Result<void>& result,
+        const std::string& file_path,
+        const bool& is_formatting_allowed
+    )
+    {
+        _file_path = file_path;
+        _is_formatting_allowed = is_formatting_allowed;
+
+        result.set_to_good_status_without_value();
+    }
+
+    void JsonFileIO::setup(
+        Result<void>& result,
+        const std::string& name,
+        const std::string& file_path
+    )
+    {
+        _name = name;
+        _file_path = file_path;
+
+        result.set_to_good_status_without_value();
     }
 
     bool JsonFileIO::get_is_formatting_allowed()
@@ -1796,38 +1838,22 @@ namespace QLogicaeCore
             }));
     }
 
-    void JsonFileIO::setup(
-        Result<void>& result,
-        const std::string& file_path
-    )
+    JsonFileIO& JsonFileIO::get_instance()
     {
-        _file_path = file_path;
+        static JsonFileIO instance;
 
-        result.set_to_good_status_without_value();
+        return instance;
     }
 
-    void JsonFileIO::setup(
-        Result<void>& result,
-        const std::string& file_path,
-        const bool& is_formatting_allowed
+    void JsonFileIO::get_instance(
+        Result<JsonFileIO*>& result
     )
     {
-        _file_path = file_path;
-        _is_formatting_allowed = is_formatting_allowed;
+        static JsonFileIO instance;
 
-        result.set_to_good_status_without_value();
-    }
-
-    void JsonFileIO::setup(
-        Result<void>& result,
-        const std::string& name,
-        const std::string& file_path
-    )
-    {
-        _name = name;
-        _file_path = file_path;
-
-        result.set_to_good_status_without_value();
+        result.set_to_good_status_with_value(
+            &instance
+        );
     }
 }
 

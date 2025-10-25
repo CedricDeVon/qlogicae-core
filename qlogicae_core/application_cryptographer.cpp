@@ -7,7 +7,7 @@ namespace QLogicaeCore
     ApplicationCryptographer::ApplicationCryptographer() :
         AbstractApplication()
     {
-
+        
     }
 
     ApplicationCryptographer::~ApplicationCryptographer()
@@ -85,7 +85,7 @@ namespace QLogicaeCore
                 return;
             }
 
-            JSONWEBTOKEN_SIGNATURE_CRYPTOGRAPHER.setup(
+            JSONWEBTOKEN_CRYPTOGRAPHER.setup(
                 result
             );
             if (result.is_status_unsafe())

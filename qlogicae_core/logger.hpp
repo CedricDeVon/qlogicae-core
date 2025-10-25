@@ -18,7 +18,7 @@ namespace QLogicaeCore
 	public:
 		Logger();
 
-		~Logger() = default;
+		~Logger();
 
 		Logger(
 			const bool& is_simplified

@@ -4,6 +4,18 @@
 
 namespace QLogicaeCore
 {
+    TextFileIO::TextFileIO()
+    {
+        
+    }
+
+    TextFileIO::~TextFileIO()
+    {
+        close(FileMode::READ);
+        close(FileMode::WRITE);
+        close(FileMode::APPEND);
+    }
+
     TextFileIO::TextFileIO(
         const std::string& file_path
     ) :
@@ -24,13 +36,6 @@ namespace QLogicaeCore
             )
     {
 
-    }
-
-    TextFileIO::~TextFileIO()
-    {
-        close(FileMode::READ);
-        close(FileMode::WRITE);
-        close(FileMode::APPEND);
     }
 
     bool TextFileIO::setup(
@@ -93,7 +98,7 @@ namespace QLogicaeCore
         _file_path = file_path;
 
         result.set_to_good_status_without_value();
-    }
+    }    
 
     bool TextFileIO::open(
         const FileMode& file_mode
@@ -724,6 +729,24 @@ namespace QLogicaeCore
 
         result.set_to_good_status_with_value(
             std::move(future)
+        );
+    }
+
+    TextFileIO& TextFileIO::get_instance()
+    {
+        static TextFileIO instance;
+
+        return instance;
+    }
+
+    void TextFileIO::get_instance(
+        Result<TextFileIO*>& result
+    )
+    {
+        static TextFileIO instance;
+
+        result.set_to_good_status_with_value(
+            &instance
         );
     }
 }

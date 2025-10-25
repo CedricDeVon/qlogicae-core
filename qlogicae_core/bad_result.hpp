@@ -17,19 +17,19 @@ namespace QLogicaeCore
         );
 
         BadResult(
-            const BadResult& bad_result
+            const BadResult& instance
         ) = delete;
 
         BadResult(
-            BadResult&& bad_result
+            BadResult&& instance
         ) noexcept = default;
 
         BadResult& operator=(
-            const BadResult& bad_result
+            const BadResult& instance
         ) = delete;
 
         BadResult& operator=(
-            BadResult&& bad_result
+            BadResult&& instance
         ) noexcept = default;
     };
 

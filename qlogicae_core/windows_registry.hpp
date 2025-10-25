@@ -11,11 +11,49 @@ namespace QLogicaeCore
 {
     class WindowsRegistry
     {
-    public:
+    public:        
         bool setup(
             const HKEY hkey = UTILITIES.DEFAULT_HKEY
         );
 
+        std::future<bool> setup_async();
+        
+        void setup_async(
+            const std::function<void(const bool& result)>& callback
+        );
+
+        void setup(
+            Result<void>& result,
+            const HKEY hkey = UTILITIES.DEFAULT_HKEY
+        );
+
+        std::future<bool> setup_async(
+            const HKEY hkey
+        );
+
+        void setup_async(
+            const std::function<void(const bool& result)>& callback,
+            const HKEY hkey
+        );
+
+        void setup_async(
+            Result<std::future<void>>& result
+        );
+
+        void setup_async(
+            const std::function<void(Result<void>& result)>& callback
+        );
+
+        void setup_async(
+            Result<std::future<void>>& result,
+            const HKEY hkey
+        );
+
+        void setup_async(
+            const std::function<void(Result<void>& result)>& callback,
+            const HKEY hkey
+        );
+        
         std::unordered_map<std::string, std::string>
             get_values_via_utf8(
                 std::string_view value
@@ -76,11 +114,6 @@ namespace QLogicaeCore
             std::wstring_view sub_path,
             std::wstring_view name,
             const std::wstring_view value
-        );
-
-        void setup(
-            Result<void>& result,
-            const HKEY hkey = UTILITIES.DEFAULT_HKEY
         );
 
         void get_values_via_utf8(
@@ -160,16 +193,16 @@ namespace QLogicaeCore
         static WindowsRegistry& hklm();
 
     protected:
-        WindowsRegistry() = default;
+        WindowsRegistry();
         
-        ~WindowsRegistry() = default;
+        ~WindowsRegistry();
         
         WindowsRegistry(
-            const WindowsRegistry& windows_registry
+            const WindowsRegistry& instance
         ) = delete;
         
         WindowsRegistry(
-            WindowsRegistry&& windows_registry
+            WindowsRegistry&& instance
         ) noexcept = delete;
         
         WindowsRegistry(
@@ -177,11 +210,11 @@ namespace QLogicaeCore
         );
         
         WindowsRegistry& operator = 
-            (WindowsRegistry&& windows_registry
+            (WindowsRegistry&& instance
         ) = delete;
         
         WindowsRegistry& operator = (
-            const WindowsRegistry& windows_registry
+            const WindowsRegistry& instance
         ) = delete;
 
         HKEY _root_key;

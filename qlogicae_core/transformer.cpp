@@ -4,6 +4,16 @@
 
 namespace QLogicaeCore
 {    
+    Transformer::Transformer()
+    {
+
+    }
+
+    Transformer::~Transformer()
+    {
+
+    }
+
     bool Transformer::setup()
     {
         try

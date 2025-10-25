@@ -119,7 +119,7 @@ namespace QLogicaeCore
 
         static SHA256HashCryptographer& get_instance();
 
-        void get_instance(
+        static void get_instance(
             Result<SHA256HashCryptographer*>& result
         );
     };

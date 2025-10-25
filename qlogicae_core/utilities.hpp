@@ -34,7 +34,6 @@
 #include <unordered_map>
 #include <condition_variable>
 
-
 namespace QLogicaeCore
 {                
 	class Utilities
@@ -1133,13 +1132,13 @@ namespace QLogicaeCore
 			
         bool setup();
 
-        void setup(
-            Result<void>& result
-        );
-
         std::future<bool> setup_async(
             const std::function<void(const bool& result)>& callback =
                 [](const bool& result) {}
+        );
+
+        void setup(
+            Result<void>& result
         );
 
         void setup_async(
@@ -1150,29 +1149,29 @@ namespace QLogicaeCore
 
 		static Utilities& get_instance();
 
-        void get_instance(
+        static void get_instance(
             Result<Utilities*>& result
         );
 
 	protected:
 		Utilities();
 		
-        ~Utilities() = default;
+        ~Utilities();
 		
         Utilities(
-            const Utilities&
+            const Utilities& instance
         ) = default;
 		
         Utilities(
-            Utilities&&
+            Utilities&& instance
         ) noexcept = delete;
 		
         Utilities& operator = (
-            Utilities&&
+            Utilities&& instance
         ) = default;
 
 		Utilities& operator = (
-            const Utilities&
+            const Utilities& instance
         ) = delete;
 	};
 

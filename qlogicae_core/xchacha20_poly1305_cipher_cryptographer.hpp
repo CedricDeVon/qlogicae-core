@@ -216,7 +216,7 @@ namespace QLogicaeCore
 
         static XChaCha20Poly1305CipherCryptographer& get_instance();
 
-        void get_instance(
+        static void get_instance(
             Result<XChaCha20Poly1305CipherCryptographer*>& result
         );
     };

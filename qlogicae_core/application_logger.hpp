@@ -15,15 +15,15 @@ namespace QLogicaeCore
             const LoggerConfigurations& logger_configurations
         );
 
-        void setup(
-            Result<void>& result,
-            const LoggerConfigurations& logger_configurations
-        );
-
         std::future<bool> setup_async(
             const LoggerConfigurations& logger_configurations,
             const std::function<void(const bool& result)>& callback =
             [](const bool& result) {}
+        );
+
+        void setup(
+            Result<void>& result,
+            const LoggerConfigurations& logger_configurations
         );
 
         void setup_async(

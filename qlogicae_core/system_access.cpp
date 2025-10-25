@@ -4,6 +4,117 @@
 
 namespace QLogicaeCore
 {
+    SystemAccess::SystemAccess()
+    {
+
+    }
+
+    SystemAccess::~SystemAccess()
+    {
+
+    }
+
+    bool SystemAccess::setup()
+    {
+        try
+        {
+            Result<void> result;
+
+            setup(result);
+
+            return result.is_status_safe();
+        }
+        catch (const std::exception& exception)
+        {
+
+        }
+    }
+
+    void SystemAccess::setup(
+        Result<void>& result
+    )
+    {
+        result.set_to_good_status_without_value();
+    }
+
+    std::future<bool> SystemAccess::setup_async()
+    {
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    setup()
+                );
+            }
+        );
+
+        return future;
+    }
+
+    void SystemAccess::setup_async(
+        const std::function<void(const bool& result)>& callback
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, callback]() mutable
+            {
+                callback(
+                    setup()
+                );
+            }
+        );
+    }
+
+    void SystemAccess::setup_async(
+        Result<std::future<void>>& result
+    )
+    {
+        std::promise<void> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this,
+            promise = std::move(promise)]() mutable
+            {
+                Result<void> result;
+
+                setup(result);
+
+                promise.set_value();
+            }
+        );
+
+        result.set_to_good_status_with_value(
+            std::move(future)
+        );
+    }
+
+    void SystemAccess::setup_async(
+        const std::function<void(Result<void>& result)>& callback
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, callback]() mutable
+            {
+                Result<void> result;
+
+                setup(result);
+
+                callback(
+                    result
+                );
+            }
+        );
+    }
+
     bool SystemAccess::has_admin_access()
     {
         try
@@ -268,20 +379,6 @@ namespace QLogicaeCore
         }
     }
 
-    SystemAccess& SystemAccess::get_instance()
-    {
-        static SystemAccess get_instance;
-     
-        return get_instance;
-    }
-
-    void SystemAccess::setup(
-        Result<void>& result
-    )
-    {
-        result.set_to_good_status_without_value();
-    }
-
     void SystemAccess::has_admin_access(
         Result<void>& result
     )
@@ -481,6 +578,13 @@ namespace QLogicaeCore
         }
 
         ENCODER.from_utf16_to_utf8(result, wresult);
+    }
+
+    SystemAccess& SystemAccess::get_instance()
+    {
+        static SystemAccess get_instance;
+
+        return get_instance;
     }
 
     void SystemAccess::get_instance(

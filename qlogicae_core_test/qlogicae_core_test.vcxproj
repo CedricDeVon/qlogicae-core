@@ -151,10 +151,13 @@
     <ClCompile Include="bcrypt_hash_cryptographer.cpp" />
     <ClCompile Include="cli_io.cpp" />
     <ClCompile Include="cryptographer.cpp" />
+    <ClCompile Include="dot_env.cpp" />
+    <ClCompile Include="dot_env_value_extractor.cpp" />
     <ClCompile Include="encoder.cpp" />
     <ClCompile Include="generator.cpp" />
     <ClCompile Include="good_result.cpp" />
     <ClCompile Include="jsonwebtoken_cryptographer.cpp" />
+    <ClCompile Include="json_file_io.cpp" />
     <ClCompile Include="logger.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -162,11 +165,17 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="placeholder_value_extractor.cpp" />
+    <ClCompile Include="regular_expression.cpp" />
     <ClCompile Include="result.cpp" />
     <ClCompile Include="sha256_hash_cryptographer.cpp" />
+    <ClCompile Include="system_access.cpp" />
     <ClCompile Include="text_file_io.cpp" />
     <ClCompile Include="time.cpp" />
     <ClCompile Include="transformer.cpp" />
+    <ClCompile Include="validators.cpp" />
+    <ClCompile Include="windows_registry.cpp" />
+    <ClCompile Include="windows_registry_value_extractor.cpp" />
     <ClCompile Include="xchacha20_poly1305_cipher_cryptographer.cpp" />
   </ItemGroup>
   <ItemGroup>

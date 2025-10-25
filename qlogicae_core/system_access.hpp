@@ -8,6 +8,26 @@ namespace QLogicaeCore
     class SystemAccess
     {
     public:
+        bool setup();
+
+        void setup(
+            Result<void>& result
+        );
+
+        std::future<bool> setup_async();
+
+        void setup_async(
+            const std::function<void(const bool& result)>& callback
+        );
+
+        void setup_async(
+            Result<std::future<void>>& result
+        );
+
+        void setup_async(
+            const std::function<void(Result<void>& result)>& callback
+        );
+
         bool has_admin_access();
         
         std::string get_executable_dir();
@@ -23,12 +43,6 @@ namespace QLogicaeCore
         std::string get_local_appdata_folder_path();
         
         std::string get_roaming_appdata_folder_path();
-
-        static SystemAccess& get_instance();
-
-        void setup(
-            Result<void>& result
-        );
 
         void has_admin_access(
             Result<void>& result
@@ -62,29 +76,31 @@ namespace QLogicaeCore
             Result<std::string>& result
         );
 
+        static SystemAccess& get_instance();
+
         static void get_instance(
             Result<SystemAccess*>& results
         );
 
     protected:
-        SystemAccess() = default;
+        SystemAccess();
         
-        ~SystemAccess() = default;
+        ~SystemAccess();
         
         SystemAccess(
-            const SystemAccess& system_access
+            const SystemAccess& instance
         ) = delete;
         
         SystemAccess(
-            SystemAccess&& system_access
+            SystemAccess&& instance
         ) noexcept = delete;
         
         SystemAccess& operator = (
-            SystemAccess&& system_access
+            SystemAccess&& instance
         ) = delete;
         
         SystemAccess& operator = (
-            const SystemAccess& system_access
+            const SystemAccess& instance
         ) = delete;
     };
 

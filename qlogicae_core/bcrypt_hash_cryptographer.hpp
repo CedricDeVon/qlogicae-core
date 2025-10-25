@@ -17,22 +17,22 @@ namespace QLogicaeCore
 
         BcryptHashCryptographer(
             const BcryptHashCryptographer&
-                bcrypt_hash_cryptographer
+                instance
         ) = delete;
 
         BcryptHashCryptographer(
             BcryptHashCryptographer&&
-                bcrypt_hash_cryptographer
+                instance
         ) noexcept = delete;
 
         BcryptHashCryptographer& operator = (
             BcryptHashCryptographer&&
-                bcrypt_hash_cryptographer
+                instance
             ) = delete;
 
         BcryptHashCryptographer& operator = (
             const BcryptHashCryptographer&
-                bcrypt_hash_cryptographer
+                instance
             ) = delete;
 
         bool setup();
@@ -119,7 +119,7 @@ namespace QLogicaeCore
 
         static BcryptHashCryptographer& get_instance();
 
-        void get_instance(
+        static void get_instance(
             Result<BcryptHashCryptographer*>& result
         );
     };

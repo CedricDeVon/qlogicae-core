@@ -4,6 +4,16 @@
 
 namespace QLogicaeCore
 {
+    Time::Time()
+    {
+        
+    }
+
+    Time::~Time()
+    {
+
+    }
+
     bool Time::setup()
     {
         try

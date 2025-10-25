@@ -4,5 +4,6 @@ namespace QLogicaeCore
 {
     struct ApplicationStartupInputs
     {        
+
     };
 }

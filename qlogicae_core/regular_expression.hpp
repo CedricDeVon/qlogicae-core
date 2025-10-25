@@ -1,6 +1,7 @@
 #pragma once
 
 #include "result.hpp"
+#include "utilities.hpp"
 
 #define PCRE2_CODE_UNIT_WIDTH 8
 #include <pcre2.h>
@@ -13,6 +14,26 @@ namespace QLogicaeCore
 	class RegularExpression
 	{
 	public:
+		bool setup();
+
+		void setup(
+			Result<void>& result
+		);
+
+		std::future<bool> setup_async();
+
+		void setup_async(
+			const std::function<void(const bool& result)>& callback
+		);
+
+		void setup_async(
+			Result<std::future<void>>& result
+		);
+
+		void setup_async(
+			const std::function<void(Result<void>& result)>& callback
+		);
+
 		void clear_all_patterns();
 		
 		bool remove_pattern(
@@ -50,12 +71,6 @@ namespace QLogicaeCore
 		std::future<bool> match_direct_async(
 			const std::string& name,
 			const std::string& pattern
-		);
-
-		static RegularExpression& get_instance();
-
-		void setup(
-			Result<void>& result
 		);
 
 		void clear_all_patterns(
@@ -107,29 +122,31 @@ namespace QLogicaeCore
 			const std::string& pattern
 		);
 
-		void get_instance(
+		static RegularExpression& get_instance();
+
+		static void get_instance(
 			Result<RegularExpression*>& result
 		);
 
 	protected:
-		~RegularExpression();
-		
-		RegularExpression() = default;
+		RegularExpression();
+
+		~RegularExpression();		
 		
 		RegularExpression(
-			const RegularExpression&
+			const RegularExpression& instance
 		) = delete;
 		
 		RegularExpression(
-			RegularExpression&&
+			RegularExpression&& instance
 		) noexcept = default;
 		
 		RegularExpression& operator = (
-			const RegularExpression&
+			const RegularExpression& instance
 		) = delete;
 		
 		RegularExpression& operator = (
-			RegularExpression&&
+			RegularExpression&& instance
 		) noexcept = default;
 
 		mutable std::shared_mutex _mutex;

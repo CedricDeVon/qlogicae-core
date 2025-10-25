@@ -26,26 +26,26 @@ namespace QLogicaeCore
     public:
         JsonWebTokenCryptographer();
 
-        ~JsonWebTokenCryptographer() = default;
+        ~JsonWebTokenCryptographer();
 
         JsonWebTokenCryptographer(
             const JsonWebTokenCryptographer&
-                json_web_token_cryptographer
+                instance
         ) = delete;
 
         JsonWebTokenCryptographer(
             JsonWebTokenCryptographer&&
-                json_web_token_cryptographer
+                instance
         ) noexcept = delete;
 
         JsonWebTokenCryptographer& operator = (
             JsonWebTokenCryptographer&&
-                json_web_token_cryptographer
+                instance
         ) = delete;
 
         JsonWebTokenCryptographer& operator = (
             const JsonWebTokenCryptographer&
-                json_web_token_cryptographer
+                instance
          ) = delete;
 
         bool setup();
@@ -124,7 +124,7 @@ namespace QLogicaeCore
 
         static JsonWebTokenCryptographer& get_instance();
 
-        void get_instance(
+        static void get_instance(
             Result<JsonWebTokenCryptographer*>& result
         );
 

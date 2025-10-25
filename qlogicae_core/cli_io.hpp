@@ -18,17 +18,17 @@ namespace QLogicaeCore
 			const bool& is_print_enabled = true
 		);
 
-		void setup(
-			Result<void>& result,
-			const bool& is_scan_enabled = true,
-			const bool& is_print_enabled = true
-		);
-
 		std::future<bool> setup_async(
 			const bool& is_scan_enabled = true,
 			const bool& is_print_enabled = true,
 			const std::function<void(const bool& result)>& callback =
 				[](const bool& result) {}
+		);
+
+		void setup(
+			Result<void>& result,
+			const bool& is_scan_enabled = true,
+			const bool& is_print_enabled = true
 		);
 
 		void setup_async(

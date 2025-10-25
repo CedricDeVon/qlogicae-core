@@ -8,7 +8,7 @@ namespace QLogicaeCore
     ApplicationCache::ApplicationCache() :
         AbstractApplication()
     {
-
+        
     }
 
     ApplicationCache::~ApplicationCache()

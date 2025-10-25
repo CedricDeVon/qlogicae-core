@@ -16,6 +16,26 @@ namespace QLogicaeCore
     class Validators
     {
     public:
+        bool setup();
+
+        void setup(
+            Result<void>& result
+        );
+
+        std::future<bool> setup_async();
+
+        void setup_async(
+            const std::function<void(const bool& result)>& callback
+        );
+
+        void setup_async(
+            Result<std::future<void>>& result
+        );
+
+        void setup_async(
+            const std::function<void(Result<void>& result)>& callback
+        );
+
         bool is_not_empty(
             const std::string_view& value
         );
@@ -445,10 +465,6 @@ namespace QLogicaeCore
             const std::vector<Type>& values,
             std::function<bool(const Type&)> predicate
         );       
-
-        static Validators& get_instance(
-
-        );
 
         void is_not_empty(
             Result<bool>& result,
@@ -978,29 +994,31 @@ namespace QLogicaeCore
             const Type&)> predicate
         );
 
-        void get_instance(
+        static Validators& get_instance();
+
+        static void get_instance(
             Result<Validators*>& result
         );
 
     protected:
         Validators();
         
-        ~Validators() = default;
+        ~Validators();
         
         Validators(
-            const Validators&
+            const Validators& instance
         ) = delete;
         
         Validators(
-            Validators&&
+            Validators&& instance
         ) noexcept = delete;
         
         Validators& operator = (
-            Validators&&
+            Validators&& instance
             ) = delete;
         
         Validators& operator = (
-            const Validators&
+            const Validators& instance
             ) = delete;
     };
 
@@ -1047,9 +1065,6 @@ namespace QLogicaeCore
     {
         return std::ranges::any_of(values, predicate);
     }
-
-    inline static Validators& VALIDATORS =
-        Validators::get_instance();
 
     template bool Validators::is_empty<int>(const std::vector<int>&);
     
@@ -1132,4 +1147,8 @@ namespace QLogicaeCore
         template void Validators::is_found<int>(Result<bool>&,
         
         const std::vector<int>&, std::function<bool(const int&)>);
+
+    inline static Validators& VALIDATORS =
+        Validators::get_instance();
+
 }

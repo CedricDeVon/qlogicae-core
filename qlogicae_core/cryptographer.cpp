@@ -4,5 +4,13 @@
 
 namespace QLogicaeCore
 {
+    Cryptographer::Cryptographer()
+    {
 
+    }
+
+    Cryptographer::~Cryptographer()
+    {
+
+    }
 }

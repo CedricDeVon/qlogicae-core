@@ -12,26 +12,26 @@ namespace QLogicaeCore
     public:
         AES256SignatureCryptographer();
 
-        ~AES256SignatureCryptographer() = default;
+        ~AES256SignatureCryptographer();
 
         AES256SignatureCryptographer(
             const AES256SignatureCryptographer&
-                aes_256_signature_cryptographer
+                instance
         ) = delete;
 
         AES256SignatureCryptographer(
             AES256SignatureCryptographer&&
-                aes_256_signature_cryptographer
+                instance
         ) noexcept = delete;
 
         AES256SignatureCryptographer& operator = (
             AES256SignatureCryptographer&&
-                aes_256_signature_cryptographer
+                instance
         ) = delete;
 
         AES256SignatureCryptographer& operator = (
             const AES256SignatureCryptographer&
-                aes_256_signature_cryptographer
+                instance
         ) = delete;
 
         bool setup();
@@ -204,7 +204,7 @@ namespace QLogicaeCore
 
         static AES256SignatureCryptographer& get_instance();
 
-        void get_instance(
+        static void get_instance(
             Result<AES256SignatureCryptographer*>& result
         );
     };

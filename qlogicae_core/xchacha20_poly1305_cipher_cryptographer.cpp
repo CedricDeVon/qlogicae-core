@@ -10,6 +10,22 @@ namespace QLogicaeCore
 
 	}
 
+    bool XChaCha20Poly1305CipherCryptographer::setup()
+    {      
+        Result<void> result;
+
+        setup(result);
+
+        return result.is_status_safe();
+    }
+
+    void XChaCha20Poly1305CipherCryptographer::setup(
+        Result<void>& result
+    )
+    {
+        result.set_to_good_status_without_value();
+    }
+
     std::future<bool> XChaCha20Poly1305CipherCryptographer::setup_async()
     {
         std::promise<bool> promise;
@@ -272,6 +288,8 @@ namespace QLogicaeCore
                 );
             }
         );
+
+        return future;
     }
 
     std::future<std::string> XChaCha20Poly1305CipherCryptographer::transform_async(
@@ -297,22 +315,8 @@ namespace QLogicaeCore
                 );
             }
         );
-    }
 
-    bool XChaCha20Poly1305CipherCryptographer::setup()
-    {
-        Result<void> result;
-
-        setup(result);
-
-        return result.is_status_safe();
-    }
-
-    void XChaCha20Poly1305CipherCryptographer::setup(
-        Result<void>& result
-    )
-    {
-        result.set_to_good_status_without_value();
+        return future;
     }
 
     void XChaCha20Poly1305CipherCryptographer::reverse(
@@ -760,7 +764,7 @@ namespace QLogicaeCore
     }
 
     void XChaCha20Poly1305CipherCryptographer::get_instance(
-        QLogicaeCore::Result<XChaCha20Poly1305CipherCryptographer*>& result
+        Result<XChaCha20Poly1305CipherCryptographer*>& result
     )
     {
         static XChaCha20Poly1305CipherCryptographer instance;

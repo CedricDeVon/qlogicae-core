@@ -5,24 +5,24 @@ namespace QLogicaeCore
     class Cryptographer
     {
     public:
-        Cryptographer() = default;
+        Cryptographer();
 
-        ~Cryptographer() = default;
+        ~Cryptographer();
 
         Cryptographer(
-            const Cryptographer& cryptographer
+            const Cryptographer& instance
         ) = delete;
 
         Cryptographer(
-            Cryptographer&& cryptographer
+            Cryptographer&& instance
         ) noexcept = delete;
 
         Cryptographer& operator = (
-            Cryptographer&& cryptographer
+            Cryptographer&& instance
         ) = delete;
 
         Cryptographer& operator = (
-            const Cryptographer& cryptographer
+            const Cryptographer& instance
         ) = delete;
 
     protected:

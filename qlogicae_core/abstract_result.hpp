@@ -15,16 +15,20 @@ namespace QLogicaeCore
         );
 
         AbstractResult(
-            const AbstractResult& abstract_result) = delete;
+            const AbstractResult& instance
+        ) = delete;
 
         AbstractResult(
-            AbstractResult&& abstract_result) noexcept = default;
+            AbstractResult&& instance
+        ) noexcept = default;
 
         AbstractResult& operator=(
-            const AbstractResult& abstract_result) = delete;
+            const AbstractResult& instance
+        ) = delete;
 
         AbstractResult& operator=(
-            AbstractResult&& abstract_result) noexcept = default;
+            AbstractResult&& instance
+        ) noexcept = default;
 
         bool has_value();
 

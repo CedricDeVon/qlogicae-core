@@ -10,13 +10,13 @@ namespace QLogicaeCore
     public:
         bool setup();
 
-        void setup(
-            Result<void>& result
-        );
-
         std::future<bool> setup_async(
             const std::function<void(const bool& result)>& callback =
             [](const bool& result) {}
+        );
+
+        void setup(
+            Result<void>& result
         );
 
         void setup_async(
@@ -146,7 +146,7 @@ namespace QLogicaeCore
     protected:
         Encoder();
 
-        ~Encoder() = default;
+        ~Encoder();
 
         Encoder(
             const Encoder& instance

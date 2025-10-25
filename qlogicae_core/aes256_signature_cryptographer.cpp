@@ -7,8 +7,13 @@ namespace QLogicaeCore
 	AES256SignatureCryptographer::AES256SignatureCryptographer() :
 		Cryptographer()
 	{
-
+        
 	}
+
+    AES256SignatureCryptographer::~AES256SignatureCryptographer()
+    {
+
+    }
 
     bool AES256SignatureCryptographer::setup()
     {

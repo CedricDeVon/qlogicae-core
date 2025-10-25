@@ -153,7 +153,7 @@ namespace QLogicaeCore
 
         static Argon2idHashCryptographer& get_instance();
 
-        void get_instance(
+        static void get_instance(
             Result<Argon2idHashCryptographer*>& result
         );
 

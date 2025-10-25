@@ -7,6 +7,11 @@ namespace QLogicaeCore
 	AES256CipherCryptographer::AES256CipherCryptographer() :
 		Cryptographer()
 	{
+		
+	}
+
+	AES256CipherCryptographer::~AES256CipherCryptographer()
+	{
 
 	}
 
