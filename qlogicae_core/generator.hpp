@@ -1,5 +1,6 @@
 #pragma once
 
+#include "logger.hpp"
 #include "encoder.hpp"
 #include "utilities.hpp"
 

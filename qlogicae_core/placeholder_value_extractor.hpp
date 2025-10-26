@@ -1,6 +1,7 @@
 #pragma once
 
 #include "result.hpp"
+#include "logger.hpp"
 #include "utilities.hpp"
 #include "abstract_value_extractor.hpp"
 

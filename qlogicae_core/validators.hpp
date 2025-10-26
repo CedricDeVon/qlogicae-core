@@ -1,6 +1,7 @@
 #pragma once
 
 #include "result.hpp"
+#include "logger.hpp"
 #include "utilities.hpp"
 #include "regular_expression.hpp"
 #include "validation_password_rules.hpp"

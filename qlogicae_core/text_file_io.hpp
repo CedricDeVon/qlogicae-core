@@ -1,6 +1,7 @@
 #pragma once
 
 #include "result.hpp"
+#include "logger.hpp"
 #include "utilities.hpp"
 #include "file_mode.hpp"
 #include "abstract_file_io.hpp"

@@ -8,8 +8,13 @@ namespace QLogicaeCore
     {
         if (sodium_init() < 0)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Encoder::Encoder()",
+                "Sodium package is not installed"
+            );
+
             throw std::runtime_error(
-                "Exception at Encoder::Encoder(): Sodium package is not initialized"
+                "QLogicaeCore::Encoder::Encoder() - Sodium package is not initialized"
             );
         }
     }
@@ -31,7 +36,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Encoder::setup()",
+                exception.what()
+            );
 
+            return false;
         }
     }
 
@@ -119,7 +129,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Encoder::from_bytes_to_base64()",
+                exception.what()
+            );
 
+            return "";
         }
     }
 
@@ -164,7 +179,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Encoder::from_base64_to_bytes()",
+                exception.what()
+            );
 
+            return {};
         }
     }
 
@@ -219,7 +239,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Encoder::from_bytes_to_hex()",
+                exception.what()
+            );
 
+            return "";
         }
     }
 
@@ -261,7 +286,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Encoder::from_hex_to_bytes()",
+                exception.what()
+            );
 
+            return {};
         }
     }
 
@@ -308,7 +338,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Encoder::from_utf16_to_utf8()",
+                exception.what()
+            );
 
+            return "";
         }
     }
 
@@ -359,7 +394,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Encoder::from_utf8_to_utf16()",
+                exception.what()
+            );
 
+            return L"";
         }
     }
 
@@ -408,7 +448,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Encoder::from_utf8_to_hex()",
+                exception.what()
+            );
 
+            return "";
         }
     }
 
@@ -444,7 +489,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Encoder::from_utf8_to_base64()",
+                exception.what()
+            );
 
+            return "";
         }
     }
 
@@ -480,7 +530,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Encoder::from_hex_to_utf8()",
+                exception.what()
+            );
 
+            return "";
         }
     }
 
@@ -533,7 +588,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Encoder::from_hex_to_base64()",
+                exception.what()
+            );
 
+            return "";
         }
     }
 
@@ -573,7 +633,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Encoder::from_base64_to_utf8()",
+                exception.what()
+            );
 
+            return "";
         }
     }
 
@@ -626,7 +691,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Encoder::from_base64_to_hex()",
+                exception.what()
+            );
 
+            return "";
         }
     }
 
@@ -678,7 +748,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Encoder::_to_hex()",
+                exception.what()
+            );
+
+            return "";
         }
     }
 
@@ -724,7 +799,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Encoder::_to_base64()",
+                exception.what()
+            );
+
+            return "";
         }
     }
 

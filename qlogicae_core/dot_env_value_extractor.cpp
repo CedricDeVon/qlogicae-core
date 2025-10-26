@@ -45,7 +45,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::DotEnvValueExtractor::setup()",
+                exception.what()
+            );
 
+            return false;
         }
     }
 
@@ -75,7 +80,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::DotEnvValueExtractor::setup()",
+                exception.what()
+            );
 
+            return false;
         }
     }
 
@@ -96,7 +106,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::DotEnvValueExtractor::setup()",
+                exception.what()
+            );
 
+            return false;
         }
     }
 
@@ -389,9 +404,14 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::DotEnvValueExtractor::get_value()",
+                exception.what()
+            );
+
             throw std::runtime_error(
                 std::string() +
-                "Exception at DotEnvValueExtractor::get_value(): " +
+                "QLogicaeCore::DotEnvValueExtractor::get_value() - " +
                 exception.what()
             );
         }

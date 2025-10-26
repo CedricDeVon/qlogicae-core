@@ -1,6 +1,7 @@
 #pragma once
 
 #include "result.hpp"
+#include "logger.hpp"
 #include "encoder.hpp"
 #include "generator.hpp"
 #include "cryptographer.hpp"

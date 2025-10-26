@@ -28,7 +28,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::RegularExpression::setup()",
+                exception.what()
+            );
 
+            return false;
         }
     }
 
@@ -157,9 +162,14 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::RegularExpression::add_pattern()",
+                exception.what()
+            );
+
             throw std::runtime_error(
                 std::string() +
-                "Exception at RegularExpression::add_pattern(): " +
+                "QLogicaeCore::RegularExpression::add_pattern() - " +
                 exception.what()
             );
         }
@@ -179,9 +189,14 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::RegularExpression::get_patterrn()",
+                exception.what()
+            );
+
             throw std::runtime_error(
                 std::string() +
-                "Exception at RegularExpression::get_patterrn(): " +
+                "QLogicaeCore::RegularExpression::get_patterrn() - " +
                 exception.what()
             );
         }
@@ -200,9 +215,14 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::RegularExpression::has_pattern()",
+                exception.what()
+            );
+
             throw std::runtime_error(
                 std::string() +
-                "Exception at RegularExpression::has_pattern(): " +
+                "QLogicaeCore::RegularExpression::has_pattern() - " +
                 exception.what()
             );
         }
@@ -223,9 +243,14 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::RegularExpression::clear_all_patterns()",
+                exception.what()
+            );
+
             throw std::runtime_error(
                 std::string() +
-                "Exception at RegularExpression::clear_all_patterns(): " +
+                "QLogicaeCore::RegularExpression::clear_all_patterns() - " +
                 exception.what()
             );
         }
@@ -254,9 +279,14 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::RegularExpression::match_named()",
+                exception.what()
+            );
+
             throw std::runtime_error(
                 std::string() +
-                "Exception at RegularExpression::match_named(): " +
+                "QLogicaeCore::RegularExpression::match_named() - " +
                 exception.what()
             );
         }
@@ -297,9 +327,14 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::RegularExpression::match_direct()",
+                exception.what()
+            );
+
             throw std::runtime_error(
                 std::string() +
-                "Exception at RegularExpression::match_direct(): " +
+                "QLogicaeCore::RegularExpression::match_direct() - " +
                 exception.what()
             );
         }
@@ -358,9 +393,14 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::RegularExpression::_do_match()",
+                exception.what()
+            );
+
             throw std::runtime_error(
                 std::string() +
-                "Exception at RegularExpression::_do_match(): " +
+                "QLogicaeCore::RegularExpression::_do_match() - " +
                 exception.what()
             );
         }

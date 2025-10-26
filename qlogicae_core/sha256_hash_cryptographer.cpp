@@ -11,11 +11,23 @@ namespace QLogicaeCore
 
 	bool SHA256HashCryptographer::setup()
 	{
-		Result<void> result;
+		try
+		{
+			Result<void> result;
 
-		setup(result);
+			setup(result);
 
-		return result.is_status_safe();
+			return result.is_status_safe();
+		}
+		catch (const std::exception& exception)
+		{
+			LOGGER.handle_exception_async(
+				"QLogicaeCore::SHA256HashCryptographer::setup()",
+				exception.what()
+			);
+
+			return false;
+		}
 	}
 
 	void SHA256HashCryptographer::setup(

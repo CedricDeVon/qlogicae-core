@@ -17,11 +17,23 @@ namespace QLogicaeCore
 
     bool AES256SignatureCryptographer::setup()
     {
-        Result<void> result;
+        try
+        {
+            Result<void> result;
 
-        setup(result);
+            setup(result);
 
-        return result.is_status_safe();
+            return result.is_status_safe();
+        }
+        catch (const std::exception& exception)
+        {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::AES256SignatureCryptographer::setup()",
+                exception.what()
+            );
+   
+            return false;
+        }
     }
 
     void AES256SignatureCryptographer::setup(
@@ -215,44 +227,54 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
-			throw std::runtime_error(
-				std::string("Exception at AES256SignatureCryptographer::transform(): ") +
-				exception.what()
-			);
-		}
-	}
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::AES256SignatureCryptographer::transform()",
+                exception.what()
+            );
 
-	std::string AES256SignatureCryptographer::reverse(
-		const std::string& va,
-		unsigned char* vb
+			throw std::runtime_error(
+				std::string("QLogicaeCore::AES256SignatureCryptographer::transform() - ") +
+                exception.what()
+            );
+        }
+    }
+
+    std::string AES256SignatureCryptographer::reverse(
+        const std::string& va,
+        unsigned char* vb
     )
-	{
-		try
-		{
-			std::scoped_lock lock(_mutex);
+    {
+        try
+        {
+            std::scoped_lock lock(_mutex);
 
-			if (!vb)
-			{
-				return "";
-			}
+            if (!vb)
+            {
+                return "";
+            }
 
-			std::vector<unsigned char> vc =
-				ENCODER.from_base64_to_bytes(va);
-			unsigned long long ve, vh = vc.size();
-			std::vector<unsigned char> vd(vh);
-			unsigned char* vf = vd.data(), *vg = vc.data();
+            std::vector<unsigned char> vc =
+                ENCODER.from_base64_to_bytes(va);
+            unsigned long long ve, vh = vc.size();
+            std::vector<unsigned char> vd(vh);
+            unsigned char* vf = vd.data(), * vg = vc.data();
 
-			if (crypto_sign_open(vf, &ve, vc.data(), vh, vb) != 0)
-			{
-				return "";
-			}
+            if (crypto_sign_open(vf, &ve, vc.data(), vh, vb) != 0)
+            {
+                return "";
+            }
 
-			return std::string(reinterpret_cast<const char*>(vf), ve);
-		}
-		catch (const std::exception& exception)
-		{
-			throw std::runtime_error(
-				std::string("Exception at AES256SignatureCryptographer::reverse(): ") +
+            return std::string(reinterpret_cast<const char*>(vf), ve);
+        }
+        catch (const std::exception& exception)
+        {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::AES256SignatureCryptographer::reverse()",
+                exception.what()
+            );
+
+            throw std::runtime_error(
+                std::string("QLogicaeCore::AES256SignatureCryptographer::reverse() - ") +
 				exception.what()
 			);
 		}

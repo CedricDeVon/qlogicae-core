@@ -17,11 +17,23 @@ namespace QLogicaeCore
 
 	bool AES256CipherCryptographer::setup()
 	{
-		Result<void> result;
+		try
+		{
+			Result<void> result;
 
-		setup(result);
+			setup(result);
 
-		return result.is_status_safe();
+			return result.is_status_safe();
+		}
+		catch (const std::exception& exception)
+		{
+			LOGGER.handle_exception_async(
+				"QLogicaeCore::AES256CipherCryptographer::setup()",
+				exception.what()
+			);
+
+			return false;
+		}
 	}
 
 	void AES256CipherCryptographer::setup(
@@ -225,8 +237,13 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
+			LOGGER.handle_exception_async(
+				"QLogicaeCore::AES256CipherCryptographer::transform()",
+				exception.what()
+			);
+
 			throw std::runtime_error(
-				std::string("Exception at AES256CipherCryptographer::transform(): ") +
+				std::string("QLogicaeCore::AES256CipherCryptographer::transform() - ") +
 				exception.what()
 			);
 		}
@@ -266,8 +283,13 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
+			LOGGER.handle_exception_async(
+				"QLogicaeCore::AES256CipherCryptographer::reverse()",
+				exception.what()
+			);
+
 			throw std::runtime_error(
-				std::string("Exception at AES256CipherCryptographer::reverse(): ") +
+				std::string("QLogicaeCore::AES256CipherCryptographer::reverse() - ") +
 				exception.what()
 			);
 		}

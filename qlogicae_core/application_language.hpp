@@ -1,6 +1,7 @@
 #pragma once
 
 #include "result.hpp"
+#include "logger.hpp"
 #include "abstract_application.hpp"
 
 namespace QLogicaeCore

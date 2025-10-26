@@ -1,5 +1,6 @@
 #pragma once
 
+#include "time_zone.hpp"
 #include "log_medium.hpp"
 #include "time_format.hpp"
 
@@ -11,7 +12,10 @@ namespace QLogicaeCore
 		
 		LogMedium log_medium =
 			LogMedium::CONSOLE;
-		
+
+		TimeZone log_time_zone =
+			TimeZone::LOCAL;
+
 		TimeFormat log_format =
 			TimeFormat::FULL_TIMESTAMP;		
 		
@@ -28,7 +32,7 @@ namespace QLogicaeCore
 			false;
 		
 		std::string log_file_fragmentation_output_folder_path =
-			"";
+			".qlogicae/logs";
 		
 		TimeFormat log_file_fragmentation_format =
 			TimeFormat::DATE_DMY_SLASHED;
@@ -41,7 +45,8 @@ namespace QLogicaeCore
 			"all.log";
 
 		std::string log_file_collectivization_output_folder_path =
-			"";
-
+			".qlogicae";
 	};
+
+	inline static LoggerConfigurations DEFAULT_LOGGER_CONFIGURATIONS;
 }

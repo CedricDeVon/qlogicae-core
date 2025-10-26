@@ -247,6 +247,7 @@
     <ClInclude Include="outlier_removal_options.hpp" />
     <ClInclude Include="qlogicae_visual_studio_2022_build.hpp" />
     <ClInclude Include="qlogicae_visual_studio_2022_build_architecture.hpp" />
+    <ClInclude Include="raw.hpp" />
     <ClInclude Include="result.hpp" />
     <ClInclude Include="result_status.hpp" />
     <ClInclude Include="rocksdb_config.hpp" />
@@ -390,6 +391,7 @@
     <ClCompile Include="application.cpp" />
     <ClCompile Include="logger_configurations.cpp" />
     <ClCompile Include="log_configurations.cpp" />
+    <ClCompile Include="raw.cpp" />
     <ClCompile Include="result.cpp" />
     <ClCompile Include="result_status.cpp" />
     <ClCompile Include="sha256_hash_cryptographer.cpp" />

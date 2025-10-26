@@ -1,13 +1,10 @@
 #pragma once
 
-#include "time.hpp"
-#include "result.hpp"
-#include "cli_io.hpp"
 #include "utilities.hpp"
-#include "log_medium.hpp"
+
+#include "result.hpp"
+#include "time_zone.hpp"
 #include "time_format.hpp"
-#include "transformer.hpp"
-#include "text_file_io.hpp"
 #include "log_configurations.hpp"
 #include "logger_configurations.hpp"
 
@@ -221,61 +218,61 @@ namespace QLogicaeCore
 			Result<std::vector<std::string>>& result
 		);
 
-		void log(
+		void log_timestamp(
 			const std::string& text,
 			const LogConfigurations& configurations =
 				DEFAULT_LOG_CONFIGURATIONS
 		);
 
-		std::future<void> log_async(
+		std::future<void> log_timestamp_async(
 			const std::string& text,
 			const LogConfigurations& configurations =
 				DEFAULT_LOG_CONFIGURATIONS
 		);
 
-		void log_async(
+		void log_timestamp_async(
 			const std::function<void()>& callback,
 			const std::string& text,
 			const LogConfigurations& configurations =
 				DEFAULT_LOG_CONFIGURATIONS
 		);
 
-		void log(
+		void log_timestamp(
 			Result<void>& result,
 			const std::string& text,
 			const LogConfigurations& configurations =
 				DEFAULT_LOG_CONFIGURATIONS
 		);
 
-		void log_async(
+		void log_timestamp_async(
 			Result<std::future<void>>& result,
 			const std::string& text,
 			const LogConfigurations& configurations =
 				DEFAULT_LOG_CONFIGURATIONS
 		);
 
-		void log_async(
+		void log_timestamp_async(
 			const std::function<void(Result<void>& result)>& callback,
 			const std::string& text,
 			const LogConfigurations& configurations =
 				DEFAULT_LOG_CONFIGURATIONS
 		);
 
-		void log(
+		void log_timestamp(
 			const std::string& text,
 			const LogLevel& log_level,
 			const bool& is_enabled = true,
 			const bool& is_simplified = false
 		);
 
-		std::future<void> log_async(
+		std::future<void> log_timestamp_async(
 			const std::string& text,
 			const LogLevel& log_level,
 			const bool& is_enabled = true,
 			const bool& is_simplified = false
 		);
 
-		void log_async(
+		void log_timestamp_async(
 			const std::function<void()>& callback,
 			const std::string& text,
 			const LogLevel& log_level,
@@ -283,7 +280,7 @@ namespace QLogicaeCore
 			const bool& is_simplified = false
 		);
 
-		void log(
+		void log_timestamp(
 			Result<void>& result,
 			const std::string& text,
 			const LogLevel& log_level,
@@ -291,7 +288,7 @@ namespace QLogicaeCore
 			const bool& is_simplified = false
 		);
 
-		void log_async(
+		void log_timestamp_async(
 			Result<std::future<void>>& result,
 			const std::string& text,
 			const LogLevel& log_level,
@@ -299,7 +296,7 @@ namespace QLogicaeCore
 			const bool& is_simplified = false
 		);
 
-		void log_async(
+		void log_timestamp_async(
 			const std::function<void(Result<void>& result)>& callback,
 			const std::string& text,
 			const LogLevel& log_level,
@@ -307,198 +304,492 @@ namespace QLogicaeCore
 			const bool& is_simplified = false
 		);
 
-		void log_info(
+		void log_timestamp_info(
 			const std::string& text,
 			const InfoLogConfigurations& configurations =
-				DEFAULT_INFO_LOG_CONFIGURATIONS
+			DEFAULT_INFO_LOG_CONFIGURATIONS
 		);
 
-		void log_info(
+		void log_timestamp_info(
 			Result<void>& result,
 			const std::string& text,
 			const InfoLogConfigurations& configurations =
-				DEFAULT_INFO_LOG_CONFIGURATIONS
+			DEFAULT_INFO_LOG_CONFIGURATIONS
 		);
 
-		std::future<void> log_info_async(
+		std::future<void> log_timestamp_info_async(
 			const std::string& text,
 			const InfoLogConfigurations& configurations =
-				DEFAULT_INFO_LOG_CONFIGURATIONS
+			DEFAULT_INFO_LOG_CONFIGURATIONS
 		);
 
-		void log_info_async(
+		void log_timestamp_info_async(
 			Result<std::future<void>>& result,
 			const std::string& text,
 			const InfoLogConfigurations& configurations =
-				DEFAULT_INFO_LOG_CONFIGURATIONS
+			DEFAULT_INFO_LOG_CONFIGURATIONS
 		);
 
-		void log_info_async(
+		void log_timestamp_info_async(
 			const std::function<void()>& callback,
 			const std::string& text,
 			const InfoLogConfigurations& configurations =
-				DEFAULT_INFO_LOG_CONFIGURATIONS
+			DEFAULT_INFO_LOG_CONFIGURATIONS
 		);
 
-		void log_info_async(
+		void log_timestamp_info_async(
 			const std::function<void(Result<void>& result)>& callback,
 			const std::string& text,
 			const InfoLogConfigurations& configurations =
 				DEFAULT_INFO_LOG_CONFIGURATIONS
 		);
 
-		void log_success(
+		void log_timestamp_success(
 			const std::string& text,
 			const SuccessLogConfigurations& configurations =
-				DEFAULT_SUCCESS_LOG_CONFIGURATIONS
+			DEFAULT_SUCCESS_LOG_CONFIGURATIONS
 		);
 
-		void log_success(
+		void log_timestamp_success(
 			Result<void>& result,
 			const std::string& text,
 			const SuccessLogConfigurations& configurations =
-				DEFAULT_SUCCESS_LOG_CONFIGURATIONS
+			DEFAULT_SUCCESS_LOG_CONFIGURATIONS
 		);
 
-		std::future<void> log_success_async(
+		std::future<void> log_timestamp_success_async(
 			const std::string& text,
 			const SuccessLogConfigurations& configurations =
-				DEFAULT_SUCCESS_LOG_CONFIGURATIONS
+			DEFAULT_SUCCESS_LOG_CONFIGURATIONS
 		);
 
-		void log_success_async(
+		void log_timestamp_success_async(
 			Result<std::future<void>>& result,
 			const std::string& text,
 			const SuccessLogConfigurations& configurations =
-				DEFAULT_SUCCESS_LOG_CONFIGURATIONS
+			DEFAULT_SUCCESS_LOG_CONFIGURATIONS
 		);
 
-		void log_success_async(
+		void log_timestamp_success_async(
 			const std::function<void()>& callback,
 			const std::string& text,
 			const SuccessLogConfigurations& configurations =
-				DEFAULT_SUCCESS_LOG_CONFIGURATIONS
+			DEFAULT_SUCCESS_LOG_CONFIGURATIONS
 		);
 
-		void log_success_async(
+		void log_timestamp_success_async(
 			const std::function<void(Result<void>& result)>& callback,
 			const std::string& text,
 			const SuccessLogConfigurations& configurations =
 				DEFAULT_SUCCESS_LOG_CONFIGURATIONS
 		);
 
-		void log_warning(
+		void log_timestamp_warning(
 			const std::string& text,
 			const WarningLogConfigurations& configurations =
-				DEFAULT_WARNING_LOG_CONFIGURATIONS
+			DEFAULT_WARNING_LOG_CONFIGURATIONS
 		);
 
-		void log_warning(
+		void log_timestamp_warning(
 			Result<void>& result,
 			const std::string& text,
 			const WarningLogConfigurations& configurations =
-				DEFAULT_WARNING_LOG_CONFIGURATIONS
+			DEFAULT_WARNING_LOG_CONFIGURATIONS
 		);
 
-		std::future<void> log_warning_async(
+		std::future<void> log_timestamp_warning_async(
 			const std::string& text,
 			const WarningLogConfigurations& configurations =
-				DEFAULT_WARNING_LOG_CONFIGURATIONS
+			DEFAULT_WARNING_LOG_CONFIGURATIONS
 		);
 
-		void log_warning_async(
+		void log_timestamp_warning_async(
 			Result<std::future<void>>& result,
 			const std::string& text,
 			const WarningLogConfigurations& configurations =
-				DEFAULT_WARNING_LOG_CONFIGURATIONS
+			DEFAULT_WARNING_LOG_CONFIGURATIONS
 		);
 
-		void log_warning_async(
+		void log_timestamp_warning_async(
 			const std::function<void()>& callback,
 			const std::string& text,
 			const WarningLogConfigurations& configurations =
-				DEFAULT_WARNING_LOG_CONFIGURATIONS
+			DEFAULT_WARNING_LOG_CONFIGURATIONS
 		);
 
-		void log_warning_async(
+		void log_timestamp_warning_async(
 			const std::function<void(Result<void>& result)>& callback,
 			const std::string& text,
 			const WarningLogConfigurations& configurations =
 				DEFAULT_WARNING_LOG_CONFIGURATIONS
 		);
 
-		void log_exception(
-			const std::string& text,
-			const ExceptionLogConfigurations& configurations =
-				DEFAULT_EXCEPTION_LOG_CONFIGURATIONS
+		void handle_exception(
+			const std::string& origin,
+			const std::string& message
 		);
 
-		void log_exception(
+		void handle_exception(
+			Result<void>& result,
+			const std::string& origin,
+			const std::string& message
+		);
+
+		std::future<void> handle_exception_async(
+			const std::string& origin,
+			const std::string& message
+		);
+
+		void handle_exception_async(
+			Result<std::future<void>>& result,
+			const std::string& origin,
+			const std::string& message
+		);
+
+		void handle_exception_async(
+			const std::function<void()>& callback,
+			const std::string& origin,
+			const std::string& message
+		);
+
+		void handle_exception_async(
+			const std::function<void(Result<void>& result)>& callback,
+			const std::string& origin,
+			const std::string& message
+		);
+
+		void log_timestamp_exception(
+			const std::string& text,
+			const ExceptionLogConfigurations& configurations =
+			DEFAULT_EXCEPTION_LOG_CONFIGURATIONS
+		);
+
+		void log_timestamp_exception(
 			Result<void>& result,
 			const std::string& text,
 			const ExceptionLogConfigurations& configurations =
-				DEFAULT_EXCEPTION_LOG_CONFIGURATIONS
+			DEFAULT_EXCEPTION_LOG_CONFIGURATIONS
 		);
 
-		std::future<void> log_exception_async(
+		std::future<void> log_timestamp_exception_async(
 			const std::string& text,
 			const ExceptionLogConfigurations& configurations =
-				DEFAULT_EXCEPTION_LOG_CONFIGURATIONS
+			DEFAULT_EXCEPTION_LOG_CONFIGURATIONS
 		);
 
-		void log_exception_async(
+		void log_timestamp_exception_async(
 			Result<std::future<void>>& result,
 			const std::string& text,
 			const ExceptionLogConfigurations& configurations =
-				DEFAULT_EXCEPTION_LOG_CONFIGURATIONS
+			DEFAULT_EXCEPTION_LOG_CONFIGURATIONS
 		);
 
-		void log_exception_async(
+		void log_timestamp_exception_async(
 			const std::function<void()>& callback,
 			const std::string& text,
 			const ExceptionLogConfigurations& configurations =
-				DEFAULT_EXCEPTION_LOG_CONFIGURATIONS
+			DEFAULT_EXCEPTION_LOG_CONFIGURATIONS
 		);
 
-		void log_exception_async(
+		void log_timestamp_exception_async(
 			const std::function<void(Result<void>& result)>& callback,
 			const std::string& text,
 			const ExceptionLogConfigurations& configurations =
 				DEFAULT_EXCEPTION_LOG_CONFIGURATIONS
 		);
 
-		void force_log_to_console_and_file(
-			const std::string& origin,
-			const std::exception& exception
+		void log_timestamp_to_console_and_file(
+			const std::string& text,
+			const LogConfigurations& configurations =
+				DEFAULT_LOG_CONFIGURATIONS
 		);
 
-		std::future<void> force_log_to_console_and_file_async(
-			const std::string& origin,
-			const std::exception& exception
+		std::future<void> log_timestamp_to_console_and_file_async(
+			const std::string& text,
+			const LogConfigurations& configurations =
+				DEFAULT_LOG_CONFIGURATIONS
 		);
 
-		void force_log_to_console_and_file_async(
+		void log_timestamp_to_console_and_file_async(
 			const std::function<void()>& callback,
-			const std::string& origin,
-			const std::exception& exception
+			const std::string& text,
+			const LogConfigurations& configurations =
+				DEFAULT_LOG_CONFIGURATIONS
 		);
 
-		void force_log_to_console_and_file(
+		void log_timestamp_to_console_and_file(
 			Result<void>& result,
-			const std::string& origin,
-			const std::exception& exception
+			const std::string& text,
+			const LogConfigurations& configurations =
+				DEFAULT_LOG_CONFIGURATIONS
 		);
 
-		void force_log_to_console_and_file_async(
+		void log_timestamp_to_console_and_file_async(
 			Result<std::future<void>>& result,
-			const std::string& origin,
-			const std::exception& exception
+			const std::string& text,
+			const LogConfigurations& configurations =
+				DEFAULT_LOG_CONFIGURATIONS
 		);
 
-		void force_log_to_console_and_file_async(
+		void log_timestamp_to_console_and_file_async(
 			const std::function<void(Result<void>& result)>& callback,
-			const std::string& origin,
-			const std::exception& exception
+			const std::string& text,
+			const LogConfigurations& configurations =
+				DEFAULT_LOG_CONFIGURATIONS
+		);
+
+		void log_timestamp_to_console(
+			const std::string& text,
+			const LogConfigurations& configurations =
+				DEFAULT_LOG_CONFIGURATIONS
+		);
+
+		std::future<void> log_timestamp_to_console_async(
+			const std::string& text,
+			const LogConfigurations& configurations =
+				DEFAULT_LOG_CONFIGURATIONS
+		);
+
+		void log_timestamp_to_console_async(
+			const std::function<void()>& callback,
+			const std::string& text,
+			const LogConfigurations& configurations =
+				DEFAULT_LOG_CONFIGURATIONS
+		);
+
+		void log_timestamp_to_console(
+			Result<void>& result,
+			const std::string& text,
+			const LogConfigurations& configurations =
+				DEFAULT_LOG_CONFIGURATIONS
+		);
+
+		void log_timestamp_to_console_async(
+			Result<std::future<void>>& result,
+			const std::string& text,
+			const LogConfigurations& configurations =
+				DEFAULT_LOG_CONFIGURATIONS
+		);
+
+		void log_timestamp_to_console_async(
+			const std::function<void(Result<void>& result)>& callback,
+			const std::string& text,
+			const LogConfigurations& configurations =
+				DEFAULT_LOG_CONFIGURATIONS
+		);
+
+		void log_timestamp_to_files(
+			const std::string& text,
+			const LogConfigurations& configurations =
+				DEFAULT_LOG_CONFIGURATIONS
+		);
+
+		std::future<void> log_timestamp_to_files_async(
+			const std::string& text,
+			const LogConfigurations& configurations =
+				DEFAULT_LOG_CONFIGURATIONS
+		);
+
+		void log_timestamp_to_files_async(
+			const std::function<void()>& callback,
+			const std::string& text,
+			const LogConfigurations& configurations =
+				DEFAULT_LOG_CONFIGURATIONS
+		);
+
+		void log_timestamp_to_files(
+			Result<void>& result,
+			const std::string& text,
+			const LogConfigurations& configurations =
+				DEFAULT_LOG_CONFIGURATIONS
+		);
+
+		void log_timestamp_to_files_async(
+			Result<std::future<void>>& result,
+			const std::string& text,
+			const LogConfigurations& configurations =
+				DEFAULT_LOG_CONFIGURATIONS
+		);
+
+		void log_timestamp_to_files_async(
+			const std::function<void(Result<void>& result)>& callback,
+			const std::string& text,
+			const LogConfigurations& configurations =
+				DEFAULT_LOG_CONFIGURATIONS
+		);
+
+		void log_to_console(
+			const std::string& text
+		);
+
+		std::future<void> log_to_console_async(
+			const std::string& text
+		);
+
+		void log_to_console_async(
+			const std::function<void()>& callback,
+			const std::string& text
+		);
+
+		void log_to_console(
+			Result<void>& result,
+			const std::string& text
+		);
+
+		void log_to_console_async(
+			Result<std::future<void>>& result,
+			const std::string& text
+		);
+
+		void log_to_console_async(
+			const std::function<void(Result<void>& result)>& callback,
+			const std::string& text
+		);
+
+		void log_to_files(
+			const std::string& text
+		);
+
+		std::future<void> log_to_files_async(
+			const std::string& text
+		);
+
+		void log_to_files_async(
+			const std::function<void()>& callback,
+			const std::string& text
+		);
+
+		void log_to_files(
+			Result<void>& result,
+			const std::string& text
+		);
+
+		void log_to_files_async(
+			Result<std::future<void>>& result,
+			const std::string& text
+		);
+
+		void log_to_files_async(
+			const std::function<void(Result<void>& result)>& callback,
+			const std::string& text
+		);
+		
+		void log_to_collectivization_file(
+			const std::string& text
+		);
+
+		std::future<void> log_to_collectivization_file_async(
+			const std::string& text
+		);
+
+		void log_to_collectivization_file_async(
+			const std::function<void()>& callback,
+			const std::string& text
+		);
+
+		void log_to_collectivization_file(
+			Result<void>& result,
+			const std::string& text
+		);
+
+		void log_to_collectivization_file_async(
+			Result<std::future<void>>& result,
+			const std::string& text
+		);
+
+		void log_to_collectivization_file_async(
+			const std::function<void(Result<void>& result)>& callback,
+			const std::string& text
+		);
+
+		void log_to_fragmentation_file(
+			const std::string& text
+		);
+
+		std::future<void> log_to_fragmentation_file_async(
+			const std::string& text
+		);
+
+		void log_to_fragmentation_file_async(
+			const std::function<void()>& callback,
+			const std::string& text
+		);
+
+		void log_to_fragmentation_file(
+			Result<void>& result,
+			const std::string& text
+		);
+
+		void log_to_fragmentation_file_async(
+			Result<std::future<void>>& result,
+			const std::string& text
+		);
+
+		void log_to_fragmentation_file_async(
+			const std::function<void(Result<void>& result)>& callback,
+			const std::string& text
+		);
+
+		void log_to_file(
+			const std::string& path,
+			const std::string& text
+		);
+
+		std::future<void> log_to_file_async(
+			const std::string& path,
+			const std::string& text
+		);
+
+		void log_to_file_async(
+			const std::function<void()>& callback,
+			const std::string& path,
+			const std::string& text
+		);
+
+		void log_to_file(
+			Result<void>& result,
+			const std::string& path,
+			const std::string& text
+		);
+
+		void log_to_file_async(
+			Result<std::future<void>>& result,
+			const std::string& path,
+			const std::string& text
+		);
+
+		void log_to_file_async(
+			const std::function<void(Result<void>& result)>& callback,
+			const std::string& path,
+			const std::string& text
+		);
+
+		void log_to_output_files(
+			const std::string& text
+		);
+
+		std::future<void> log_to_output_files_async(
+			const std::string& text
+		);
+
+		void log_to_output_files_async(
+			const std::function<void()>& callback,
+			const std::string& text
+		);
+
+		void log_to_output_files(
+			Result<void>& result,
+			const std::string& text
+		);
+
+		void log_to_output_files_async(
+			Result<std::future<void>>& result,
+			const std::string& text
+		);
+
+		void log_to_output_files_async(
+			const std::function<void(Result<void>& result)>& callback,
+			const std::string& text
 		);
 
 		static Logger& get_instance();
@@ -518,7 +809,7 @@ namespace QLogicaeCore
 
 		TimeFormat _log_format;
 
-		TextFileIO _text_file_io;
+		TimeZone _log_time_zone;
 
 		mutable std::shared_mutex _mutex;
 
@@ -538,76 +829,6 @@ namespace QLogicaeCore
 		
 		std::string _log_file_collectivization_output_folder_path;		
 
-		void _log_to_collectivization_file(
-			const std::string& text
-		);
-		
-		void _log_to_collectivization_file(
-			Result<void>& result,
-			const std::string& text
-		);
-
-		std::future<void> _log_to_collectivization_file_async(
-			const std::string& text
-		);
-
-		void _log_to_collectivization_file_async(
-			Result<std::future<void>>& result,
-			const std::string& text
-		);
-
-		void _log_to_fragmentation_file(
-			const std::string& text
-		);
-		
-		void _log_to_fragmentation_file(
-			Result<void>& result,
-			const std::string& text
-		);
-
-		std::future<void> _log_to_fragmentation_file_async(
-			const std::string& text
-		);
-		
-		void _log_to_fragmentation_file_async(
-			Result<std::future<void>>& result,
-			const std::string& text
-		);
-
-		void _log_to_file(
-			const std::string& path,
-			const std::string& text
-		);
-
-		void _log_to_file(
-			Result<void>& result,
-			const std::string& path,
-			const std::string& text
-		);
-
-		std::future<void> _log_to_file_async(
-			const std::string& path,
-			const std::string& text
-		);
-
-		void _log_to_output_files(
-			const std::string& text
-		);
-
-		std::future<void> _log_to_output_files_async(
-			const std::string& text
-		);
-		
-		void _log_to_output_files(
-			Result<void>& result,
-			const std::string& text
-		);
-
-		std::future<void> _log_to_output_files_async(
-			Result<std::future<void>>& result,
-			const std::string& text
-		);
-
 		std::string _generate_log_fragmentation_file_path();
 
 		void _generate_log_fragmentation_file_path(
@@ -618,6 +839,26 @@ namespace QLogicaeCore
 
 		void _generate_log_collectivization_file_path(
 			Result<std::string>& result
+		);
+
+		std::string _to_log_format(
+			const std::string& text,
+			const LogLevel& log_level
+		);
+
+		void _to_log_format(
+			Result<std::string>& result,
+			const std::string& text,
+			const LogLevel& log_level
+		);
+
+		std::string _time_now(
+			const TimeFormat& time_format
+		);
+
+		void _time_now(
+			Result<std::string>& result,
+			const TimeFormat& time_format
 		);
 	};
 

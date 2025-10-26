@@ -20,11 +20,23 @@ namespace QLogicaeCore
 
 	bool Argon2idHashCryptographer::setup()
 	{
-		Result<void> result;
+		try
+		{
+			Result<void> result;
 
-		setup(result);
+			setup(result);
 
-		return result.is_status_safe();
+			return result.is_status_safe();
+		}
+		catch (const std::exception& exception)
+		{
+			LOGGER.handle_exception_async(
+				"QLogicaeCore::Argon2idHashCryptographer::setup()",
+				exception.what()
+			);
+
+			return false;
+		}
 	}
 
 	void Argon2idHashCryptographer::setup(
@@ -248,7 +260,12 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
-			
+			LOGGER.handle_exception_async(
+				"QLogicaeCore::Argon2idHashCryptographer::transform()",
+				exception.what()
+			);
+
+			return "";
 		}
 	}
 
@@ -290,7 +307,12 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
-			
+			LOGGER.handle_exception_async(
+				"QLogicaeCore::Argon2idHashCryptographer::reverse()",
+				exception.what()
+			);
+
+			return false;
 		}
 	}
 	

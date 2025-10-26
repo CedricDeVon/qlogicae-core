@@ -1,6 +1,7 @@
 #pragma once
 
 #include "result.hpp"
+#include "logger.hpp"
 #include "utilities.hpp"
 #include "time_zone.hpp"
 #include "time_format.hpp"

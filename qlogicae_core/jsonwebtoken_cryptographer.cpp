@@ -81,9 +81,14 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::JsonWebTokenCryptographer::transform()",
+                exception.what()
+            );
+
             throw std::runtime_error(
                 std::string() +
-                "Exception at JsonWebTokenCryptographer::transform(): " +
+                "QLogicaeCore::JsonWebTokenCryptographer::transform(): " +
                 exception.what()
             );
         }
@@ -99,25 +104,25 @@ namespace QLogicaeCore
         {
             if (options.token.empty())
             {
-                result.message = 
-                    "Exception at JsonWebTokenCryptographer::reverse(): Token input is empty";
-                
+                result.message =
+                    "QLogicaeCore::JsonWebTokenCryptographer::reverse(): Token input is empty";
+
                 return result;
             }
 
             if (options.issuer.empty())
             {
-                result.message = 
-                    "Exception at JsonWebTokenCryptographer::reverse(): Expected issuer is empty";
-                
+                result.message =
+                    "QLogicaeCore::JsonWebTokenCryptographer::reverse(): Expected issuer is empty";
+
                 return result;
             }
 
             if (options.public_key.empty())
             {
-                result.message = 
-                    "Exception at JsonWebTokenCryptographer::reverse(): Public key is empty";
-                
+                result.message =
+                    "QLogicaeCore::JsonWebTokenCryptographer::reverse(): Public key is empty";
+
                 return result;
             }
 
@@ -125,8 +130,8 @@ namespace QLogicaeCore
 
             if (decoded.get_issuer() != options.issuer)
             {
-                result.message = 
-                    "Exception at JsonWebTokenCryptographer::reverse(): Invalid issuer";
+                result.message =
+                    "QLogicaeCore::JsonWebTokenCryptographer::reverse(): Invalid issuer";
 
                 return result;
             }
@@ -152,8 +157,13 @@ namespace QLogicaeCore
         }
         catch (const std::exception& ex)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::JsonWebTokenCryptographer::reverse()",
+                ex.what()
+            );
+
             result.message = std::string(
-                "Exception at JsonWebTokenCryptographer::reverse(): JWT verification failed: ") +
+                "QLogicaeCore::JsonWebTokenCryptographer::reverse(): JWT verification failed: ") +
                 ex.what();
         }
 

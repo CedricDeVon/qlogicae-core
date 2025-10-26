@@ -1,6 +1,7 @@
 #pragma once
 
 #include "result.hpp"
+#include "logger.hpp"
 #include "abstract_application.hpp"
 #include "cryptographer_properties.hpp"
 #include "bcrypt_hash_cryptographer.hpp"

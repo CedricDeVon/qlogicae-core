@@ -1,6 +1,8 @@
 #pragma once
 
 #include "result.hpp"
+#include "logger.hpp"
+#include "time_zone.hpp"
 #include "log_medium.hpp"
 #include "time_format.hpp"
 #include "application_file_io.hpp"
@@ -34,6 +36,8 @@ namespace QLogicaeCore
 
         std::string CONFIGURATIONS_ENVIRONMENT_NAME;
 
+        TimeZone CONFIGURATIONS_ENVIRONMENT_TIME_ZONE;
+        
         std::string CONFIGURATIONS_ENVIRONMENT_LANGUAGE_SELECTED;
 
         std::string CONFIGURATIONS_ENVIRONMENT_LOG_NAME;

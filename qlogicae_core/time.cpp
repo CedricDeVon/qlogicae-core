@@ -26,7 +26,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Time::setup()",
+                exception.what()
+            );
 
+            return false;
         }
     }
 
@@ -107,7 +112,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Time::now()",
+                exception.what()
+            );
 
+            return 0;
         }
     }
 
@@ -138,7 +148,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Time::month()",
+                exception.what()
+            );
 
+            return 0;
         }
     }
 
@@ -167,7 +182,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Time::day()",
+                exception.what()
+            );
 
+            return 0;
         }
     }
 
@@ -198,7 +218,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Time::minute()",
+                exception.what()
+            );
 
+            return 0;
         }
     }
 
@@ -229,7 +254,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Time::minute()",
+                exception.what()
+            );
 
+            return 0;
         }
     }
 
@@ -257,7 +287,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Time::millisecond()",
+                exception.what()
+            );
 
+            return 0;
         }
     }
 
@@ -287,7 +322,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Time::microsecond()",
+                exception.what()
+            );
 
+            return 0;
         }
     }
 
@@ -317,7 +357,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Time::nanosecond()",
+                exception.what()
+            );
 
+            return 0;
         }
     }
 
@@ -350,7 +395,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Time::hour()",
+                exception.what()
+            );
 
+            return 0;
         }
     }
 
@@ -381,7 +431,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Time::year()",
+                exception.what()
+            );
 
+            return 0;
         }
     }
 
@@ -392,7 +447,7 @@ namespace QLogicaeCore
     {
         result.set_to_good_status_with_value(
             static_cast<double>(_get_time_zone(zone).tm_year) +
-                UTILITIES.UNIX_START_YEAR_OFFSET);
+            UTILITIES.UNIX_START_YEAR_OFFSET);
     }
 
     std::string Time::now(
@@ -410,11 +465,16 @@ namespace QLogicaeCore
                 zone
             );
 
-            return result.get_value();            
+            return result.get_value();
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Time::now()",
+                exception.what()
+            );
 
+            return "";
         }
     }
 
@@ -427,7 +487,7 @@ namespace QLogicaeCore
         absl::Time now_time = absl::Now();
         absl::Duration since_epoch = now_time - absl::UnixEpoch();
         std::tm tm = _get_time_zone(zone);
-        const char* fmt = _get_format_string(format);
+        const char* fmt = UTILITIES.get_format_string(format);
         std::string str;
 
         switch (format)
@@ -500,7 +560,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Time::get_time_unit_full_name()",
+                exception.what()
+            );
 
+            return "";
         }
     }
 
@@ -511,17 +576,17 @@ namespace QLogicaeCore
     {
         switch (format)
         {
-            case TimeScaleUnit::NANOSECONDS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_NANOSECONDS); break;
-            case TimeScaleUnit::MICROSECONDS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_MICROSECONDS); break;
-            case TimeScaleUnit::MILLISECONDS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_MILLISECONDS); break;
-            case TimeScaleUnit::SECONDS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_SECONDS); break;
-            case TimeScaleUnit::MINUTES: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_MINUTES); break;
-            case TimeScaleUnit::HOURS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_HOURS); break;
-            case TimeScaleUnit::DAYS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_DAYS); break;
-            case TimeScaleUnit::WEEKS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_WEEKS); break;
-            case TimeScaleUnit::MONTHS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_MONTHS); break;
-            case TimeScaleUnit::YEARS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_YEARS); break;
-            default: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_SECONDS); break;
+        case TimeScaleUnit::NANOSECONDS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_NANOSECONDS); break;
+        case TimeScaleUnit::MICROSECONDS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_MICROSECONDS); break;
+        case TimeScaleUnit::MILLISECONDS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_MILLISECONDS); break;
+        case TimeScaleUnit::SECONDS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_SECONDS); break;
+        case TimeScaleUnit::MINUTES: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_MINUTES); break;
+        case TimeScaleUnit::HOURS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_HOURS); break;
+        case TimeScaleUnit::DAYS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_DAYS); break;
+        case TimeScaleUnit::WEEKS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_WEEKS); break;
+        case TimeScaleUnit::MONTHS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_MONTHS); break;
+        case TimeScaleUnit::YEARS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_YEARS); break;
+        default: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_FULL_NAME_SECONDS); break;
         }
     }
 
@@ -542,7 +607,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Time::get_time_unit_abbreviation()",
+                exception.what()
+            );
 
+            return "";
         }
     }
 
@@ -553,17 +623,17 @@ namespace QLogicaeCore
     {
         switch (format)
         {
-            case TimeScaleUnit::NANOSECONDS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_NANOSECONDS); break;
-            case TimeScaleUnit::MICROSECONDS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_MICROSECONDS); break;
-            case TimeScaleUnit::MILLISECONDS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_MILLISECONDS); break;
-            case TimeScaleUnit::SECONDS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_SECONDS); break;
-            case TimeScaleUnit::MINUTES: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_MINUTES); break;
-            case TimeScaleUnit::HOURS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_HOURS); break;
-            case TimeScaleUnit::DAYS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_DAYS); break;
-            case TimeScaleUnit::WEEKS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_WEEKS); break;
-            case TimeScaleUnit::MONTHS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_MONTHS); break;
-            case TimeScaleUnit::YEARS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_YEARS); break;
-            default: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_SECONDS); break;
+        case TimeScaleUnit::NANOSECONDS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_NANOSECONDS); break;
+        case TimeScaleUnit::MICROSECONDS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_MICROSECONDS); break;
+        case TimeScaleUnit::MILLISECONDS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_MILLISECONDS); break;
+        case TimeScaleUnit::SECONDS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_SECONDS); break;
+        case TimeScaleUnit::MINUTES: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_MINUTES); break;
+        case TimeScaleUnit::HOURS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_HOURS); break;
+        case TimeScaleUnit::DAYS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_DAYS); break;
+        case TimeScaleUnit::WEEKS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_WEEKS); break;
+        case TimeScaleUnit::MONTHS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_MONTHS); break;
+        case TimeScaleUnit::YEARS: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_YEARS); break;
+        default: result.set_to_good_status_with_value(UTILITIES.TIME_SCALE_UNIT_ABBREVIATION_SECONDS); break;
         }
     }
 
@@ -584,7 +654,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Time::get_time_unit_abbreviation()",
+                exception.what()
+            );
 
+            return TimeScaleUnit::NANOSECONDS;
         }
     }
 
@@ -618,7 +693,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Time::convert_seconds()",
+                exception.what()
+            );
 
+            return 0;
         }
     }
 
@@ -630,17 +710,17 @@ namespace QLogicaeCore
     {
         switch (format)
         {
-            case TimeScaleUnit::NANOSECONDS: result.set_to_good_status_with_value(time / UTILITIES.SECONDS_OVER_NANOSECONDS); break;
-            case TimeScaleUnit::MICROSECONDS: result.set_to_good_status_with_value(time / UTILITIES.SECONDS_OVER_MICROSECONDS); break;
-            case TimeScaleUnit::MILLISECONDS: result.set_to_good_status_with_value(time / UTILITIES.SECONDS_OVER_MILLISECONDS); break;
-            case TimeScaleUnit::SECONDS: result.set_to_good_status_with_value(time); break;
-            case TimeScaleUnit::MINUTES: result.set_to_good_status_with_value(time * UTILITIES.SECONDS_PER_MINUTE); break;
-            case TimeScaleUnit::HOURS: result.set_to_good_status_with_value(time * UTILITIES.SECONDS_PER_HOUR); break;
-            case TimeScaleUnit::DAYS: result.set_to_good_status_with_value(time * UTILITIES.SECONDS_PER_DAY); break;
-            case TimeScaleUnit::WEEKS: result.set_to_good_status_with_value(time * UTILITIES.SECONDS_PER_WEEK); break;
-            case TimeScaleUnit::MONTHS: result.set_to_good_status_with_value(time * UTILITIES.SECONDS_PER_MONTH); break;
-            case TimeScaleUnit::YEARS: result.set_to_good_status_with_value(time * UTILITIES.SECONDS_PER_YEAR); break;
-            default: result.set_to_good_status_with_value(time); break;
+        case TimeScaleUnit::NANOSECONDS: result.set_to_good_status_with_value(time / UTILITIES.SECONDS_OVER_NANOSECONDS); break;
+        case TimeScaleUnit::MICROSECONDS: result.set_to_good_status_with_value(time / UTILITIES.SECONDS_OVER_MICROSECONDS); break;
+        case TimeScaleUnit::MILLISECONDS: result.set_to_good_status_with_value(time / UTILITIES.SECONDS_OVER_MILLISECONDS); break;
+        case TimeScaleUnit::SECONDS: result.set_to_good_status_with_value(time); break;
+        case TimeScaleUnit::MINUTES: result.set_to_good_status_with_value(time * UTILITIES.SECONDS_PER_MINUTE); break;
+        case TimeScaleUnit::HOURS: result.set_to_good_status_with_value(time * UTILITIES.SECONDS_PER_HOUR); break;
+        case TimeScaleUnit::DAYS: result.set_to_good_status_with_value(time * UTILITIES.SECONDS_PER_DAY); break;
+        case TimeScaleUnit::WEEKS: result.set_to_good_status_with_value(time * UTILITIES.SECONDS_PER_WEEK); break;
+        case TimeScaleUnit::MONTHS: result.set_to_good_status_with_value(time * UTILITIES.SECONDS_PER_MONTH); break;
+        case TimeScaleUnit::YEARS: result.set_to_good_status_with_value(time * UTILITIES.SECONDS_PER_YEAR); break;
+        default: result.set_to_good_status_with_value(time); break;
         }
     }
 
@@ -663,7 +743,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Time::convert_nanoseconds()",
+                exception.what()
+            );
 
+            return 0;
         }
     }
 
@@ -675,17 +760,17 @@ namespace QLogicaeCore
     {
         switch (format)
         {
-            case TimeScaleUnit::NANOSECONDS: result.set_to_good_status_with_value(time); break;
-            case TimeScaleUnit::MICROSECONDS: result.set_to_good_status_with_value(time / UTILITIES.SECONDS_OVER_MILLISECONDS); break;
-            case TimeScaleUnit::MILLISECONDS: result.set_to_good_status_with_value(time / UTILITIES.SECONDS_OVER_MICROSECONDS); break;
-            case TimeScaleUnit::SECONDS: result.set_to_good_status_with_value(time / UTILITIES.SECONDS_OVER_NANOSECONDS); break;
-            case TimeScaleUnit::MINUTES: result.set_to_good_status_with_value(time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_MINUTE)); break;
-            case TimeScaleUnit::HOURS: result.set_to_good_status_with_value(time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_HOUR)); break;
-            case TimeScaleUnit::DAYS: result.set_to_good_status_with_value(time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_DAY)); break;
-            case TimeScaleUnit::WEEKS: result.set_to_good_status_with_value(time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_WEEK)); break;
-            case TimeScaleUnit::MONTHS: result.set_to_good_status_with_value(time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_MONTH)); break;
-            case TimeScaleUnit::YEARS: result.set_to_good_status_with_value(time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_YEAR)); break;
-            default: result.set_to_good_status_with_value(time); break;
+        case TimeScaleUnit::NANOSECONDS: result.set_to_good_status_with_value(time); break;
+        case TimeScaleUnit::MICROSECONDS: result.set_to_good_status_with_value(time / UTILITIES.SECONDS_OVER_MILLISECONDS); break;
+        case TimeScaleUnit::MILLISECONDS: result.set_to_good_status_with_value(time / UTILITIES.SECONDS_OVER_MICROSECONDS); break;
+        case TimeScaleUnit::SECONDS: result.set_to_good_status_with_value(time / UTILITIES.SECONDS_OVER_NANOSECONDS); break;
+        case TimeScaleUnit::MINUTES: result.set_to_good_status_with_value(time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_MINUTE)); break;
+        case TimeScaleUnit::HOURS: result.set_to_good_status_with_value(time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_HOUR)); break;
+        case TimeScaleUnit::DAYS: result.set_to_good_status_with_value(time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_DAY)); break;
+        case TimeScaleUnit::WEEKS: result.set_to_good_status_with_value(time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_WEEK)); break;
+        case TimeScaleUnit::MONTHS: result.set_to_good_status_with_value(time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_MONTH)); break;
+        case TimeScaleUnit::YEARS: result.set_to_good_status_with_value(time / (UTILITIES.SECONDS_OVER_NANOSECONDS * UTILITIES.SECONDS_PER_YEAR)); break;
+        default: result.set_to_good_status_with_value(time); break;
         }
     }
 
@@ -702,7 +787,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Time::_pad3()",
+                exception.what()
+            );
 
+            return "";
         }
     }
 
@@ -721,7 +811,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Time::_format_millisecond_level()",
+                exception.what()
+            );
 
+            return "";
         }
     }
 
@@ -743,7 +838,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Time::_format_microsecond_level()",
+                exception.what()
+            );
 
+            return "";
         }
     }
 
@@ -766,7 +866,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Time::_format_nanosecond_level()",
+                exception.what()
+            );
 
+            return "";
         }
     }
 
@@ -787,7 +892,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Time::_format_time()",
+                exception.what()
+            );
 
+            return "";
         }
     }
 
@@ -814,67 +924,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Time::_get_time_zone()",
+                exception.what()
+            );
 
-        }
-    }
-
-    const char* Time::_get_format_string(
-        const TimeFormat& format
-    )
-    {
-        try
-        {
-            switch (format)
-            {
-                case TimeFormat::ISO8601:
-                {
-                    return UTILITIES.TIME_FORMAT_ISO_8601;
-                }
-                case TimeFormat::FULL_TIMESTAMP:
-                {
-                    return UTILITIES.TIME_FORMAT_FULL_TIMESTAMP;
-                }
-                case TimeFormat::FULL_DASHED_TIMESTAMP:
-                {
-                    return UTILITIES.TIME_FORMAT_FULL_DASHED_TIMESTAMP;
-                }
-                case TimeFormat::HOUR_12:
-                {
-                    return UTILITIES.TIME_FORMAT_HOUR_12;
-                }
-                case TimeFormat::HOUR_24:
-                {
-                    return UTILITIES.TIME_FORMAT_HOUR_24;
-                }
-                case TimeFormat::DATE_DASHED:
-                {
-                    return UTILITIES.TIME_FORMAT_DATE_DASHED;
-                }
-                case TimeFormat::DATE_MDY_SLASHED:
-                {
-                    return UTILITIES.TIME_FORMAT_DATE_MDY_SLASHED;
-                }
-                case TimeFormat::DATE_DMY_SLASHED:
-                {
-                    return UTILITIES.TIME_FORMAT_DATE_DMY_SLASHED;
-                }
-                case TimeFormat::DATE_DMY_SPACED:
-                {
-                    return UTILITIES.TIME_FORMAT_DATE_DMY_SPACED;
-                }
-                case TimeFormat::DATE_VERBOSE:
-                {
-                    return UTILITIES.TIME_FORMAT_DATE_VERBOSE;
-                }
-                default:
-                {
-                    return UTILITIES.TIME_FORMAT_DATE_VERBOSE;
-                }
-            }
-        }
-        catch (const std::exception& exception)
-        {
-
+            return {};
         }
     }
 

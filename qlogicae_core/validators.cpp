@@ -28,7 +28,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Validators::setup()",
+                exception.what()
+            );
 
+            return false;
         }
     }
 
@@ -127,8 +132,13 @@ namespace QLogicaeCore
         {
             return std::regex_match(input.begin(), input.end(), std::regex(pattern.data()));
         }
-        catch (const std::regex_error&)
+        catch (const std::regex_error& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Validators::match_std_regex()",
+                exception.what()
+            );
+
             return false;
         }
     }

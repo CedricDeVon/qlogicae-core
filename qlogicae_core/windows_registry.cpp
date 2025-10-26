@@ -29,9 +29,19 @@ namespace QLogicaeCore
         const HKEY root_hkey
     )
     {
-        Result<void> result;
+        try
+        {
+            Result<void> result;
 
-        setup(result, root_hkey);
+            setup(result, root_hkey);
+        }
+        catch (const std::exception& exception)
+        {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::WindowsRegistry::WindowsRegistry()",
+                exception.what()
+            );
+        }
     }
 
     std::future<bool> WindowsRegistry::setup_async()
@@ -130,7 +140,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::WindowsRegistry::setup()",
+                exception.what()
+            );
 
+            return false;
         }
     }
 

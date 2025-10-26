@@ -12,11 +12,23 @@ namespace QLogicaeCore
 
     bool XChaCha20Poly1305CipherCryptographer::setup()
     {      
-        Result<void> result;
+        try
+        {
+            Result<void> result;
 
-        setup(result);
+            setup(result);
 
-        return result.is_status_safe();
+            return result.is_status_safe();
+        }
+        catch (const std::exception& exception)
+        {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::XChaCha20Poly1305CipherCryptographer::setup()",
+                exception.what()
+            );
+
+            return false;
+        }
     }
 
     void XChaCha20Poly1305CipherCryptographer::setup(
@@ -212,8 +224,13 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::XChaCha20Poly1305CipherCryptographer::transform()",
+                exception.what()
+            );
+
             throw std::runtime_error(
-                std::string("Exception at XChaCha20Poly1305CipherCryptographer::transform(): ") +
+                std::string("QLogicaeCore::XChaCha20Poly1305CipherCryptographer::transform(): ") +
                 exception.what()
             );
         }
@@ -258,8 +275,13 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::XChaCha20Poly1305CipherCryptographer::reverse()",
+                exception.what()
+            );
+
             throw std::runtime_error(
-                std::string("Exception at XChaCha20Poly1305CipherCryptographer::reverse(): ") +
+                std::string("QLogicaeCore::XChaCha20Poly1305CipherCryptographer::reverse(): ") +
                 exception.what()
             );
         }

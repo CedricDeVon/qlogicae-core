@@ -52,7 +52,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::WindowsRegistryValueExtractor::setup()",
+                exception.what()
+            );
         }
     }
 
@@ -152,7 +155,7 @@ namespace QLogicaeCore
         const std::string& sub_key,
         const std::string& name_key
     )
-    {   
+    {
         try
         {
             Result<void> void_result;
@@ -167,8 +170,13 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::WindowsRegistryValueExtractor::setup()",
+                exception.what()
+            );
 
-        }        
+            return false;
+        }
     }
 
     bool WindowsRegistryValueExtractor::setup(
@@ -190,8 +198,13 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::WindowsRegistryValueExtractor::setup()",
+                exception.what()
+            );
 
-        }        
+            return false;
+        }
     }
 
     std::future<bool> WindowsRegistryValueExtractor::setup_async(
@@ -435,7 +448,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string("Exception at WindowsRegistryValueExtractor::get_value(): ") + exception.what());
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::WindowsRegistryValueExtractor::get_value()",
+                exception.what()
+            );
+
+            throw std::runtime_error(std::string("WindowsRegistryValueExtractor::get_value() - ") + exception.what());
         }
     }
 

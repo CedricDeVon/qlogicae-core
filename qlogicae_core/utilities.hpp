@@ -1,5 +1,7 @@
 #pragma once
 
+#include "time_zone.hpp"
+#include "log_level.hpp"
 #include "log_medium.hpp"
 #include "time_format.hpp"
 #include "system_access.hpp"
@@ -11,7 +13,6 @@
 #include "supported_qlogicae_installer.hpp"
 #include "qlogicae_visual_studio_2022_build.hpp"
 #include "qlogicae_visual_studio_2022_build_architecture.hpp"
-
 
 #include <sqlite3.h>
 #include <boost/asio.hpp>
@@ -155,30 +156,6 @@ namespace QLogicaeCore
         const std::string STRING_NONE_2 =
             "N/A";
 
-        const std::string LOG_LEVEL_ALL =
-            "INFO";
-        
-        const std::string LOG_LEVEL_INFO =
-            "INFO";
-        
-        const std::string LOG_LEVEL_DEBUG =
-            "DEBUG";
-        
-        const std::string LOG_LEVEL_SUCCESS =
-            "SUCCESS";
-        
-        const std::string LOG_LEVEL_WARNING =
-            "WARNING";
-        
-        const std::string LOG_LEVEL_CRITICAL =
-            "CRITICAL";
-        
-        const std::string LOG_LEVEL_EXCEPTION =
-            "EXCEPTION";
-        
-        const std::string LOG_LEVEL_HIGHLIGHTED_INFO =
-            "INFO";
-
         const std::string DEFAULT_HOST_ADDRESS =
             "1.1.1.1";
 
@@ -312,6 +289,67 @@ namespace QLogicaeCore
             "Error";
 
         const double EPSILON = 1e-12;
+
+        
+        const std::string TIME_ZONE_LOCAL_1 =
+            "local";
+
+        const std::string TIME_ZONE_UTC_1 =
+            "utc";
+
+        const std::string TIME_ZONE_LOCAL_2 =
+            "LOCAL";
+
+        const std::string TIME_ZONE_UTC_2 =
+            "UTC";
+
+        const std::string TIME_ZONE_LOCAL_3 =
+            "Local";
+
+        const std::string TIME_ZONE_UTC_3 =
+            "Utc";
+
+        const std::unordered_map<TimeZone, std::string> TIME_ZONE_ENUMS_1 =
+        {
+            { TimeZone::LOCAL, TIME_ZONE_LOCAL_1 },
+
+            { TimeZone::UTC, TIME_ZONE_UTC_1 }
+        };
+
+        const std::unordered_map<std::string, TimeZone> TIME_ZONE_STRINGS_1 =
+        {
+            { TIME_ZONE_LOCAL_1, TimeZone::LOCAL },
+
+            { TIME_ZONE_UTC_1, TimeZone::UTC }
+        };
+
+        const std::unordered_map<TimeZone, std::string> TIME_ZONE_ENUMS_2 =
+        {
+            { TimeZone::LOCAL, TIME_ZONE_LOCAL_2 },
+
+            { TimeZone::UTC, TIME_ZONE_UTC_2 }
+        };
+
+        const std::unordered_map<std::string, TimeZone> TIME_ZONE_STRINGS_2 =
+        {
+            { TIME_ZONE_LOCAL_2, TimeZone::LOCAL },
+
+            { TIME_ZONE_UTC_2, TimeZone::UTC }
+        };
+
+        const std::unordered_map<TimeZone, std::string> TIME_ZONE_ENUMS_3 =
+        {
+            { TimeZone::LOCAL, TIME_ZONE_LOCAL_3 },
+
+            { TimeZone::UTC, TIME_ZONE_UTC_3 }
+        };
+
+        const std::unordered_map<std::string, TimeZone> TIME_ZONE_STRINGS_3 =
+        {
+            { TIME_ZONE_LOCAL_3, TimeZone::LOCAL },
+
+            { TIME_ZONE_UTC_3, TimeZone::UTC }
+        };
 
         const std::string TIME_FORMAT_UNIX_1 = "unix";
 
@@ -613,6 +651,68 @@ namespace QLogicaeCore
             { TIME_FORMAT_DATE_DMY_SPACED_3, TimeFormat::DATE_DMY_SPACED },
 
             { TIME_FORMAT_DATE_VERBOSE_3, TimeFormat::DATE_VERBOSE }
+        };
+
+        const std::string LOG_LEVEL_ALL =
+            "INFO";
+
+        const std::string LOG_LEVEL_INFO =
+            "INFO";
+
+        const std::string LOG_LEVEL_DEBUG =
+            "DEBUG";
+
+        const std::string LOG_LEVEL_SUCCESS =
+            "SUCCESS";
+
+        const std::string LOG_LEVEL_WARNING =
+            "WARNING";
+
+        const std::string LOG_LEVEL_CRITICAL =
+            "CRITICAL";
+
+        const std::string LOG_LEVEL_EXCEPTION =
+            "EXCEPTION";
+
+        const std::string LOG_LEVEL_HIGHLIGHTED_INFO =
+            "INFO";
+
+        const std::unordered_map<LogLevel, std::string> LOG_LEVEL_ENUMS_2 =
+        {
+            { LogLevel::ALL, LOG_LEVEL_ALL },
+
+            { LogLevel::INFO, LOG_LEVEL_INFO },
+
+            { LogLevel::DEBUG, LOG_LEVEL_DEBUG },
+
+            { LogLevel::SUCCESS, LOG_LEVEL_SUCCESS },
+
+            { LogLevel::WARNING, LOG_LEVEL_WARNING },
+
+            { LogLevel::CRITICAL, LOG_LEVEL_CRITICAL },
+
+            { LogLevel::EXCEPTION, LOG_LEVEL_EXCEPTION },
+
+            { LogLevel::HIGHLIGHTED_INFO, LOG_LEVEL_HIGHLIGHTED_INFO }
+        };
+
+        const std::unordered_map<std::string, LogLevel> LOG_LEVEL_STRINGS_2 =
+        {
+            { LOG_LEVEL_ALL, LogLevel::ALL },
+
+            { LOG_LEVEL_INFO, LogLevel::INFO },
+
+            { LOG_LEVEL_DEBUG, LogLevel::DEBUG },
+
+            { LOG_LEVEL_SUCCESS, LogLevel::SUCCESS },
+
+            { LOG_LEVEL_WARNING, LogLevel::WARNING },
+
+            { LOG_LEVEL_CRITICAL, LogLevel::CRITICAL },
+
+            { LOG_LEVEL_EXCEPTION, LogLevel::EXCEPTION },
+
+            { LOG_LEVEL_HIGHLIGHTED_INFO, LogLevel::HIGHLIGHTED_INFO }
         };
 
         const std::string LOG_MEDIUM_ALL_1 = "all";
@@ -1145,6 +1245,15 @@ namespace QLogicaeCore
             Result<std::future<void>>& result,
             const std::function<void(Result<void>& result)>& callback =
                 [](Result<void>& result) {}
+        );
+
+        const char* get_format_string(
+            const TimeFormat& format
+        );
+
+        void get_format_string(
+            Result<const char*>& result,
+            const TimeFormat& format
         );
 
 		static Utilities& get_instance();

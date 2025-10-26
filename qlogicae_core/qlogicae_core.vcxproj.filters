@@ -516,6 +516,9 @@
     <ClInclude Include="log_configurations.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="raw.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="qlogicae_core.cpp">
@@ -756,6 +759,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="log_configurations.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="raw.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

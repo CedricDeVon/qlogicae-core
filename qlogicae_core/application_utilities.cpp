@@ -30,6 +30,8 @@ namespace QLogicaeCore
 
         CONFIGURATIONS_ENVIRONMENT_LANGUAGE_SELECTED = "";
 
+        CONFIGURATIONS_ENVIRONMENT_TIME_ZONE =
+            TimeZone::LOCAL;
 
         CONFIGURATIONS_ENVIRONMENT_LOG_NAME = "";
 
@@ -84,15 +86,25 @@ namespace QLogicaeCore
         {
             if (_is_enabled)
             {
+                LOGGER.handle_exception_async(
+                    "QLogicaeCore::ApplicationUtilities::setup()",
+                    "Can only be called once"
+                );
+
                 return result.set_to_bad_status_without_value(
-                    "Exception at ApplicationUtilities::setup() - Can only be called once"
+                    "QLogicaeCore::ApplicationUtilities::setup() - Can only be called once"
                 );
             }
 
             if (!QLOGICAE_APPLICATION_FILE_IO.get_is_enabled())
             {
+                LOGGER.handle_exception_async(
+                    "QLogicaeCore::ApplicationUtilities::setup()",
+                    "QLOGICAE_APPLICATION_FILE_IO is currently disabled"
+                );
+
                 return result.set_to_bad_status_without_value(
-                    "Exception at ApplicationUtilities::setup() - QLOGICAE_APPLICATION_FILE_IO is currently disabled"
+                    "QLogicaeCore::ApplicationUtilities::setup() - QLOGICAE_APPLICATION_FILE_IO is currently disabled"
                 );
             }
 
@@ -148,9 +160,11 @@ namespace QLogicaeCore
                     "architecture"
                 }
             );
+
             QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.set_file_path(
                 UTILITIES.FULL_APPLICATION_QLOGICAE_PUBLIC_APPLICATION_CONFIGURATIONS_ENVIRONMENT_FILE_PATH
             );
+
             CONFIGURATIONS_ENVIRONMENT_ID = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_string(
                 {
                     "id"
@@ -161,6 +175,14 @@ namespace QLogicaeCore
                 {
                     "name"
                 }
+            );
+
+            CONFIGURATIONS_ENVIRONMENT_TIME_ZONE = UTILITIES.TIME_ZONE_STRINGS_1.at(
+                QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_string(
+                    {
+                        "time", "zone"
+                    }
+                )
             );
 
             CONFIGURATIONS_ENVIRONMENT_LANGUAGE_SELECTED = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_string(
@@ -234,14 +256,14 @@ namespace QLogicaeCore
 
             std::vector<std::any> log_file_output_paths = {};
             // Post JSON Extraction        
-            
+
             CONFIGURATIONS_ENVIRONMENT_LOG_FILE_COLLECTIVIZATION_OUTPUT_FOLDER_PATH =
                 UTILITIES.FULL_ROAMING_APPDATA_FOLDER_PATH +
                 "\\" + UTILITIES.RELATIVE_QLOGICAE_FOLDER_PATH_3 +
                 "\\" + CONFIGURATIONS_APPLICATION_ID +
                 "\\" + CONFIGURATIONS_ENVIRONMENT_ID +
                 "\\" + UTILITIES.RELATIVE_QLOGICAE_LOGS_FOLDER_PATH_1;
-            
+
             CONFIGURATIONS_ENVIRONMENT_LOG_FILE_FRAGMENTATION_OUTPUT_FOLDER_PATH =
                 UTILITIES.FULL_ROAMING_APPDATA_FOLDER_PATH +
                 "\\" + UTILITIES.RELATIVE_QLOGICAE_FOLDER_PATH_3 +
@@ -279,23 +301,23 @@ namespace QLogicaeCore
                 "\\" + UTILITIES.RELATIVE_QLOGICAE_LOGS_FOLDER_PATH_1 +
                 "\\" + UTILITIES.RELATIVE_QLOGICAE_LOGS_FRAGMENTS_FOLDER_PATH_1
             );
-            
+
             if (CONFIGURATIONS_ENVIRONMENT_LOG_IS_ENABLED &&
                 CONFIGURATIONS_ENVIRONMENT_LOG_CONSOLE_IS_ENABLED &&
                 CONFIGURATIONS_ENVIRONMENT_LOG_FILE_IS_ENABLED
-            )
+                )
             {
                 CONFIGURATIONS_ENVIRONMENT_LOG_MEDIUM = LogMedium::ALL;
             }
             else if (CONFIGURATIONS_ENVIRONMENT_LOG_IS_ENABLED &&
                 CONFIGURATIONS_ENVIRONMENT_LOG_CONSOLE_IS_ENABLED
-            )
+                )
             {
                 CONFIGURATIONS_ENVIRONMENT_LOG_MEDIUM = LogMedium::CONSOLE;
             }
             else if (CONFIGURATIONS_ENVIRONMENT_LOG_IS_ENABLED &&
                 CONFIGURATIONS_ENVIRONMENT_LOG_FILE_IS_ENABLED
-            )
+                )
             {
                 CONFIGURATIONS_ENVIRONMENT_LOG_MEDIUM = LogMedium::FILE;
             }
@@ -310,8 +332,13 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::ApplicationUtilities::setup()",
+                exception.what()
+            );
+
             result.set_to_bad_status_without_value(
-                std::string("Exception at ApplicationUtilities::setup() - ") +
+                std::string("QLogicaeCore::ApplicationUtilities::setup() - ") +
                 exception.what()
             );
         }        

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "result.hpp"
+#include "logger.hpp"
 #include "utilities.hpp"
 #include "abstract_file_io.hpp"
 #include "vector_string_hash.hpp"

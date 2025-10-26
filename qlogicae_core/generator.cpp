@@ -9,8 +9,13 @@ namespace QLogicaeCore
         static const int status = sodium_init();
         if (status < 0)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Generator::Generator()",
+                "Sodium initialization failed"
+            );
+
             throw std::runtime_error(
-                "Exception at: Generator::Generator(): Sodium initialization failed"
+                "QLogicaeCore::Generator::Generator() - Sodium initialization failed"
             );
         }
     }
@@ -32,7 +37,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Generator::setup()",
+                exception.what()
+            );
 
+            return false;
         }
     }
 
@@ -120,7 +130,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Generator::random_hex()",
+                exception.what()
+            );
+
+            return "";
         }
     }
 
@@ -164,7 +179,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Generator::random_base64()",
+                exception.what()
+            );
+
+            return "";
         }
     }
 
@@ -206,7 +226,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Generator::random_rgb_hex()",
+                exception.what()
+            );
+
+            return "";
         }
     }
 
@@ -240,7 +265,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Generator::random_rgba_hex()",
+                exception.what()
+            );
+
+            return "";
         }
     }
 
@@ -274,7 +304,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Generator::random_uuid4()",
+                exception.what()
+            );
+
+            return "";
         }
     }
 
@@ -306,7 +341,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Generator::random_salt()",
+                exception.what()
+            );
+
+            return {};
         }
     }
 
@@ -339,7 +379,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Generator::random_bool()",
+                exception.what()
+            );
+
+            return false;
         }
     }
 
@@ -381,7 +426,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Generator::random_string_vector()",
+                exception.what()
+            );
+
+            return {};
         }
     }
 
@@ -422,7 +472,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Generator::random_string()",
+                exception.what()
+            );
+
+            return "";
         }
     }
 
@@ -474,7 +529,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Generator::random_int()",
+                exception.what()
+            );
+
+            return 0;
         }
     }
 
@@ -516,7 +576,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Generator::random_double()",
+                exception.what()
+            );
+
+            return 0;
         }
     }
 
@@ -556,7 +621,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Generator::random_bytes()",
+                exception.what()
+            );
         }
     }
 

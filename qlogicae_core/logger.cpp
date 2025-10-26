@@ -6,42 +6,43 @@ namespace QLogicaeCore
 {	
 	Logger::Logger()
 	{
-		_name = "";
-		_log_medium = LogMedium::CONSOLE;
-		_log_format = TimeFormat::FULL_TIMESTAMP;
-		_log_file_fragmentation_format = TimeFormat::DATE_DMY_SLASHED;
-		_is_enabled = true;
-		_is_simplified = false;
-		_is_log_file_fragmentation_enabled = false;
-		_log_file_fragmentation_output_folder_path = "";
-		_log_file_collectivization_output_file_name = "";
-		_is_log_file_collectivization_enabled = false;
-		_log_file_collectivization_output_folder_path = "";
-		_output_paths = {};
+		_name = DEFAULT_LOGGER_CONFIGURATIONS.name;
+		_log_medium = DEFAULT_LOGGER_CONFIGURATIONS.log_medium;
+		_log_time_zone = DEFAULT_LOGGER_CONFIGURATIONS.log_time_zone;
+		_log_format = DEFAULT_LOGGER_CONFIGURATIONS.log_format;
+		_log_file_fragmentation_format = DEFAULT_LOGGER_CONFIGURATIONS.log_file_fragmentation_format;
+		_is_enabled = DEFAULT_LOGGER_CONFIGURATIONS.is_enabled;
+		_is_simplified = DEFAULT_LOGGER_CONFIGURATIONS.is_simplified;
+		_is_log_file_fragmentation_enabled = DEFAULT_LOGGER_CONFIGURATIONS.is_log_file_fragmentation_enabled;
+		_log_file_fragmentation_output_folder_path = DEFAULT_LOGGER_CONFIGURATIONS.log_file_fragmentation_output_folder_path;
+		_is_log_file_collectivization_enabled = DEFAULT_LOGGER_CONFIGURATIONS.is_log_file_collectivization_enabled;
+		_log_file_collectivization_output_file_name = DEFAULT_LOGGER_CONFIGURATIONS.log_file_collectivization_output_file_name;
+		_log_file_collectivization_output_folder_path = DEFAULT_LOGGER_CONFIGURATIONS.log_file_collectivization_output_folder_path;
+		_output_paths = DEFAULT_LOGGER_CONFIGURATIONS.output_paths;
 	}
-	
+
 	Logger::~Logger()
 	{
-		
+
 	}
 
 	Logger::Logger(
 		const bool& is_simplified
 	)
 	{
-		_name = "";
-		_log_medium = LogMedium::CONSOLE;
-		_log_format = TimeFormat::FULL_TIMESTAMP;
-		_log_file_fragmentation_format = TimeFormat::DATE_DMY_SLASHED;
-		_is_enabled = true;
+		_name = DEFAULT_LOGGER_CONFIGURATIONS.name;
+		_log_medium = DEFAULT_LOGGER_CONFIGURATIONS.log_medium;
+		_log_time_zone = DEFAULT_LOGGER_CONFIGURATIONS.log_time_zone;
+		_log_format = DEFAULT_LOGGER_CONFIGURATIONS.log_format;
+		_log_file_fragmentation_format = DEFAULT_LOGGER_CONFIGURATIONS.log_file_fragmentation_format;
+		_is_enabled = DEFAULT_LOGGER_CONFIGURATIONS.is_enabled;
 		_is_simplified = is_simplified;
-		_is_log_file_fragmentation_enabled = false;
-		_log_file_fragmentation_output_folder_path = "";
-		_is_log_file_collectivization_enabled = false;
-		_log_file_collectivization_output_file_name = "";
-		_log_file_collectivization_output_folder_path = "";
-		_log_file_collectivization_output_file_path = "";
-		_output_paths = {};
+		_is_log_file_fragmentation_enabled = DEFAULT_LOGGER_CONFIGURATIONS.is_log_file_fragmentation_enabled;
+		_log_file_fragmentation_output_folder_path = DEFAULT_LOGGER_CONFIGURATIONS.log_file_fragmentation_output_folder_path;
+		_is_log_file_collectivization_enabled = DEFAULT_LOGGER_CONFIGURATIONS.is_log_file_collectivization_enabled;
+		_log_file_collectivization_output_file_name = DEFAULT_LOGGER_CONFIGURATIONS.log_file_collectivization_output_file_name;
+		_log_file_collectivization_output_folder_path = DEFAULT_LOGGER_CONFIGURATIONS.log_file_collectivization_output_folder_path;
+		_output_paths = DEFAULT_LOGGER_CONFIGURATIONS.output_paths;
 	}
 
 	Logger::Logger(
@@ -53,16 +54,16 @@ namespace QLogicaeCore
 	{
 		_name = name;
 		_log_medium = medium;
-		_log_format = TimeFormat::FULL_TIMESTAMP;
-		_log_file_fragmentation_format = TimeFormat::DATE_DMY_SLASHED;
-		_is_enabled = true;
+		_log_time_zone = DEFAULT_LOGGER_CONFIGURATIONS.log_time_zone;
+		_log_format = DEFAULT_LOGGER_CONFIGURATIONS.log_format;
+		_log_file_fragmentation_format = DEFAULT_LOGGER_CONFIGURATIONS.log_file_fragmentation_format;
+		_is_enabled = DEFAULT_LOGGER_CONFIGURATIONS.is_enabled;
 		_is_simplified = is_simplified;
-		_is_log_file_fragmentation_enabled = false;
-		_log_file_fragmentation_output_folder_path = "";
-		_is_log_file_collectivization_enabled = false;
-		_log_file_collectivization_output_file_name = "";
-		_log_file_collectivization_output_folder_path = "";
-		_log_file_collectivization_output_file_path = "";
+		_is_log_file_fragmentation_enabled = DEFAULT_LOGGER_CONFIGURATIONS.is_log_file_fragmentation_enabled;
+		_log_file_fragmentation_output_folder_path = DEFAULT_LOGGER_CONFIGURATIONS.log_file_fragmentation_output_folder_path;
+		_is_log_file_collectivization_enabled = DEFAULT_LOGGER_CONFIGURATIONS.is_log_file_collectivization_enabled;
+		_log_file_collectivization_output_file_name = DEFAULT_LOGGER_CONFIGURATIONS.log_file_collectivization_output_file_name;
+		_log_file_collectivization_output_folder_path = DEFAULT_LOGGER_CONFIGURATIONS.log_file_collectivization_output_folder_path;
 		_output_paths = output_paths;
 	}
 
@@ -72,6 +73,7 @@ namespace QLogicaeCore
 	{
 		_name = configurations.name;
 		_log_medium = configurations.log_medium;
+		_log_time_zone = configurations.log_time_zone;
 		_log_format = configurations.log_format;
 		_log_file_fragmentation_format = configurations.log_file_fragmentation_format;
 		_is_enabled = configurations.is_enabled;
@@ -102,12 +104,8 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
-			Result<std::future<void>> result;
-
-			force_log_to_console_and_file_async(
-				result,
-				"Logger::setup()",
-				exception
+			throw std::runtime_error(
+				std::string("QLogicaeCore::Logger::setup()") + exception.what()
 			);
 
 			return false;
@@ -118,18 +116,19 @@ namespace QLogicaeCore
 		Result<void>& result
 	)
 	{
-		_name = "";
-		_log_medium = LogMedium::CONSOLE;
-		_log_format = TimeFormat::FULL_TIMESTAMP;
-		_log_file_fragmentation_format = TimeFormat::DATE_DMY_SLASHED;
-		_is_enabled = true;
-		_is_simplified = false;
-		_is_log_file_fragmentation_enabled = false;
-		_log_file_fragmentation_output_folder_path = "";
-		_log_file_collectivization_output_file_name = "";
-		_is_log_file_collectivization_enabled = false;
-		_log_file_collectivization_output_folder_path = "";
-		_output_paths = {};
+		_name = DEFAULT_LOGGER_CONFIGURATIONS.name;
+		_log_medium = DEFAULT_LOGGER_CONFIGURATIONS.log_medium;
+		_log_time_zone = DEFAULT_LOGGER_CONFIGURATIONS.log_time_zone;
+		_log_format = DEFAULT_LOGGER_CONFIGURATIONS.log_format;
+		_log_file_fragmentation_format = DEFAULT_LOGGER_CONFIGURATIONS.log_file_fragmentation_format;
+		_is_enabled = DEFAULT_LOGGER_CONFIGURATIONS.is_enabled;
+		_is_simplified = DEFAULT_LOGGER_CONFIGURATIONS.is_simplified;
+		_is_log_file_fragmentation_enabled = DEFAULT_LOGGER_CONFIGURATIONS.is_log_file_fragmentation_enabled;
+		_log_file_fragmentation_output_folder_path = DEFAULT_LOGGER_CONFIGURATIONS.log_file_fragmentation_output_folder_path;
+		_is_log_file_collectivization_enabled = DEFAULT_LOGGER_CONFIGURATIONS.is_log_file_collectivization_enabled;
+		_log_file_collectivization_output_file_name = DEFAULT_LOGGER_CONFIGURATIONS.log_file_collectivization_output_file_name;
+		_log_file_collectivization_output_folder_path = DEFAULT_LOGGER_CONFIGURATIONS.log_file_collectivization_output_folder_path;
+		_output_paths = DEFAULT_LOGGER_CONFIGURATIONS.output_paths;
 
 		result.set_to_good_status_without_value();
 	}
@@ -151,9 +150,8 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
-			force_log_to_console_and_file_async(
-				"Logger::setup()",
-				exception
+			throw std::runtime_error(
+				std::string("QLogicaeCore::Logger::setup()") + exception.what()
 			);
 
 			return false;
@@ -165,19 +163,19 @@ namespace QLogicaeCore
 		const bool& is_simplified
 	)
 	{
-		_name = "";
-		_log_medium = LogMedium::CONSOLE;
-		_log_format = TimeFormat::FULL_TIMESTAMP;
-		_log_file_fragmentation_format = TimeFormat::DATE_DMY_SLASHED;
-		_is_enabled = true;
+		_name = DEFAULT_LOGGER_CONFIGURATIONS.name;
+		_log_medium = DEFAULT_LOGGER_CONFIGURATIONS.log_medium;
+		_log_time_zone = DEFAULT_LOGGER_CONFIGURATIONS.log_time_zone;
+		_log_format = DEFAULT_LOGGER_CONFIGURATIONS.log_format;
+		_log_file_fragmentation_format = DEFAULT_LOGGER_CONFIGURATIONS.log_file_fragmentation_format;
+		_is_enabled = DEFAULT_LOGGER_CONFIGURATIONS.is_enabled;
 		_is_simplified = is_simplified;
-		_is_log_file_fragmentation_enabled = false;
-		_log_file_fragmentation_output_folder_path = "";
-		_is_log_file_collectivization_enabled = false;
-		_log_file_collectivization_output_file_name = "";
-		_log_file_collectivization_output_folder_path = "";
-		_log_file_collectivization_output_file_path = "";
-		_output_paths = {};
+		_is_log_file_fragmentation_enabled = DEFAULT_LOGGER_CONFIGURATIONS.is_log_file_fragmentation_enabled;
+		_log_file_fragmentation_output_folder_path = DEFAULT_LOGGER_CONFIGURATIONS.log_file_fragmentation_output_folder_path;
+		_is_log_file_collectivization_enabled = DEFAULT_LOGGER_CONFIGURATIONS.is_log_file_collectivization_enabled;
+		_log_file_collectivization_output_file_name = DEFAULT_LOGGER_CONFIGURATIONS.log_file_collectivization_output_file_name;
+		_log_file_collectivization_output_folder_path = DEFAULT_LOGGER_CONFIGURATIONS.log_file_collectivization_output_folder_path;
+		_output_paths = DEFAULT_LOGGER_CONFIGURATIONS.output_paths;
 
 		result.set_to_good_status_without_value();
 	}
@@ -205,9 +203,8 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
-			force_log_to_console_and_file_async(
-				"Logger::setup()",
-				exception
+			throw std::runtime_error(
+				std::string("QLogicaeCore::Logger::setup()") + exception.what()
 			);
 
 			return false;
@@ -224,16 +221,16 @@ namespace QLogicaeCore
 	{
 		_name = name;
 		_log_medium = medium;
-		_log_format = TimeFormat::FULL_TIMESTAMP;
-		_log_file_fragmentation_format = TimeFormat::DATE_DMY_SLASHED;
-		_is_enabled = true;
+		_log_time_zone = DEFAULT_LOGGER_CONFIGURATIONS.log_time_zone;
+		_log_format = DEFAULT_LOGGER_CONFIGURATIONS.log_format;
+		_log_file_fragmentation_format = DEFAULT_LOGGER_CONFIGURATIONS.log_file_fragmentation_format;
+		_is_enabled = DEFAULT_LOGGER_CONFIGURATIONS.is_enabled;
 		_is_simplified = is_simplified;
-		_is_log_file_fragmentation_enabled = false;
-		_log_file_fragmentation_output_folder_path = "";
-		_is_log_file_collectivization_enabled = false;
-		_log_file_collectivization_output_file_name = "";
-		_log_file_collectivization_output_folder_path = "";
-		_log_file_collectivization_output_file_path = "";
+		_is_log_file_fragmentation_enabled = DEFAULT_LOGGER_CONFIGURATIONS.is_log_file_fragmentation_enabled;
+		_log_file_fragmentation_output_folder_path = DEFAULT_LOGGER_CONFIGURATIONS.log_file_fragmentation_output_folder_path;
+		_is_log_file_collectivization_enabled = DEFAULT_LOGGER_CONFIGURATIONS.is_log_file_collectivization_enabled;
+		_log_file_collectivization_output_file_name = DEFAULT_LOGGER_CONFIGURATIONS.log_file_collectivization_output_file_name;
+		_log_file_collectivization_output_folder_path = DEFAULT_LOGGER_CONFIGURATIONS.log_file_collectivization_output_folder_path;
 		_output_paths = output_paths;
 
 		result.set_to_good_status_without_value();
@@ -256,9 +253,8 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
-			force_log_to_console_and_file_async(
-				"Logger::setup()",
-				exception
+			throw std::runtime_error(
+				std::string("QLogicaeCore::Logger::setup()") + exception.what()
 			);
 
 			return false;
@@ -272,6 +268,7 @@ namespace QLogicaeCore
 	{
 		_name = configurations.name;
 		_log_medium = configurations.log_medium;
+		_log_time_zone = configurations.log_time_zone;
 		_log_format = configurations.log_format;
 		_log_file_fragmentation_format = configurations.log_file_fragmentation_format;
 		_is_enabled = configurations.is_enabled;
@@ -777,7 +774,7 @@ namespace QLogicaeCore
 		);
 	}
 
-	void Logger::log(
+	void Logger::log_timestamp(
 		const std::string& text,
 		const LogLevel& log_level,
 		const bool& is_enabled,
@@ -790,7 +787,7 @@ namespace QLogicaeCore
 
 			Result<void> result;
 			
-			log(
+			log_timestamp(
 				result,
 				text,
 				log_level,
@@ -800,21 +797,21 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
-			force_log_to_console_and_file_async(
-				"Logger::log()",
-				exception
+			throw std::runtime_error(
+				std::string("QLogicaeCore::Logger::log_timestamp()") + exception.what()
 			);
+
 		}
 	}
 
-	void Logger::log(
+	void Logger::log_timestamp(
 		Result<void>& result,
 		const std::string& text,
 		const LogLevel& log_level,
 		const bool& is_enabled,
 		const bool& is_simplified
 	)
-	{		
+	{	
 		if ((!is_enabled || !_is_enabled) ||
 			_log_medium == LogMedium::NONE
 		)
@@ -836,11 +833,10 @@ namespace QLogicaeCore
 		}
 		else
 		{
-			TRANSFORMER.to_log_format(
+			_to_log_format(
 				string_result,
 				text,
-				log_level,
-				_log_format
+				log_level
 			);
 		}
 
@@ -848,28 +844,28 @@ namespace QLogicaeCore
 		{
 			case LogMedium::ALL:
 			{
-				CLI_IO.print_async(
+				log_to_console_async(
 					future_void_result_1,
 					string_result.get_value()
 				);
 
 				if (!_output_paths.empty())
 				{
-					_log_to_output_files_async(
+					log_to_output_files_async(
 						future_void_result_2,
 						string_result.get_value()
 					);
 				}
 				if (_is_log_file_fragmentation_enabled)
 				{
-					_log_to_fragmentation_file_async(
+					log_to_fragmentation_file_async(
 						future_void_result_3,
 						string_result.get_value()
 					);
 				}
 				if (_is_log_file_collectivization_enabled)
 				{
-					_log_to_collectivization_file_async(
+					log_to_collectivization_file_async(
 						future_void_result_4,
 						string_result.get_value()
 					);
@@ -879,7 +875,7 @@ namespace QLogicaeCore
 			}
 			case LogMedium::CONSOLE:
 			{
-				CLI_IO.print_async(
+				log_to_console_async(
 					future_void_result_1,
 					string_result.get_value()
 				);
@@ -890,21 +886,21 @@ namespace QLogicaeCore
 			{
 				if (!_output_paths.empty())
 				{
-					_log_to_output_files_async(
+					log_to_output_files_async(
 						future_void_result_2,
 						string_result.get_value()
 					);
 				}
 				if (_is_log_file_fragmentation_enabled)
 				{
-					_log_to_fragmentation_file_async(
+					log_to_fragmentation_file_async(
 						future_void_result_3,
 						string_result.get_value()
 					);
 				}
 				if (_is_log_file_collectivization_enabled)
 				{
-					_log_to_collectivization_file_async(
+					log_to_collectivization_file_async(
 						future_void_result_4,
 						string_result.get_value()
 					);
@@ -916,18 +912,18 @@ namespace QLogicaeCore
 		result.set_to_good_status_without_value();
 	}
 
-	void Logger::log(
+	void Logger::log_timestamp(
 		const std::string& text,
 		const LogConfigurations& configurations
 	)
 	{
 		try
-		{			
+		{
 			std::scoped_lock lock(_mutex);
 
 			Result<void> result;
 
-			log(
+			log_timestamp(
 				result,
 				text,
 				configurations
@@ -935,19 +931,18 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
-			force_log_to_console_and_file(
-				"Logger::log()",
-				exception
+			throw std::runtime_error(
+				std::string("QLogicaeCore::Logger::log_timestamp()") + exception.what()
 			);
 		}
 	}
 
-	void Logger::log(
+	void Logger::log_timestamp(
 		Result<void>& result,
 		const std::string& text,
 		const LogConfigurations& configurations
 	)
-	{		
+	{
 		LogLevel log_level = configurations.log_level;
 		bool is_enabled = configurations.is_enabled;
 		bool is_simplified = configurations.is_simplified;
@@ -973,50 +968,49 @@ namespace QLogicaeCore
 		}
 		else
 		{
-			TRANSFORMER.to_log_format(
+			_to_log_format(
 				string_result,
 				text,
-				log_level,
-				_log_format
+				log_level
 			);
 		}
 
 		switch (_log_medium)
 		{
-			case LogMedium::ALL:
+		case LogMedium::ALL:
+		{
+			log_to_console_async(
+				future_void_result_1,
+				string_result.get_value()
+			);
+
+			if (!_output_paths.empty())
 			{
-				CLI_IO.print_async(
-					future_void_result_1,
+				log_to_output_files_async(
+					future_void_result_2,
 					string_result.get_value()
 				);
-
-				if (!_output_paths.empty())
-				{
-					_log_to_output_files_async(
-						future_void_result_2,
-						string_result.get_value()
-					);
-				}
-				if (_is_log_file_fragmentation_enabled)
-				{
-					_log_to_fragmentation_file_async(
-						future_void_result_3,
-						string_result.get_value()
-					);
-				}
-				if (_is_log_file_collectivization_enabled)
-				{
-					_log_to_collectivization_file_async(
-						future_void_result_4,
-						string_result.get_value()
-					);
-				}
-
-				break;
 			}
-			case LogMedium::CONSOLE:
+			if (_is_log_file_fragmentation_enabled)
 			{
-				CLI_IO.print_async(
+				log_to_fragmentation_file_async(
+					future_void_result_3,
+					string_result.get_value()
+				);
+			}
+			if (_is_log_file_collectivization_enabled)
+			{
+				log_to_collectivization_file_async(
+					future_void_result_4,
+					string_result.get_value()
+				);
+			}
+
+			break;
+		}
+		case LogMedium::CONSOLE:
+		{
+			log_to_console_async(
 					future_void_result_1,
 					string_result.get_value()
 				);
@@ -1027,21 +1021,21 @@ namespace QLogicaeCore
 			{
 				if (!_output_paths.empty())
 				{
-					_log_to_output_files_async(
+					log_to_output_files_async(
 						future_void_result_2,
 						string_result.get_value()
 					);
 				}
 				if (_is_log_file_fragmentation_enabled)
 				{
-					_log_to_fragmentation_file_async(
+					log_to_fragmentation_file_async(
 						future_void_result_3,
 						string_result.get_value()
 					);
 				}
 				if (_is_log_file_collectivization_enabled)
 				{
-					_log_to_collectivization_file_async(
+					log_to_collectivization_file_async(
 						future_void_result_4,
 						string_result.get_value()
 					);
@@ -1053,7 +1047,7 @@ namespace QLogicaeCore
 		result.set_to_good_status_without_value();
 	}
 
-	std::future<void> Logger::log_async(
+	std::future<void> Logger::log_timestamp_async(
 		const std::string& text,
 		const LogLevel& log_level,
 		const bool& is_enabled,
@@ -1068,7 +1062,7 @@ namespace QLogicaeCore
 			[this, text, log_level, is_enabled, is_simplified,				
 				promise = std::move(promise)]() mutable
 			{
-				log(
+				log_timestamp(
 					text,
 					log_level,
 					is_enabled,
@@ -1082,7 +1076,7 @@ namespace QLogicaeCore
 		return future;
 	}
 
-	void Logger::log_async(
+	void Logger::log_timestamp_async(
 		Result<std::future<void>>& result,
 		const std::string& text,
 		const LogLevel& log_level,
@@ -1100,7 +1094,7 @@ namespace QLogicaeCore
 			{
 				Result<void> result;
 
-				log(
+				log_timestamp(
 					result,
 					text,
 					log_level,
@@ -1117,7 +1111,7 @@ namespace QLogicaeCore
 		);
 	}
 
-	std::future<void> Logger::log_async(
+	std::future<void> Logger::log_timestamp_async(
 		const std::string& text,
 		const LogConfigurations& configurations
 	)
@@ -1130,7 +1124,7 @@ namespace QLogicaeCore
 			[this, text, configurations,
 				promise = std::move(promise)]() mutable
 			{
-				log(
+				log_timestamp(
 					text,
 					configurations
 				);
@@ -1142,7 +1136,7 @@ namespace QLogicaeCore
 		return future;
 	}
 
-	void Logger::log_async(
+	void Logger::log_timestamp_async(
 		Result<std::future<void>>& result,
 		const std::string& text,
 		const LogConfigurations& configurations
@@ -1158,7 +1152,11 @@ namespace QLogicaeCore
 			{
 				Result<void> result;
 
-				setup(result);
+				log_timestamp(
+					result,
+					text,
+					configurations
+				);
 
 				promise.set_value();
 			}
@@ -1169,7 +1167,7 @@ namespace QLogicaeCore
 		);
 	}
 
-	void Logger::log_async(
+	void Logger::log_timestamp_async(
 		const std::function<void()>& callback,
 		const std::string& text,
 		const LogConfigurations& configurations
@@ -1179,7 +1177,7 @@ namespace QLogicaeCore
 			UTILITIES.BOOST_ASIO_POOL,
 			[this, callback, text, configurations]() mutable
 			{
-				log(
+				log_timestamp(
 					text,
 					configurations
 				);
@@ -1189,7 +1187,7 @@ namespace QLogicaeCore
 		);
 	}
 
-	void Logger::log_async(
+	void Logger::log_timestamp_async(
 		const std::function<void(Result<void>& result)>& callback,
 		const std::string& text,
 		const LogConfigurations& configurations
@@ -1201,7 +1199,7 @@ namespace QLogicaeCore
 			{
 				Result<void> result;
 
-				log(
+				log_timestamp(
 					result,
 					text,
 					configurations
@@ -1214,7 +1212,7 @@ namespace QLogicaeCore
 		);
 	}
 
-	void Logger::log_async(
+	void Logger::log_timestamp_async(
 		const std::function<void()>& callback,
 		const std::string& text,
 		const LogLevel& log_level,
@@ -1226,7 +1224,7 @@ namespace QLogicaeCore
 			UTILITIES.BOOST_ASIO_POOL,
 			[this, callback, text, log_level, is_enabled, is_simplified]() mutable
 			{
-				log(
+				log_timestamp(
 					text,
 					log_level,
 					is_enabled,
@@ -1238,7 +1236,7 @@ namespace QLogicaeCore
 		);
 	}
 
-	void Logger::log_async(
+	void Logger::log_timestamp_async(
 		const std::function<void(Result<void>& result)>& callback,
 		const std::string& text,
 		const LogLevel& log_level,
@@ -1252,7 +1250,7 @@ namespace QLogicaeCore
 			{
 				Result<void> result;
 
-				log(
+				log_timestamp(
 					result,
 					text,
 					log_level,
@@ -1267,31 +1265,31 @@ namespace QLogicaeCore
 		);
 	}
 
-	void Logger::log_info(
+	void Logger::log_timestamp_info(
 		const std::string& text,
 		const InfoLogConfigurations& configurations
 	)
 	{
-		log(
+		log_timestamp(
 			text,
 			configurations
 		);
 	}
 
-	void Logger::log_info(
+	void Logger::log_timestamp_info(
 		Result<void>& result,
 		const std::string& text,
 		const InfoLogConfigurations& configurations
 	)
 	{
-		log(
+		log_timestamp(
 			result,
 			text,
 			configurations
 		);
 	}
 
-	std::future<void> Logger::log_info_async(
+	std::future<void> Logger::log_timestamp_info_async(
 		const std::string& text,
 		const InfoLogConfigurations& configurations
 	)
@@ -1302,9 +1300,9 @@ namespace QLogicaeCore
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
 			[this, text, configurations,
-				promise = std::move(promise)]() mutable
+			promise = std::move(promise)]() mutable
 			{
-				log_info(
+				log_timestamp_info(
 					text,
 					configurations
 				);
@@ -1316,7 +1314,7 @@ namespace QLogicaeCore
 		return future;
 	}
 
-	void Logger::log_info_async(
+	void Logger::log_timestamp_info_async(
 		Result<std::future<void>>& result,
 		const std::string& text,
 		const InfoLogConfigurations& configurations
@@ -1328,11 +1326,11 @@ namespace QLogicaeCore
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
 			[this, text, configurations,
-				promise = std::move(promise)]() mutable
+			promise = std::move(promise)]() mutable
 			{
 				Result<void> result;
 
-				log_info(
+				log_timestamp_info(
 					result,
 					text,
 					configurations
@@ -1347,7 +1345,7 @@ namespace QLogicaeCore
 		);
 	}
 
-	void Logger::log_info_async(
+	void Logger::log_timestamp_info_async(
 		const std::function<void()>& callback,
 		const std::string& text,
 		const InfoLogConfigurations& configurations
@@ -1357,7 +1355,7 @@ namespace QLogicaeCore
 			UTILITIES.BOOST_ASIO_POOL,
 			[this, callback, text, configurations]() mutable
 			{
-				log_info(
+				log_timestamp_info(
 					text,
 					configurations
 				);
@@ -1367,7 +1365,7 @@ namespace QLogicaeCore
 		);
 	}
 
-	void Logger::log_info_async(
+	void Logger::log_timestamp_info_async(
 		const std::function<void(Result<void>& result)>& callback,
 		const std::string& text,
 		const InfoLogConfigurations& configurations
@@ -1379,7 +1377,7 @@ namespace QLogicaeCore
 			{
 				Result<void> result;
 
-				log_info(
+				log_timestamp_info(
 					result,
 					text,
 					configurations
@@ -1392,31 +1390,31 @@ namespace QLogicaeCore
 		);
 	}
 
-	void Logger::log_success(
+	void Logger::log_timestamp_success(
 		const std::string& text,
 		const SuccessLogConfigurations& configurations
 	)
 	{
-		log(
+		log_timestamp(
 			text,
 			configurations
 		);
 	}
 
-	void Logger::log_success(
+	void Logger::log_timestamp_success(
 		Result<void>& result,
 		const std::string& text,
 		const SuccessLogConfigurations& configurations
 	)
 	{
-		log(
+		log_timestamp(
 			result,
 			text,
 			configurations
 		);
 	}
 
-	std::future<void> Logger::log_success_async(
+	std::future<void> Logger::log_timestamp_success_async(
 		const std::string& text,
 		const SuccessLogConfigurations& configurations
 	)
@@ -1427,9 +1425,9 @@ namespace QLogicaeCore
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
 			[this, text, configurations,
-				promise = std::move(promise)]() mutable
+			promise = std::move(promise)]() mutable
 			{
-				log_success(
+				log_timestamp_success(
 					text,
 					configurations
 				);
@@ -1441,7 +1439,7 @@ namespace QLogicaeCore
 		return future;
 	}
 
-	void Logger::log_success_async(
+	void Logger::log_timestamp_success_async(
 		Result<std::future<void>>& result,
 		const std::string& text,
 		const SuccessLogConfigurations& configurations
@@ -1453,11 +1451,11 @@ namespace QLogicaeCore
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
 			[this, text, configurations,
-				promise = std::move(promise)]() mutable
+			promise = std::move(promise)]() mutable
 			{
 				Result<void> result;
 
-				log_success(
+				log_timestamp_success(
 					result,
 					text,
 					configurations
@@ -1472,7 +1470,7 @@ namespace QLogicaeCore
 		);
 	}
 
-	void Logger::log_success_async(
+	void Logger::log_timestamp_success_async(
 		const std::function<void()>& callback,
 		const std::string& text,
 		const SuccessLogConfigurations& configurations
@@ -1482,7 +1480,7 @@ namespace QLogicaeCore
 			UTILITIES.BOOST_ASIO_POOL,
 			[this, callback, text, configurations]() mutable
 			{
-				log_success(
+				log_timestamp_success(
 					text,
 					configurations
 				);
@@ -1492,7 +1490,7 @@ namespace QLogicaeCore
 		);
 	}
 
-	void Logger::log_success_async(
+	void Logger::log_timestamp_success_async(
 		const std::function<void(Result<void>& result)>& callback,
 		const std::string& text,
 		const SuccessLogConfigurations& configurations
@@ -1504,7 +1502,7 @@ namespace QLogicaeCore
 			{
 				Result<void> result;
 
-				log_success(
+				log_timestamp_success(
 					result,
 					text,
 					configurations
@@ -1517,31 +1515,31 @@ namespace QLogicaeCore
 		);
 	}
 
-	void Logger::log_warning(
+	void Logger::log_timestamp_warning(
 		const std::string& text,
 		const WarningLogConfigurations& configurations
 	)
 	{
-		log(
+		log_timestamp(
 			text,
 			configurations
 		);
 	}
 
-	void Logger::log_warning(
+	void Logger::log_timestamp_warning(
 		Result<void>& result,
 		const std::string& text,
 		const WarningLogConfigurations& configurations
 	)
 	{
-		log(
+		log_timestamp(
 			result,
 			text,
 			configurations
 		);
 	}
 
-	std::future<void> Logger::log_warning_async(
+	std::future<void> Logger::log_timestamp_warning_async(
 		const std::string& text,
 		const WarningLogConfigurations& configurations
 	)
@@ -1552,9 +1550,9 @@ namespace QLogicaeCore
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
 			[this, text, configurations,
-				promise = std::move(promise)]() mutable
+			promise = std::move(promise)]() mutable
 			{
-				log_warning(
+				log_timestamp_warning(
 					text,
 					configurations
 				);
@@ -1566,7 +1564,7 @@ namespace QLogicaeCore
 		return future;
 	}
 
-	void Logger::log_warning_async(
+	void Logger::log_timestamp_warning_async(
 		Result<std::future<void>>& result,
 		const std::string& text,
 		const WarningLogConfigurations& configurations
@@ -1578,11 +1576,11 @@ namespace QLogicaeCore
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
 			[this, text, configurations,
-				promise = std::move(promise)]() mutable
+			promise = std::move(promise)]() mutable
 			{
 				Result<void> result;
 
-				log_warning(
+				log_timestamp_warning(
 					result,
 					text,
 					configurations
@@ -1597,7 +1595,7 @@ namespace QLogicaeCore
 		);
 	}
 
-	void Logger::log_warning_async(
+	void Logger::log_timestamp_warning_async(
 		const std::function<void()>& callback,
 		const std::string& text,
 		const WarningLogConfigurations& configurations
@@ -1607,7 +1605,7 @@ namespace QLogicaeCore
 			UTILITIES.BOOST_ASIO_POOL,
 			[this, callback, text, configurations]() mutable
 			{
-				log_warning(
+				log_timestamp_warning(
 					text,
 					configurations
 				);
@@ -1617,7 +1615,7 @@ namespace QLogicaeCore
 		);
 	}
 
-	void Logger::log_warning_async(
+	void Logger::log_timestamp_warning_async(
 		const std::function<void(Result<void>& result)>& callback,
 		const std::string& text,
 		const WarningLogConfigurations& configurations
@@ -1629,7 +1627,7 @@ namespace QLogicaeCore
 			{
 				Result<void> result;
 
-				log_warning(
+				log_timestamp_warning(
 					result,
 					text,
 					configurations
@@ -1642,31 +1640,31 @@ namespace QLogicaeCore
 		);
 	}
 
-	void Logger::log_exception(
+	void Logger::log_timestamp_exception(
 		const std::string& text,
 		const ExceptionLogConfigurations& configurations
 	)
 	{
-		log(
+		log_timestamp(
 			text,
 			configurations
 		);
 	}
 
-	void Logger::log_exception(
+	void Logger::log_timestamp_exception(
 		Result<void>& result,
 		const std::string& text,
 		const ExceptionLogConfigurations& configurations
 	)
 	{
-		log(
+		log_timestamp(
 			result,
 			text,
 			configurations
 		);
 	}
 
-	std::future<void> Logger::log_exception_async(
+	std::future<void> Logger::log_timestamp_exception_async(
 		const std::string& text,
 		const ExceptionLogConfigurations& configurations
 	)
@@ -1677,9 +1675,9 @@ namespace QLogicaeCore
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
 			[this, text, configurations,
-				promise = std::move(promise)]() mutable
+			promise = std::move(promise)]() mutable
 			{
-				log_exception(
+				log_timestamp_exception(
 					text,
 					configurations
 				);
@@ -1691,7 +1689,7 @@ namespace QLogicaeCore
 		return future;
 	}
 
-	void Logger::log_exception_async(
+	void Logger::log_timestamp_exception_async(
 		Result<std::future<void>>& result,
 		const std::string& text,
 		const ExceptionLogConfigurations& configurations
@@ -1703,11 +1701,11 @@ namespace QLogicaeCore
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
 			[this, text, configurations,
-				promise = std::move(promise)]() mutable
+			promise = std::move(promise)]() mutable
 			{
 				Result<void> result;
 
-				log_exception(
+				log_timestamp_exception(
 					result,
 					text,
 					configurations
@@ -1722,7 +1720,7 @@ namespace QLogicaeCore
 		);
 	}
 
-	void Logger::log_exception_async(
+	void Logger::log_timestamp_exception_async(
 		const std::function<void()>& callback,
 		const std::string& text,
 		const ExceptionLogConfigurations& configurations
@@ -1732,7 +1730,7 @@ namespace QLogicaeCore
 			UTILITIES.BOOST_ASIO_POOL,
 			[this, callback, text, configurations]() mutable
 			{
-				log_exception(
+				log_timestamp_exception(
 					text,
 					configurations
 				);
@@ -1742,7 +1740,7 @@ namespace QLogicaeCore
 		);
 	}
 
-	void Logger::log_exception_async(
+	void Logger::log_timestamp_exception_async(
 		const std::function<void(Result<void>& result)>& callback,
 		const std::string& text,
 		const ExceptionLogConfigurations& configurations
@@ -1754,7 +1752,7 @@ namespace QLogicaeCore
 			{
 				Result<void> result;
 
-				log_exception(
+				log_timestamp_exception(
 					result,
 					text,
 					configurations
@@ -1767,30 +1765,25 @@ namespace QLogicaeCore
 		);
 	}
 
-	void Logger::force_log_to_console_and_file(
+	void Logger::handle_exception(
 		const std::string& origin,
-		const std::exception& exception
+		const std::string& message
 	)
-	{
-		try
-		{
-			Result<void> result;
+	{		
+		std::scoped_lock lock(_mutex);
 
-			force_log_to_console_and_file(
-				result,
-				origin,
-				exception
-			);
-		}
-		catch (const std::exception& exception)
-		{
-			
-		}
+		Result<void> result;
+
+		handle_exception(
+			result,
+			origin,
+			message
+		);
 	}
 
-	std::future<void> Logger::force_log_to_console_and_file_async(
+	std::future<void> Logger::handle_exception_async(
 		const std::string& origin,
-		const std::exception& exception
+		const std::string& message
 	)
 	{
 		std::promise<void> promise;
@@ -1798,12 +1791,12 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, origin, exception,
-				promise = std::move(promise)]() mutable
+			[this, origin, message,
+			promise = std::move(promise)]() mutable
 			{
-				force_log_to_console_and_file(
+				handle_exception(
 					origin,
-					exception
+					message
 				);
 
 				promise.set_value();
@@ -1813,19 +1806,19 @@ namespace QLogicaeCore
 		return future;
 	}
 
-	void Logger::force_log_to_console_and_file_async(
+	void Logger::handle_exception_async(
 		const std::function<void()>& callback,
 		const std::string& origin,
-		const std::exception& exception
+		const std::string& message
 	)
 	{
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, callback, origin, exception]() mutable
+			[this, callback, origin, message]() mutable
 			{
-				force_log_to_console_and_file(
+				handle_exception(
 					origin,
-					exception
+					message
 				);
 
 				callback();
@@ -1833,32 +1826,32 @@ namespace QLogicaeCore
 		);
 	}
 
-	void Logger::force_log_to_console_and_file(
+	void Logger::handle_exception(
 		Result<void>& result,
 		const std::string& origin,
-		const std::exception& exception
+		const std::string& message
 	)
-	{
+	{		
 		Result<std::string> string_result;
 		Result<std::future<void>> future_void_result;
 
-		TRANSFORMER.to_exception_text_format(
+		_to_log_format(
 			string_result,
-			origin,
-			exception.what()
+			"" + origin + " - " + message,
+			LogLevel::EXCEPTION
 		);
 
-		CLI_IO.print(
-			result,
-			string_result.get_value()
-		);
-
-		_log_to_fragmentation_file_async(
+		log_to_output_files_async(
 			future_void_result,
 			string_result.get_value()
 		);
 
-		_log_to_collectivization_file_async(
+		log_to_fragmentation_file_async(
+			future_void_result,
+			string_result.get_value()
+		);
+
+		log_to_collectivization_file_async(
 			future_void_result,
 			string_result.get_value()
 		);
@@ -1866,10 +1859,10 @@ namespace QLogicaeCore
 		result.set_to_good_status_without_value();
 	}
 
-	void Logger::force_log_to_console_and_file_async(
+	void Logger::handle_exception_async(
 		Result<std::future<void>>& result,
 		const std::string& origin,
-		const std::exception& exception
+		const std::string& message
 	)
 	{
 		std::promise<void> promise;
@@ -1877,15 +1870,15 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, origin, exception, 
-				promise = std::move(promise)]() mutable
+			[this, origin, message,
+			promise = std::move(promise)]() mutable
 			{
 				Result<void> result;
 
-				force_log_to_console_and_file(
+				handle_exception(
 					result,
 					origin,
-					exception
+					message
 				);
 
 				promise.set_value();
@@ -1897,22 +1890,22 @@ namespace QLogicaeCore
 		);
 	}
 
-	void Logger::force_log_to_console_and_file_async(
+	void Logger::handle_exception_async(
 		const std::function<void(Result<void>& result)>& callback,
 		const std::string& origin,
-		const std::exception& exception
+		const std::string& message
 	)
 	{
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, callback, origin, exception]() mutable
+			[this, callback, origin, message]() mutable
 			{
 				Result<void> result;
 
-				force_log_to_console_and_file(
+				handle_exception(
 					result,
 					origin,
-					exception
+					message
 				);
 
 				callback(
@@ -1921,6 +1914,474 @@ namespace QLogicaeCore
 			}
 		);
 	}
+
+	void Logger::log_timestamp_to_console_and_file(
+		const std::string& text,
+		const LogConfigurations& configurations
+	)
+	{
+		try
+		{
+			Result<void> result;
+
+			log_timestamp_to_console_and_file(
+				result,
+				text,
+				configurations
+			);
+		}
+		catch (const std::exception& exception)
+		{
+			throw std::runtime_error(
+				std::string("QLogicaeCore::Logger::log_timestamp_to_console_and_file()") + exception.what()
+			);
+		}
+	}
+
+	std::future<void> Logger::log_timestamp_to_console_and_file_async(
+		const std::string& text,
+		const LogConfigurations& configurations
+	)
+	{
+		std::promise<void> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text, configurations,
+			promise = std::move(promise)]() mutable
+			{
+				log_timestamp_to_console_and_file(
+					text,
+					configurations
+				);
+
+				promise.set_value();
+			}
+		);
+
+		return future;
+	}
+
+	void Logger::log_timestamp_to_console_and_file_async(
+		const std::function<void()>& callback,
+		const std::string& text,
+		const LogConfigurations& configurations
+	)
+	{
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, callback, text, configurations]() mutable
+			{
+				log_timestamp_to_console_and_file(
+					text,
+					configurations
+				);
+
+				callback();
+			}
+		);
+	}
+
+	void Logger::log_timestamp_to_console_and_file(
+		Result<void>& result,
+		const std::string& text,
+		const LogConfigurations& configurations
+	)
+	{
+		Result<std::string> string_result;
+		Result<std::future<void>> future_void_result;
+
+		_to_log_format(
+			string_result,
+			text,
+			configurations.log_level
+		);
+
+		log_to_console_async(
+			future_void_result,
+			string_result.get_value()
+		);
+
+
+		log_to_output_files_async(
+			future_void_result,
+			string_result.get_value()
+		);
+
+		log_to_fragmentation_file_async(
+			future_void_result,
+			string_result.get_value()
+		);
+
+		log_to_collectivization_file_async(
+			future_void_result,
+			string_result.get_value()
+		);
+
+		result.set_to_good_status_without_value();
+	}
+
+	void Logger::log_timestamp_to_console_and_file_async(
+		Result<std::future<void>>& result,
+		const std::string& text,
+		const LogConfigurations& configurations
+	)
+	{
+		std::promise<void> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text, configurations,
+			promise = std::move(promise)]() mutable
+			{
+				Result<void> result;
+
+				log_timestamp_to_console_and_file(
+					result,
+					text,
+					configurations
+				);
+
+				promise.set_value();
+			}
+		);
+
+		result.set_to_good_status_with_value(
+			std::move(future)
+		);
+	}
+
+	void Logger::log_timestamp_to_console_and_file_async(
+		const std::function<void(Result<void>& result)>& callback,
+		const std::string& text,
+		const LogConfigurations& configurations
+	)
+	{
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, callback, text, configurations]() mutable
+			{
+				Result<void> result;
+
+				log_timestamp_to_console_and_file(
+					result,
+					text,
+					configurations
+				);
+
+				callback(
+					result
+				);
+			}
+		);
+	}
+
+	void Logger::log_timestamp_to_files(
+		const std::string& text,
+		const LogConfigurations& configurations
+	)
+	{
+		try
+		{
+			Result<void> result;
+
+			log_timestamp_to_files(
+				result,
+				text,
+				configurations
+			);
+		}
+		catch (const std::exception& exception)
+		{
+			throw std::runtime_error(
+				std::string("QLogicaeCore::Logger::log_timestamp_to_files()") + exception.what()
+			);
+		}
+	}
+
+	std::future<void> Logger::log_timestamp_to_files_async(
+		const std::string& text,
+		const LogConfigurations& configurations
+	)
+	{
+		std::promise<void> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text, configurations,
+			promise = std::move(promise)]() mutable
+			{
+				log_timestamp_to_files(
+					text,
+					configurations
+				);
+
+				promise.set_value();
+			}
+		);
+
+		return future;
+	}
+
+	void Logger::log_timestamp_to_files_async(
+		const std::function<void()>& callback,
+		const std::string& text,
+		const LogConfigurations& configurations
+	)
+	{
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, callback, text, configurations]() mutable
+			{
+				log_timestamp_to_files(
+					text,
+					configurations
+				);
+
+				callback();
+			}
+		);
+	}
+
+	void Logger::log_timestamp_to_files(
+		Result<void>& result,
+		const std::string& text,
+		const LogConfigurations& configurations
+	)
+	{
+		Result<std::string> string_result;
+		Result<std::future<void>> future_void_result;
+
+		_to_log_format(
+			string_result,
+			text,
+			configurations.log_level
+		);
+
+		log_to_output_files_async(
+			future_void_result,
+			string_result.get_value()
+		);
+
+		log_to_fragmentation_file_async(
+			future_void_result,
+			string_result.get_value()
+		);
+
+		log_to_collectivization_file_async(
+			future_void_result,
+			string_result.get_value()
+		);
+
+		result.set_to_good_status_without_value();
+	}
+
+	void Logger::log_timestamp_to_files_async(
+		Result<std::future<void>>& result,
+		const std::string& text,
+		const LogConfigurations& configurations
+	)
+	{
+		std::promise<void> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text, configurations,
+			promise = std::move(promise)]() mutable
+			{
+				Result<void> result;
+
+				log_timestamp_to_files(
+					result,
+					text,
+					configurations
+				);
+
+				promise.set_value();
+			}
+		);
+
+		result.set_to_good_status_with_value(
+			std::move(future)
+		);
+	}
+
+	void Logger::log_timestamp_to_files_async(
+		const std::function<void(Result<void>& result)>& callback,
+		const std::string& text,
+		const LogConfigurations& configurations
+	)
+	{
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, callback, text, configurations]() mutable
+			{
+				Result<void> result;
+
+				log_timestamp_to_files(
+					result,
+					text,
+					configurations
+				);
+
+				callback(
+					result
+				);
+			}
+		);
+	}
+
+	void Logger::log_timestamp_to_console(
+		const std::string& text,
+		const LogConfigurations& configurations
+	)
+	{
+		try
+		{
+			Result<void> result;
+
+			log_timestamp_to_console(
+				result,
+				text,
+				configurations
+			);
+		}
+		catch (const std::exception& exception)
+		{
+			throw std::runtime_error(
+				std::string("QLogicaeCore::Logger::log_timestamp_to_console()") + exception.what()
+			);
+		}
+	}
+
+	std::future<void> Logger::log_timestamp_to_console_async(
+		const std::string& text,
+		const LogConfigurations& configurations
+	)
+	{
+		std::promise<void> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text, configurations,
+			promise = std::move(promise)]() mutable
+			{
+				log_timestamp_to_console(
+					text,
+					configurations
+				);
+
+				promise.set_value();
+			}
+		);
+
+		return future;
+	}
+
+	void Logger::log_timestamp_to_console_async(
+		const std::function<void()>& callback,
+		const std::string& text,
+		const LogConfigurations& configurations
+	)
+	{
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, callback, text, configurations]() mutable
+			{
+				log_timestamp_to_console(
+					text,
+					configurations
+				);
+
+				callback();
+			}
+		);
+	}
+
+	void Logger::log_timestamp_to_console(
+		Result<void>& result,
+		const std::string& text,
+		const LogConfigurations& configurations
+	)
+	{
+		Result<std::string> string_result;
+		Result<std::future<void>> future_void_result;
+
+		_to_log_format(
+			string_result,
+			text,
+			configurations.log_level
+		);
+
+		log_to_console_async(
+			future_void_result,
+			string_result.get_value()
+		);
+
+		result.set_to_good_status_without_value();
+	}
+
+	void Logger::log_timestamp_to_console_async(
+		Result<std::future<void>>& result,
+		const std::string& text,
+		const LogConfigurations& configurations
+	)
+	{
+		std::promise<void> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text, configurations,
+			promise = std::move(promise)]() mutable
+			{
+				Result<void> result;
+
+				log_timestamp_to_console(
+					result,
+					text,
+					configurations
+				);
+
+				promise.set_value();
+			}
+		);
+
+		result.set_to_good_status_with_value(
+			std::move(future)
+		);
+	}
+
+	void Logger::log_timestamp_to_console_async(
+		const std::function<void(Result<void>& result)>& callback,
+		const std::string& text,
+		const LogConfigurations& configurations
+	)
+	{
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, callback, text, configurations]() mutable
+			{
+				Result<void> result;
+
+				log_timestamp_to_console(
+					result,
+					text,
+					configurations
+				);
+
+				callback(
+					result
+				);
+			}
+		);
+	}
+
 
 	Logger& Logger::get_instance()
 	{
@@ -1940,7 +2401,7 @@ namespace QLogicaeCore
 		);
 	}
 
-	void Logger::_log_to_collectivization_file(
+	void Logger::log_to_console(
 		const std::string& text
 	)
 	{
@@ -1948,39 +2409,20 @@ namespace QLogicaeCore
 		{
 			Result<void> result;
 
-			_log_to_collectivization_file(
+			log_to_console(
 				result,
 				text
 			);
 		}
 		catch (const std::exception& exception)
 		{
-
+			throw std::runtime_error(
+				std::string("QLogicaeCore::Logger::log_to_console()") + exception.what()
+			);
 		}
 	}
 
-	void Logger::_log_to_collectivization_file(
-		Result<void>& result,
-		const std::string& text
-	)
-	{
- 		TextFileIO text_file_io;
-
-		Result<bool> bool_result;
-		
-		text_file_io.set_file_path(
-			result,
-			_log_file_collectivization_output_file_path
-		);
-		text_file_io.append(
-			bool_result,
-			text
-		);
-
-		result.set_to_good_status_without_value();
-	}
-
-	std::future<void> Logger::_log_to_collectivization_file_async(
+	std::future<void> Logger::log_to_console_async(
 		const std::string& text
 	)
 	{
@@ -1989,10 +2431,10 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, text, 
-				promise = std::move(promise)]() mutable
+			[this, text,
+			promise = std::move(promise)]() mutable
 			{
-				_log_to_collectivization_file(
+				log_to_console(
 					text
 				);
 
@@ -2003,7 +2445,35 @@ namespace QLogicaeCore
 		return future;
 	}
 
-	void Logger::_log_to_collectivization_file_async(
+	void Logger::log_to_console_async(
+		const std::function<void()>& callback,
+		const std::string& text
+	)
+	{
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text, callback]() mutable
+			{
+				log_to_console(
+					text
+				);
+
+				callback();
+			}
+		);
+	}
+
+	void Logger::log_to_console(
+		Result<void>& result,
+		const std::string& text
+	)
+	{
+		fast_io::io::print(fast_io::out(), text);
+
+		result.set_to_good_status_without_value();
+	}
+
+	void Logger::log_to_console_async(
 		Result<std::future<void>>& result,
 		const std::string& text
 	)
@@ -2013,12 +2483,12 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, text, 
-				promise = std::move(promise)]() mutable
+			[this, text,
+			promise = std::move(promise)]() mutable
 			{
 				Result<void> result;
 
-				_log_to_collectivization_file(
+				log_to_console(
 					result,
 					text
 				);
@@ -2032,7 +2502,30 @@ namespace QLogicaeCore
 		);
 	}
 
-	void Logger::_log_to_fragmentation_file(
+	void Logger::log_to_console_async(
+		const std::function<void(Result<void>& result)>& callback,
+		const std::string& text
+	)
+	{
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text, callback]() mutable
+			{
+				Result<void> result;
+
+				log_to_console(
+					result,
+					text
+				);
+
+				callback(
+					result
+				);
+			}
+		);
+	}
+
+	void Logger::log_to_files(
 		const std::string& text
 	)
 	{
@@ -2040,67 +2533,363 @@ namespace QLogicaeCore
 		{
 			Result<void> result;
 
-			_log_to_fragmentation_file(
+			log_to_files(
 				result,
 				text
 			);
 		}
 		catch (const std::exception& exception)
 		{
-
+			throw std::runtime_error(
+				std::string("QLogicaeCore::Logger::log_to_files()") + exception.what()
+			);
 		}
 	}
 
-	void Logger::_log_to_fragmentation_file(
+	std::future<void> Logger::log_to_files_async(
+		const std::string& text
+	)
+	{
+		std::promise<void> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text,
+			promise = std::move(promise)]() mutable
+			{
+				log_to_files(
+					text
+				);
+
+				promise.set_value();
+			}
+		);
+
+		return future;
+	}
+
+	void Logger::log_to_files_async(
+		const std::function<void()>& callback,
+		const std::string& text
+	)
+	{
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text, callback]() mutable
+			{
+				log_to_files(
+					text
+				);
+
+				callback();
+			}
+		);
+	}
+
+	void Logger::log_to_files(
 		Result<void>& result,
 		const std::string& text
 	)
 	{
- 		TextFileIO text_file_io;
+		Result<std::string> string_result;
+		Result<std::future<void>> future_void_result;
 
-		Result<bool> bool_result;
+		log_to_output_files_async(
+			future_void_result,
+			string_result.get_value()
+		);
+
+		log_to_fragmentation_file_async(
+			future_void_result,
+			string_result.get_value()
+		);
+
+		log_to_collectivization_file_async(
+			future_void_result,
+			string_result.get_value()
+		);
+
+		result.set_to_good_status_without_value();
+	}
+
+	void Logger::log_to_files_async(
+		Result<std::future<void>>& result,
+		const std::string& text
+	)
+	{
+		std::promise<void> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text,
+			promise = std::move(promise)]() mutable
+			{
+				Result<void> result;
+
+				log_to_files(
+					result,
+					text
+				);
+
+				promise.set_value();
+			}
+		);
+
+		result.set_to_good_status_with_value(
+			std::move(future)
+		);
+	}
+
+	void Logger::log_to_files_async(
+		const std::function<void(Result<void>& result)>& callback,
+		const std::string& text
+	)
+	{
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text, callback]() mutable
+			{
+				Result<void> result;
+
+				log_to_files(
+					result,
+					text
+				);
+
+				callback(
+					result
+				);
+			}
+		);
+	}
+
+
+
+	void Logger::log_to_collectivization_file(
+		const std::string& text
+	)
+	{
+		try
+		{
+			Result<void> result;
+
+			log_to_collectivization_file(
+				result,
+				text
+			);
+		}
+		catch (const std::exception& exception)
+		{
+			throw std::runtime_error(
+				std::string("QLogicaeCore::Logger::log_to_collectivization_file()") + exception.what()
+			);
+		}
+	}
+
+	void Logger::log_to_collectivization_file(
+		Result<void>& result,
+		const std::string& text
+	)
+	{
+		fast_io::obuf_file append_file(
+			_log_file_collectivization_output_file_path,
+			fast_io::open_mode::app
+		);
+
+		fast_io::io::print(
+			append_file,
+			text
+		);
+
+		append_file.close();
+
+		result.set_to_good_status_without_value();
+	}
+
+	std::future<void> Logger::log_to_collectivization_file_async(
+		const std::string& text
+	)
+	{
+		std::promise<void> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text,
+			promise = std::move(promise)]() mutable
+			{
+				log_to_collectivization_file(
+					text
+				);
+
+				promise.set_value();
+			}
+		);
+
+		return future;
+	}
+
+	void Logger::log_to_collectivization_file_async(
+		const std::function<void()>& callback,
+		const std::string& text
+	)
+	{
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text, callback]() mutable
+			{
+				log_to_collectivization_file(
+					text
+				);
+
+				callback();
+			}
+		);
+	}
+	
+	void Logger::log_to_collectivization_file_async(
+		Result<std::future<void>>& result,
+		const std::string& text
+	)
+	{
+		std::promise<void> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text,
+			promise = std::move(promise)]() mutable
+			{
+				Result<void> result;
+
+				log_to_collectivization_file(
+					result,
+					text
+				);
+
+				promise.set_value();
+			}
+		);
+
+		result.set_to_good_status_with_value(
+			std::move(future)
+		);
+	}
+
+	void Logger::log_to_collectivization_file_async(
+		const std::function<void(Result<void>& result)>& callback,
+		const std::string& text
+	)
+	{
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text, callback]() mutable
+			{
+				Result<void> result;
+
+				log_to_collectivization_file(
+					result,
+					text
+				);
+
+				callback(
+					result
+				);
+			}
+		);
+	}
+
+	void Logger::log_to_fragmentation_file(
+		const std::string& text
+	)
+	{
+		try
+		{
+			Result<void> result;
+
+			log_to_fragmentation_file(
+				result,
+				text
+			);
+		}
+		catch (const std::exception& exception)
+		{
+			throw std::runtime_error(
+				std::string("QLogicaeCore::Logger::log_to_fragmentation_file()") + exception.what()
+			);
+		}
+	}
+
+	std::future<void> Logger::log_to_fragmentation_file_async(
+		const std::string& text
+	)
+	{
+		std::promise<void> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text,
+			promise = std::move(promise)]() mutable
+			{
+				log_to_fragmentation_file(
+					text
+				);
+
+				promise.set_value();
+			}
+		);
+
+		return future;
+	}
+
+	void Logger::log_to_fragmentation_file_async(
+		const std::function<void()>& callback,
+		const std::string& text
+	)
+	{
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text, callback]() mutable
+			{
+				log_to_fragmentation_file(
+					text
+				);
+
+				callback();
+			}
+		);
+	}
+
+	void Logger::log_to_fragmentation_file(
+		Result<void>& result,
+		const std::string& text
+	)
+	{
 		Result<std::string> string_result;
 
 		_generate_log_fragmentation_file_path(
 			string_result
 		);
 
-		text_file_io.set_file_path(
-			result,
-			string_result.get_value()
+		fast_io::obuf_file append_file(
+			string_result.get_value(),
+			fast_io::open_mode::app
 		);
-		text_file_io.append(
-			bool_result,
+
+		fast_io::io::print(
+			append_file,
 			text
 		);
+
+		append_file.close();
 
 		result.set_to_good_status_without_value();
 	}
 
-	std::future<void> Logger::_log_to_fragmentation_file_async(
-		const std::string& text
-	)
-	{
-		std::promise<void> promise;
-		auto future = promise.get_future();
-
-		boost::asio::post(
-			UTILITIES.BOOST_ASIO_POOL,
-			[this, text, 
-				promise = std::move(promise)]() mutable
-			{
-				_log_to_fragmentation_file(
-					text
-				);
-
-				promise.set_value();
-			}
-		);
-
-		return future;
-	}
-
-	void Logger::_log_to_fragmentation_file_async(
+	void Logger::log_to_fragmentation_file_async(
 		Result<std::future<void>>& result,
 		const std::string& text
 	)
@@ -2115,7 +2904,7 @@ namespace QLogicaeCore
 			{
 				Result<void> result;
 
-				_log_to_fragmentation_file(
+				log_to_fragmentation_file(
 					result,
 					text
 				);
@@ -2129,7 +2918,30 @@ namespace QLogicaeCore
 		);
 	}
 
-	void Logger::_log_to_file(
+	void Logger::log_to_fragmentation_file_async(
+		const std::function<void(Result<void>& result)>& callback,
+		const std::string& text
+	)
+	{
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text, callback]() mutable
+			{
+				Result<void> result;
+
+				log_to_fragmentation_file(
+					result,
+					text
+				);
+
+				callback(
+					result
+				);
+			}
+		);
+	}
+
+	void Logger::log_to_file(
 		const std::string& path,
 		const std::string& text
 	)
@@ -2138,7 +2950,7 @@ namespace QLogicaeCore
 		{
 			Result<void> result;
 
-			_log_to_file(
+			log_to_file(
 				result,
 				path,
 				text
@@ -2146,31 +2958,13 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
-
+			throw std::runtime_error(
+				std::string("QLogicaeCore::Logger::log_to_file()") + exception.what()
+			);
 		}
 	}
 
-	void Logger::_log_to_file(
-		Result<void>& result,
-		const std::string& path,
-		const std::string& text
-	)
-	{
- 		TextFileIO text_file_io;
-
-		Result<bool> bool_result;
-
-		text_file_io.set_file_path(
-			result,
-			path
-		);
-		text_file_io.append(
-			bool_result,
-			text
-		);
-	}
-
-	std::future<void> Logger::_log_to_file_async(
+	std::future<void> Logger::log_to_file_async(
 		const std::string& path,
 		const std::string& text
 	)
@@ -2180,10 +2974,10 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, path, text, 
-				promise = std::move(promise)]() mutable
+			[this, path, text,
+			promise = std::move(promise)]() mutable
 			{
-				_log_to_file(
+				log_to_file(
 					path,
 					text
 				);
@@ -2195,7 +2989,102 @@ namespace QLogicaeCore
 		return future;
 	}
 
-	void Logger::_log_to_output_files(
+	void Logger::log_to_file_async(
+		const std::function<void()>& callback,
+		const std::string& path,
+		const std::string& text
+	)
+	{
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, path, text, callback]() mutable
+			{
+				log_to_file(
+					path,
+					text
+				);
+
+				callback();
+			}
+		);
+	}
+
+	void Logger::log_to_file(
+		Result<void>& result,
+		const std::string& path,
+		const std::string& text
+	)
+	{		
+		fast_io::obuf_file append_file(
+			path,
+			fast_io::open_mode::app
+		);
+
+		fast_io::io::print(
+			append_file,
+			text
+		);
+
+		append_file.close();		
+	}
+
+	void Logger::log_to_file_async(
+		Result<std::future<void>>& result,
+		const std::string& path,
+		const std::string& text
+	)
+	{
+		std::promise<void> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, path, text,
+			promise = std::move(promise)]() mutable
+			{
+				Result<void> result;
+
+				log_to_file(
+					result,
+					path,
+					text
+				);
+
+				promise.set_value();
+			}
+		);
+
+		result.set_to_good_status_with_value(
+			std::move(future)
+		);
+	}
+
+	void Logger::log_to_file_async(
+		const std::function<void(Result<void>& result)>& callback,
+		const std::string& path,
+		const std::string& text
+	)
+	{
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, path, text, callback]() mutable
+			{
+				Result<void> result;
+
+				log_to_file(
+					result,
+					path,
+					text
+				);
+
+				callback(
+					result
+				);
+			}
+		);
+	}
+
+	void Logger::log_to_output_files(
 		const std::string& text
 	)
 	{
@@ -2203,18 +3092,20 @@ namespace QLogicaeCore
 		{
 			Result<void> result;
 
-			_log_to_output_files(
+			log_to_output_files(
 				result,
 				text
 			);
 		}
 		catch (const std::exception& exception)
 		{
-
+			throw std::runtime_error(
+				std::string("QLogicaeCore::Logger::log_to_output_files()") + exception.what()
+			);
 		}
 	}
 
-	std::future<void> Logger::_log_to_output_files_async(
+	std::future<void> Logger::log_to_output_files_async(
 		const std::string& text
 	)
 	{
@@ -2226,7 +3117,7 @@ namespace QLogicaeCore
 			[this, text, 
 				promise = std::move(promise)]() mutable
 			{				
-				_log_to_output_files(
+				log_to_output_files(
 					text
 				);
 
@@ -2237,15 +3128,38 @@ namespace QLogicaeCore
 		return future;
 	}
 
-	void Logger::_log_to_output_files(
+	void Logger::log_to_output_files_async(
+		const std::function<void()>& callback,
+		const std::string& text
+	)
+	{
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text, callback]() mutable
+			{
+				log_to_output_files(
+					text
+				);
+
+				callback();
+			}
+		);
+	}
+
+	void Logger::log_to_output_files(
 		Result<void>& result,
 		const std::string& text
 	)
 	{
+		if (_output_paths.empty())
+		{
+			return;
+		}
+
 		for (const auto& output_path :
 			_output_paths)
 		{
-			_log_to_file(
+			log_to_file(
 				output_path,
 				text
 			);
@@ -2254,7 +3168,7 @@ namespace QLogicaeCore
 		result.set_to_good_status_without_value();
 	}
 
-	std::future<void> Logger::_log_to_output_files_async(
+	void Logger::log_to_output_files_async(
 		Result<std::future<void>>& result,
 		const std::string& text
 	)
@@ -2266,10 +3180,10 @@ namespace QLogicaeCore
 			UTILITIES.BOOST_ASIO_POOL,
 			[this, text, 
 				promise = std::move(promise)]() mutable
-			{
+			{				
 				Result<void> result;
 
-				_log_to_output_files(
+				log_to_output_files(
 					result,
 					text
 				);
@@ -2280,6 +3194,29 @@ namespace QLogicaeCore
 
 		result.set_to_good_status_with_value(
 			std::move(future)
+		);
+	}
+
+	void Logger::log_to_output_files_async(
+		const std::function<void(Result<void>& result)>& callback,
+		const std::string& text
+	)
+	{
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text, callback]() mutable
+			{
+				Result<void> result;
+
+				log_to_output_files(
+					result,
+					text
+				);
+
+				callback(
+					result
+				);
+			}
 		);
 	}
 
@@ -2297,7 +3234,9 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
-
+			throw std::runtime_error(
+				std::string("QLogicaeCore::Logger::_generate_log_fragmentation_file_path()") + exception.what()
+			);
 		}
 	}
 
@@ -2307,7 +3246,7 @@ namespace QLogicaeCore
 	{
 		result.set_to_good_status_with_value(
 			_log_file_fragmentation_output_folder_path +
-				"\\" + TIME.now(_log_file_fragmentation_format) + ".log"
+				"\\" + _time_now(_log_file_fragmentation_format) + ".log"
 		);
 	}
 
@@ -2325,7 +3264,9 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
-
+			throw std::runtime_error(
+				std::string("QLogicaeCore::Logger::_generate_log_collectivization_file_path()") + exception.what()
+			);
 		}
 	}
 
@@ -2337,5 +3278,326 @@ namespace QLogicaeCore
 			_log_file_collectivization_output_folder_path +
 			"\\" + _log_file_collectivization_output_file_name
 		);
+	}
+
+	std::string Logger::_to_log_format(
+		const std::string& text,
+		const LogLevel& log_level
+	)
+	{
+		try
+		{
+			Result<std::string> string_result;
+
+			_to_log_format(
+				string_result,
+				text,
+				log_level
+			);
+
+			return string_result.get_value();
+		}
+		catch (const std::exception& exception)
+		{
+			throw std::runtime_error(
+				std::string("QLogicaeCore::Logger::_to_log_format()") + exception.what()
+			);
+		}
+	}
+
+	void Logger::_to_log_format(
+		Result<std::string>& result,
+		const std::string& text,
+		const LogLevel& log_level
+	)
+	{
+		_time_now(
+			result,
+			_log_format
+		);
+		result.get_value().reserve(256);
+		result.set_value(			
+			(_name.empty()) ? "" : ("[" + _name + "] [") +
+			result.get_value() +
+			"] [" +
+			UTILITIES.LOG_LEVEL_ENUMS_2.at(log_level) +
+			"]\t" +
+			text +
+			"\n"
+		);
+		result.set_status_to_good();
+	}
+
+
+	std::string Logger::_time_now(
+		const TimeFormat& time_format
+	)
+	{
+		try
+		{
+			Result<std::string> string_result;
+
+			_time_now(
+				string_result,
+				time_format
+			);
+
+			return string_result.get_value();
+		}
+		catch (const std::exception& exception)
+		{
+			throw std::runtime_error(
+				std::string("QLogicaeCore::Logger::_time_now()") + exception.what()
+			);
+		}
+	}
+
+	void Logger::_time_now(
+		Result<std::string>& result,
+		const TimeFormat& format
+	)
+	{
+		std::tm tm{};
+		absl::Time now_time = absl::Now();
+		std::time_t system_time = std::chrono::system_clock::to_time_t(
+			std::chrono::system_clock::now()
+		);
+		absl::Duration since_epoch = now_time - absl::UnixEpoch();
+		const char* time_format = UTILITIES.get_format_string(format);
+		if (_log_time_zone == TimeZone::UTC)
+		{
+			gmtime_s(&tm, &system_time);
+		}
+		else
+		{
+			localtime_s(&tm, &system_time);
+		}
+
+		switch (format)
+		{
+			case TimeFormat::UNIX:
+			{
+				result.set_to_good_status_with_value(
+					absl::StrCat(
+						absl::ToUnixSeconds(
+							now_time
+						)
+					)
+				);
+
+				break;
+			}
+			case TimeFormat::ISO8601:
+			case TimeFormat::SECOND_LEVEL_TIMESTAMP:
+			case TimeFormat::HOUR_12:
+			case TimeFormat::HOUR_24:
+			case TimeFormat::DATE_DASHED:
+			case TimeFormat::DATE_MDY_SLASHED:
+			case TimeFormat::DATE_DMY_SLASHED:
+			case TimeFormat::DATE_DMY_SPACED:
+			case TimeFormat::DATE_VERBOSE:
+			{
+				char format_buffer[32];
+
+				std::strftime(
+					format_buffer,
+					64,
+					time_format,
+					&tm
+				);
+
+				result.set_to_good_status_with_value(
+					format_buffer
+				);
+				break;		
+			}
+			case TimeFormat::MILLISECOND_LEVEL_TIMESTAMP:
+			{
+				char format_buffer[32];
+				char millisecond_buffer[4];
+
+				std::strftime(
+					format_buffer,
+					64,
+					time_format,
+					&tm
+				);
+				std::snprintf(
+					millisecond_buffer,
+					4,
+					"%03d",
+					static_cast<int>(
+						absl::ToInt64Milliseconds(since_epoch) % 1000
+					)
+				);
+
+				result.set_to_good_status_with_value(
+					std::string(format_buffer) +
+					"." +
+					millisecond_buffer
+				);
+
+				break;
+			}
+			case TimeFormat::MICROSECOND_LEVEL_TIMESTAMP:
+			{
+				char format_buffer[32];
+				char millisecond_buffer[4];
+				char microseconds_buffer[4];
+
+				std::strftime(
+					format_buffer,
+					64,
+					time_format,
+					&tm
+				);
+				std::snprintf(
+					millisecond_buffer,
+					4,
+					"%03d",
+					static_cast<int>(
+						absl::ToInt64Milliseconds(since_epoch) % 1000
+					)
+				);
+				std::snprintf(
+					microseconds_buffer,
+					4,
+					"%03d",
+					static_cast<int>(
+						absl::ToInt64Microseconds(since_epoch) % 1000
+					)
+				);
+
+				result.set_to_good_status_with_value(
+					std::string(format_buffer) +
+					"." +
+					millisecond_buffer +
+					":" +
+					microseconds_buffer
+				);
+
+				break;
+			}
+			case TimeFormat::FULL_TIMESTAMP:
+			{
+				char format_buffer[32];
+				char millisecond_buffer[4];
+				char microseconds_buffer[4];
+				char nanoseconds_buffer[4];
+
+				std::strftime(
+					format_buffer,
+					64,
+					time_format,
+					&tm
+				);
+				std::snprintf(
+					millisecond_buffer,
+					4,
+					"%03d",
+					static_cast<int>(
+						absl::ToInt64Milliseconds(since_epoch) % 1000
+						)
+				);			
+				std::snprintf(
+					microseconds_buffer,
+					4,
+					"%03d",
+					static_cast<int>(
+						absl::ToInt64Microseconds(since_epoch) % 1000
+						)
+				);
+				std::snprintf(
+					nanoseconds_buffer,
+					4,
+					"%03d",
+					static_cast<int>(
+						absl::ToInt64Nanoseconds(since_epoch) % 1000
+						)
+				);
+
+				result.set_to_good_status_with_value(
+					std::string(format_buffer) +
+					"." +
+					millisecond_buffer +
+					":" +
+					microseconds_buffer +
+					":" +
+					nanoseconds_buffer
+				);
+			
+				break;
+			}
+			case TimeFormat::FULL_DASHED_TIMESTAMP:
+			{
+				char format_buffer[32];
+				char millisecond_buffer[4];
+				char microseconds_buffer[4];
+				char nanoseconds_buffer[4];
+
+				std::strftime(
+					format_buffer,
+					64,
+					time_format,
+					&tm
+				);
+				std::snprintf(
+					millisecond_buffer,
+					4,
+					"%03d",
+					static_cast<int>(
+						absl::ToInt64Milliseconds(since_epoch) % 1000
+						)
+				);
+				std::snprintf(
+					microseconds_buffer,
+					4,
+					"%03d",
+					static_cast<int>(
+						absl::ToInt64Microseconds(since_epoch) % 1000
+						)
+				);
+				std::snprintf(
+					nanoseconds_buffer,
+					4,
+					"%03d",
+					static_cast<int>(
+						absl::ToInt64Nanoseconds(since_epoch) % 1000
+						)
+				);
+
+				result.set_to_good_status_with_value(
+					std::string(format_buffer) +
+					"." +
+					millisecond_buffer +
+					"-" +
+					microseconds_buffer +
+					"-" +
+					nanoseconds_buffer
+				);
+
+				break;
+			}
+			case TimeFormat::MILLISECOND_MICROSECOND_NANOSECOND:
+			{
+				result.set_to_good_status_with_value(
+					absl::StrCat(
+						"ms: ", absl::ToInt64Milliseconds(since_epoch),
+						", us: ", absl::ToInt64Microseconds(since_epoch),
+						", ns: ", absl::ToInt64Nanoseconds(since_epoch)
+					)
+				);
+
+				break;
+			}
+			default:
+			{
+				result.set_to_good_status_with_value(
+					"Invalid TimeFormat"
+				);
+
+				break;
+			}
+		}		
 	}
 }

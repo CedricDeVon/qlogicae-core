@@ -68,7 +68,7 @@ namespace QLogicaeCore
 
 	Utilities::~Utilities()
 	{
-
+		UTILITIES.BOOST_ASIO_POOL.join();
 	}
 
     bool Utilities::setup()
@@ -83,7 +83,9 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
-
+			throw std::runtime_error(
+				std::string("Utilities::setup()") + exception.what()
+			);
 		}
     }
 
@@ -151,6 +153,94 @@ namespace QLogicaeCore
 			std::move(future)
 		);
     }
+
+	const char* Utilities::get_format_string(
+		const TimeFormat& format
+	)
+	{
+		try
+		{
+			Result<const char*> result;
+
+			get_format_string(
+				result,
+				format			
+			);
+
+			return result.get_value();
+		}
+		catch (const std::exception& exception)
+		{			
+			throw std::runtime_error(
+				std::string("Utilities::get_format_string()") + exception.what()
+			);
+		}
+	}
+
+	void Utilities::get_format_string(
+		Result<const char*>& result,
+		const TimeFormat& format
+	)
+	{
+		switch (format)
+		{
+			case TimeFormat::ISO8601:
+			{
+				result.set_to_good_status_with_value(UTILITIES.TIME_FORMAT_ISO_8601);
+				break;
+			}
+			case TimeFormat::FULL_TIMESTAMP:
+			{
+				result.set_to_good_status_with_value(UTILITIES.TIME_FORMAT_FULL_TIMESTAMP);
+				break;
+			}
+			case TimeFormat::FULL_DASHED_TIMESTAMP:
+			{
+				result.set_to_good_status_with_value(UTILITIES.TIME_FORMAT_FULL_DASHED_TIMESTAMP);
+				break;
+			}
+			case TimeFormat::HOUR_12:
+			{
+				result.set_to_good_status_with_value(UTILITIES.TIME_FORMAT_HOUR_12);
+				break;
+			}
+			case TimeFormat::HOUR_24:
+			{
+				result.set_to_good_status_with_value(UTILITIES.TIME_FORMAT_HOUR_24);
+				break;
+			}
+			case TimeFormat::DATE_DASHED:
+			{
+				result.set_to_good_status_with_value(UTILITIES.TIME_FORMAT_DATE_DASHED);
+				break;
+			}
+			case TimeFormat::DATE_MDY_SLASHED:
+			{
+				result.set_to_good_status_with_value(UTILITIES.TIME_FORMAT_DATE_MDY_SLASHED);
+				break;
+			}
+			case TimeFormat::DATE_DMY_SLASHED:
+			{
+				result.set_to_good_status_with_value(UTILITIES.TIME_FORMAT_DATE_DMY_SLASHED);
+				break;
+			}
+			case TimeFormat::DATE_DMY_SPACED:
+			{
+				result.set_to_good_status_with_value(UTILITIES.TIME_FORMAT_DATE_DMY_SPACED);
+				break;
+			}
+			case TimeFormat::DATE_VERBOSE:
+			{
+				result.set_to_good_status_with_value(UTILITIES.TIME_FORMAT_DATE_VERBOSE);
+				break;
+			}
+			default:
+			{
+				result.set_to_good_status_with_value(UTILITIES.TIME_FORMAT_DATE_VERBOSE);
+				break;
+			}
+		}
+	}
 
     Utilities& Utilities::get_instance()
     {

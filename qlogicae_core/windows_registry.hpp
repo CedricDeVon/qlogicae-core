@@ -1,6 +1,7 @@
 #pragma once
 
 #include "result.hpp"
+#include "logger.hpp"
 #include "encoder.hpp"
 #include "utilities.hpp"
 #include "value_enum_key_delete_handler.hpp"

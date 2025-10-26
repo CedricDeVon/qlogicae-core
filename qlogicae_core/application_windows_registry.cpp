@@ -32,8 +32,13 @@ namespace QLogicaeCore
         {
             if (_is_enabled)
             {
+                LOGGER.handle_exception_async(
+                    "QLogicaeCore::ApplicationWindowsRegistry::setup()",
+                    "Can only be called once"
+                );
+
                 return result.set_to_bad_status_without_value(
-                    "Exception at ApplicationWindowsRegistry::setup() - Can only be called once"
+                    "QLogicaeCore::ApplicationWindowsRegistry::setup() - Can only be called once"
                 );
             }
 
@@ -55,8 +60,13 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::ApplicationWindowsRegistry::setup()",
+                exception.what()
+            );
+
             result.set_to_bad_status_without_value(
-                std::string("Exception at ApplicationWindowsRegistry::setup() - ") +
+                std::string("QLogicaeCore::ApplicationWindowsRegistry::setup() - ") +
                 exception.what()
             );
         }

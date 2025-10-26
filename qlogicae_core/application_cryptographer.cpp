@@ -32,8 +32,13 @@ namespace QLogicaeCore
         {
             if (_is_enabled)
             {
+                LOGGER.handle_exception_async(
+                    "QLogicaeCore::ApplicationCryptographer::setup()",
+                    "Can only be called once"
+                );
+
                 return result.set_to_bad_status_without_value(
-                    "Exception at ApplicationCryptographer::setup() - Can only be called once"
+                    "QLogicaeCore::ApplicationCryptographer::setup() - Can only be called once"
                 );
             }
 
@@ -99,8 +104,13 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::ApplicationCryptographer::setup()",
+                exception.what()
+            );
+
             result.set_to_bad_status_without_value(
-                std::string("Exception at ApplicationCryptographer::setup() - ") +
+                std::string("QLogicaeCore::ApplicationCryptographer::setup() - ") +
                 exception.what()
             );
         }

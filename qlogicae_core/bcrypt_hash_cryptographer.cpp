@@ -12,11 +12,23 @@ namespace QLogicaeCore
 
 	bool BcryptHashCryptographer::setup()
 	{
-		Result<void> result;
+		try
+		{
+			Result<void> result;
 
-		setup(result);
+			setup(result);
 
-		return result.is_status_safe();
+			return result.is_status_safe();
+		}
+		catch (const std::exception& exception)
+		{
+			LOGGER.handle_exception_async(
+				"QLogicaeCore::BcryptHashCryptographer::setup()",
+				exception.what()
+			);
+
+			return false;
+		}
 	}
 
     void BcryptHashCryptographer::setup(
@@ -123,7 +135,12 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
-			
+			LOGGER.handle_exception_async(
+				"QLogicaeCore::BcryptHashCryptographer::transform()",
+				exception.what()
+			);
+
+			return "";
 		}
 	}
 
@@ -142,7 +159,12 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
-			
+			LOGGER.handle_exception_async(
+				"QLogicaeCore::BcryptHashCryptographer::reverse()",
+				exception.what()
+			);
+
+			return false;
 		}
 	}
 

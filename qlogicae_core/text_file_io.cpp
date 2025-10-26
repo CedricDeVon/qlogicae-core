@@ -55,6 +55,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::TextFileIO::setup()",
+                exception.what()
+            );
 
         }
     }
@@ -84,7 +88,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::TextFileIO::setup()",
+                exception.what()
+            );
 
+            return false;
         }
     }
 
@@ -98,7 +107,7 @@ namespace QLogicaeCore
         _file_path = file_path;
 
         result.set_to_good_status_without_value();
-    }    
+    }
 
     bool TextFileIO::open(
         const FileMode& file_mode
@@ -117,7 +126,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::TextFileIO::open()",
+                exception.what()
+            );
 
+            return false;
         }
     }
 
@@ -128,54 +142,54 @@ namespace QLogicaeCore
     {
         switch (file_mode)
         {
-            case FileMode::READ:
-            {
-                if (!std::filesystem::exists(_file_path))
-                {
-                    return result.set_to_bad_status_without_value(
-                        "File not found"
-                    );
-                }
-                if (!_read_file)
-                {
-                    _read_file.emplace(_file_path);
-                }
-
-                return result.set_to_good_status_with_value(
-                    true
-                );
-            }
-            case FileMode::WRITE:
-            {
-                if (!_write_file)
-                {
-                    _write_file.emplace(_file_path);
-                }
-
-                return result.set_to_good_status_with_value(
-                    true
-                );
-            }
-            case FileMode::APPEND:
-            {
-                if (!_append_file)
-                {
-                    _append_file.emplace(
-                        _file_path,
-                        fast_io::open_mode::app
-                    );
-                }
-
-                return result.set_to_good_status_with_value(
-                    true
-                );
-            }
-            default:
+        case FileMode::READ:
+        {
+            if (!std::filesystem::exists(_file_path))
             {
                 return result.set_to_bad_status_without_value(
-                    "File open failed"
+                    "File not found"
                 );
             }
+            if (!_read_file)
+            {
+                _read_file.emplace(_file_path);
+            }
+
+            return result.set_to_good_status_with_value(
+                true
+            );
+        }
+        case FileMode::WRITE:
+        {
+            if (!_write_file)
+            {
+                _write_file.emplace(_file_path);
+            }
+
+            return result.set_to_good_status_with_value(
+                true
+            );
+        }
+        case FileMode::APPEND:
+        {
+            if (!_append_file)
+            {
+                _append_file.emplace(
+                    _file_path,
+                    fast_io::open_mode::app
+                );
+            }
+
+            return result.set_to_good_status_with_value(
+                true
+            );
+        }
+        default:
+        {
+            return result.set_to_bad_status_without_value(
+                "File open failed"
+            );
+        }
         }
     }
 
@@ -196,7 +210,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::TextFileIO::close()",
+                exception.what()
+            );
 
+            return false;
         }
     }
 
@@ -207,45 +226,45 @@ namespace QLogicaeCore
     {
         switch (file_mode)
         {
-            case FileMode::READ:
+        case FileMode::READ:
+        {
+            if (_read_file)
             {
-                if (_read_file)
-                {
-                    _read_file.reset();
-                }
+                _read_file.reset();
+            }
 
-                return result.set_to_good_status_with_value(
-                    true
-                );
-            }
-            case FileMode::WRITE:
+            return result.set_to_good_status_with_value(
+                true
+            );
+        }
+        case FileMode::WRITE:
+        {
+            if (_write_file)
             {
-                if (_write_file)
-                {
-                    _write_file.reset();
-                }
+                _write_file.reset();
+            }
 
-                return result.set_to_good_status_with_value(
-                    true
-                );
-            }
-            case FileMode::APPEND:
+            return result.set_to_good_status_with_value(
+                true
+            );
+        }
+        case FileMode::APPEND:
+        {
+            if (_append_file)
             {
-                if (_append_file)
-                {
-                    _append_file.reset();
-                }
+                _append_file.reset();
+            }
 
-                return result.set_to_good_status_with_value(
-                    true
-                );
-            }
-            default:
-            {
-                return result.set_to_bad_status_without_value(
-                    "File close found"
-                );
-            }
+            return result.set_to_good_status_with_value(
+                true
+            );
+        }
+        default:
+        {
+            return result.set_to_bad_status_without_value(
+                "File close found"
+            );
+        }
         }
     }
 
@@ -266,7 +285,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::TextFileIO::is_open()",
+                exception.what()
+            );
 
+            return false;
         }
     }
 
@@ -277,30 +301,30 @@ namespace QLogicaeCore
     {
         switch (file_mode)
         {
-            case FileMode::READ:
-            {
-                return result.set_to_good_status_with_value(
-                    _read_file.has_value()
-                );
-            }
-            case FileMode::WRITE:
-            {
-                return result.set_to_good_status_with_value(
-                    _write_file.has_value()
-                );
-            }
-            case FileMode::APPEND:
-            {
-                return result.set_to_good_status_with_value(
-                    _append_file.has_value()
-                );
-            }
-            default:
-            {
-                return result.set_to_bad_status_without_value(
-                    "Invalid file mode"
-                );
-            }
+        case FileMode::READ:
+        {
+            return result.set_to_good_status_with_value(
+                _read_file.has_value()
+            );
+        }
+        case FileMode::WRITE:
+        {
+            return result.set_to_good_status_with_value(
+                _write_file.has_value()
+            );
+        }
+        case FileMode::APPEND:
+        {
+            return result.set_to_good_status_with_value(
+                _append_file.has_value()
+            );
+        }
+        default:
+        {
+            return result.set_to_bad_status_without_value(
+                "Invalid file mode"
+            );
+        }
         }
     }
 
@@ -320,7 +344,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::TextFileIO::read()",
+                exception.what()
+            );
 
+            return "";
         }
     }
 
@@ -366,7 +395,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::TextFileIO::write()",
+                exception.what()
+            );
 
+            return false;
         }
     }
 
@@ -374,7 +408,7 @@ namespace QLogicaeCore
         Result<bool>& result,
         const std::string& content
     )
-    {        
+    {
         if (!open(FileMode::WRITE))
         {
             return result.set_to_bad_status_without_value(
@@ -395,6 +429,7 @@ namespace QLogicaeCore
             true
         );
     }
+
     bool TextFileIO::append(
         const std::string& content
     )
@@ -414,7 +449,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::TextFileIO::open()",
+                exception.what()
+            );
 
+            return false;
         }
     }
 

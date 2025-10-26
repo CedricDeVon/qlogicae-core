@@ -1,8 +1,8 @@
 #pragma once
 
 #include "time.hpp"
+#include "logger.hpp"
 #include "result.hpp"
-#include "cli_io.hpp"
 #include "log_level.hpp"
 #include "time_format.hpp"
 #include "result_status.hpp"
@@ -89,6 +89,23 @@ namespace QLogicaeCore
 
         void to_log_format(
             Result<std::string>& result,
+            const std::string& text,
+            const LogLevel& log_level,
+            const TimeFormat& time_format,
+            const size_t& length = 128
+        );
+
+        std::string to_log_format(
+            const std::string& name,
+            const std::string& text,
+            const LogLevel& log_level,
+            const TimeFormat& time_format,
+            const size_t& length = 128
+        );
+
+        void to_log_format(
+            Result<std::string>& result,
+            const std::string& name,
             const std::string& text,
             const LogLevel& log_level,
             const TimeFormat& time_format,

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "logger.hpp"
 #include "encoder.hpp"
 #include "windows_registry.hpp"
 #include "abstract_value_extractor.hpp"

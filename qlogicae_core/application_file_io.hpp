@@ -1,6 +1,7 @@
 #pragma once
 
 #include "result.hpp"
+#include "logger.hpp"
 #include "xml_file_io.hpp"
 #include "csv_file_io.hpp"
 #include "file_uri_io.hpp"

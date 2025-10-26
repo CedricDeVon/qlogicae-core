@@ -26,7 +26,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Transformer::setup()",
+                exception.what()
+            );
 
+            return false;
         }
     }
 
@@ -52,7 +57,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Transformer::color_type()",
+                exception.what()
+            );
+
+            return "";
         }
     }
 
@@ -175,7 +185,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Transformer::to_na_format()",
+                exception.what()
+            );
+
+            return "";
         }
     }
 
@@ -203,7 +218,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Transformer::to_none_format()",
+                exception.what()
+            );
+
+            return "";
         }
     }
 
@@ -236,7 +256,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Transformer::split()",
+                exception.what()
+            );
+
+            return {};
         }
     }
 
@@ -282,7 +307,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Transformer::to_log_format()",
+                exception.what()
+            );
+
+            return "";
         }
     }
 
@@ -299,7 +329,65 @@ namespace QLogicaeCore
             "[" +
             TIME.now(time_format) +
             "] [" +
-            get_log_level_string(level) +
+            UTILITIES.LOG_LEVEL_ENUMS_2.at(level) +
+            "]\t" +
+            text +
+            "\n"
+        );
+        result.set_status_to_good();
+    }
+
+    std::string Transformer::to_log_format(
+        const std::string& name,
+        const std::string& text,
+        const LogLevel& log_level,
+        const TimeFormat& time_format,
+        const size_t& output_length
+    )
+    {
+        try
+        {
+            Result<std::string> string_result;
+
+            to_log_format(
+                string_result,
+                name,
+                text,
+                log_level,
+                time_format,
+                output_length
+            );
+
+            return string_result.get_value();
+        }
+        catch (const std::exception& exception)
+        {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Transformer::to_log_format()",
+                exception.what()
+            );
+
+            return "";
+        }
+    }
+
+    void Transformer::to_log_format(
+        Result<std::string>& result,
+        const std::string& name,
+        const std::string& text,
+        const LogLevel& level,
+        const TimeFormat& time_format,
+        const size_t& output_length
+    )
+    {
+        result.get_value().reserve(output_length);
+        result.set_value(
+            "[" +
+            name +
+            "] [" +
+            TIME.now(time_format) +
+            "] [" +
+            UTILITIES.LOG_LEVEL_ENUMS_2.at(level) +
             "]\t" +
             text +
             "\n"
@@ -328,7 +416,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Transformer::to_log_format()",
+                exception.what()
+            );
+
+            return "";
         }
     }
 
@@ -344,13 +437,15 @@ namespace QLogicaeCore
             "[" +
             TIME.now(TimeFormat::FULL_TIMESTAMP) +
             "] [" +
-            get_log_level_string(log_level) +
+            UTILITIES.LOG_LEVEL_ENUMS_2.at(log_level) +
             "]\t" +
             text +
             "\n"
         );
         result.set_status_to_good();
     }
+
+
 
     std::string Transformer::to_log_level_color_format(
         const std::string& text,
@@ -373,7 +468,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Transformer::to_log_level_color_format()",
+                exception.what()
+            );
+
+            return "";
         }
     }
 
@@ -419,7 +519,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Transformer::to_result_message_format()",
+                exception.what()
+            );
 
+            return "";
         }
     }
 
@@ -463,7 +568,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Transformer::to_exception_text_format()",
+                exception.what()
+            );
 
+            return "";
         }
     }
 
@@ -474,7 +584,7 @@ namespace QLogicaeCore
     )
     {
         result.set_to_good_status_with_value(
-            "Exception at " + origin + " - " + text
+            "'" + origin + "' - " + text
         );
     }
 

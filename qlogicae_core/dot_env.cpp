@@ -27,7 +27,12 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
+			LOGGER.handle_exception_async(
+				"QLogicaeCore::DotEnv::setup()",
+				exception.what()
+			);
 
+			return false;
 		}
 	}
 
@@ -131,9 +136,14 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
+			LOGGER.handle_exception_async(
+				"QLogicaeCore::DotEnv::set()",
+				exception.what()
+			);
+
 			throw std::runtime_error(
 				std::string() +
-				"Exception at DotEnv::set(): " +
+				"QLogicaeCore::DotEnv::set(): " +
 				exception.what()
 			);
 		}
@@ -153,9 +163,14 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
+			LOGGER.handle_exception_async(
+				"QLogicaeCore::DotEnv::reverse()",
+				exception.what()
+			);
+
 			throw std::runtime_error(
 				std::string() +
-				"Exception at DotEnv::remove(): " +
+				"QLogicaeCore::DotEnv::remove(): " +
 				exception.what()
 			);
 		}
@@ -191,9 +206,14 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
+			LOGGER.handle_exception_async(
+				"QLogicaeCore::DotEnv::get()",
+				exception.what()
+			);
+
 			throw std::runtime_error(
 				std::string() +
-				"Exception at DotEnv::get(): " +
+				"QLogicaeCore::DotEnv::get(): " +
 				exception.what()
 			);
 		}

@@ -26,7 +26,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::SystemAccess::setup()",
+                exception.what()
+            );
 
+            return false;
         }
     }
 
@@ -143,8 +148,13 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::SystemAccess::has_admin_access()",
+                exception.what()
+            );
+
             throw std::runtime_error(
-                std::string() + "Exception at SystemAccess::has_admin_access(): " +
+                std::string() + "QLogicaeCore::SystemAccess::has_admin_access(): " +
                 exception.what()
             );
         }
@@ -169,7 +179,7 @@ namespace QLogicaeCore
 
             std::filesystem::path dir =
                 std::filesystem::path(buffer)
-                    .parent_path();
+                .parent_path();
             const std::wstring& wstr =
                 dir.wstring();
             if (wstr.empty())
@@ -207,9 +217,14 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::SystemAccess::get_executable_dir()",
+                exception.what()
+            );
+
             throw std::runtime_error(
                 std::string() +
-                "Exception at SystemAccess::get_executable_dir(): " +
+                "QLogicaeCore::SystemAccess::get_executable_dir(): " +
                 exception.what()
             );
         }
@@ -223,9 +238,14 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::SystemAccess::get_executed_folder()",
+                exception.what()
+            );
+
             throw std::runtime_error(
                 std::string() +
-                "Exception at SystemAccess::get_executed_folder(): " +
+                "QLogicaeCore::SystemAccess::get_executed_folder(): " +
                 exception.what()
             );
         }
@@ -234,14 +254,19 @@ namespace QLogicaeCore
     std::string SystemAccess::get_executable_folder()
     {
         try
-        {            
+        {
             return get_executable_dir();
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::SystemAccess::get_executable_folder()",
+                exception.what()
+            );
+
             throw std::runtime_error(
                 std::string() +
-                "Exception at SystemAccess::get_executable_folder(): " +
+                "QLogicaeCore::SystemAccess::get_executable_folder(): " +
                 exception.what()
             );
         }
@@ -253,10 +278,10 @@ namespace QLogicaeCore
         {
             wchar_t file_path[MAX_PATH];
             if (::GetEnvironmentVariableW(
-                    L"VSAPPIDDIR",
-                    nullptr,
-                    0
-                ) > 0 ||
+                L"VSAPPIDDIR",
+                nullptr,
+                0
+            ) > 0 ||
                 GetModuleFileNameW(
                     nullptr,
                     file_path,
@@ -278,9 +303,14 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::SystemAccess::restart_with_admin_access()",
+                exception.what()
+            );
+
             throw std::runtime_error(
                 std::string() +
-                "Exception at SystemAccess::restart_with_admin_access(): " +
+                "QLogicaeCore::SystemAccess::restart_with_admin_access(): " +
                 exception.what()
             );
         }
@@ -293,11 +323,11 @@ namespace QLogicaeCore
             wchar_t* path = nullptr;
             std::wstring result;
             if (SUCCEEDED(SHGetKnownFolderPath(
-                    FOLDERID_RoamingAppData,
-                    0,
-                    NULL,
-                    &path
-                )
+                FOLDERID_RoamingAppData,
+                0,
+                NULL,
+                &path
+            )
             ))
             {
                 result.assign(path);
@@ -310,9 +340,14 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::SystemAccess::get_roaming_appdata_folder_path()",
+                exception.what()
+            );
+
             throw std::runtime_error(
                 std::string() +
-                "Exception at SystemAccess::get_roaming_appdata_folder_path(): " +
+                "QLogicaeCore::SystemAccess::get_roaming_appdata_folder_path(): " +
                 exception.what()
             );
         }
@@ -329,7 +364,7 @@ namespace QLogicaeCore
                 0,
                 NULL,
                 &path))
-            )
+                )
             {
                 result.assign(path);
                 CoTaskMemFree(path);
@@ -341,9 +376,14 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::SystemAccess::get_local_appdata_folder_path()",
+                exception.what()
+            );
+
             throw std::runtime_error(
                 std::string() +
-                "Exception at SystemAccess::get_local_appdata_folder_path(): " +
+                "QLogicaeCore::SystemAccess::get_local_appdata_folder_path(): " +
                 exception.what()
             );
         }
@@ -371,9 +411,14 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::SystemAccess::get_programdata_folder_path()",
+                exception.what()
+            );
+
             throw std::runtime_error(
                 std::string() +
-                "Exception at SystemAccess::get_programdata_folder_path(): " +
+                "QLogicaeCore::SystemAccess::get_programdata_folder_path(): " +
                 exception.what()
             );
         }

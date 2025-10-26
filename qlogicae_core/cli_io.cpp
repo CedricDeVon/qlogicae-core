@@ -33,7 +33,12 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
+			LOGGER.handle_exception_async(
+				"QLogicaeCore::CliIO::setup()",
+				exception.what()
+			);
 
+			return false;
 		}
 	}
 
@@ -196,7 +201,12 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
-			
+			LOGGER.handle_exception_async(
+				"QLogicaeCore::CliIO::builtin_scan()",
+				exception.what()
+			);
+
+			return "";
 		}		
 	}
 
@@ -226,7 +236,12 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
-			
+			LOGGER.handle_exception_async(
+				"QLogicaeCore::CliIO::scan()",
+				exception.what()
+			);
+
+			return "";
 		}
 	}
 
@@ -262,7 +277,10 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
-
+			LOGGER.handle_exception_async(
+				"QLogicaeCore::CliIO::print()",
+				exception.what()
+			);
 		}
 	}
 
@@ -293,7 +311,10 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
-
+			LOGGER.handle_exception_async(
+				"QLogicaeCore::CliIO::print_with_new_line()",
+				exception.what()
+			);
 		}
 	}
 
@@ -324,7 +345,10 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
-
+			LOGGER.handle_exception_async(
+				"QLogicaeCore::CliIO::builtin_print_with_new_line()",
+				exception.what()
+			);
 		}
 	}
 
@@ -353,7 +377,10 @@ namespace QLogicaeCore
 		}
 		catch (const std::exception& exception)
 		{
-
+			LOGGER.handle_exception_async(
+				"QLogicaeCore::CliIO::builtin_print()",
+				exception.what()
+			);
 		}
 	}
 

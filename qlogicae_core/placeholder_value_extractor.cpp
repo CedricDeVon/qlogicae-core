@@ -36,7 +36,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::PlaceholderValueExtractor::setup()",
+                exception.what()
+            );
 
+            return false;
         }
     }
 
@@ -57,7 +62,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::PlaceholderValueExtractor::setup()",
+                exception.what()
+            );
 
+            return false;
         }
     }
 

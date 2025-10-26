@@ -40,7 +40,7 @@ namespace QLogicaeCoreTest
     TEST_F(LoggerTest, Should_Expect_AsyncLogToComplete_When_LogAsync)
     {
         QLogicaeCore::Logger logger;
-        std::future<void> future = logger.log_async("message");
+        std::future<void> future = logger.log_timestamp_async("message");
         future.get();
         SUCCEED();
     }

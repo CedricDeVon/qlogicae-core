@@ -38,8 +38,13 @@ namespace QLogicaeCore
         {
             if (_is_enabled)
             {
+                LOGGER.handle_exception_async(
+                    "QLogicaeCore::ApplicationLogger::setup()",
+                    "Can only be called once"
+                );
+
                 return result.set_to_bad_status_without_value(
-                    "Exception at ApplicationLogger::setup() - Can only be called once"
+                    "QLogicaeCore::ApplicationLogger::setup() - Can only be called once"
                 );
             }
 
@@ -58,8 +63,13 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::ApplicationLogger::setup()",
+                exception.what()
+            );
+
             result.set_to_bad_status_without_value(
-                std::string("Exception at ApplicationLogger::setup() - ") +
+                std::string("QLogicaeCore::ApplicationLogger::setup() - ") +
                 exception.what()
             );
         }        
