@@ -21,502 +21,502 @@
     <ClInclude Include="pch.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="abstract_file_io.hpp">
+    <ClInclude Include="qlogicae_core\abstract_file_io.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="abstract_result.hpp">
+    <ClInclude Include="qlogicae_core\abstract_result.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="abstract_value_extractor.hpp">
+    <ClInclude Include="qlogicae_core\abstract_value_extractor.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="bad_result.hpp">
+    <ClInclude Include="qlogicae_core\bad_result.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="binary_file_io.hpp">
+    <ClInclude Include="qlogicae_core\binary_file_io.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="cli_io.hpp">
+    <ClInclude Include="qlogicae_core\cli_io.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="cryptographer.hpp">
+    <ClInclude Include="qlogicae_core\cryptographer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="xchacha20_poly1305_cipher_cryptographer.hpp">
+    <ClInclude Include="qlogicae_core\xchacha20_poly1305_cipher_cryptographer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="aes256_cipher_cryptographer.hpp">
+    <ClInclude Include="qlogicae_core\aes256_cipher_cryptographer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="argon2id_hash_cryptographer.hpp">
+    <ClInclude Include="qlogicae_core\argon2id_hash_cryptographer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="aes256_signature_cryptographer.hpp">
+    <ClInclude Include="qlogicae_core\aes256_signature_cryptographer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="csv_file_io.hpp">
+    <ClInclude Include="qlogicae_core\csv_file_io.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dot_env.hpp">
+    <ClInclude Include="qlogicae_core\dot_env.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dot_env_value_extractor.hpp">
+    <ClInclude Include="qlogicae_core\dot_env_value_extractor.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="encoder.hpp">
+    <ClInclude Include="qlogicae_core\encoder.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="file_ios.hpp">
+    <ClInclude Include="qlogicae_core\file_ios.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="generator.hpp">
+    <ClInclude Include="qlogicae_core\generator.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="globals.hpp">
+    <ClInclude Include="qlogicae_core\globals.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="good_result.hpp">
+    <ClInclude Include="qlogicae_core\good_result.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="interval.hpp">
+    <ClInclude Include="qlogicae_core\interval.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="json_file_io.hpp">
+    <ClInclude Include="qlogicae_core\json_file_io.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="logger.hpp">
+    <ClInclude Include="qlogicae_core\logger.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="network_ping.hpp">
+    <ClInclude Include="qlogicae_core\network_ping.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="placeholder_value_extractor.hpp">
+    <ClInclude Include="qlogicae_core\placeholder_value_extractor.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="regular_expression.hpp">
+    <ClInclude Include="qlogicae_core\regular_expression.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="rocksdb_database.hpp">
+    <ClInclude Include="qlogicae_core\rocksdb_database.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="system_access.hpp">
+    <ClInclude Include="qlogicae_core\system_access.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="text_file_io.hpp">
+    <ClInclude Include="qlogicae_core\text_file_io.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="time.hpp">
+    <ClInclude Include="qlogicae_core\time.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="timeout.hpp">
+    <ClInclude Include="qlogicae_core\timeout.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="toml_file_io.hpp">
+    <ClInclude Include="qlogicae_core\toml_file_io.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="transformer.hpp">
+    <ClInclude Include="qlogicae_core\transformer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="validators.hpp">
+    <ClInclude Include="qlogicae_core\validators.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="windows_registry.hpp">
+    <ClInclude Include="qlogicae_core\windows_registry.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="windows_registry_value_extractor.hpp">
+    <ClInclude Include="qlogicae_core\windows_registry_value_extractor.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="qlogicae_core.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="string_memory_pool.hpp">
+    <ClInclude Include="qlogicae_core\string_memory_pool.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="event_dispatcher.hpp">
+    <ClInclude Include="qlogicae_core\event_dispatcher.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="string_builder.hpp">
+    <ClInclude Include="qlogicae_core\string_builder.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="thread_pool.hpp">
+    <ClInclude Include="qlogicae_core\thread_pool.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="bcrypt_hash_cryptographer.hpp">
+    <ClInclude Include="qlogicae_core\bcrypt_hash_cryptographer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="jsonwebtoken_cryptographer.hpp">
+    <ClInclude Include="qlogicae_core\jsonwebtoken_cryptographer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sqlite.hpp">
+    <ClInclude Include="qlogicae_core\sqlite.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="file_uri_io.hpp">
+    <ClInclude Include="qlogicae_core\file_uri_io.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="xml_file_io.hpp">
+    <ClInclude Include="qlogicae_core\xml_file_io.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gmail_mailer.hpp">
+    <ClInclude Include="qlogicae_core\gmail_mailer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="groq_cloud_client_api.hpp">
+    <ClInclude Include="qlogicae_core\groq_cloud_client_api.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sha256_hash_cryptographer.hpp">
+    <ClInclude Include="qlogicae_core\sha256_hash_cryptographer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="statistician.hpp">
+    <ClInclude Include="qlogicae_core\statistician.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="temperature.hpp">
+    <ClInclude Include="qlogicae_core\temperature.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="application.hpp">
+    <ClInclude Include="qlogicae_core\application.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="utilities.hpp">
+    <ClInclude Include="qlogicae_core\utilities.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="event_dispatcher_subscription_handle.hpp">
+    <ClInclude Include="qlogicae_core\event_dispatcher_subscription_handle.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sqlite_row.hpp">
+    <ClInclude Include="qlogicae_core\sqlite_row.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sqlite_statement.hpp">
+    <ClInclude Include="qlogicae_core\sqlite_statement.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sqlite_exception.hpp">
+    <ClInclude Include="qlogicae_core\sqlite_exception.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sqlite_database.hpp">
+    <ClInclude Include="qlogicae_core\sqlite_database.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sqlite_transaction.hpp">
+    <ClInclude Include="qlogicae_core\sqlite_transaction.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sqlite_backend.hpp">
+    <ClInclude Include="qlogicae_core\sqlite_backend.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sqlite_statement_data.hpp">
+    <ClInclude Include="qlogicae_core\sqlite_statement_data.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="string_memory_pool_character_pool_block.hpp">
+    <ClInclude Include="qlogicae_core\string_memory_pool_character_pool_block.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="string_memory_pool_character_pool.hpp">
+    <ClInclude Include="qlogicae_core\string_memory_pool_character_pool.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="string_memory_pool_diagnostics.hpp">
+    <ClInclude Include="qlogicae_core\string_memory_pool_diagnostics.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="encoding_type.hpp">
+    <ClInclude Include="qlogicae_core\encoding_type.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="file_mode.hpp">
+    <ClInclude Include="qlogicae_core\file_mode.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="time_scale_unit.hpp">
+    <ClInclude Include="qlogicae_core\time_scale_unit.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="time_format.hpp">
+    <ClInclude Include="qlogicae_core\time_format.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="time_zone.hpp">
+    <ClInclude Include="qlogicae_core\time_zone.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="log_medium.hpp">
+    <ClInclude Include="qlogicae_core\log_medium.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="log_level.hpp">
+    <ClInclude Include="qlogicae_core\log_level.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="task_priority.hpp">
+    <ClInclude Include="qlogicae_core\task_priority.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="temperature_unit_type.hpp">
+    <ClInclude Include="qlogicae_core\temperature_unit_type.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="case_sensitivity.hpp">
+    <ClInclude Include="qlogicae_core\case_sensitivity.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="windows_registry_root_path.hpp">
+    <ClInclude Include="qlogicae_core\windows_registry_root_path.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="utf.hpp">
+    <ClInclude Include="qlogicae_core\utf.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="environment_variable.hpp">
+    <ClInclude Include="qlogicae_core\environment_variable.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="qlogicae_visual_studio_2022_build_architecture.hpp">
+    <ClInclude Include="qlogicae_core\qlogicae_visual_studio_2022_build_architecture.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="qlogicae_visual_studio_2022_build.hpp">
+    <ClInclude Include="qlogicae_core\qlogicae_visual_studio_2022_build.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="supported_qlogicae_ide.hpp">
+    <ClInclude Include="qlogicae_core\supported_qlogicae_ide.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="supported_qlogicae_installer.hpp">
+    <ClInclude Include="qlogicae_core\supported_qlogicae_installer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="value_enum_key_delete_handler.hpp">
+    <ClInclude Include="qlogicae_core\value_enum_key_delete_handler.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="json.hpp">
+    <ClInclude Include="qlogicae_core\json.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="json_value_type.hpp">
+    <ClInclude Include="qlogicae_core\json_value_type.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="json_value_pointer.hpp">
+    <ClInclude Include="qlogicae_core\json_value_pointer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="json_value.hpp">
+    <ClInclude Include="qlogicae_core\json_value.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="json_visitor.hpp">
+    <ClInclude Include="qlogicae_core\json_visitor.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="cryptographer_properties.hpp">
+    <ClInclude Include="qlogicae_core\cryptographer_properties.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="small_task_object.hpp">
+    <ClInclude Include="qlogicae_core\small_task_object.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="worker_queue.hpp">
+    <ClInclude Include="qlogicae_core\worker_queue.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="jsonwebtoken_transform_input.hpp">
+    <ClInclude Include="qlogicae_core\jsonwebtoken_transform_input.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="jsonwebtoken_reverse_input.hpp">
+    <ClInclude Include="qlogicae_core\jsonwebtoken_reverse_input.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="jsonwebtoken_reverse_result.hpp">
+    <ClInclude Include="qlogicae_core\jsonwebtoken_reverse_result.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="vector_string_hash.hpp">
+    <ClInclude Include="qlogicae_core\vector_string_hash.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="vector_string_equal.hpp">
+    <ClInclude Include="qlogicae_core\vector_string_equal.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="validation_password_rules.hpp">
+    <ClInclude Include="qlogicae_core\validation_password_rules.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="rocksdb_config.hpp">
+    <ClInclude Include="qlogicae_core\rocksdb_config.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="outlier_removal_options.hpp">
+    <ClInclude Include="qlogicae_core\outlier_removal_options.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="case_aware_hash.hpp">
+    <ClInclude Include="qlogicae_core\case_aware_hash.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="case_aware_equal.hpp">
+    <ClInclude Include="qlogicae_core\case_aware_equal.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="string_memory_pool_snapshot.hpp">
+    <ClInclude Include="qlogicae_core\string_memory_pool_snapshot.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="network_ping_response.hpp">
+    <ClInclude Include="qlogicae_core\network_ping_response.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="network_ping_settings.hpp">
+    <ClInclude Include="qlogicae_core\network_ping_settings.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="groq_cloud_client_api_prompt_configurations.hpp">
+    <ClInclude Include="qlogicae_core\groq_cloud_client_api_prompt_configurations.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="groq_cloud_client_api_chat_message.hpp">
+    <ClInclude Include="qlogicae_core\groq_cloud_client_api_chat_message.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="groq_cloud_client_api_request.hpp">
+    <ClInclude Include="qlogicae_core\groq_cloud_client_api_request.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="groq_cloud_client_api_response.hpp">
+    <ClInclude Include="qlogicae_core\groq_cloud_client_api_response.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="case_aware_equal.cpp">
+    <ClInclude Include="qlogicae_core\case_aware_equal.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="case_aware_hash.cpp">
+    <ClInclude Include="qlogicae_core\case_aware_hash.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="case_sensitivity.cpp">
+    <ClInclude Include="qlogicae_core\case_sensitivity.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="cryptographer_properties.cpp">
+    <ClInclude Include="qlogicae_core\cryptographer_properties.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="encoding_type.cpp">
+    <ClInclude Include="qlogicae_core\encoding_type.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="environment_variable.cpp">
+    <ClInclude Include="qlogicae_core\environment_variable.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="file_mode.cpp">
+    <ClInclude Include="qlogicae_core\file_mode.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="groq_cloud_client_api_chat_message.cpp">
+    <ClInclude Include="qlogicae_core\groq_cloud_client_api_chat_message.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="groq_cloud_client_api_prompt_configurations.cpp">
+    <ClInclude Include="qlogicae_core\groq_cloud_client_api_prompt_configurations.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="groq_cloud_client_api_request.cpp">
+    <ClInclude Include="qlogicae_core\groq_cloud_client_api_request.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="groq_cloud_client_api_response.cpp">
+    <ClInclude Include="qlogicae_core\groq_cloud_client_api_response.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="json.cpp">
+    <ClInclude Include="qlogicae_core\json.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="json_value.cpp">
+    <ClInclude Include="qlogicae_core\json_value.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="json_value_pointer.cpp">
+    <ClInclude Include="qlogicae_core\json_value_pointer.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="json_value_type.cpp">
+    <ClInclude Include="qlogicae_core\json_value_type.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="json_visitor.cpp">
+    <ClInclude Include="qlogicae_core\json_visitor.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="jsonwebtoken_reverse_input.cpp">
+    <ClInclude Include="qlogicae_core\jsonwebtoken_reverse_input.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="jsonwebtoken_reverse_result.cpp">
+    <ClInclude Include="qlogicae_core\jsonwebtoken_reverse_result.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="jsonwebtoken_transform_input.cpp">
+    <ClInclude Include="qlogicae_core\jsonwebtoken_transform_input.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="log_level.cpp">
+    <ClInclude Include="qlogicae_core\log_level.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="log_medium.cpp">
+    <ClInclude Include="qlogicae_core\log_medium.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="network_ping_response.cpp">
+    <ClInclude Include="qlogicae_core\network_ping_response.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="network_ping_settings.cpp">
+    <ClInclude Include="qlogicae_core\network_ping_settings.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="outlier_removal_options.cpp">
+    <ClInclude Include="qlogicae_core\outlier_removal_options.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="qlogicae_visual_studio_2022_build.cpp">
+    <ClInclude Include="qlogicae_core\qlogicae_visual_studio_2022_build.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="qlogicae_visual_studio_2022_build_architecture.cpp">
+    <ClInclude Include="qlogicae_core\qlogicae_visual_studio_2022_build_architecture.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="rocksdb_config.cpp">
+    <ClInclude Include="qlogicae_core\rocksdb_config.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="small_task_object.cpp">
+    <ClInclude Include="qlogicae_core\small_task_object.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="string_memory_pool_snapshot.cpp">
+    <ClInclude Include="qlogicae_core\string_memory_pool_snapshot.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="supported_qlogicae_ide.cpp">
+    <ClInclude Include="qlogicae_core\supported_qlogicae_ide.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="supported_qlogicae_installer.cpp">
+    <ClInclude Include="qlogicae_core\supported_qlogicae_installer.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="task_priority.cpp">
+    <ClInclude Include="qlogicae_core\task_priority.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="temperature_unit_type.cpp">
+    <ClInclude Include="qlogicae_core\temperature_unit_type.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="time_format.cpp">
+    <ClInclude Include="qlogicae_core\time_format.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="time_scale_unit.cpp">
+    <ClInclude Include="qlogicae_core\time_scale_unit.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="time_zone.cpp">
+    <ClInclude Include="qlogicae_core\time_zone.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="utf.cpp">
+    <ClInclude Include="qlogicae_core\utf.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="validation_password_rules.cpp">
+    <ClInclude Include="qlogicae_core\validation_password_rules.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="value_enum_key_delete_handler.cpp">
+    <ClInclude Include="qlogicae_core\value_enum_key_delete_handler.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="vector_string_equal.cpp">
+    <ClInclude Include="qlogicae_core\vector_string_equal.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="vector_string_hash.cpp">
+    <ClInclude Include="qlogicae_core\vector_string_hash.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="windows_registry_root_path.cpp">
+    <ClInclude Include="qlogicae_core\windows_registry_root_path.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="worker_queue.cpp">
+    <ClInclude Include="qlogicae_core\worker_queue.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="result.hpp">
+    <ClInclude Include="qlogicae_core\result.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="boost_interprocess_cache.hpp">
+    <ClInclude Include="qlogicae_core\boost_interprocess_cache.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="byte_size.hpp">
+    <ClInclude Include="qlogicae_core\byte_size.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="boost_interprocess_cache_shared_data.hpp">
+    <ClInclude Include="qlogicae_core\boost_interprocess_cache_shared_data.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="result_status.hpp">
+    <ClInclude Include="qlogicae_core\result_status.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="application_logger.hpp">
+    <ClInclude Include="qlogicae_core\application_logger.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="application_windows_registry.hpp">
+    <ClInclude Include="qlogicae_core\application_windows_registry.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="application_cryptographer.hpp">
+    <ClInclude Include="qlogicae_core\application_cryptographer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="application_cache.hpp">
+    <ClInclude Include="qlogicae_core\application_cache.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="application_language.hpp">
+    <ClInclude Include="qlogicae_core\application_language.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="application_file_io.hpp">
+    <ClInclude Include="qlogicae_core\application_file_io.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="application_startup_inputs.hpp">
+    <ClInclude Include="qlogicae_core\application_startup_inputs.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="application_utilities.hpp">
+    <ClInclude Include="qlogicae_core\application_utilities.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="abstract_application.hpp">
+    <ClInclude Include="qlogicae_core\abstract_application.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="logger_configurations.hpp">
+    <ClInclude Include="qlogicae_core\logger_configurations.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="log_configurations.hpp">
+    <ClInclude Include="qlogicae_core\log_configurations.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="raw.hpp">
+    <ClInclude Include="qlogicae_core\raw.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -527,246 +527,246 @@
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="abstract_file_io.cpp">
+    <ClCompile Include="qlogicae_core\abstract_file_io.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="abstract_result.cpp">
+    <ClCompile Include="qlogicae_core\abstract_result.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="abstract_value_extractor.cpp">
+    <ClCompile Include="qlogicae_core\abstract_value_extractor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="bad_result.cpp">
+    <ClCompile Include="qlogicae_core\bad_result.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="binary_file_io.cpp">
+    <ClCompile Include="qlogicae_core\binary_file_io.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cli_io.cpp">
+    <ClCompile Include="qlogicae_core\cli_io.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cryptographer.cpp">
+    <ClCompile Include="qlogicae_core\cryptographer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="xchacha20_poly1305_cipher_cryptographer.cpp">
+    <ClCompile Include="qlogicae_core\xchacha20_poly1305_cipher_cryptographer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="aes256_cipher_cryptographer.cpp">
+    <ClCompile Include="qlogicae_core\aes256_cipher_cryptographer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="argon2id_hash_cryptographer.cpp">
+    <ClCompile Include="qlogicae_core\argon2id_hash_cryptographer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="aes256_signature_cryptographer.cpp">
+    <ClCompile Include="qlogicae_core\aes256_signature_cryptographer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="csv_file_io.cpp">
+    <ClCompile Include="qlogicae_core\csv_file_io.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dot_env.cpp">
+    <ClCompile Include="qlogicae_core\dot_env.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dot_env_value_extractor.cpp">
+    <ClCompile Include="qlogicae_core\dot_env_value_extractor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="encoder.cpp">
+    <ClCompile Include="qlogicae_core\encoder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="file_ios.cpp">
+    <ClCompile Include="qlogicae_core\file_ios.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="generator.cpp">
+    <ClCompile Include="qlogicae_core\generator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="globals.cpp">
+    <ClCompile Include="qlogicae_core\globals.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="good_result.cpp">
+    <ClCompile Include="qlogicae_core\good_result.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="interval.cpp">
+    <ClCompile Include="qlogicae_core\interval.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="json_file_io.cpp">
+    <ClCompile Include="qlogicae_core\json_file_io.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="logger.cpp">
+    <ClCompile Include="qlogicae_core\logger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="network_ping.cpp">
+    <ClCompile Include="qlogicae_core\network_ping.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="placeholder_value_extractor.cpp">
+    <ClCompile Include="qlogicae_core\placeholder_value_extractor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="regular_expression.cpp">
+    <ClCompile Include="qlogicae_core\regular_expression.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="rocksdb_database.cpp">
+    <ClCompile Include="qlogicae_core\rocksdb_database.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="system_access.cpp">
+    <ClCompile Include="qlogicae_core\system_access.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="text_file_io.cpp">
+    <ClCompile Include="qlogicae_core\text_file_io.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="time.cpp">
+    <ClCompile Include="qlogicae_core\time.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="timeout.cpp">
+    <ClCompile Include="qlogicae_core\timeout.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="toml_file_io.cpp">
+    <ClCompile Include="qlogicae_core\toml_file_io.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="transformer.cpp">
+    <ClCompile Include="qlogicae_core\transformer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="validators.cpp">
+    <ClCompile Include="qlogicae_core\validators.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="windows_registry.cpp">
+    <ClCompile Include="qlogicae_core\windows_registry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="windows_registry_value_extractor.cpp">
+    <ClCompile Include="qlogicae_core\windows_registry_value_extractor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="string_memory_pool.cpp">
+    <ClCompile Include="qlogicae_core\string_memory_pool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="event_dispatcher.cpp">
+    <ClCompile Include="qlogicae_core\event_dispatcher.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="string_builder.cpp">
+    <ClCompile Include="qlogicae_core\string_builder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="thread_pool.cpp">
+    <ClCompile Include="qlogicae_core\thread_pool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="jsonwebtoken_cryptographer.cpp">
+    <ClCompile Include="qlogicae_core\jsonwebtoken_cryptographer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="bcrypt_hash_cryptographer.cpp">
+    <ClCompile Include="qlogicae_core\bcrypt_hash_cryptographer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sqlite.cpp">
+    <ClCompile Include="qlogicae_core\sqlite.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="file_uri_io.cpp">
+    <ClCompile Include="qlogicae_core\file_uri_io.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="xml_file_io.cpp">
+    <ClCompile Include="qlogicae_core\xml_file_io.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gmail_mailer.cpp">
+    <ClCompile Include="qlogicae_core\gmail_mailer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sha256_hash_cryptographer.cpp">
+    <ClCompile Include="qlogicae_core\sha256_hash_cryptographer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="groq_cloud_client_api.cpp">
+    <ClCompile Include="qlogicae_core\groq_cloud_client_api.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="statistician.cpp">
+    <ClCompile Include="qlogicae_core\statistician.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="temperature.cpp">
+    <ClCompile Include="qlogicae_core\temperature.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="application.cpp">
+    <ClCompile Include="qlogicae_core\application.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="utilities.cpp">
+    <ClCompile Include="qlogicae_core\utilities.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="event_dispatcher_subscription_handle.cpp">
+    <ClCompile Include="qlogicae_core\event_dispatcher_subscription_handle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sqlite_row.cpp">
+    <ClCompile Include="qlogicae_core\sqlite_row.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sqlite_statement.cpp">
+    <ClCompile Include="qlogicae_core\sqlite_statement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sqlite_exception.cpp">
+    <ClCompile Include="qlogicae_core\sqlite_exception.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sqlite_database.cpp">
+    <ClCompile Include="qlogicae_core\sqlite_database.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sqlite_transaction.cpp">
+    <ClCompile Include="qlogicae_core\sqlite_transaction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sqlite_backend.cpp">
+    <ClCompile Include="qlogicae_core\sqlite_backend.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sqlite_statement_data.cpp">
+    <ClCompile Include="qlogicae_core\sqlite_statement_data.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="string_memory_pool_character_pool_block.cpp">
+    <ClCompile Include="qlogicae_core\string_memory_pool_character_pool_block.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="string_memory_pool_character_pool.cpp">
+    <ClCompile Include="qlogicae_core\string_memory_pool_character_pool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="string_memory_pool_diagnostics.cpp">
+    <ClCompile Include="qlogicae_core\string_memory_pool_diagnostics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="result.cpp">
+    <ClCompile Include="qlogicae_core\result.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="boost_interprocess_cache.cpp">
+    <ClCompile Include="qlogicae_core\boost_interprocess_cache.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="byte_size.cpp">
+    <ClCompile Include="qlogicae_core\byte_size.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="boost_interprocess_cache_shared_data.cpp">
+    <ClCompile Include="qlogicae_core\boost_interprocess_cache_shared_data.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="result_status.cpp">
+    <ClCompile Include="qlogicae_core\result_status.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="application_cache.cpp">
+    <ClCompile Include="qlogicae_core\application_cache.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="application_cryptographer.cpp">
+    <ClCompile Include="qlogicae_core\application_cryptographer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="application_language.cpp">
+    <ClCompile Include="qlogicae_core\application_language.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="application_logger.cpp">
+    <ClCompile Include="qlogicae_core\application_logger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="application_windows_registry.cpp">
+    <ClCompile Include="qlogicae_core\application_windows_registry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="application_file_io.cpp">
+    <ClCompile Include="qlogicae_core\application_file_io.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="application_startup_inputs.cpp">
+    <ClCompile Include="qlogicae_core\application_startup_inputs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="application_utilities.cpp">
+    <ClCompile Include="qlogicae_core\application_utilities.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="abstract_application.cpp">
+    <ClCompile Include="qlogicae_core\abstract_application.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="logger_configurations.cpp">
+    <ClCompile Include="qlogicae_core\logger_configurations.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="log_configurations.cpp">
+    <ClCompile Include="qlogicae_core\log_configurations.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="raw.cpp">
+    <ClCompile Include="qlogicae_core\raw.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <MASM Include="assembly.asm">
+    <MASM Include="qlogicae_core\assembly.asm">
       <Filter>Source Files</Filter>
     </MASM>
   </ItemGroup>

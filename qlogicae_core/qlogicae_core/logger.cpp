@@ -105,7 +105,7 @@ namespace QLogicaeCore
 		catch (const std::exception& exception)
 		{
 			throw std::runtime_error(
-				std::string("QLogicaeCore::Logger::setup()") + exception.what()
+				std::string("QLogicaeCore::Logger::setup() - ") + exception.what()
 			);
 
 			return false;
@@ -151,7 +151,7 @@ namespace QLogicaeCore
 		catch (const std::exception& exception)
 		{
 			throw std::runtime_error(
-				std::string("QLogicaeCore::Logger::setup()") + exception.what()
+				std::string("QLogicaeCore::Logger::setup() - ") + exception.what()
 			);
 
 			return false;
@@ -204,7 +204,7 @@ namespace QLogicaeCore
 		catch (const std::exception& exception)
 		{
 			throw std::runtime_error(
-				std::string("QLogicaeCore::Logger::setup()") + exception.what()
+				std::string("QLogicaeCore::Logger::setup() - ") + exception.what()
 			);
 
 			return false;
@@ -254,7 +254,7 @@ namespace QLogicaeCore
 		catch (const std::exception& exception)
 		{
 			throw std::runtime_error(
-				std::string("QLogicaeCore::Logger::setup()") + exception.what()
+				std::string("QLogicaeCore::Logger::setup() - ") + exception.what()
 			);
 
 			return false;
@@ -798,7 +798,7 @@ namespace QLogicaeCore
 		catch (const std::exception& exception)
 		{
 			throw std::runtime_error(
-				std::string("QLogicaeCore::Logger::log_timestamp()") + exception.what()
+				std::string("QLogicaeCore::Logger::log_timestamp() - ") + exception.what()
 			);
 
 		}
@@ -844,8 +844,8 @@ namespace QLogicaeCore
 		{
 			case LogMedium::ALL:
 			{
-				log_to_console_async(
-					future_void_result_1,
+				log_to_console(
+					result,
 					string_result.get_value()
 				);
 
@@ -875,8 +875,8 @@ namespace QLogicaeCore
 			}
 			case LogMedium::CONSOLE:
 			{
-				log_to_console_async(
-					future_void_result_1,
+				log_to_console(
+					result,
 					string_result.get_value()
 				);
 
@@ -932,7 +932,7 @@ namespace QLogicaeCore
 		catch (const std::exception& exception)
 		{
 			throw std::runtime_error(
-				std::string("QLogicaeCore::Logger::log_timestamp()") + exception.what()
+				std::string("QLogicaeCore::Logger::log_timestamp() - ") + exception.what()
 			);
 		}
 	}
@@ -979,8 +979,8 @@ namespace QLogicaeCore
 		{
 		case LogMedium::ALL:
 		{
-			log_to_console_async(
-				future_void_result_1,
+			log_to_console(
+				result,
 				string_result.get_value()
 			);
 
@@ -1010,8 +1010,8 @@ namespace QLogicaeCore
 		}
 		case LogMedium::CONSOLE:
 		{
-			log_to_console_async(
-					future_void_result_1,
+			log_to_console(
+				result,
 					string_result.get_value()
 				);
 
@@ -1933,7 +1933,7 @@ namespace QLogicaeCore
 		catch (const std::exception& exception)
 		{
 			throw std::runtime_error(
-				std::string("QLogicaeCore::Logger::log_timestamp_to_console_and_file()") + exception.what()
+				std::string("QLogicaeCore::Logger::log_timestamp_to_console_and_file() - ") + exception.what()
 			);
 		}
 	}
@@ -1998,11 +1998,10 @@ namespace QLogicaeCore
 			configurations.log_level
 		);
 
-		log_to_console_async(
-			future_void_result,
+		log_to_console(
+			result,
 			string_result.get_value()
 		);
-
 
 		log_to_output_files_async(
 			future_void_result,
@@ -2096,7 +2095,7 @@ namespace QLogicaeCore
 		catch (const std::exception& exception)
 		{
 			throw std::runtime_error(
-				std::string("QLogicaeCore::Logger::log_timestamp_to_files()") + exception.what()
+				std::string("QLogicaeCore::Logger::log_timestamp_to_files() - ") + exception.what()
 			);
 		}
 	}
@@ -2253,7 +2252,7 @@ namespace QLogicaeCore
 		catch (const std::exception& exception)
 		{
 			throw std::runtime_error(
-				std::string("QLogicaeCore::Logger::log_timestamp_to_console()") + exception.what()
+				std::string("QLogicaeCore::Logger::log_timestamp_to_console() - ") + exception.what()
 			);
 		}
 	}
@@ -2417,7 +2416,7 @@ namespace QLogicaeCore
 		catch (const std::exception& exception)
 		{
 			throw std::runtime_error(
-				std::string("QLogicaeCore::Logger::log_to_console()") + exception.what()
+				std::string("QLogicaeCore::Logger::log_to_console() - ") + exception.what()
 			);
 		}
 	}
@@ -2541,7 +2540,7 @@ namespace QLogicaeCore
 		catch (const std::exception& exception)
 		{
 			throw std::runtime_error(
-				std::string("QLogicaeCore::Logger::log_to_files()") + exception.what()
+				std::string("QLogicaeCore::Logger::log_to_files() - ") + exception.what()
 			);
 		}
 	}
@@ -2665,8 +2664,6 @@ namespace QLogicaeCore
 		);
 	}
 
-
-
 	void Logger::log_to_collectivization_file(
 		const std::string& text
 	)
@@ -2683,7 +2680,7 @@ namespace QLogicaeCore
 		catch (const std::exception& exception)
 		{
 			throw std::runtime_error(
-				std::string("QLogicaeCore::Logger::log_to_collectivization_file()") + exception.what()
+				std::string("QLogicaeCore::Logger::log_to_collectivization_file() - ") + exception.what()
 			);
 		}
 	}
@@ -2817,7 +2814,7 @@ namespace QLogicaeCore
 		catch (const std::exception& exception)
 		{
 			throw std::runtime_error(
-				std::string("QLogicaeCore::Logger::log_to_fragmentation_file()") + exception.what()
+				std::string("QLogicaeCore::Logger::log_to_fragmentation_file() - ") + exception.what()
 			);
 		}
 	}
@@ -2959,7 +2956,7 @@ namespace QLogicaeCore
 		catch (const std::exception& exception)
 		{
 			throw std::runtime_error(
-				std::string("QLogicaeCore::Logger::log_to_file()") + exception.what()
+				std::string("QLogicaeCore::Logger::log_to_file() - ") + exception.what()
 			);
 		}
 	}
@@ -3100,7 +3097,7 @@ namespace QLogicaeCore
 		catch (const std::exception& exception)
 		{
 			throw std::runtime_error(
-				std::string("QLogicaeCore::Logger::log_to_output_files()") + exception.what()
+				std::string("QLogicaeCore::Logger::log_to_output_files() - ") + exception.what()
 			);
 		}
 	}
@@ -3235,7 +3232,7 @@ namespace QLogicaeCore
 		catch (const std::exception& exception)
 		{
 			throw std::runtime_error(
-				std::string("QLogicaeCore::Logger::_generate_log_fragmentation_file_path()") + exception.what()
+				std::string("QLogicaeCore::Logger::_generate_log_fragmentation_file_path() - ") + exception.what()
 			);
 		}
 	}
@@ -3265,7 +3262,7 @@ namespace QLogicaeCore
 		catch (const std::exception& exception)
 		{
 			throw std::runtime_error(
-				std::string("QLogicaeCore::Logger::_generate_log_collectivization_file_path()") + exception.what()
+				std::string("QLogicaeCore::Logger::_generate_log_collectivization_file_path() - ") + exception.what()
 			);
 		}
 	}
@@ -3300,7 +3297,7 @@ namespace QLogicaeCore
 		catch (const std::exception& exception)
 		{
 			throw std::runtime_error(
-				std::string("QLogicaeCore::Logger::_to_log_format()") + exception.what()
+				std::string("QLogicaeCore::Logger::_to_log_format() - ") + exception.what()
 			);
 		}
 	}
@@ -3347,7 +3344,7 @@ namespace QLogicaeCore
 		catch (const std::exception& exception)
 		{
 			throw std::runtime_error(
-				std::string("QLogicaeCore::Logger::_time_now()") + exception.what()
+				std::string("QLogicaeCore::Logger::_time_now() - ") + exception.what()
 			);
 		}
 	}
