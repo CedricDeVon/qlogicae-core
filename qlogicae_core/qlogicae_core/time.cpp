@@ -931,6 +931,15 @@ namespace QLogicaeCore
 
             return {};
         }
+        catch (...)
+        {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Time::_get_time_zone()",
+                "Error"
+            );
+
+            return {};
+        }
     }
 
     Time& Time::get_instance()

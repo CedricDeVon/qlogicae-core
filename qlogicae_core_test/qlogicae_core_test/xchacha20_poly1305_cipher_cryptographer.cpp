@@ -1,7 +1,7 @@
 #include "pch.hpp"
 
-#include "generator.hpp"
-#include "xchacha20_poly1305_cipher_cryptographer.hpp"
+#include "qlogicae_core/generator.hpp"
+#include "qlogicae_core/xchacha20_poly1305_cipher_cryptographer.hpp"
 
 namespace QLogicaeCoreTest
 {

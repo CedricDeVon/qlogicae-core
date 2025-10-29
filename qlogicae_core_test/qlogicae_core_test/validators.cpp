@@ -1,6 +1,6 @@
 ﻿#include "pch.hpp"
 
-#include "validators.hpp"
+#include "qlogicae_core/validators.hpp"
 
 namespace QLogicaeCoreTest
 {

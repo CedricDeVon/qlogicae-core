@@ -1,6 +1,6 @@
 #include "pch.hpp"
 
-#include "time.hpp"
+#include "qlogicae_core/time.hpp"
 
 namespace QLogicaeCoreTest
 {

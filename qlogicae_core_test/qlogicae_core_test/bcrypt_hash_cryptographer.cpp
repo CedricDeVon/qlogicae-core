@@ -1,6 +1,6 @@
 #include "pch.hpp"
 
-#include "bcrypt_hash_cryptographer.hpp"
+#include "qlogicae_core/bcrypt_hash_cryptographer.hpp"
 
 namespace QLogicaeCoreTest
 {

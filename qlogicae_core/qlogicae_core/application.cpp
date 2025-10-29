@@ -64,6 +64,9 @@ namespace QLogicaeCore
                     .is_simplified = QLOGICAE_APPLICATION_UTILITIES
                         .CONFIGURATIONS_ENVIRONMENT_LOG_IS_SIMPLIFIED,
 
+                    .is_log_console_enabled = QLOGICAE_APPLICATION_UTILITIES
+                        .CONFIGURATIONS_ENVIRONMENT_LOG_CONSOLE_IS_ENABLED,
+
                     .output_paths = QLOGICAE_APPLICATION_UTILITIES
                         .CONFIGURATIONS_ENVIRONMENT_LOG_FILE_OUTPUT_PATHS,
 

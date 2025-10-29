@@ -1,6 +1,6 @@
 #include "pch.hpp"
 
-#include "logger.hpp"
+#include "qlogicae_core/logger.hpp"
 
 namespace QLogicaeCoreTest
 {
@@ -53,7 +53,7 @@ namespace QLogicaeCoreTest
         for (int index = 0; index < 8; ++index)
         {
             thread_list.emplace_back([&logger]() {
-                logger.log("threaded message");
+                logger.log_timestamp("threaded message");
                 });
         }
 
@@ -73,7 +73,7 @@ namespace QLogicaeCoreTest
 
         while (std::chrono::steady_clock::now() - start < std::chrono::seconds(2))
         {
-            logger.log("stress log");
+            logger.log_timestamp("stress log");
             ++log_count;
         }
 
@@ -83,14 +83,14 @@ namespace QLogicaeCoreTest
     TEST_F(LoggerTest, Should_Expect_NoThrow_When_LoggingEmptyString)
     {
         QLogicaeCore::Logger logger;
-        EXPECT_NO_THROW(logger.log(""));
+        EXPECT_NO_THROW(logger.log_timestamp(""));
     }
 
     TEST_F(LoggerTest, Should_Expect_CompleteQuickly_When_LoggingUnder2Seconds)
     {
         QLogicaeCore::Logger logger;
         auto start = std::chrono::steady_clock::now();
-        logger.log("timed message");
+        logger.log_timestamp("timed message");
         auto end = std::chrono::steady_clock::now();
 
         EXPECT_LT(std::chrono::duration_cast<std::chrono::seconds>(end - start).count(), 2);
@@ -101,7 +101,7 @@ namespace QLogicaeCoreTest
         QLogicaeCore::Logger logger;
         logger.set_is_simplified(GetParam());
         EXPECT_EQ(logger.get_is_simplified(), GetParam());
-        EXPECT_NO_THROW(logger.log("param log", QLogicaeCore::LogLevel::INFO, GetParam()));
+        EXPECT_NO_THROW(logger.log_timestamp("param log", QLogicaeCore::LogLevel::INFO, GetParam()));
     }
 
     INSTANTIATE_TEST_CASE_P(LogSimplifiedStates, SimplifiedLogFlagTest,

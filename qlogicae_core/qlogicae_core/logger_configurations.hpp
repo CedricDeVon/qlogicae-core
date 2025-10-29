@@ -24,7 +24,10 @@ namespace QLogicaeCore
 
 		bool is_enabled =
 			true;
-		
+
+		bool is_log_console_enabled =
+			true;
+
 		std::vector<std::string> output_paths =
 			{};
 		

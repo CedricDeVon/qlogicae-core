@@ -815,6 +815,8 @@ namespace QLogicaeCore
 
 		std::vector<std::string> _output_paths;
 
+		bool _is_log_console_enabled;
+
 		bool _is_log_file_fragmentation_enabled;
 
 		TimeFormat _log_file_fragmentation_format;
