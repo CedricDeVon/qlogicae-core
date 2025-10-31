@@ -6,41 +6,44 @@ namespace QLogicaeCore
 {
 	struct LogConfigurations
 	{
-		LogLevel log_level = LogLevel::INFO;
+		LogLevel log_level =
+			LogLevel::INFO;
 		
-		bool is_enabled = true;
+		bool is_enabled =
+			false;
 		
-		bool is_log_format_enabled = false;
+		bool is_format_enabled =
+			false;
 
 		bool is_console_enabled =
-			true;
+			false;
 
-		bool is_console_log_format_enabled =
-			true;
+		bool is_console_format_enabled =
+			false;
 
 		bool is_file_enabled =
-			true;
+			false;
 
-		bool is_file_log_format_enabled =
-			true;
+		bool is_file_format_enabled =
+			false;
 
 		bool is_file_collectivization_enabled =
-			true;
+			false;
 
-		bool is_file_collectivization_log_format_enabled =
-			true;
+		bool is_file_collectivization_format_enabled =
+			false;
 
 		bool is_file_fragmentation_enabled =
-			true;
+			false;
 
-		bool is_file_fragmentation_log_format_enabled =
-			true;
+		bool is_file_fragmentation_format_enabled =
+			false;
 
 		bool is_file_custom_enabled =
-			true;
+			false;
 
-		bool is_file_custom_log_format_enabled =
-			true;
+		bool is_file_custom_format_enabled =
+			false;
 	};
 
 	inline static LogConfigurations DEFAULT_LOG_CONFIGURATIONS;

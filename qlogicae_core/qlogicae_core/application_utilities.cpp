@@ -156,7 +156,7 @@ namespace QLogicaeCore
                     "log", "format"
                 }
             );
-            CONFIGURATIONS_ENVIRONMENT_LOG.log_format = UTILITIES.TIME_FORMAT_STRINGS_1.at(
+            CONFIGURATIONS_ENVIRONMENT_LOG.format = UTILITIES.TIME_FORMAT_STRINGS_1.at(
                 UTILITIES.TIME_FORMAT_STRINGS_1.contains(string_output) ? string_output : UTILITIES.TIME_FORMAT_FULL_TIMESTAMP_1
             );
 
@@ -166,9 +166,9 @@ namespace QLogicaeCore
                 }
             );
 
-            CONFIGURATIONS_ENVIRONMENT_LOG.is_log_format_enabled = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_bool(
+            CONFIGURATIONS_ENVIRONMENT_LOG.is_format_enabled = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_bool(
                 {
-                    "log", "is_log_format_enabled"
+                    "log", "is_format_enabled"
                 }
             );
 
@@ -178,9 +178,9 @@ namespace QLogicaeCore
                 }
             );
 
-            CONFIGURATIONS_ENVIRONMENT_LOG.is_log_format_enabled = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_bool(
+            CONFIGURATIONS_ENVIRONMENT_LOG.is_format_enabled = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_bool(
                 {
-                    "log", "console", "is_log_format_enabled"
+                    "log", "console", "is_format_enabled"
                 }
             );
 
@@ -190,9 +190,9 @@ namespace QLogicaeCore
                 }
             );
 
-            CONFIGURATIONS_ENVIRONMENT_LOG.is_file_log_format_enabled = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_bool(
+            CONFIGURATIONS_ENVIRONMENT_LOG.is_file_format_enabled = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_bool(
                 {
-                    "log", "file", "is_log_format_enabled"
+                    "log", "file", "is_format_enabled"
                 }
             );
 
@@ -202,9 +202,9 @@ namespace QLogicaeCore
                 }
             );
 
-            CONFIGURATIONS_ENVIRONMENT_LOG.is_file_collectivization_log_format_enabled = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_bool(
+            CONFIGURATIONS_ENVIRONMENT_LOG.is_file_collectivization_format_enabled = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_bool(
                 {
-                    "log", "file", "collectivization", "is_log_format_enabled"
+                    "log", "file", "collectivization", "is_format_enabled"
                 }
             );
 
@@ -220,9 +220,9 @@ namespace QLogicaeCore
                 }
             );
 
-            CONFIGURATIONS_ENVIRONMENT_LOG.is_file_fragmentation_log_format_enabled = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_bool(
+            CONFIGURATIONS_ENVIRONMENT_LOG.is_file_fragmentation_format_enabled = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_bool(
                 {
-                    "log", "file", "fragmentation", "is_log_format_enabled"
+                    "log", "file", "fragmentation", "is_format_enabled"
                 }
             );
 
@@ -241,9 +241,9 @@ namespace QLogicaeCore
                 }
             );
 
-            CONFIGURATIONS_ENVIRONMENT_LOG.is_file_custom_log_format_enabled = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_bool(
+            CONFIGURATIONS_ENVIRONMENT_LOG.is_file_custom_format_enabled = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_bool(
                 {
-                    "log", "file", "custom", "is_log_format_enabled"
+                    "log", "file", "custom", "is_format_enabled"
                 }
             );
 

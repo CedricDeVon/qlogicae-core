@@ -13,10 +13,10 @@ namespace QLogicaeCore
 		std::string name = "";
 		
 		bool is_enabled =
-			true;
+			false;
 	
-		bool is_log_format_enabled =
-			true;
+		bool is_format_enabled =
+			false;
 
 		LogMedium medium =
 			LogMedium::CONSOLE;
@@ -24,58 +24,53 @@ namespace QLogicaeCore
 		TimeZone time_zone =
 			TimeZone::LOCAL;
 
-		TimeFormat log_format =
+		TimeFormat format =
 			TimeFormat::FULL_TIMESTAMP;
 
 		bool is_console_enabled =
-			true;
+			false;
 		
-		bool is_console_log_format_enabled =
-			true;
-		
-
+		bool is_console_format_enabled =
+			false;	
 
 		bool is_file_enabled =
-			true;
+			false;
 
-		bool is_file_log_format_enabled =
-			true;
-
-
+		bool is_file_format_enabled =
+			false;
 
 		bool is_file_collectivization_enabled =
-			true;
+			false;
 
-		bool is_file_collectivization_log_format_enabled =
-			true;
+		bool is_file_collectivization_format_enabled =
+			false;
 
 		std::string file_collectivization_file_name =
 			"all.log";
 
-		std::string file_collectivization_folder_path =
-			".qlogicae";
+		std::string file_collectivization_file_path =
+			"";
 
-		
+		std::string file_collectivization_folder_path =
+			"";		
 
 		bool is_file_fragmentation_enabled =
-			true;
+			false;
 		
-		bool is_file_fragmentation_log_format_enabled =
-			true;
+		bool is_file_fragmentation_format_enabled =
+			false;
 
 		TimeFormat file_fragmentation_file_name_format =
 			TimeFormat::DATE_DMY_SLASHED;
 
 		std::string file_fragmentation_folder_path =
-			".qlogicae/logs";
+			"";
 		
-
-
 		bool is_file_custom_enabled =
-			true;
+			false;
 
-		bool is_file_custom_log_format_enabled =
-			true;
+		bool is_file_custom_format_enabled =
+			false;
 
 		std::vector<std::string> file_custom_output_paths =
 			{};		

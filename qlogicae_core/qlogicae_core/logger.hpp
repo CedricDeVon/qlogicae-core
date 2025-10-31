@@ -643,52 +643,8 @@ namespace QLogicaeCore
 			Result<Logger*>& result
 		);
 
-	protected:		
-		std::string _name;
-
-		bool _is_enabled;
-
-		bool _is_log_format_enabled;
-		
-		LogMedium _log_medium;
-
-		TimeZone _log_time_zone;		
-
-		TimeFormat _log_format;
-
-
-
-		bool _is_console_enabled;
-
-		bool _is_console_log_format_enabled;
-
-		bool _is_file_enabled;
-
-		bool _is_file_log_format_enabled;
-
-		bool _is_file_collectivization_enabled;
-
-		bool _is_file_collectivization_log_format_enabled;
-
-		std::string _file_collectivization_file_name;
-
-		std::string _file_collectivization_file_path;
-		
-		std::string _file_collectivization_folder_path;		
-
-		bool _is_file_fragmentation_enabled;
-
-		bool _is_file_fragmentation_log_format_enabled;
-		
-		TimeFormat _file_fragmentation_file_name_format;
-
-		std::string _file_fragmentation_folder_path;				
-
-		bool _is_file_custom_enabled;
-
-		bool _is_file_custom_log_format_enabled;
-
-		std::vector<std::string> _file_custom_output_paths;
+	protected:				
+		LoggerConfigurations _configurations;
 
 		mutable std::shared_mutex _mutex;
 
@@ -732,6 +688,52 @@ namespace QLogicaeCore
 }
 
 
+/*
+		std::string _name;
+
+		bool _is_enabled;
+
+		bool _is_log_format_enabled;
+
+		LogMedium _log_medium;
+
+		TimeZone _log_time_zone;
+
+		TimeFormat _log_format;
+
+		bool _is_console_enabled;
+
+		bool _is_console_log_format_enabled;
+
+		bool _is_file_enabled;
+
+		bool _is_file_log_format_enabled;
+
+		bool _is_file_collectivization_enabled;
+
+		bool _is_file_collectivization_log_format_enabled;
+
+		std::string _file_collectivization_file_name;
+
+		std::string _file_collectivization_file_path;
+
+		std::string _file_collectivization_folder_path;
+
+		bool _is_file_fragmentation_enabled;
+
+		bool _is_file_fragmentation_log_format_enabled;
+
+		TimeFormat _file_fragmentation_file_name_format;
+
+		std::string _file_fragmentation_folder_path;
+
+		bool _is_file_custom_enabled;
+
+		bool _is_file_custom_log_format_enabled;
+
+		std::vector<std::string> _file_custom_output_paths;
+
+		*/
 
 /*
 
