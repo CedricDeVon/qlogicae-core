@@ -18,6 +18,7 @@
 #include "qlogicae_core/log_level.hpp"
 #include "qlogicae_core/time_zone.hpp"
 #include "qlogicae_core/file_mode.hpp"
+#include "qlogicae_core/time_delay.hpp"
 #include "qlogicae_core/json_value.hpp"
 #include "qlogicae_core/log_medium.hpp"
 #include "qlogicae_core/time_format.hpp"

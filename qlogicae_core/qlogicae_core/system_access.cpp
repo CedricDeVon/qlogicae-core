@@ -26,7 +26,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception_async(
+            LOGGER.handle_exception(
                 "QLogicaeCore::SystemAccess::setup()",
                 exception.what()
             );
@@ -148,7 +148,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception_async(
+            LOGGER.handle_exception(
                 "QLogicaeCore::SystemAccess::has_admin_access()",
                 exception.what()
             );
@@ -217,7 +217,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception_async(
+            LOGGER.handle_exception(
                 "QLogicaeCore::SystemAccess::get_executable_dir()",
                 exception.what()
             );
@@ -238,7 +238,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception_async(
+            LOGGER.handle_exception(
                 "QLogicaeCore::SystemAccess::get_executed_folder()",
                 exception.what()
             );
@@ -259,7 +259,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception_async(
+            LOGGER.handle_exception(
                 "QLogicaeCore::SystemAccess::get_executable_folder()",
                 exception.what()
             );
@@ -303,7 +303,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception_async(
+            LOGGER.handle_exception(
                 "QLogicaeCore::SystemAccess::restart_with_admin_access()",
                 exception.what()
             );
@@ -340,7 +340,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception_async(
+            LOGGER.handle_exception(
                 "QLogicaeCore::SystemAccess::get_roaming_appdata_folder_path()",
                 exception.what()
             );
@@ -376,7 +376,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception_async(
+            LOGGER.handle_exception(
                 "QLogicaeCore::SystemAccess::get_local_appdata_folder_path()",
                 exception.what()
             );
@@ -411,7 +411,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception_async(
+            LOGGER.handle_exception(
                 "QLogicaeCore::SystemAccess::get_programdata_folder_path()",
                 exception.what()
             );

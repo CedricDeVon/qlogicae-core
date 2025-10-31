@@ -68,7 +68,7 @@ namespace QLogicaeCore
 
 	Utilities::~Utilities()
 	{
-		UTILITIES.BOOST_ASIO_POOL.join();
+		
 	}
 
     bool Utilities::setup()

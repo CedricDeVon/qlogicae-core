@@ -56,6 +56,8 @@ namespace QLogicaeCore
                 "QLogicaeCore::WindowsRegistryValueExtractor::setup()",
                 exception.what()
             );
+
+            return false;
         }
     }
 

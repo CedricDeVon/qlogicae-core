@@ -4,7 +4,8 @@
 
 namespace QLogicaeCore
 {
-    TextFileIO::TextFileIO()
+    TextFileIO::TextFileIO() :
+        AbstractFileIO()
     {
         
     }
@@ -55,7 +56,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception_async(
+            LOGGER.handle_exception(
                 "QLogicaeCore::TextFileIO::setup()",
                 exception.what()
             );
@@ -88,7 +89,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception_async(
+            LOGGER.handle_exception(
                 "QLogicaeCore::TextFileIO::setup()",
                 exception.what()
             );
@@ -126,7 +127,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception_async(
+            LOGGER.handle_exception(
                 "QLogicaeCore::TextFileIO::open()",
                 exception.what()
             );
@@ -146,8 +147,8 @@ namespace QLogicaeCore
         {
             if (!std::filesystem::exists(_file_path))
             {
-                return result.set_to_bad_status_without_value(
-                    "File not found"
+                return result.set_to_bad_status_with_value(
+                    false, "File not found"
                 );
             }
             if (!_read_file)
@@ -186,8 +187,8 @@ namespace QLogicaeCore
         }
         default:
         {
-            return result.set_to_bad_status_without_value(
-                "File open failed"
+            return result.set_to_bad_status_with_value(
+                false, "File open failed"
             );
         }
         }
@@ -210,7 +211,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception_async(
+            LOGGER.handle_exception(
                 "QLogicaeCore::TextFileIO::close()",
                 exception.what()
             );
@@ -226,45 +227,45 @@ namespace QLogicaeCore
     {
         switch (file_mode)
         {
-        case FileMode::READ:
-        {
-            if (_read_file)
+            case FileMode::READ:
             {
-                _read_file.reset();
-            }
+                if (_read_file)
+                {
+                    _read_file.reset();
+                }
 
-            return result.set_to_good_status_with_value(
-                true
-            );
-        }
-        case FileMode::WRITE:
-        {
-            if (_write_file)
+                return result.set_to_good_status_with_value(
+                    true
+                );
+            }
+            case FileMode::WRITE:
             {
-                _write_file.reset();
-            }
+                if (_write_file)
+                {
+                    _write_file.reset();
+                }
 
-            return result.set_to_good_status_with_value(
-                true
-            );
-        }
-        case FileMode::APPEND:
-        {
-            if (_append_file)
+                return result.set_to_good_status_with_value(
+                    true
+                );
+            }
+            case FileMode::APPEND:
             {
-                _append_file.reset();
-            }
+                if (_append_file)
+                {
+                    _append_file.reset();
+                }
 
-            return result.set_to_good_status_with_value(
-                true
-            );
-        }
-        default:
-        {
-            return result.set_to_bad_status_without_value(
-                "File close found"
-            );
-        }
+                return result.set_to_good_status_with_value(
+                    true
+                );
+            }
+            default:
+            {
+                return result.set_to_bad_status_with_value(
+                    false, "File close found"
+                );
+            }
         }
     }
 
@@ -285,7 +286,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception_async(
+            LOGGER.handle_exception(
                 "QLogicaeCore::TextFileIO::is_open()",
                 exception.what()
             );
@@ -321,8 +322,8 @@ namespace QLogicaeCore
         }
         default:
         {
-            return result.set_to_bad_status_without_value(
-                "Invalid file mode"
+            return result.set_to_bad_status_with_value(
+                false, "Invalid file mode"
             );
         }
         }
@@ -344,7 +345,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception_async(
+            LOGGER.handle_exception(
                 "QLogicaeCore::TextFileIO::read()",
                 exception.what()
             );
@@ -395,7 +396,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception_async(
+            LOGGER.handle_exception(
                 "QLogicaeCore::TextFileIO::write()",
                 exception.what()
             );
@@ -449,7 +450,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception_async(
+            LOGGER.handle_exception(
                 "QLogicaeCore::TextFileIO::open()",
                 exception.what()
             );

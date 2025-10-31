@@ -13,8 +13,8 @@ namespace QLogicaeCoreTest
         QLogicaeCore::Logger logger;
         EXPECT_EQ(logger.get_name(), "");
         EXPECT_EQ(logger.get_medium(), QLogicaeCore::LogMedium::CONSOLE);
-        EXPECT_FALSE(logger.get_is_simplified());
-        EXPECT_TRUE(logger.get_output_paths().empty());
+        EXPECT_TRUE(logger.get_is_log_format_enabled());
+        EXPECT_TRUE(logger.get_file_custom_output_paths().empty());
     }
 
     TEST_F(LoggerTest, Should_Expect_ProperInitialization_When_ConstructedWithParams)
@@ -25,22 +25,22 @@ namespace QLogicaeCoreTest
 
         EXPECT_EQ(logger.get_name(), "MyLogger");
         EXPECT_EQ(logger.get_medium(), QLogicaeCore::LogMedium::CONSOLE);
-        EXPECT_TRUE(logger.get_is_simplified());
-        EXPECT_EQ(logger.get_output_paths(), paths);
+        EXPECT_TRUE(logger.get_is_log_format_enabled());
+        EXPECT_EQ(logger.get_file_custom_output_paths(), paths);
     }
 
-    TEST_F(LoggerTest, Should_Expect_FlagUpdated_When_SetIsSimplified)
+    TEST_F(LoggerTest, Should_Expect_FlagUpdated_When_SetIsLogFormatEnabled)
     {
         QLogicaeCore::Logger logger;
-        EXPECT_FALSE(logger.get_is_simplified());
-        logger.set_is_simplified(true);
-        EXPECT_TRUE(logger.get_is_simplified());
+        EXPECT_TRUE(logger.get_is_log_format_enabled());
+        logger.set_is_log_format_enabled(true);
+        EXPECT_TRUE(logger.get_is_log_format_enabled());
     }
 
     TEST_F(LoggerTest, Should_Expect_AsyncLogToComplete_When_LogAsync)
     {
         QLogicaeCore::Logger logger;
-        std::future<void> future = logger.log_timestamp_async("message");
+        std::future<void> future = logger.log_with_timestamp_async("message");
         future.get();
         SUCCEED();
     }
@@ -53,7 +53,7 @@ namespace QLogicaeCoreTest
         for (int index = 0; index < 8; ++index)
         {
             thread_list.emplace_back([&logger]() {
-                logger.log_timestamp("threaded message");
+                logger.log_with_timestamp("threaded message");
                 });
         }
 
@@ -73,7 +73,7 @@ namespace QLogicaeCoreTest
 
         while (std::chrono::steady_clock::now() - start < std::chrono::seconds(2))
         {
-            logger.log_timestamp("stress log");
+            logger.log_with_timestamp("stress log");
             ++log_count;
         }
 
@@ -83,14 +83,14 @@ namespace QLogicaeCoreTest
     TEST_F(LoggerTest, Should_Expect_NoThrow_When_LoggingEmptyString)
     {
         QLogicaeCore::Logger logger;
-        EXPECT_NO_THROW(logger.log_timestamp(""));
+        EXPECT_NO_THROW(logger.log_with_timestamp(""));
     }
 
     TEST_F(LoggerTest, Should_Expect_CompleteQuickly_When_LoggingUnder2Seconds)
     {
         QLogicaeCore::Logger logger;
         auto start = std::chrono::steady_clock::now();
-        logger.log_timestamp("timed message");
+        logger.log_with_timestamp("timed message");
         auto end = std::chrono::steady_clock::now();
 
         EXPECT_LT(std::chrono::duration_cast<std::chrono::seconds>(end - start).count(), 2);
@@ -99,9 +99,9 @@ namespace QLogicaeCoreTest
     TEST_P(SimplifiedLogFlagTest, Should_Expect_LogBehavesCorrectly_When_Parameterized)
     {
         QLogicaeCore::Logger logger;
-        logger.set_is_simplified(GetParam());
-        EXPECT_EQ(logger.get_is_simplified(), GetParam());
-        EXPECT_NO_THROW(logger.log_timestamp("param log", QLogicaeCore::LogLevel::INFO, GetParam()));
+        logger.set_is_log_format_enabled(GetParam());
+        EXPECT_EQ(logger.get_is_log_format_enabled(), GetParam());
+        EXPECT_NO_THROW(logger.log_with_timestamp("param log", QLogicaeCore::LogLevel::INFO, GetParam()));
     }
 
     INSTANTIATE_TEST_CASE_P(LogSimplifiedStates, SimplifiedLogFlagTest,

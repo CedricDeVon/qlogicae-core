@@ -48,46 +48,7 @@ namespace QLogicaeCore
 
             QLOGICAE_APPLICATION_LOGGER.setup(
                 result,
-                {
-                    .name = QLOGICAE_APPLICATION_UTILITIES
-                        .CONFIGURATIONS_ENVIRONMENT_LOG_NAME,
-
-                    .log_medium = QLOGICAE_APPLICATION_UTILITIES
-                        .CONFIGURATIONS_ENVIRONMENT_LOG_MEDIUM,
-                
-                    .log_time_zone = QLOGICAE_APPLICATION_UTILITIES
-                        .CONFIGURATIONS_ENVIRONMENT_TIME_ZONE,
-
-                    .log_format = QLOGICAE_APPLICATION_UTILITIES
-                        .CONFIGURATIONS_ENVIRONMENT_LOG_FORMAT,
-
-                    .is_simplified = QLOGICAE_APPLICATION_UTILITIES
-                        .CONFIGURATIONS_ENVIRONMENT_LOG_IS_SIMPLIFIED,
-
-                    .is_log_console_enabled = QLOGICAE_APPLICATION_UTILITIES
-                        .CONFIGURATIONS_ENVIRONMENT_LOG_CONSOLE_IS_ENABLED,
-
-                    .output_paths = QLOGICAE_APPLICATION_UTILITIES
-                        .CONFIGURATIONS_ENVIRONMENT_LOG_FILE_OUTPUT_PATHS,
-
-                    .is_log_file_fragmentation_enabled = QLOGICAE_APPLICATION_UTILITIES
-                        .CONFIGURATIONS_ENVIRONMENT_LOG_FILE_IS_FRAGMENTATION_ENABLED,
-
-                    .log_file_fragmentation_output_folder_path = QLOGICAE_APPLICATION_UTILITIES
-                        .CONFIGURATIONS_ENVIRONMENT_LOG_FILE_FRAGMENTATION_OUTPUT_FOLDER_PATH,
-
-                    .log_file_fragmentation_format = QLOGICAE_APPLICATION_UTILITIES
-                        .CONFIGURATIONS_ENVIRONMENT_LOG_FILE_FRAGMENTATION_FORMAT,
-
-                    .is_log_file_collectivization_enabled = QLOGICAE_APPLICATION_UTILITIES
-                        .CONFIGURATIONS_ENVIRONMENT_LOG_FILE_IS_COLLECTIVIZATION_ENABLED,
-
-                    .log_file_collectivization_output_file_name = QLOGICAE_APPLICATION_UTILITIES
-                        .CONFIGURATIONS_ENVIRONMENT_LOG_FILE_COLLECTIVIZATION_FILE_NAME,
-
-                    .log_file_collectivization_output_folder_path = QLOGICAE_APPLICATION_UTILITIES
-                        .CONFIGURATIONS_ENVIRONMENT_LOG_FILE_COLLECTIVIZATION_OUTPUT_FOLDER_PATH,
-                }
+                QLOGICAE_APPLICATION_UTILITIES.CONFIGURATIONS_ENVIRONMENT_LOG
             );
             if (result.is_status_unsafe())
             {

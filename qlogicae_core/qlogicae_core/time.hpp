@@ -6,6 +6,11 @@
 #include "time_zone.hpp"
 #include "time_format.hpp"
 
+#include <absl/time/time.h>
+#include <absl/time/clock.h>
+#include <absl/strings/str_cat.h>
+#include <absl/strings/str_split.h>
+
 namespace QLogicaeCore
 {
     class Time

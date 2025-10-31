@@ -361,6 +361,7 @@
     <ClInclude Include="qlogicae_core\windows_registry.hpp" />
     <ClInclude Include="qlogicae_core\windows_registry_value_extractor.hpp" />
     <ClInclude Include="qlogicae_core\xml_file_io.hpp" />
+    <ClInclude Include="qlogicae_core\time_delay.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="qlogicae_core\abstract_application.cpp" />
@@ -452,6 +453,7 @@
     <ClCompile Include="qlogicae_core\windows_registry.cpp" />
     <ClCompile Include="qlogicae_core\windows_registry_value_extractor.cpp" />
     <ClCompile Include="qlogicae_core\xml_file_io.cpp" />
+    <ClCompile Include="qlogicae_core\time_delay.cpp" />
   </ItemGroup>
   <ItemGroup>
     <MASM Include="qlogicae_core\assembly.asm" />

@@ -10,6 +10,10 @@
 
 namespace QLogicaeCore
 {	
+	void delay_microseconds(
+		double microseconds
+	);
+
 	class Logger
 	{
 	public:
@@ -18,14 +22,14 @@ namespace QLogicaeCore
 		~Logger();
 
 		Logger(
-			const bool& is_simplified
+			const bool& is_log_format_enabled
 		);
 
 		Logger(
 			const std::string& name,
 			const LogMedium& medium = LogMedium::CONSOLE,
 			const std::vector<std::string>& output_paths = {},
-			const bool& is_simplified = false
+			const bool& is_log_format_enabled = false
 		);
 
 		Logger(
@@ -33,19 +37,19 @@ namespace QLogicaeCore
 		);
 
 		Logger(
-			const Logger& logger
+			const Logger& instance
 		) = delete;
 
 		Logger(
-			Logger&& logger
+			Logger&& instance
 		) noexcept = default;
 
 		Logger& operator = (
-			const Logger& logger
+			const Logger& instance
 		) = delete;
 
 		Logger& operator = (
-			Logger&& logger
+			Logger&& instance
 		) noexcept = default;
 
 		bool setup();
@@ -55,19 +59,19 @@ namespace QLogicaeCore
 		);
 
 		bool setup(
-			const bool& is_simplified
+			const bool& is_log_format_enabled
 		);
 
 		void setup(
 			Result<void>& result,
-			const bool& is_simplified
+			const bool& is_log_format_enabled
 		);
 
 		bool setup(
 			const std::string& name,
 			const LogMedium& medium = LogMedium::CONSOLE,
 			const std::vector<std::string>& output_paths = {},
-			const bool& is_simplified = false
+			const bool& is_log_format_enabled = false
 		);
 
 		void setup(
@@ -75,7 +79,7 @@ namespace QLogicaeCore
 			const std::string& name,
 			const LogMedium& medium = LogMedium::CONSOLE,
 			const std::vector<std::string>& output_paths = {},
-			const bool& is_simplified = false
+			const bool& is_log_format_enabled = false
 		);
 
 		bool setup(
@@ -102,29 +106,29 @@ namespace QLogicaeCore
 		);
 
 		std::future<bool> setup_async(
-			const bool& is_simplified
+			const bool& is_log_format_enabled
 		);
 
 		void setup_async(
 			const std::function<void(const bool& result)>& callback,
-			const bool& is_simplified
+			const bool& is_log_format_enabled
 		);
 
 		void setup_async(
 			Result<std::future<void>>& result,
-			const bool& is_simplified
+			const bool& is_log_format_enabled
 		);
 
 		void setup_async(
 			const std::function<void(Result<void>& result)>& callback,
-			const bool& is_simplified
+			const bool& is_log_format_enabled
 		);
 
 		std::future<bool> setup_async(
 			const std::string& name,
 			const LogMedium& medium = LogMedium::CONSOLE,
 			const std::vector<std::string>& output_paths = {},
-			const bool& is_simplified = false
+			const bool& is_log_format_enabled = false
 		);
 
 		void setup_async(
@@ -132,7 +136,7 @@ namespace QLogicaeCore
 			const std::string& name,
 			const LogMedium& medium = LogMedium::CONSOLE,
 			const std::vector<std::string>& output_paths = {},
-			const bool& is_simplified = false
+			const bool& is_log_format_enabled = false
 		);
 
 		void setup_async(
@@ -140,7 +144,7 @@ namespace QLogicaeCore
 			const std::string& name,
 			const LogMedium& medium = LogMedium::CONSOLE,
 			const std::vector<std::string>& output_paths = {},
-			const bool& is_simplified = false
+			const bool& is_log_format_enabled = false
 		);
 
 		void setup_async(
@@ -148,7 +152,7 @@ namespace QLogicaeCore
 			const std::string& name,
 			const LogMedium& medium = LogMedium::CONSOLE,
 			const std::vector<std::string>& output_paths = {},
-			const bool& is_simplified = false
+			const bool& is_log_format_enabled = false
 		);
 
 		std::future<bool> setup_async(
@@ -170,17 +174,18 @@ namespace QLogicaeCore
 			const LoggerConfigurations& configurations
 		);
 
-		bool get_is_simplified();
 
-		void get_is_simplified(
+		bool get_is_log_format_enabled();
+
+		void get_is_log_format_enabled(
 			Result<bool>& result
 		);
 
-		void set_is_simplified(
+		void set_is_log_format_enabled(
 			const bool& value
 		);
 
-		void set_is_simplified(
+		void set_is_log_format_enabled(
 			Result<void>& result,
 			const bool& value
 		);
@@ -212,406 +217,212 @@ namespace QLogicaeCore
 			Result<std::string>& result
 		);
 
-		std::vector<std::string> get_output_paths();
+		std::vector<std::string> get_file_custom_output_paths();
 
-		void get_output_paths(
+		void get_file_custom_output_paths(
 			Result<std::vector<std::string>>& result
 		);
 
-		void log_timestamp(
+		void log_with_timestamp(
 			const std::string& text,
 			const LogConfigurations& configurations =
 				DEFAULT_LOG_CONFIGURATIONS
 		);
 
-		std::future<void> log_timestamp_async(
+		std::future<void> log_with_timestamp_async(
 			const std::string& text,
 			const LogConfigurations& configurations =
 				DEFAULT_LOG_CONFIGURATIONS
 		);
 
-		void log_timestamp_async(
+		void log_with_timestamp_async(
 			const std::function<void()>& callback,
 			const std::string& text,
 			const LogConfigurations& configurations =
 				DEFAULT_LOG_CONFIGURATIONS
 		);
 
-		void log_timestamp(
+		void log_with_timestamp(
 			Result<void>& result,
 			const std::string& text,
 			const LogConfigurations& configurations =
 				DEFAULT_LOG_CONFIGURATIONS
 		);
 
-		void log_timestamp_async(
+		void log_with_timestamp_async(
 			Result<std::future<void>>& result,
 			const std::string& text,
 			const LogConfigurations& configurations =
 				DEFAULT_LOG_CONFIGURATIONS
 		);
 
-		void log_timestamp_async(
+		void log_with_timestamp_async(
 			const std::function<void(Result<void>& result)>& callback,
 			const std::string& text,
 			const LogConfigurations& configurations =
 				DEFAULT_LOG_CONFIGURATIONS
 		);
 
-		void log_timestamp(
+		void log_with_timestamp(
 			const std::string& text,
 			const LogLevel& log_level,
 			const bool& is_enabled = true,
-			const bool& is_simplified = false
+			const bool& is_log_format_enabled = false
 		);
 
-		std::future<void> log_timestamp_async(
+		std::future<void> log_with_timestamp_async(
 			const std::string& text,
 			const LogLevel& log_level,
 			const bool& is_enabled = true,
-			const bool& is_simplified = false
+			const bool& is_log_format_enabled = false
 		);
 
-		void log_timestamp_async(
+		void log_with_timestamp_async(
 			const std::function<void()>& callback,
 			const std::string& text,
 			const LogLevel& log_level,
 			const bool& is_enabled = true,
-			const bool& is_simplified = false
+			const bool& is_log_format_enabled = false
 		);
 
-		void log_timestamp(
+		void log_with_timestamp(
 			Result<void>& result,
 			const std::string& text,
 			const LogLevel& log_level,
 			const bool& is_enabled = true,
-			const bool& is_simplified = false
+			const bool& is_log_format_enabled = false
 		);
 
-		void log_timestamp_async(
+		void log_with_timestamp_async(
 			Result<std::future<void>>& result,
 			const std::string& text,
 			const LogLevel& log_level,
 			const bool& is_enabled = true,
-			const bool& is_simplified = false
+			const bool& is_log_format_enabled = false
 		);
 
-		void log_timestamp_async(
+		void log_with_timestamp_async(
 			const std::function<void(Result<void>& result)>& callback,
 			const std::string& text,
 			const LogLevel& log_level,
 			const bool& is_enabled = true,
-			const bool& is_simplified = false
+			const bool& is_log_format_enabled = false
 		);
 
-		void log_timestamp_info(
-			const std::string& text,
-			const InfoLogConfigurations& configurations =
-			DEFAULT_INFO_LOG_CONFIGURATIONS
-		);
-
-		void log_timestamp_info(
-			Result<void>& result,
-			const std::string& text,
-			const InfoLogConfigurations& configurations =
-			DEFAULT_INFO_LOG_CONFIGURATIONS
-		);
-
-		std::future<void> log_timestamp_info_async(
-			const std::string& text,
-			const InfoLogConfigurations& configurations =
-			DEFAULT_INFO_LOG_CONFIGURATIONS
-		);
-
-		void log_timestamp_info_async(
-			Result<std::future<void>>& result,
-			const std::string& text,
-			const InfoLogConfigurations& configurations =
-			DEFAULT_INFO_LOG_CONFIGURATIONS
-		);
-
-		void log_timestamp_info_async(
-			const std::function<void()>& callback,
-			const std::string& text,
-			const InfoLogConfigurations& configurations =
-			DEFAULT_INFO_LOG_CONFIGURATIONS
-		);
-
-		void log_timestamp_info_async(
-			const std::function<void(Result<void>& result)>& callback,
-			const std::string& text,
-			const InfoLogConfigurations& configurations =
-				DEFAULT_INFO_LOG_CONFIGURATIONS
-		);
-
-		void log_timestamp_success(
-			const std::string& text,
-			const SuccessLogConfigurations& configurations =
-			DEFAULT_SUCCESS_LOG_CONFIGURATIONS
-		);
-
-		void log_timestamp_success(
-			Result<void>& result,
-			const std::string& text,
-			const SuccessLogConfigurations& configurations =
-			DEFAULT_SUCCESS_LOG_CONFIGURATIONS
-		);
-
-		std::future<void> log_timestamp_success_async(
-			const std::string& text,
-			const SuccessLogConfigurations& configurations =
-			DEFAULT_SUCCESS_LOG_CONFIGURATIONS
-		);
-
-		void log_timestamp_success_async(
-			Result<std::future<void>>& result,
-			const std::string& text,
-			const SuccessLogConfigurations& configurations =
-			DEFAULT_SUCCESS_LOG_CONFIGURATIONS
-		);
-
-		void log_timestamp_success_async(
-			const std::function<void()>& callback,
-			const std::string& text,
-			const SuccessLogConfigurations& configurations =
-			DEFAULT_SUCCESS_LOG_CONFIGURATIONS
-		);
-
-		void log_timestamp_success_async(
-			const std::function<void(Result<void>& result)>& callback,
-			const std::string& text,
-			const SuccessLogConfigurations& configurations =
-				DEFAULT_SUCCESS_LOG_CONFIGURATIONS
-		);
-
-		void log_timestamp_warning(
-			const std::string& text,
-			const WarningLogConfigurations& configurations =
-			DEFAULT_WARNING_LOG_CONFIGURATIONS
-		);
-
-		void log_timestamp_warning(
-			Result<void>& result,
-			const std::string& text,
-			const WarningLogConfigurations& configurations =
-			DEFAULT_WARNING_LOG_CONFIGURATIONS
-		);
-
-		std::future<void> log_timestamp_warning_async(
-			const std::string& text,
-			const WarningLogConfigurations& configurations =
-			DEFAULT_WARNING_LOG_CONFIGURATIONS
-		);
-
-		void log_timestamp_warning_async(
-			Result<std::future<void>>& result,
-			const std::string& text,
-			const WarningLogConfigurations& configurations =
-			DEFAULT_WARNING_LOG_CONFIGURATIONS
-		);
-
-		void log_timestamp_warning_async(
-			const std::function<void()>& callback,
-			const std::string& text,
-			const WarningLogConfigurations& configurations =
-			DEFAULT_WARNING_LOG_CONFIGURATIONS
-		);
-
-		void log_timestamp_warning_async(
-			const std::function<void(Result<void>& result)>& callback,
-			const std::string& text,
-			const WarningLogConfigurations& configurations =
-				DEFAULT_WARNING_LOG_CONFIGURATIONS
-		);
-
-		void handle_exception(
-			const std::string& origin,
-			const std::string& message
-		);
-
-		void handle_exception(
-			Result<void>& result,
-			const std::string& origin,
-			const std::string& message
-		);
-
-		std::future<void> handle_exception_async(
-			const std::string& origin,
-			const std::string& message
-		);
-
-		void handle_exception_async(
-			Result<std::future<void>>& result,
-			const std::string& origin,
-			const std::string& message
-		);
-
-		void handle_exception_async(
-			const std::function<void()>& callback,
-			const std::string& origin,
-			const std::string& message
-		);
-
-		void handle_exception_async(
-			const std::function<void(Result<void>& result)>& callback,
-			const std::string& origin,
-			const std::string& message
-		);
-
-		void log_timestamp_exception(
-			const std::string& text,
-			const ExceptionLogConfigurations& configurations =
-			DEFAULT_EXCEPTION_LOG_CONFIGURATIONS
-		);
-
-		void log_timestamp_exception(
-			Result<void>& result,
-			const std::string& text,
-			const ExceptionLogConfigurations& configurations =
-			DEFAULT_EXCEPTION_LOG_CONFIGURATIONS
-		);
-
-		std::future<void> log_timestamp_exception_async(
-			const std::string& text,
-			const ExceptionLogConfigurations& configurations =
-			DEFAULT_EXCEPTION_LOG_CONFIGURATIONS
-		);
-
-		void log_timestamp_exception_async(
-			Result<std::future<void>>& result,
-			const std::string& text,
-			const ExceptionLogConfigurations& configurations =
-			DEFAULT_EXCEPTION_LOG_CONFIGURATIONS
-		);
-
-		void log_timestamp_exception_async(
-			const std::function<void()>& callback,
-			const std::string& text,
-			const ExceptionLogConfigurations& configurations =
-			DEFAULT_EXCEPTION_LOG_CONFIGURATIONS
-		);
-
-		void log_timestamp_exception_async(
-			const std::function<void(Result<void>& result)>& callback,
-			const std::string& text,
-			const ExceptionLogConfigurations& configurations =
-				DEFAULT_EXCEPTION_LOG_CONFIGURATIONS
-		);
-
-		void log_timestamp_to_console_and_file(
+		void log_with_timestamp_to_console_and_file(
 			const std::string& text,
 			const LogConfigurations& configurations =
 				DEFAULT_LOG_CONFIGURATIONS
 		);
 
-		std::future<void> log_timestamp_to_console_and_file_async(
+		std::future<void> log_with_timestamp_to_console_and_file_async(
 			const std::string& text,
 			const LogConfigurations& configurations =
 				DEFAULT_LOG_CONFIGURATIONS
 		);
 
-		void log_timestamp_to_console_and_file_async(
+		void log_with_timestamp_to_console_and_file_async(
 			const std::function<void()>& callback,
 			const std::string& text,
 			const LogConfigurations& configurations =
 				DEFAULT_LOG_CONFIGURATIONS
 		);
 
-		void log_timestamp_to_console_and_file(
+		void log_with_timestamp_to_console_and_file(
 			Result<void>& result,
 			const std::string& text,
 			const LogConfigurations& configurations =
 				DEFAULT_LOG_CONFIGURATIONS
 		);
 
-		void log_timestamp_to_console_and_file_async(
+		void log_with_timestamp_to_console_and_file_async(
 			Result<std::future<void>>& result,
 			const std::string& text,
 			const LogConfigurations& configurations =
 				DEFAULT_LOG_CONFIGURATIONS
 		);
 
-		void log_timestamp_to_console_and_file_async(
+		void log_with_timestamp_to_console_and_file_async(
 			const std::function<void(Result<void>& result)>& callback,
 			const std::string& text,
 			const LogConfigurations& configurations =
 				DEFAULT_LOG_CONFIGURATIONS
 		);
 
-		void log_timestamp_to_console(
+		void log_with_timestamp_to_console(
 			const std::string& text,
 			const LogConfigurations& configurations =
 				DEFAULT_LOG_CONFIGURATIONS
 		);
 
-		std::future<void> log_timestamp_to_console_async(
+		std::future<void> log_with_timestamp_to_console_async(
 			const std::string& text,
 			const LogConfigurations& configurations =
 				DEFAULT_LOG_CONFIGURATIONS
 		);
 
-		void log_timestamp_to_console_async(
+		void log_with_timestamp_to_console_async(
 			const std::function<void()>& callback,
 			const std::string& text,
 			const LogConfigurations& configurations =
 				DEFAULT_LOG_CONFIGURATIONS
 		);
 
-		void log_timestamp_to_console(
+		void log_with_timestamp_to_console(
 			Result<void>& result,
 			const std::string& text,
 			const LogConfigurations& configurations =
 				DEFAULT_LOG_CONFIGURATIONS
 		);
 
-		void log_timestamp_to_console_async(
+		void log_with_timestamp_to_console_async(
 			Result<std::future<void>>& result,
 			const std::string& text,
 			const LogConfigurations& configurations =
 				DEFAULT_LOG_CONFIGURATIONS
 		);
 
-		void log_timestamp_to_console_async(
+		void log_with_timestamp_to_console_async(
 			const std::function<void(Result<void>& result)>& callback,
 			const std::string& text,
 			const LogConfigurations& configurations =
 				DEFAULT_LOG_CONFIGURATIONS
 		);
 
-		void log_timestamp_to_files(
+		void log_with_timestamp_to_files(
 			const std::string& text,
 			const LogConfigurations& configurations =
 				DEFAULT_LOG_CONFIGURATIONS
 		);
 
-		std::future<void> log_timestamp_to_files_async(
+		std::future<void> log_with_timestamp_to_files_async(
 			const std::string& text,
 			const LogConfigurations& configurations =
 				DEFAULT_LOG_CONFIGURATIONS
 		);
 
-		void log_timestamp_to_files_async(
+		void log_with_timestamp_to_files_async(
 			const std::function<void()>& callback,
 			const std::string& text,
 			const LogConfigurations& configurations =
 				DEFAULT_LOG_CONFIGURATIONS
 		);
 
-		void log_timestamp_to_files(
+		void log_with_timestamp_to_files(
 			Result<void>& result,
 			const std::string& text,
 			const LogConfigurations& configurations =
 				DEFAULT_LOG_CONFIGURATIONS
 		);
 
-		void log_timestamp_to_files_async(
+		void log_with_timestamp_to_files_async(
 			Result<std::future<void>>& result,
 			const std::string& text,
 			const LogConfigurations& configurations =
 				DEFAULT_LOG_CONFIGURATIONS
 		);
 
-		void log_timestamp_to_files_async(
+		void log_with_timestamp_to_files_async(
 			const std::function<void(Result<void>& result)>& callback,
 			const std::string& text,
 			const LogConfigurations& configurations =
@@ -792,6 +603,40 @@ namespace QLogicaeCore
 			const std::string& text
 		);
 
+		void handle_exception(
+			const std::string& origin,
+			const std::string& message
+		);
+
+		void handle_exception(
+			Result<void>& result,
+			const std::string& origin,
+			const std::string& message
+		);
+
+		std::future<void> handle_exception_async(
+			const std::string& origin,
+			const std::string& message
+		);
+
+		void handle_exception_async(
+			Result<std::future<void>>& result,
+			const std::string& origin,
+			const std::string& message
+		);
+
+		void handle_exception_async(
+			const std::function<void()>& callback,
+			const std::string& origin,
+			const std::string& message
+		);
+
+		void handle_exception_async(
+			const std::function<void(Result<void>& result)>& callback,
+			const std::string& origin,
+			const std::string& message
+		);
+
 		static Logger& get_instance();
 
 		void get_instance(
@@ -799,37 +644,53 @@ namespace QLogicaeCore
 		);
 
 	protected:		
-		bool _is_enabled;
-		
 		std::string _name;
 
-		bool _is_simplified;
+		bool _is_enabled;
 
+		bool _is_log_format_enabled;
+		
 		LogMedium _log_medium;
+
+		TimeZone _log_time_zone;		
 
 		TimeFormat _log_format;
 
-		TimeZone _log_time_zone;
+
+
+		bool _is_console_enabled;
+
+		bool _is_console_log_format_enabled;
+
+		bool _is_file_enabled;
+
+		bool _is_file_log_format_enabled;
+
+		bool _is_file_collectivization_enabled;
+
+		bool _is_file_collectivization_log_format_enabled;
+
+		std::string _file_collectivization_file_name;
+
+		std::string _file_collectivization_file_path;
+		
+		std::string _file_collectivization_folder_path;		
+
+		bool _is_file_fragmentation_enabled;
+
+		bool _is_file_fragmentation_log_format_enabled;
+		
+		TimeFormat _file_fragmentation_file_name_format;
+
+		std::string _file_fragmentation_folder_path;				
+
+		bool _is_file_custom_enabled;
+
+		bool _is_file_custom_log_format_enabled;
+
+		std::vector<std::string> _file_custom_output_paths;
 
 		mutable std::shared_mutex _mutex;
-
-		std::vector<std::string> _output_paths;
-
-		bool _is_log_console_enabled;
-
-		bool _is_log_file_fragmentation_enabled;
-
-		TimeFormat _log_file_fragmentation_format;
-
-		bool _is_log_file_collectivization_enabled;
-
-		std::string _log_file_fragmentation_output_folder_path;
-		
-		std::string _log_file_collectivization_output_file_name;
-
-		std::string _log_file_collectivization_output_file_path;
-		
-		std::string _log_file_collectivization_output_folder_path;		
 
 		std::string _generate_log_fragmentation_file_path();
 
@@ -845,13 +706,15 @@ namespace QLogicaeCore
 
 		std::string _to_log_format(
 			const std::string& text,
-			const LogLevel& log_level
+			const LogLevel& log_level,
+			const TimeFormat& log_format
 		);
 
 		void _to_log_format(
 			Result<std::string>& result,
 			const std::string& text,
-			const LogLevel& log_level
+			const LogLevel& log_level,
+			const TimeFormat& log_format
 		);
 
 		std::string _time_now(
@@ -867,3 +730,795 @@ namespace QLogicaeCore
 	inline static Logger& LOGGER =
 		Logger::get_instance();
 }
+
+
+
+/*
+
+		void log_with_timestamp_exception(
+			const std::string& text,
+			const ExceptionLogConfigurations& configurations =
+			DEFAULT_EXCEPTION_LOG_CONFIGURATIONS
+		);
+
+		void log_with_timestamp_exception(
+			Result<void>& result,
+			const std::string& text,
+			const ExceptionLogConfigurations& configurations =
+			DEFAULT_EXCEPTION_LOG_CONFIGURATIONS
+		);
+
+		std::future<void> log_with_timestamp_exception_async(
+			const std::string& text,
+			const ExceptionLogConfigurations& configurations =
+			DEFAULT_EXCEPTION_LOG_CONFIGURATIONS
+		);
+
+		void log_with_timestamp_exception_async(
+			Result<std::future<void>>& result,
+			const std::string& text,
+			const ExceptionLogConfigurations& configurations =
+			DEFAULT_EXCEPTION_LOG_CONFIGURATIONS
+		);
+
+		void log_with_timestamp_exception_async(
+			const std::function<void()>& callback,
+			const std::string& text,
+			const ExceptionLogConfigurations& configurations =
+			DEFAULT_EXCEPTION_LOG_CONFIGURATIONS
+		);
+
+		void log_with_timestamp_exception_async(
+			const std::function<void(Result<void>& result)>& callback,
+			const std::string& text,
+			const ExceptionLogConfigurations& configurations =
+				DEFAULT_EXCEPTION_LOG_CONFIGURATIONS
+		);
+
+
+
+		void log_with_timestamp_info(
+			const std::string& text,
+			const InfoLogConfigurations& configurations =
+			DEFAULT_INFO_LOG_CONFIGURATIONS
+		);
+
+		void log_with_timestamp_info(
+			Result<void>& result,
+			const std::string& text,
+			const InfoLogConfigurations& configurations =
+			DEFAULT_INFO_LOG_CONFIGURATIONS
+		);
+
+		std::future<void> log_with_timestamp_info_async(
+			const std::string& text,
+			const InfoLogConfigurations& configurations =
+			DEFAULT_INFO_LOG_CONFIGURATIONS
+		);
+
+		void log_with_timestamp_info_async(
+			Result<std::future<void>>& result,
+			const std::string& text,
+			const InfoLogConfigurations& configurations =
+			DEFAULT_INFO_LOG_CONFIGURATIONS
+		);
+
+		void log_with_timestamp_info_async(
+			const std::function<void()>& callback,
+			const std::string& text,
+			const InfoLogConfigurations& configurations =
+			DEFAULT_INFO_LOG_CONFIGURATIONS
+		);
+
+		void log_with_timestamp_info_async(
+			const std::function<void(Result<void>& result)>& callback,
+			const std::string& text,
+			const InfoLogConfigurations& configurations =
+				DEFAULT_INFO_LOG_CONFIGURATIONS
+		);
+
+		void log_with_timestamp_success(
+			const std::string& text,
+			const SuccessLogConfigurations& configurations =
+			DEFAULT_SUCCESS_LOG_CONFIGURATIONS
+		);
+
+		void log_with_timestamp_success(
+			Result<void>& result,
+			const std::string& text,
+			const SuccessLogConfigurations& configurations =
+			DEFAULT_SUCCESS_LOG_CONFIGURATIONS
+		);
+
+		std::future<void> log_with_timestamp_success_async(
+			const std::string& text,
+			const SuccessLogConfigurations& configurations =
+			DEFAULT_SUCCESS_LOG_CONFIGURATIONS
+		);
+
+		void log_with_timestamp_success_async(
+			Result<std::future<void>>& result,
+			const std::string& text,
+			const SuccessLogConfigurations& configurations =
+			DEFAULT_SUCCESS_LOG_CONFIGURATIONS
+		);
+
+		void log_with_timestamp_success_async(
+			const std::function<void()>& callback,
+			const std::string& text,
+			const SuccessLogConfigurations& configurations =
+			DEFAULT_SUCCESS_LOG_CONFIGURATIONS
+		);
+
+		void log_with_timestamp_success_async(
+			const std::function<void(Result<void>& result)>& callback,
+			const std::string& text,
+			const SuccessLogConfigurations& configurations =
+				DEFAULT_SUCCESS_LOG_CONFIGURATIONS
+		);
+
+		void log_with_timestamp_warning(
+			const std::string& text,
+			const WarningLogConfigurations& configurations =
+			DEFAULT_WARNING_LOG_CONFIGURATIONS
+		);
+
+		void log_with_timestamp_warning(
+			Result<void>& result,
+			const std::string& text,
+			const WarningLogConfigurations& configurations =
+			DEFAULT_WARNING_LOG_CONFIGURATIONS
+		);
+
+		std::future<void> log_with_timestamp_warning_async(
+			const std::string& text,
+			const WarningLogConfigurations& configurations =
+			DEFAULT_WARNING_LOG_CONFIGURATIONS
+		);
+
+		void log_with_timestamp_warning_async(
+			Result<std::future<void>>& result,
+			const std::string& text,
+			const WarningLogConfigurations& configurations =
+			DEFAULT_WARNING_LOG_CONFIGURATIONS
+		);
+
+		void log_with_timestamp_warning_async(
+			const std::function<void()>& callback,
+			const std::string& text,
+			const WarningLogConfigurations& configurations =
+			DEFAULT_WARNING_LOG_CONFIGURATIONS
+		);
+
+		void log_with_timestamp_warning_async(
+			const std::function<void(Result<void>& result)>& callback,
+			const std::string& text,
+			const WarningLogConfigurations& configurations =
+				DEFAULT_WARNING_LOG_CONFIGURATIONS
+		);
+
+
+*/
+
+
+
+
+/*
+
+
+	void Logger::log_timestamp_info(
+		const std::string& text,
+		const InfoLogConfigurations& configurations
+	)
+	{
+		if (!_is_enabled)
+		{
+			return;
+		}
+
+		log_timestamp(
+			text,
+			configurations
+		);
+	}
+
+	void Logger::log_timestamp_info(
+		Result<void>& result,
+		const std::string& text,
+		const InfoLogConfigurations& configurations
+	)
+	{
+		if (!_is_enabled)
+		{
+			return;
+		}
+
+		log_timestamp(
+			result,
+			text,
+			configurations
+		);
+	}
+
+	std::future<void> Logger::log_timestamp_info_async(
+		const std::string& text,
+		const InfoLogConfigurations& configurations
+	)
+	{
+		std::promise<void> promise;
+		auto future = promise.get_future();
+
+		if (!_is_enabled)
+		{
+			return future;
+		}
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text, configurations,
+			promise = std::move(promise)]() mutable
+			{
+				log_timestamp_info(
+					text,
+					configurations
+				);
+
+				promise.set_value();
+			}
+		);
+
+		return future;
+	}
+
+	void Logger::log_timestamp_info_async(
+		Result<std::future<void>>& result,
+		const std::string& text,
+		const InfoLogConfigurations& configurations
+	)
+	{
+		if (!_is_enabled)
+		{
+			return;
+		}
+
+		std::promise<void> promise;
+		auto future = promise.get_future();
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text, configurations,
+			promise = std::move(promise)]() mutable
+			{
+				Result<void> result;
+
+				log_timestamp_info(
+					result,
+					text,
+					configurations
+				);
+
+				promise.set_value();
+			}
+		);
+
+		result.set_to_good_status_with_value(
+			std::move(future)
+		);
+	}
+
+	void Logger::log_timestamp_info_async(
+		const std::function<void()>& callback,
+		const std::string& text,
+		const InfoLogConfigurations& configurations
+	)
+	{
+		if (!_is_enabled)
+		{
+			return;
+		}
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, callback, text, configurations]() mutable
+			{
+				log_timestamp_info(
+					text,
+					configurations
+				);
+
+				callback();
+			}
+		);
+	}
+
+	void Logger::log_timestamp_info_async(
+		const std::function<void(Result<void>& result)>& callback,
+		const std::string& text,
+		const InfoLogConfigurations& configurations
+	)
+	{
+		if (!_is_enabled)
+		{
+			return;
+		}
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text, configurations, callback]() mutable
+			{
+				Result<void> result;
+
+				log_timestamp_info(
+					result,
+					text,
+					configurations
+				);
+
+				callback(
+					result
+				);
+			}
+		);
+	}
+
+	void Logger::log_timestamp_success(
+		const std::string& text,
+		const SuccessLogConfigurations& configurations
+	)
+	{
+		if (!_is_enabled)
+		{
+			return;
+		}
+
+		log_timestamp(
+			text,
+			configurations
+		);
+	}
+
+	void Logger::log_timestamp_success(
+		Result<void>& result,
+		const std::string& text,
+		const SuccessLogConfigurations& configurations
+	)
+	{
+		if (!_is_enabled)
+		{
+			return;
+		}
+
+		log_timestamp(
+			result,
+			text,
+			configurations
+		);
+	}
+
+	std::future<void> Logger::log_timestamp_success_async(
+		const std::string& text,
+		const SuccessLogConfigurations& configurations
+	)
+	{
+		std::promise<void> promise;
+		auto future = promise.get_future();
+		if (!_is_enabled)
+		{
+			return future;
+		}
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text, configurations,
+			promise = std::move(promise)]() mutable
+			{
+				log_timestamp_success(
+					text,
+					configurations
+				);
+
+				promise.set_value();
+			}
+		);
+
+		return future;
+	}
+
+	void Logger::log_timestamp_success_async(
+		Result<std::future<void>>& result,
+		const std::string& text,
+		const SuccessLogConfigurations& configurations
+	)
+	{
+		std::promise<void> promise;
+		auto future = promise.get_future();
+		if (!_is_enabled)
+		{
+			return;
+		}
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text, configurations,
+			promise = std::move(promise)]() mutable
+			{
+				Result<void> result;
+
+				log_timestamp_success(
+					result,
+					text,
+					configurations
+				);
+
+				promise.set_value();
+			}
+		);
+
+		result.set_to_good_status_with_value(
+			std::move(future)
+		);
+	}
+
+	void Logger::log_timestamp_success_async(
+		const std::function<void()>& callback,
+		const std::string& text,
+		const SuccessLogConfigurations& configurations
+	)
+	{
+		if (!_is_enabled)
+		{
+			return;
+		}
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, callback, text, configurations]() mutable
+			{
+				log_timestamp_success(
+					text,
+					configurations
+				);
+
+				callback();
+			}
+		);
+	}
+
+	void Logger::log_timestamp_success_async(
+		const std::function<void(Result<void>& result)>& callback,
+		const std::string& text,
+		const SuccessLogConfigurations& configurations
+	)
+	{
+		if (!_is_enabled)
+		{
+			return;
+		}
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text, configurations, callback]() mutable
+			{
+				Result<void> result;
+
+				log_timestamp_success(
+					result,
+					text,
+					configurations
+				);
+
+				callback(
+					result
+				);
+			}
+		);
+	}
+
+	void Logger::log_timestamp_warning(
+		const std::string& text,
+		const WarningLogConfigurations& configurations
+	)
+	{
+		if (!_is_enabled)
+		{
+			return;
+		}
+
+		log_timestamp(
+			text,
+			configurations
+		);
+	}
+
+	void Logger::log_timestamp_warning(
+		Result<void>& result,
+		const std::string& text,
+		const WarningLogConfigurations& configurations
+	)
+	{
+		if (!_is_enabled)
+		{
+			return;
+		}
+
+		log_timestamp(
+			result,
+			text,
+			configurations
+		);
+	}
+
+	std::future<void> Logger::log_timestamp_warning_async(
+		const std::string& text,
+		const WarningLogConfigurations& configurations
+	)
+	{
+		std::promise<void> promise;
+		auto future = promise.get_future();
+		if (!_is_enabled)
+		{
+			return future;
+		}
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text, configurations,
+			promise = std::move(promise)]() mutable
+			{
+				log_timestamp_warning(
+					text,
+					configurations
+				);
+
+				promise.set_value();
+			}
+		);
+
+		return future;
+	}
+
+	void Logger::log_timestamp_warning_async(
+		Result<std::future<void>>& result,
+		const std::string& text,
+		const WarningLogConfigurations& configurations
+	)
+	{
+		std::promise<void> promise;
+		auto future = promise.get_future();
+		if (!_is_enabled)
+		{
+			return;
+		}
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text, configurations,
+			promise = std::move(promise)]() mutable
+			{
+				Result<void> result;
+
+				log_timestamp_warning(
+					result,
+					text,
+					configurations
+				);
+
+				promise.set_value();
+			}
+		);
+
+		result.set_to_good_status_with_value(
+			std::move(future)
+		);
+	}
+
+	void Logger::log_timestamp_warning_async(
+		const std::function<void()>& callback,
+		const std::string& text,
+		const WarningLogConfigurations& configurations
+	)
+	{
+		if (!_is_enabled)
+		{
+			return;
+		}
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, callback, text, configurations]() mutable
+			{
+				log_timestamp_warning(
+					text,
+					configurations
+				);
+
+				callback();
+			}
+		);
+	}
+
+	void Logger::log_timestamp_warning_async(
+		const std::function<void(Result<void>& result)>& callback,
+		const std::string& text,
+		const WarningLogConfigurations& configurations
+	)
+	{
+		if (!_is_enabled)
+		{
+			return;
+		}
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text, configurations, callback]() mutable
+			{
+				Result<void> result;
+
+				log_timestamp_warning(
+					result,
+					text,
+					configurations
+				);
+
+				callback(
+					result
+				);
+			}
+		);
+	}
+
+	void Logger::log_timestamp_exception(
+		const std::string& text,
+		const ExceptionLogConfigurations& configurations
+	)
+	{
+		if (!_is_enabled)
+		{
+			return;
+		}
+
+		log_timestamp(
+			text,
+			configurations
+		);
+	}
+
+	void Logger::log_timestamp_exception(
+		Result<void>& result,
+		const std::string& text,
+		const ExceptionLogConfigurations& configurations
+	)
+	{
+		if (!_is_enabled)
+		{
+			return;
+		}
+
+		log_timestamp(
+			result,
+			text,
+			configurations
+		);
+	}
+
+	std::future<void> Logger::log_timestamp_exception_async(
+		const std::string& text,
+		const ExceptionLogConfigurations& configurations
+	)
+	{
+		std::promise<void> promise;
+		auto future = promise.get_future();
+		if (!_is_enabled)
+		{
+			return future;
+		}
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text, configurations,
+			promise = std::move(promise)]() mutable
+			{
+				log_timestamp_exception(
+					text,
+					configurations
+				);
+
+				promise.set_value();
+			}
+		);
+
+		return future;
+	}
+
+	void Logger::log_timestamp_exception_async(
+		Result<std::future<void>>& result,
+		const std::string& text,
+		const ExceptionLogConfigurations& configurations
+	)
+	{
+		std::promise<void> promise;
+		auto future = promise.get_future();
+		if (!_is_enabled)
+		{
+			return;
+		}
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text, configurations,
+			promise = std::move(promise)]() mutable
+			{
+				Result<void> result;
+
+				log_timestamp_exception(
+					result,
+					text,
+					configurations
+				);
+
+				promise.set_value();
+			}
+		);
+
+		result.set_to_good_status_with_value(
+			std::move(future)
+		);
+	}
+
+	void Logger::log_timestamp_exception_async(
+		const std::function<void()>& callback,
+		const std::string& text,
+		const ExceptionLogConfigurations& configurations
+	)
+	{
+		if (!_is_enabled)
+		{
+			return;
+		}
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, callback, text, configurations]() mutable
+			{
+				log_timestamp_exception(
+					text,
+					configurations
+				);
+
+				callback();
+			}
+		);
+	}
+
+	void Logger::log_timestamp_exception_async(
+		const std::function<void(Result<void>& result)>& callback,
+		const std::string& text,
+		const ExceptionLogConfigurations& configurations
+	)
+	{
+		if (!_is_enabled)
+		{
+			return;
+		}
+
+		boost::asio::post(
+			UTILITIES.BOOST_ASIO_POOL,
+			[this, text, configurations, callback]() mutable
+			{
+				Result<void> result;
+
+				log_timestamp_exception(
+					result,
+					text,
+					configurations
+				);
+
+				callback(
+					result
+				);
+			}
+		);
+	}
+
+
+*/

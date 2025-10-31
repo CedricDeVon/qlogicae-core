@@ -26,7 +26,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception_async(
+            LOGGER.handle_exception(
                 "QLogicaeCore::Time::setup()",
                 exception.what()
             );
@@ -112,7 +112,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception_async(
+            LOGGER.handle_exception(
                 "QLogicaeCore::Time::now()",
                 exception.what()
             );
@@ -148,7 +148,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception_async(
+            LOGGER.handle_exception(
                 "QLogicaeCore::Time::month()",
                 exception.what()
             );
@@ -182,7 +182,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception_async(
+            LOGGER.handle_exception(
                 "QLogicaeCore::Time::day()",
                 exception.what()
             );
@@ -218,7 +218,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception_async(
+            LOGGER.handle_exception(
                 "QLogicaeCore::Time::minute()",
                 exception.what()
             );
@@ -254,7 +254,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception_async(
+            LOGGER.handle_exception(
                 "QLogicaeCore::Time::minute()",
                 exception.what()
             );
@@ -287,7 +287,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception_async(
+            LOGGER.handle_exception(
                 "QLogicaeCore::Time::millisecond()",
                 exception.what()
             );
@@ -322,7 +322,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception_async(
+            LOGGER.handle_exception(
                 "QLogicaeCore::Time::microsecond()",
                 exception.what()
             );
@@ -357,7 +357,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception_async(
+            LOGGER.handle_exception(
                 "QLogicaeCore::Time::nanosecond()",
                 exception.what()
             );
@@ -395,7 +395,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception_async(
+            LOGGER.handle_exception(
                 "QLogicaeCore::Time::hour()",
                 exception.what()
             );
@@ -431,7 +431,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception_async(
+            LOGGER.handle_exception(
                 "QLogicaeCore::Time::year()",
                 exception.what()
             );
@@ -469,7 +469,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception_async(
+            LOGGER.handle_exception(
                 "QLogicaeCore::Time::now()",
                 exception.what()
             );
@@ -492,52 +492,67 @@ namespace QLogicaeCore
 
         switch (format)
         {
-        case TimeFormat::UNIX:
-            str = absl::StrCat(absl::ToUnixSeconds(now_time));
-            break;
+            case TimeFormat::UNIX:
+            {
+                str = absl::StrCat(absl::ToUnixSeconds(now_time));
+                break;
+            }
+            case TimeFormat::ISO8601:
+            case TimeFormat::SECOND_LEVEL_TIMESTAMP:
+            case TimeFormat::HOUR_12:
+            case TimeFormat::HOUR_24:
+            case TimeFormat::DATE_DASHED:
+            case TimeFormat::DATE_MDY_SLASHED:
+            case TimeFormat::DATE_DMY_SLASHED:
+            case TimeFormat::DATE_DMY_SPACED:
+            case TimeFormat::DATE_VERBOSE:
+            {
+                str = _format_time(tm, fmt);
+                break;
+            }
+            case TimeFormat::MILLISECOND_LEVEL_TIMESTAMP:
+            {
+                str = _format_time(tm, fmt) + "." +
+                    _format_millisecond_level(since_epoch, ":");
+                break;
+            }
+            case TimeFormat::MICROSECOND_LEVEL_TIMESTAMP:
+            {
+                str = _format_time(tm, fmt) + "." +
+                    _format_microsecond_level(since_epoch, ":");
+                break;
+            }
+            case TimeFormat::FULL_TIMESTAMP:
+            {
+                str = _format_time(tm, fmt) + "." +
+                    _format_nanosecond_level(since_epoch, ":");
+                break;
+            }
+            case TimeFormat::FULL_DASHED_TIMESTAMP:
+            {
+                str = _format_time(tm, fmt) + "-" +
+                    _format_nanosecond_level(since_epoch, "-");
+                break;
+            }
+            case TimeFormat::MILLISECOND_MICROSECOND_NANOSECOND:
+            {
+                int64_t ms = absl::ToInt64Milliseconds(since_epoch);
+                int64_t us = absl::ToInt64Microseconds(since_epoch);
+                int64_t ns = absl::ToInt64Nanoseconds(since_epoch);
 
-        case TimeFormat::ISO8601:
-        case TimeFormat::SECOND_LEVEL_TIMESTAMP:
-        case TimeFormat::HOUR_12:
-        case TimeFormat::HOUR_24:
-        case TimeFormat::DATE_DASHED:
-        case TimeFormat::DATE_MDY_SLASHED:
-        case TimeFormat::DATE_DMY_SLASHED:
-        case TimeFormat::DATE_DMY_SPACED:
-        case TimeFormat::DATE_VERBOSE:
-            str = _format_time(tm, fmt);
-            break;
+                if (ms < 0 || us < 0 || ns < 0) {
+                    str = UTILITIES.TIME_FORMAT_INVALID;
+                    break;
+                }
 
-        case TimeFormat::MILLISECOND_LEVEL_TIMESTAMP:
-            str = _format_time(tm, fmt) + "." +
-                _format_millisecond_level(since_epoch, ":");
-            break;
-
-        case TimeFormat::MICROSECOND_LEVEL_TIMESTAMP:
-            str = _format_time(tm, fmt) + "." +
-                _format_microsecond_level(since_epoch, ":");
-            break;
-
-        case TimeFormat::FULL_TIMESTAMP:
-            str = _format_time(tm, fmt) + "." +
-                _format_nanosecond_level(since_epoch, ":");
-            break;
-
-        case TimeFormat::FULL_DASHED_TIMESTAMP:
-            str = _format_time(tm, fmt) + "-" +
-                _format_nanosecond_level(since_epoch, "-");
-            break;
-
-        case TimeFormat::MILLISECOND_MICROSECOND_NANOSECOND:
-            str = absl::StrCat(
-                "ms: ", absl::ToInt64Milliseconds(since_epoch),
-                ", us: ", absl::ToInt64Microseconds(since_epoch),
-                ", ns: ", absl::ToInt64Nanoseconds(since_epoch));
-            break;
-
-        default:
-            str = UTILITIES.TIME_FORMAT_INVALID;
-            break;
+                str = absl::StrCat("ms: ", ms, ", us: ", us, ", ns: ", ns);
+                break;
+            }
+            default:
+            {
+                str = UTILITIES.TIME_FORMAT_INVALID;
+                break;
+            }
         }
 
         result.set_to_good_status_with_value(str);
@@ -560,7 +575,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception_async(
+            LOGGER.handle_exception(
                 "QLogicaeCore::Time::get_time_unit_full_name()",
                 exception.what()
             );
@@ -607,7 +622,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception_async(
+            LOGGER.handle_exception(
                 "QLogicaeCore::Time::get_time_unit_abbreviation()",
                 exception.what()
             );
@@ -654,7 +669,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception_async(
+            LOGGER.handle_exception(
                 "QLogicaeCore::Time::get_time_unit_abbreviation()",
                 exception.what()
             );
@@ -693,7 +708,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception_async(
+            LOGGER.handle_exception(
                 "QLogicaeCore::Time::convert_seconds()",
                 exception.what()
             );
@@ -743,7 +758,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception_async(
+            LOGGER.handle_exception(
                 "QLogicaeCore::Time::convert_nanoseconds()",
                 exception.what()
             );
@@ -787,7 +802,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception_async(
+            LOGGER.handle_exception(
                 "QLogicaeCore::Time::_pad3()",
                 exception.what()
             );
@@ -811,7 +826,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception_async(
+            LOGGER.handle_exception(
                 "QLogicaeCore::Time::_format_millisecond_level()",
                 exception.what()
             );
@@ -838,7 +853,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception_async(
+            LOGGER.handle_exception(
                 "QLogicaeCore::Time::_format_microsecond_level()",
                 exception.what()
             );
@@ -866,7 +881,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception_async(
+            LOGGER.handle_exception(
                 "QLogicaeCore::Time::_format_nanosecond_level()",
                 exception.what()
             );
@@ -892,7 +907,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception_async(
+            LOGGER.handle_exception(
                 "QLogicaeCore::Time::_format_time()",
                 exception.what()
             );
@@ -924,7 +939,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception_async(
+            LOGGER.handle_exception(
                 "QLogicaeCore::Time::_get_time_zone()",
                 exception.what()
             );
@@ -933,7 +948,7 @@ namespace QLogicaeCore
         }
         catch (...)
         {
-            LOGGER.handle_exception_async(
+            LOGGER.handle_exception(
                 "QLogicaeCore::Time::_get_time_zone()",
                 "Error"
             );
