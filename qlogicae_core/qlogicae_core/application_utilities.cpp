@@ -156,6 +156,7 @@ namespace QLogicaeCore
                     "log", "format"
                 }
             );
+
             CONFIGURATIONS_ENVIRONMENT_LOG.format = UTILITIES.TIME_FORMAT_STRINGS_1.at(
                 UTILITIES.TIME_FORMAT_STRINGS_1.contains(string_output) ? string_output : UTILITIES.TIME_FORMAT_FULL_TIMESTAMP_1
             );
@@ -294,30 +295,6 @@ namespace QLogicaeCore
                 "\\" + UTILITIES.RELATIVE_QLOGICAE_LOGS_FOLDER_PATH_1 +
                 "\\" + UTILITIES.RELATIVE_QLOGICAE_LOGS_FRAGMENTS_FOLDER_PATH_1
             );
-
-            if (CONFIGURATIONS_ENVIRONMENT_LOG.is_enabled &&
-                CONFIGURATIONS_ENVIRONMENT_LOG.is_console_enabled &&
-                CONFIGURATIONS_ENVIRONMENT_LOG.is_file_enabled
-                )
-            {
-                CONFIGURATIONS_ENVIRONMENT_LOG.medium = LogMedium::ALL;
-            }
-            else if (CONFIGURATIONS_ENVIRONMENT_LOG.is_enabled &&
-                CONFIGURATIONS_ENVIRONMENT_LOG.is_console_enabled
-                )
-            {
-                CONFIGURATIONS_ENVIRONMENT_LOG.medium = LogMedium::CONSOLE;
-            }
-            else if (CONFIGURATIONS_ENVIRONMENT_LOG.is_enabled &&
-                CONFIGURATIONS_ENVIRONMENT_LOG.is_file_enabled
-                )
-            {
-                CONFIGURATIONS_ENVIRONMENT_LOG.medium = LogMedium::FILE;
-            }
-            else
-            {
-                CONFIGURATIONS_ENVIRONMENT_LOG.medium = LogMedium::NONE;
-            }
 
             set_is_enabled(true);
 

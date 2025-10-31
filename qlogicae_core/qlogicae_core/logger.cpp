@@ -23,7 +23,6 @@ namespace QLogicaeCore
 		_configurations.name = DEFAULT_LOGGER_CONFIGURATIONS.name;
 		_configurations.is_enabled = DEFAULT_LOGGER_CONFIGURATIONS.is_enabled;
 		_configurations.is_format_enabled = DEFAULT_LOGGER_CONFIGURATIONS.is_format_enabled;
-		_configurations.medium = DEFAULT_LOGGER_CONFIGURATIONS.medium;
 		_configurations.time_zone = DEFAULT_LOGGER_CONFIGURATIONS.time_zone;
 		_configurations.format = DEFAULT_LOGGER_CONFIGURATIONS.format;
 
@@ -60,7 +59,6 @@ namespace QLogicaeCore
 		_configurations.name = DEFAULT_LOGGER_CONFIGURATIONS.name;
 		_configurations.is_enabled = DEFAULT_LOGGER_CONFIGURATIONS.is_enabled;
 		_configurations.is_format_enabled = is_log_format_enabled;
-		_configurations.medium = DEFAULT_LOGGER_CONFIGURATIONS.medium;
 		_configurations.time_zone = DEFAULT_LOGGER_CONFIGURATIONS.time_zone;
 		_configurations.format = DEFAULT_LOGGER_CONFIGURATIONS.format;
 
@@ -95,7 +93,6 @@ namespace QLogicaeCore
 		_configurations.name = name;
 		_configurations.is_enabled = DEFAULT_LOGGER_CONFIGURATIONS.is_enabled;
 		_configurations.is_format_enabled = is_log_format_enabled;
-		_configurations.medium = medium;
 		_configurations.time_zone = DEFAULT_LOGGER_CONFIGURATIONS.time_zone;
 		_configurations.format = DEFAULT_LOGGER_CONFIGURATIONS.format;
 
@@ -127,7 +124,6 @@ namespace QLogicaeCore
 		_configurations.name = configurations.name;
 		_configurations.is_enabled = configurations.is_enabled;
 		_configurations.is_format_enabled = configurations.is_format_enabled;
-		_configurations.medium = configurations.medium;
 		_configurations.time_zone = configurations.time_zone;
 		_configurations.format = configurations.format;
 
@@ -185,7 +181,6 @@ namespace QLogicaeCore
 		_configurations.name = DEFAULT_LOGGER_CONFIGURATIONS.name;
 		_configurations.is_enabled = DEFAULT_LOGGER_CONFIGURATIONS.is_enabled;
 		_configurations.is_format_enabled = DEFAULT_LOGGER_CONFIGURATIONS.is_format_enabled;
-		_configurations.medium = DEFAULT_LOGGER_CONFIGURATIONS.medium;
 		_configurations.time_zone = DEFAULT_LOGGER_CONFIGURATIONS.time_zone;
 		_configurations.format = DEFAULT_LOGGER_CONFIGURATIONS.format;
 
@@ -245,7 +240,6 @@ namespace QLogicaeCore
 		_configurations.name = DEFAULT_LOGGER_CONFIGURATIONS.name;
 		_configurations.is_enabled = DEFAULT_LOGGER_CONFIGURATIONS.is_enabled;
 		_configurations.is_format_enabled = is_log_format_enabled;
-		_configurations.medium = DEFAULT_LOGGER_CONFIGURATIONS.medium;
 		_configurations.time_zone = DEFAULT_LOGGER_CONFIGURATIONS.time_zone;
 		_configurations.format = DEFAULT_LOGGER_CONFIGURATIONS.format;
 
@@ -314,7 +308,6 @@ namespace QLogicaeCore
 		_configurations.name = name;
 		_configurations.is_enabled = DEFAULT_LOGGER_CONFIGURATIONS.is_enabled;
 		_configurations.is_format_enabled = is_log_format_enabled;
-		_configurations.medium = medium;
 		_configurations.time_zone = DEFAULT_LOGGER_CONFIGURATIONS.time_zone;
 		_configurations.format = DEFAULT_LOGGER_CONFIGURATIONS.format;
 
@@ -374,7 +367,6 @@ namespace QLogicaeCore
 		_configurations.name = configurations.name;
 		_configurations.is_enabled = configurations.is_enabled;
 		_configurations.is_format_enabled = configurations.is_format_enabled;
-		_configurations.medium = configurations.medium;
 		_configurations.time_zone = configurations.time_zone;
 		_configurations.format = configurations.format;
 
@@ -973,84 +965,73 @@ namespace QLogicaeCore
 		const std::string& text,
 		const LogConfigurations& configurations
 	)
-	{
-		LogMedium medium =
-			_configurations.medium;
-
+	{		
 		TimeFormat format =
 			_configurations.format;
 
 		LogLevel log_level =
 			configurations.log_level;
 
-		bool is_enabled =
-			configurations.is_enabled ||
-			_configurations.is_enabled;
-
-		bool is_log_format_enabled =
-			configurations.is_format_enabled ||
-			_configurations.is_format_enabled;
-
 		bool is_console_enabled =
-			is_enabled ||
 			configurations.is_console_enabled ||
 			_configurations.is_console_enabled;
 
 		bool is_console_format_enabled =
 			configurations.is_console_format_enabled ||
-			_configurations.is_console_format_enabled ||
-			is_log_format_enabled;
-
-		bool is_file_enabled =
-			configurations.is_file_enabled ||
-			_configurations.is_file_enabled ||
-			is_enabled;
-
-		bool is_file_format_enabled =
-			configurations.is_file_format_enabled ||
-			_configurations.is_file_format_enabled ||
-			is_log_format_enabled;
+			_configurations.is_console_format_enabled;
 
 		bool is_file_collectivization_enabled =
 			configurations.is_file_collectivization_enabled ||
-			_configurations.is_file_collectivization_enabled ||
-			is_file_enabled;
+			_configurations.is_file_collectivization_enabled;
 
 		bool is_file_collectivization_format_enabled =
 			configurations.is_file_collectivization_format_enabled ||
-			_configurations.is_file_collectivization_format_enabled ||
-			is_file_format_enabled;
+			_configurations.is_file_collectivization_format_enabled;
 
 		bool is_file_fragmentation_enabled =
 			configurations.is_file_fragmentation_enabled ||
-			_configurations.is_file_fragmentation_enabled ||
-			is_file_enabled;
+			_configurations.is_file_fragmentation_enabled;
 
 		bool is_file_fragmentation_format_enabled =
 			configurations.is_file_fragmentation_format_enabled ||
-			_configurations.is_file_fragmentation_format_enabled ||
-			is_file_format_enabled;
+			_configurations.is_file_fragmentation_format_enabled;
 
 		bool is_file_custom_enabled =
 			configurations.is_file_custom_enabled ||
 			!_configurations.file_custom_output_paths.empty() ||
-			_configurations.is_file_custom_enabled ||
-			is_file_enabled;
+			_configurations.is_file_custom_enabled;
 
 		bool is_file_custom_format_enabled =
 			configurations.is_file_custom_format_enabled ||
-			_configurations.is_file_custom_format_enabled ||
+			_configurations.is_file_custom_format_enabled;
+
+		bool is_file_enabled =
+			configurations.is_file_enabled ||
+			_configurations.is_file_enabled ||
+			is_file_collectivization_enabled ||
+			is_file_fragmentation_enabled ||
+			is_file_custom_enabled;
+
+		bool is_file_format_enabled =
+			configurations.is_file_format_enabled ||
+			_configurations.is_file_format_enabled ||
+			is_file_collectivization_format_enabled ||
+			is_file_fragmentation_format_enabled ||
+			is_file_custom_format_enabled;
+
+		bool is_enabled =
+			configurations.is_enabled ||
+			_configurations.is_enabled ||
+			is_console_enabled ||
+			is_file_enabled;
+
+		bool is_log_format_enabled =
+			configurations.is_format_enabled ||
+			_configurations.is_format_enabled ||
+			is_console_format_enabled ||
 			is_file_format_enabled;
 
-		if (
-			!is_enabled &&
-			!is_console_enabled &&
-			!is_file_enabled &&
-			!is_file_collectivization_enabled &&
-			!is_file_fragmentation_enabled &&
-			!is_file_custom_enabled &&
-			medium == LogMedium::NONE
-		)
+		if (!is_enabled)
 		{
 			return result.set_to_good_status_without_value();
 		}
@@ -1096,84 +1077,36 @@ namespace QLogicaeCore
 			(is_file_custom_format_enabled) ? log_text.get_value() : text
 		);
 
-		switch (medium)
+		if (is_console_enabled)
 		{
-			case LogMedium::ALL:
-			{
-				if (is_console_enabled)
-				{
-					log_to_console_async(
-						future_void_result_1,
-						console_log_text.get_value()
-					);
-				}
+			log_to_console_async(
+				future_void_result_1,
+				console_log_text.get_value()
+			);
+		}
 
-				if (is_file_fragmentation_enabled)
-				{
-					log_to_fragmentation_file_async(
-						future_void_result_2,
-						file_fragmentation_log_text.get_value()
-					);
-				}
+		if (is_file_fragmentation_enabled)
+		{
+			log_to_fragmentation_file_async(
+				future_void_result_2,
+				file_fragmentation_log_text.get_value()
+			);
+		}
 
-				if (is_file_collectivization_enabled)
-				{
-					log_to_collectivization_file_async(
-						future_void_result_3,
-						file_collectivization_log_text.get_value()
-					);
-				}
+		if (is_file_collectivization_enabled)
+		{
+			log_to_collectivization_file_async(
+				future_void_result_3,
+				file_collectivization_log_text.get_value()
+			);
+		}
 
-				if (is_file_custom_enabled)
-				{
-					log_to_output_files_async(
-						future_void_result_4,
-						file_custom_log_text.get_value()
-					);
-				}
-
-				break;
-			}
-			case LogMedium::CONSOLE:
-			{
-				if (is_console_enabled)
-				{
-					log_to_console_async(
-						future_void_result_1,
-						console_log_text.get_value()
-					);
-				}
-
-				break;
-			}
-			case LogMedium::FILE:
-			{
-				if (is_file_fragmentation_enabled)
-				{
-					log_to_fragmentation_file_async(
-						future_void_result_2,
-						file_fragmentation_log_text.get_value()
-					);
-				}
-
-				if (is_file_collectivization_enabled)
-				{
-					log_to_collectivization_file_async(
-						future_void_result_3,
-						file_collectivization_log_text.get_value()
-					);
-				}
-
-				if (is_file_custom_enabled)
-				{
-					log_to_output_files_async(
-						future_void_result_4,
-						file_custom_log_text.get_value()
-					);
-				}
-
-				break;
-			}
+		if (is_file_custom_enabled)
+		{
+			log_to_output_files_async(
+				future_void_result_4,
+				file_custom_log_text.get_value()
+			);
 		}
 
 		result.set_to_good_status_without_value();
@@ -1627,161 +1560,11 @@ namespace QLogicaeCore
 		const LogConfigurations& configurations
 	)
 	{
-		LogMedium medium =
-			_configurations.medium;
-
-		TimeFormat format =
-			_configurations.format;
-
-		LogLevel log_level =
-			configurations.log_level;
-
-		bool is_enabled =
-			configurations.is_enabled ||
-			_configurations.is_enabled;
-
-		bool is_log_format_enabled =
-			configurations.is_format_enabled ||
-			_configurations.is_format_enabled;
-
-		bool is_console_enabled =
-			is_enabled ||
-			configurations.is_console_enabled ||
-			_configurations.is_console_enabled;
-
-		bool is_console_format_enabled =
-			configurations.is_console_format_enabled ||
-			_configurations.is_console_format_enabled ||
-			is_log_format_enabled;
-
-		bool is_file_enabled =
-			configurations.is_file_enabled ||
-			_configurations.is_file_enabled ||
-			is_enabled;
-
-		bool is_file_format_enabled =
-			configurations.is_file_format_enabled ||
-			_configurations.is_file_format_enabled ||
-			is_log_format_enabled;
-
-		bool is_file_collectivization_enabled =
-			configurations.is_file_collectivization_enabled ||
-			_configurations.is_file_collectivization_enabled ||
-			is_file_enabled;
-
-		bool is_file_collectivization_format_enabled =
-			configurations.is_file_collectivization_format_enabled ||
-			_configurations.is_file_collectivization_format_enabled ||
-			is_file_format_enabled;
-
-		bool is_file_fragmentation_enabled =
-			configurations.is_file_fragmentation_enabled ||
-			_configurations.is_file_fragmentation_enabled ||
-			is_file_enabled;
-
-		bool is_file_fragmentation_format_enabled =
-			configurations.is_file_fragmentation_format_enabled ||
-			_configurations.is_file_fragmentation_format_enabled ||
-			is_file_format_enabled;
-
-		bool is_file_custom_enabled =
-			configurations.is_file_custom_enabled ||
-			!_configurations.file_custom_output_paths.empty() ||
-			_configurations.is_file_custom_enabled ||
-			is_file_enabled;
-
-		bool is_file_custom_format_enabled =
-			configurations.is_file_custom_format_enabled ||
-			_configurations.is_file_custom_format_enabled ||
-			is_file_format_enabled;
-
-		if (
-			!is_enabled &&
-			!is_console_enabled &&
-			!is_file_enabled &&
-			!is_file_collectivization_enabled &&
-			!is_file_fragmentation_enabled &&
-			!is_file_custom_enabled &&
-			medium == LogMedium::NONE
-			)
-		{
-			return result.set_to_good_status_without_value();
-		}
-
-		Result<std::string> log_text;
-
-		Result<std::string> console_log_text;
-		Result<std::string> file_custom_log_text;
-		Result<std::string> file_fragmentation_log_text;
-		Result<std::string> file_collectivization_log_text;
-
-		Result<std::future<void>> future_void_result_1;
-		Result<std::future<void>> future_void_result_2;
-		Result<std::future<void>> future_void_result_3;
-		Result<std::future<void>> future_void_result_4;
-
-		if (is_log_format_enabled)
-		{
-			_to_log_format(
-				log_text,
-				text,
-				log_level,
-				format
-			);
-		}
-		else
-		{
-			log_text.set_value(
-				text
-			);
-		}
-
-		console_log_text.set_value(
-			(is_console_format_enabled) ? log_text.get_value() : text
+		log_with_timestamp(
+			result,
+			text,
+			configurations
 		);
-		file_collectivization_log_text.set_value(
-			(is_file_collectivization_format_enabled) ? log_text.get_value() : text
-		);
-		file_fragmentation_log_text.set_value(
-			(is_file_fragmentation_format_enabled) ? log_text.get_value() : text
-		);
-		file_custom_log_text.set_value(
-			(is_file_custom_format_enabled) ? log_text.get_value() : text
-		);
-
-		if (is_console_enabled)
-		{
-			log_to_console_async(
-				future_void_result_1,
-				console_log_text.get_value()
-			);
-		}
-
-		if (is_file_fragmentation_enabled)
-		{
-			log_to_fragmentation_file_async(
-				future_void_result_2,
-				file_fragmentation_log_text.get_value()
-			);
-		}
-
-		if (is_file_collectivization_enabled)
-		{
-			log_to_collectivization_file_async(
-				future_void_result_3,
-				file_collectivization_log_text.get_value()
-			);
-		}
-
-		if (is_file_custom_enabled)
-		{
-			log_to_output_files_async(
-				future_void_result_4,
-				file_custom_log_text.get_value()
-			);
-		}
-
-		result.set_to_good_status_without_value();
 	}
 
 	void Logger::log_with_timestamp_to_console_and_file_async(
@@ -1914,73 +1697,62 @@ namespace QLogicaeCore
 		const LogConfigurations& configurations
 	)
 	{	
-		LogMedium medium =
-			_configurations.medium;
-
 		TimeFormat format =
 			_configurations.format;
 
 		LogLevel log_level =
 			configurations.log_level;
 
-		bool is_enabled =
-			configurations.is_enabled ||
-			_configurations.is_enabled;
-
-		bool is_log_format_enabled =
-			configurations.is_format_enabled ||
-			_configurations.is_format_enabled;
-
-		bool is_file_enabled =
-			configurations.is_file_enabled ||
-			_configurations.is_file_enabled ||
-			is_enabled;
-
-		bool is_file_format_enabled =
-			configurations.is_file_format_enabled ||
-			_configurations.is_file_format_enabled ||
-			is_log_format_enabled;
-
 		bool is_file_collectivization_enabled =
 			configurations.is_file_collectivization_enabled ||
-			_configurations.is_file_collectivization_enabled ||
-			is_file_enabled;
+			_configurations.is_file_collectivization_enabled;
 
 		bool is_file_collectivization_format_enabled =
 			configurations.is_file_collectivization_format_enabled ||
-			_configurations.is_file_collectivization_format_enabled ||
-			is_file_format_enabled;
+			_configurations.is_file_collectivization_format_enabled;
 
 		bool is_file_fragmentation_enabled =
 			configurations.is_file_fragmentation_enabled ||
-			_configurations.is_file_fragmentation_enabled ||
-			is_file_enabled;
+			_configurations.is_file_fragmentation_enabled;
 
 		bool is_file_fragmentation_format_enabled =
 			configurations.is_file_fragmentation_format_enabled ||
-			_configurations.is_file_fragmentation_format_enabled ||
-			is_file_format_enabled;
+			_configurations.is_file_fragmentation_format_enabled;
 
 		bool is_file_custom_enabled =
 			configurations.is_file_custom_enabled ||
 			!_configurations.file_custom_output_paths.empty() ||
-			_configurations.is_file_custom_enabled ||
-			is_file_enabled;
+			_configurations.is_file_custom_enabled;
 
 		bool is_file_custom_format_enabled =
 			configurations.is_file_custom_format_enabled ||
-			_configurations.is_file_custom_format_enabled ||
+			_configurations.is_file_custom_format_enabled;
+
+		bool is_file_enabled =
+			configurations.is_file_enabled ||
+			_configurations.is_file_enabled ||
+			is_file_collectivization_enabled ||
+			is_file_fragmentation_enabled ||
+			is_file_custom_enabled;
+
+		bool is_file_format_enabled =
+			configurations.is_file_format_enabled ||
+			_configurations.is_file_format_enabled ||
+			is_file_collectivization_format_enabled ||
+			is_file_fragmentation_format_enabled ||
+			is_file_custom_format_enabled;
+
+		bool is_enabled =
+			configurations.is_enabled ||
+			_configurations.is_enabled ||
+			is_file_enabled;
+
+		bool is_log_format_enabled =
+			configurations.is_format_enabled ||
+			_configurations.is_format_enabled ||
 			is_file_format_enabled;
 
-
-		if (
-			!is_enabled &&
-			!is_file_enabled &&
-			!is_file_collectivization_enabled &&
-			!is_file_fragmentation_enabled &&
-			!is_file_custom_enabled &&
-			_configurations.medium == LogMedium::NONE
-			)
+		if (!is_enabled)
 		{
 			return result.set_to_good_status_without_value();
 		}
@@ -2178,32 +1950,31 @@ namespace QLogicaeCore
 		const LogConfigurations& configurations
 	)
 	{		
+		TimeFormat format =
+			_configurations.format;
+
 		LogLevel log_level =
 			configurations.log_level;
 
-		bool is_enabled =
-			configurations.is_enabled ||
-			_configurations.is_enabled;
-
-		bool is_log_format_enabled =
-			configurations.is_format_enabled ||
-			_configurations.is_format_enabled;
-
 		bool is_console_enabled =
-			is_enabled ||
 			configurations.is_console_enabled ||
 			_configurations.is_console_enabled;
 
 		bool is_console_format_enabled =
 			configurations.is_console_format_enabled ||
-			_configurations.is_console_format_enabled ||
-			is_log_format_enabled;
+			_configurations.is_console_format_enabled;
 
-		if (
-			!is_enabled &&
-			!is_console_enabled &&
-			_configurations.medium == LogMedium::NONE
-			)
+		bool is_enabled =
+			configurations.is_enabled ||
+			_configurations.is_enabled ||
+			is_console_enabled;
+
+		bool is_log_format_enabled =
+			configurations.is_format_enabled ||
+			_configurations.is_format_enabled ||
+			is_console_format_enabled;
+
+		if (!is_enabled)
 		{
 			return result.set_to_good_status_without_value();
 		}
