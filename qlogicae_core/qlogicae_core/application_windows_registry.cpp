@@ -100,6 +100,94 @@ namespace QLogicaeCore
         );
     }
 
+    bool ApplicationWindowsRegistry::terminate()
+    {
+        try
+        {
+            Result<void> void_result;
+
+            terminate(void_result);
+
+            return void_result.is_status_safe();
+        }
+        catch (const std::exception& exception)
+        {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::ApplicationWindowsRegistry::terminate()",
+                exception.what()
+            );
+
+            return false;
+        }
+    }
+
+    void ApplicationWindowsRegistry::terminate(
+        Result<void>& result
+    )
+    {
+        set_is_enabled(false);
+
+        result.set_to_good_status_without_value();
+    }
+
+    std::future<bool> ApplicationWindowsRegistry::terminate_async(
+        const std::function<void(const bool& value)>& callback
+    )
+    {
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, callback, promise = std::move(promise)]() mutable
+            {
+                bool value = terminate();
+
+                promise.set_value(
+                    value
+                );
+
+                if (callback)
+                {
+                    callback(
+                        value
+                    );
+                }
+            }
+        );
+
+        return future;
+    }
+
+    void ApplicationWindowsRegistry::terminate_async(
+        Result<std::future<void>>& result,
+        const std::function<void(Result<void>& result)>& callback
+    )
+    {
+        std::promise<void> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, callback, promise = std::move(promise)]() mutable
+            {
+                Result<void> result;
+
+                terminate(result);
+
+                promise.set_value();
+
+                callback(
+                    result
+                );
+            }
+        );
+
+        result.set_to_good_status_with_value(
+            std::move(future)
+        );
+    }
+
     ApplicationWindowsRegistry& ApplicationWindowsRegistry::get_instance()
     {
         static ApplicationWindowsRegistry instance;
