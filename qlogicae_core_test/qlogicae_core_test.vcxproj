@@ -177,6 +177,7 @@
     <ClCompile Include="qlogicae_core_test\windows_registry.cpp" />
     <ClCompile Include="qlogicae_core_test\windows_registry_value_extractor.cpp" />
     <ClCompile Include="qlogicae_core_test\xchacha20_poly1305_cipher_cryptographer.cpp" />
+    <ClCompile Include="qlogicae_core_test\time_delay.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\qlogicae_core\qlogicae_core.vcxproj">

@@ -40,6 +40,23 @@ namespace QLogicaeCore
             [](Result<void>& result) {}
         );
 
+        bool terminate();
+
+        std::future<bool> terminate_async(
+            const std::function<void(const bool& result)>& callback =
+            [](const bool& result) {}
+        );
+
+        void terminate(
+            Result<void>& result
+        );
+
+        void terminate_async(
+            Result<std::future<void>>& result,
+            const std::function<void(Result<void>& result)>& callback =
+            [](Result<void>& result) {}
+        );
+
         static ApplicationFileIO& get_instance();
 
         static void get_instance(

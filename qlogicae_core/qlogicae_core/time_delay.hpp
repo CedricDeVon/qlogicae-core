@@ -34,6 +34,10 @@ namespace QLogicaeCore
             const double& value
         );
 
+        std::future<void> in_years_async(
+            const double& value
+        );
+
         void in_years_async(
             const std::function<void(const bool& result)>& callback,
             const double& value
@@ -45,11 +49,20 @@ namespace QLogicaeCore
         );
 
         void in_years_async(
+            Result<std::future<void>>& result,
+            const double& value
+        );
+
+        void in_years_async(
             const std::function<void(Result<void>& result)>& callback,
             const double& value
         );
 
         void in_months(
+            const double& value
+        );
+
+        std::future<void> in_months_async(
             const double& value
         );
 
@@ -64,11 +77,20 @@ namespace QLogicaeCore
         );
 
         void in_months_async(
+            Result<std::future<void>>& result,
+            const double& value
+        );
+
+        void in_months_async(
             const std::function<void(Result<void>& result)>& callback,
             const double& value
         );
 
         void in_days(
+            const double& value
+        );
+
+        std::future<void> in_days_async(
             const double& value
         );
 
@@ -79,6 +101,11 @@ namespace QLogicaeCore
 
         void in_days(
             Result<void>& result,
+            const double& value
+        );
+
+        void in_days_async(
+            Result<std::future<void>>& result,
             const double& value
         );
 
@@ -88,6 +115,10 @@ namespace QLogicaeCore
         );
 
         void in_hours(
+            const double& value
+        );
+
+        std::future<void> in_hours_async(
             const double& value
         );
 
@@ -102,11 +133,20 @@ namespace QLogicaeCore
         );
 
         void in_hours_async(
+            Result<std::future<void>>& result,
+            const double& value
+        );
+
+        void in_hours_async(
             const std::function<void(Result<void>& result)>& callback,
             const double& value
         );
 
         void in_minutes(
+            const double& value
+        );
+
+        std::future<void> in_minutes_async(
             const double& value
         );
 
@@ -121,11 +161,20 @@ namespace QLogicaeCore
         );
 
         void in_minutes_async(
+            Result<std::future<void>>& result,
+            const double& value
+        );
+
+        void in_minutes_async(
             const std::function<void(Result<void>& result)>& callback,
             const double& value
         );
 
         void in_seconds(
+            const double& value
+        );
+
+        std::future<void> in_seconds_async(
             const double& value
         );
 
@@ -140,11 +189,20 @@ namespace QLogicaeCore
         );
 
         void in_seconds_async(
+            Result<std::future<void>>& result,
+            const double& value
+        );
+
+        void in_seconds_async(
             const std::function<void(Result<void>& result)>& callback,
             const double& value
         );
 
         void in_milliseconds(
+            const double& value
+        );
+
+        std::future<void> in_milliseconds_async(
             const double& value
         );
 
@@ -159,11 +217,20 @@ namespace QLogicaeCore
         );
 
         void in_milliseconds_async(
+            Result<std::future<void>>& result,
+            const double& value
+        );
+
+        void in_milliseconds_async(
             const std::function<void(Result<void>& result)>& callback,
             const double& value
         );
 
         void in_microseconds(
+            const double& value
+        );
+
+        std::future<void> in_microseconds_async(
             const double& value
         );
 
@@ -178,11 +245,20 @@ namespace QLogicaeCore
         );
 
         void in_microseconds_async(
+            Result<std::future<void>>& result,
+            const double& value
+        );
+
+        void in_microseconds_async(
             const std::function<void(Result<void>& result)>& callback,
             const double& value
         );
 
         void in_nanoseconds(
+            const double& value
+        );
+
+        std::future<void> in_nanoseconds_async(
             const double& value
         );
 
@@ -197,58 +273,90 @@ namespace QLogicaeCore
         );
 
         void in_nanoseconds_async(
+            Result<std::future<void>>& result,
+            const double& value
+        );
+
+        void in_nanoseconds_async(
             const std::function<void(Result<void>& result)>& callback,
             const double& value
         );
 
-        void in_calibrate();
+        void calibrate();
 
-        void in_calibrate_async(
+        std::future<void> calibrate_async(
+            const double& microseconds
+        );
+
+        void calibrate_async(
             const std::function<void(const bool& result)>& callback
         );
 
-        void in_calibrate(
+        void calibrate(
             Result<void>& result
         );
 
-        void in_calibrate_async(
-            Result<void>& result
-        );
-
-        void in_rdtsc(
+        void calibrate_async(
+            Result<std::future<void>>& result,
             const double& microseconds
         );
 
-        void in_rdtsc_async(
+        void calibrate_async(
+            const std::function<void(Result<void>& result)>& callback
+        );
+
+        void real_time_stamp_counter(
+            const double& microseconds
+        );
+
+        std::future<void> real_time_stamp_counter_async(
+            const double& microseconds
+        );
+
+        void real_time_stamp_counter_async(
             const std::function<void(const bool& result)>& callback,
             const double& microseconds
         );
 
-        void in_rdtsc(
+        void real_time_stamp_counter(
             Result<void>& result,
             const double& microseconds
         );
 
-        void in_rdtsc_async(
+        void real_time_stamp_counter_async(
+            Result<std::future<void>>& result,
+            const double& microseconds
+        );
+
+        void real_time_stamp_counter_async(
             const std::function<void(Result<void>& result)>& callback,
             const double& microseconds
         );
 
-        void in_qpc(
+        void query_performance_counter(
             const double& microseconds
         );
 
-        void in_qpc_async(
+        std::future<void> query_performance_counter_async(
+            const double& microseconds
+        );
+
+        void query_performance_counter_async(
             const std::function<void(const bool& result)>& callback,
             const double& microseconds
         );
 
-        void in_qpc(
+        void query_performance_counter(
             Result<void>& result,
             const double& microseconds
         );
 
-        void in_qpc_async(
+        void query_performance_counter_async(
+            Result<std::future<void>>& result,
+            const double& microseconds
+        );
+
+        void query_performance_counter_async(
             const std::function<void(Result<void>& result)>& callback,
             const double& microseconds
         );
