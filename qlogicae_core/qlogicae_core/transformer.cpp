@@ -588,6 +588,255 @@ namespace QLogicaeCore
         );
     }
 
+    std::string Transformer::to_uppercase(
+        const std::string text
+    )
+    {
+        return absl::AsciiStrToUpper(text);
+    }
+
+    std::string Transformer::to_lowercase(
+        const std::string text
+    )
+    {
+        return absl::AsciiStrToLower(text);
+    }
+
+    std::string Transformer::to_capitalized(
+        const std::string text
+    )
+    {
+        if (text.empty())
+        {
+            return text;
+        }
+
+        std::string result = absl::AsciiStrToLower(text);
+        result[0] = static_cast<char>(std::toupper(result[0]));
+        return result;
+    }
+
+    void Transformer::to_uppercase(
+        Result<std::string>& result,
+        const std::string text
+    )
+    {
+        result.set_to_good_status_with_value(
+            absl::AsciiStrToUpper(text)
+        );
+    }
+
+    void Transformer::to_lowercase(
+        Result<std::string>& result,
+        const std::string text
+    )
+    {
+        result.set_to_good_status_with_value(
+            absl::AsciiStrToLower(text)
+        );
+    }
+
+    void Transformer::to_capitalized(
+        Result<std::string>& result,
+        const std::string text
+    )
+    {
+        if (text.empty())
+        {
+            result.set_to_good_status_with_value(text);
+            return;
+        }
+
+        std::string output = absl::AsciiStrToLower(text);
+        output[0] = static_cast<char>(std::toupper(output[0]));
+        result.set_to_good_status_with_value(output);
+    }
+
+    std::wstring Transformer::to_uppercase(
+        const std::wstring text
+    )
+    {
+        std::wstring result = text;
+        std::transform(
+            result.begin(),
+            result.end(),
+            result.begin(),
+            ::towupper
+        );
+        return result;
+    }
+
+    std::wstring Transformer::to_lowercase(
+        const std::wstring text
+    )
+    {
+        std::wstring result = text;
+        std::transform(
+            result.begin(),
+            result.end(),
+            result.begin(),
+            ::towlower
+        );
+        return result;
+    }
+
+    std::wstring Transformer::to_capitalized(
+        const std::wstring text
+    )
+    {
+        if (text.empty())
+        {
+            return text;
+        }
+
+        std::wstring result = text;
+        std::transform(
+            result.begin(),
+            result.end(),
+            result.begin(),
+            ::towlower
+        );
+        result[0] = static_cast<wchar_t>(
+            std::towupper(result[0])
+            );
+        return result;
+    }
+
+    void Transformer::to_uppercase(
+        Result<std::wstring>& result,
+        const std::wstring text
+    )
+    {
+        std::wstring output = text;
+        std::transform(
+            output.begin(),
+            output.end(),
+            output.begin(),
+            ::towupper
+        );
+        result.set_to_good_status_with_value(output);
+    }
+
+    void Transformer::to_lowercase(
+        Result<std::wstring>& result,
+        const std::wstring text
+    )
+    {
+        std::wstring output = text;
+        std::transform(
+            output.begin(),
+            output.end(),
+            output.begin(),
+            ::towlower
+        );
+        result.set_to_good_status_with_value(output);
+    }
+
+    void Transformer::to_capitalized(
+        Result<std::wstring>& result,
+        const std::wstring text
+    )
+    {
+        if (text.empty())
+        {
+            result.set_to_good_status_with_value(text);
+            return;
+        }
+
+        std::wstring output = text;
+        std::transform(
+            output.begin(),
+            output.end(),
+            output.begin(),
+            ::towlower
+        );
+        output[0] = static_cast<wchar_t>(
+            std::towupper(output[0])
+            );
+        result.set_to_good_status_with_value(output);
+    }
+
+    const char* Transformer::to_uppercase(
+        const char* text
+    )
+    {
+        if (!text)
+        {
+            return "";
+        }
+
+        static thread_local std::string buffer;
+        buffer = absl::AsciiStrToUpper(text);
+        return buffer.c_str();
+    }
+
+    const char* Transformer::to_lowercase(
+        const char* text
+    )
+    {
+        if (!text)
+        {
+            return "";
+        }
+
+        static thread_local std::string buffer;
+        buffer = absl::AsciiStrToLower(text);
+        return buffer.c_str();
+    }
+
+    const char* Transformer::to_capitalized(
+        const char* text
+    )
+    {
+        if (!text)
+        {
+            return "";
+        }
+
+        static thread_local std::string buffer;
+        std::string temp = absl::AsciiStrToLower(text);
+
+        if (!temp.empty())
+        {
+            temp[0] = static_cast<char>(
+                std::toupper(temp[0])
+                );
+        }
+
+        buffer = temp;
+        return buffer.c_str();
+    }
+
+    void Transformer::to_uppercase(
+        Result<const char*>& result,
+        const char* text
+    )
+    {
+        result.set_to_good_status_with_value(
+            to_uppercase(text)
+        );
+    }
+
+    void Transformer::to_lowercase(
+        Result<const char*>& result,
+        const char* text
+    )
+    {
+        result.set_to_good_status_with_value(
+            to_lowercase(text)
+        );
+    }
+
+    void Transformer::to_capitalized(
+        Result<const char*>& result,
+        const char* text
+    )
+    {
+        result.set_to_good_status_with_value(
+            to_capitalized(text)
+        );
+    }
+
     Transformer& Transformer::get_instance()
     {
         static Transformer instance;

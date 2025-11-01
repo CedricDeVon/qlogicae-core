@@ -153,6 +153,87 @@ namespace QLogicaeCore
             const std::string& message
         );
 
+        std::string to_uppercase(
+            const std::string text
+        );
+
+        std::string to_lowercase(
+            const std::string text
+        );
+
+        std::string to_capitalized(
+            const std::string text
+        );
+
+        void to_uppercase(
+            Result<std::string>& result,
+            const std::string text
+        );
+
+        void to_lowercase(
+            Result<std::string>& result,
+            const std::string text
+        );
+
+        void to_capitalized(
+            Result<std::string>& result,
+            const std::string text
+        );
+
+        std::wstring to_uppercase(
+            const std::wstring text
+        );
+
+        std::wstring to_lowercase(
+            const std::wstring text
+        );
+
+        std::wstring to_capitalized(
+            const std::wstring text
+        );
+
+        void to_uppercase(
+            Result<std::wstring>& result,
+            const std::wstring text
+        );
+
+        void to_lowercase(
+            Result<std::wstring>& result,
+            const std::wstring text
+        );
+
+        void to_capitalized(
+            Result<std::wstring>& result,
+            const std::wstring text
+        );
+
+        const char* to_uppercase(
+            const char* text
+        );
+
+        const char* to_lowercase(
+            const char* text
+        );
+
+        const char* to_capitalized(
+            const char* text
+        );
+
+        void to_uppercase(
+            Result<const char*>& result,
+            const char* text
+        );
+
+        void to_lowercase(
+            Result<const char*>& result,
+            const char* text
+        );
+
+        void to_capitalized(
+            Result<const char*>& result,
+            const char* text
+        );
+
         static Transformer& get_instance();
 
         static void get_instance(

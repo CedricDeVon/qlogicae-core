@@ -45,6 +45,7 @@
 #include <rapidjson/pointer.h>
 #include <libxml/xmlschemas.h>
 #include <rapidjson/document.h>
+#include "absl/strings/ascii.h"
 #include <absl/strings/str_cat.h>
 #include <rapidjson/allocators.h>
 #include <rapidjson/prettywriter.h>
@@ -96,6 +97,7 @@
 #include <format>
 #include <random>
 #include <cctype>
+#include <cwctype>
 #include <sstream>
 #include <variant>
 #include <iomanip>
