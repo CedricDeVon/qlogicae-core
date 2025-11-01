@@ -29,6 +29,34 @@ namespace QLogicaeCore
             const std::function<void(Result<void>& result)>& callback
         );
 
+        bool run_process(
+            const std::string& command
+        );
+
+        void run_process(
+            Result<bool>& result,
+            const std::string& command
+        );
+
+        std::future<bool> run_process_async(
+            const std::string& command
+        );
+
+        void run_process_async(
+            const std::function<void(const bool& result)>& callback,
+            const std::string& command
+        );
+
+        void run_process_async(
+            Result<std::future<bool>>& result,
+            const std::string& command
+        );
+
+        void run_process_async(
+            const std::function<void(Result<bool>& result)>& callback,
+            const std::string& command
+        );
+
         bool has_admin_access();
         
         std::string get_executable_dir();

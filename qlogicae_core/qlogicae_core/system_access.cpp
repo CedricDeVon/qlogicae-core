@@ -625,6 +625,163 @@ namespace QLogicaeCore
         ENCODER.from_utf16_to_utf8(result, wresult);
     }
 
+
+    bool SystemAccess::run_process(
+        const std::string& command
+    )
+    {
+        try
+        {
+            Result<bool> result;
+
+            run_process(result, command);
+
+            return result.is_status_safe();
+        }
+        catch (const std::exception& exception)
+        {
+            LOGGER.handle_exception(
+                "QLogicaeCore::SystemAccess::run_process()",
+                exception.what()
+            );
+
+            return false;
+        }
+    }
+
+    void SystemAccess::run_process(
+        Result<bool>& result,
+        const std::string& command
+    )
+    {
+        STARTUPINFOA si{};
+        PROCESS_INFORMATION pi{};
+        si.cb = sizeof(si);
+
+        if (!CreateProcessA(
+            nullptr,
+            const_cast<LPSTR>(command.c_str()),
+            nullptr,
+            nullptr,
+            FALSE,
+            0,
+            nullptr,
+            nullptr,
+            &si,
+            &pi)
+        )
+        {
+            result.set_to_good_status_with_value(
+                false
+            );
+        }
+
+        WaitForSingleObject(pi.hProcess, INFINITE);
+
+        CloseHandle(pi.hProcess);
+        CloseHandle(pi.hThread);
+
+        result.set_to_good_status_with_value(
+            true
+        );
+    }
+
+
+    std::future<bool> SystemAccess::run_process_async(
+        const std::string& command
+    )
+    {
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, command,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    run_process(
+                        command
+                    )
+                );
+            }
+        );
+
+        return future;
+    }
+
+    void SystemAccess::run_process_async(
+        const std::function<void(const bool& result)>& callback,
+        const std::string& command
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, callback, command]() mutable
+            {
+                callback(
+                    run_process(
+                        command
+                    )
+                );
+            }
+        );
+    }
+
+    void SystemAccess::run_process_async(
+        Result<std::future<bool>>& result,
+        const std::string& command
+    )
+    {
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, command,
+            promise = std::move(promise)]() mutable
+            {
+                Result<bool> result;
+
+                run_process(
+                    result,
+                    command
+                );
+
+                promise.set_value(
+                    result.get_value()
+                );
+            }
+        );
+
+        result.set_to_good_status_with_value(
+            std::move(future)
+        );
+    }
+
+    void SystemAccess::run_process_async(
+        const std::function<void(Result<bool>& result)>& callback,
+        const std::string& command
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, callback, command]() mutable
+            {
+                Result<bool> result;
+
+                run_process(
+                    result,
+                    command
+                );
+
+                callback(
+                    result
+                );
+            }
+        );
+    }
+
     SystemAccess& SystemAccess::get_instance()
     {
         static SystemAccess get_instance;
