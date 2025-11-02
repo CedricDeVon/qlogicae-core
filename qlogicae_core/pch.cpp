@@ -1,8 +1,6 @@
 #include "pch.hpp"
 
-#ifndef x64_MASM_ASSEMBLY
+namespace QLogicaeCore
+{
 
-extern "C" void qlogicae_core__assembly();
-
-#endif
-
+}

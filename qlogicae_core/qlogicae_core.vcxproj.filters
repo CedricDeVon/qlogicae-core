@@ -784,7 +784,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <MASM Include="qlogicae_core\assembly\x64__main.asm">
+    <MASM Include="qlogicae_core\assembly\x64_masm__main.asm">
       <Filter>Source Files</Filter>
     </MASM>
   </ItemGroup>

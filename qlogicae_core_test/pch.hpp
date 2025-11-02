@@ -5,41 +5,105 @@
 #include "gtest/gtest.h"
 
 #include <any>
-#include <map>
-#include <array>
-#include <mutex>
-#include <ctime>
+#include <variant>
+#include <optional>
+#include <typeinfo>
+#include <typeindex>
+#include <type_traits>
+#include <compare>
+#include <source_location>
+
+#include <cstddef>
+#include <cstdint>
+#include <climits>
+#include <limits>
+#include <bit>
+#include <bitset>
+
+#include <string>
+#include <string_view>
+#include <charconv>
+#include <format>
 #include <regex>
-#include <queue>
-#include <tuple>
+#include <cctype>
+#include <cwctype>
+
+#include <array>
 #include <vector>
+#include <deque>
+#include <list>
+#include <set>
+#include <map>
+#include <unordered_set>
+#include <unordered_map>
+#include <span>
+#include <tuple>
+#include <stack>
+#include <queue>
+#include <iterator>
+#include <ranges>
+
+#include <memory>
+#include <memory_resource>
+#include <new>
+
 #include <thread>
 #include <future>
-#include <string>
-#include <memory>
+#include <mutex>
+#include <shared_mutex>
+#include <condition_variable>
+#include <atomic>
+#include <stop_token>
+#include <semaphore>
+#include <latch>
+#include <barrier>
+
 #include <chrono>
-#include <limits>
-#include <format>
+#include <ratio>
 #include <random>
-#include <cctype>
-#include <sstream>
-#include <variant>
-#include <iomanip>
+#include <numbers>
+
 #include <fstream>
-#include <cstdint>
-#include <cassert>
-#include <cstddef>
-#include <iterator>
+#include <filesystem>
+
 #include <iostream>
-#include <typeindex>
-#include <optional>
+#include <istream>
+#include <ostream>
+#include <sstream>
+#include <iomanip>
+#include <ios>
+#include <cstdio>
+#include <cstdlib>
+
+#include <stdexcept>
+#include <cassert>
+#include <cerrno>
+#include <csignal>
+#include <cmath>
+#include <complex>
+#include <valarray>
+
 #include <algorithm>
 #include <functional>
-#include <filesystem>
-#include <type_traits>
-#include <string_view>
-#include <shared_mutex>
-#include <unordered_map>
-#include <unordered_set>
-#include <memory_resource>
-#include <condition_variable>
+#include <execution>
+#include <locale>
+
+#include <version>
+
+#include <concepts>
+#include <coroutine>
+
+#include <cfenv>
+#include <cfloat>
+
+#include <cstdarg>
+#include <csetjmp>
+#include <cstring>
+#include <ctime>
+
+#include <windows.h>
+
+namespace QLogicaeCoreTest
+{
+
+}

@@ -177,3 +177,8 @@
 #include <ctime>
 
 #include <windows.h>
+
+namespace QLogicaeCore
+{
+
+}

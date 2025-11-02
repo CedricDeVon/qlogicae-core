@@ -158,3 +158,8 @@
 #include "qlogicae_core/includes/application_cryptographer.hpp"
 #include "qlogicae_core/includes/application_startup_inputs.hpp"
 #include "qlogicae_core/includes/application_windows_registry.hpp"
+
+namespace QLogicaeCore
+{
+
+}

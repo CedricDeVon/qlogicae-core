@@ -142,44 +142,46 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="pch.hpp" />
+    <ClInclude Include="qlogicae_core_test\includes\assembly.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="qlogicae_core_test\abstract_file_io.cpp" />
-    <ClCompile Include="qlogicae_core_test\abstract_result.cpp" />
-    <ClCompile Include="qlogicae_core_test\aes256_cipher_cryptographer.cpp" />
-    <ClCompile Include="qlogicae_core_test\aes256_signature_cryptographer.cpp" />
-    <ClCompile Include="qlogicae_core_test\argon2id_hash_cryptographer.cpp" />
-    <ClCompile Include="qlogicae_core_test\bad_result.cpp" />
-    <ClCompile Include="qlogicae_core_test\bcrypt_hash_cryptographer.cpp" />
-    <ClCompile Include="qlogicae_core_test\cli_io.cpp" />
-    <ClCompile Include="qlogicae_core_test\cryptographer.cpp" />
-    <ClCompile Include="qlogicae_core_test\dot_env.cpp" />
-    <ClCompile Include="qlogicae_core_test\dot_env_value_extractor.cpp" />
-    <ClCompile Include="qlogicae_core_test\encoder.cpp" />
-    <ClCompile Include="qlogicae_core_test\generator.cpp" />
-    <ClCompile Include="qlogicae_core_test\good_result.cpp" />
-    <ClCompile Include="qlogicae_core_test\jsonwebtoken_cryptographer.cpp" />
-    <ClCompile Include="qlogicae_core_test\json_file_io.cpp" />
-    <ClCompile Include="qlogicae_core_test\logger.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\abstract_file_io.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\abstract_result.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\aes256_cipher_cryptographer.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\aes256_signature_cryptographer.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\argon2id_hash_cryptographer.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\assembly.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\bad_result.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\bcrypt_hash_cryptographer.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\cli_io.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\cryptographer.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\dot_env.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\dot_env_value_extractor.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\encoder.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\generator.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\good_result.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\jsonwebtoken_cryptographer.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\json_file_io.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\logger.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="qlogicae_core_test\placeholder_value_extractor.cpp" />
-    <ClCompile Include="qlogicae_core_test\regular_expression.cpp" />
-    <ClCompile Include="qlogicae_core_test\result.cpp" />
-    <ClCompile Include="qlogicae_core_test\sha256_hash_cryptographer.cpp" />
-    <ClCompile Include="qlogicae_core_test\system_access.cpp" />
-    <ClCompile Include="qlogicae_core_test\text_file_io.cpp" />
-    <ClCompile Include="qlogicae_core_test\time.cpp" />
-    <ClCompile Include="qlogicae_core_test\transformer.cpp" />
-    <ClCompile Include="qlogicae_core_test\validators.cpp" />
-    <ClCompile Include="qlogicae_core_test\windows_registry.cpp" />
-    <ClCompile Include="qlogicae_core_test\windows_registry_value_extractor.cpp" />
-    <ClCompile Include="qlogicae_core_test\xchacha20_poly1305_cipher_cryptographer.cpp" />
-    <ClCompile Include="qlogicae_core_test\time_delay.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\placeholder_value_extractor.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\regular_expression.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\result.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\sha256_hash_cryptographer.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\system_access.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\text_file_io.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\time.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\transformer.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\validators.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\windows_registry.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\windows_registry_value_extractor.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\xchacha20_poly1305_cipher_cryptographer.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\time_delay.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\qlogicae_core\qlogicae_core.vcxproj">
@@ -190,7 +192,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <MASM Include="qlogicae_core_test\assembly.asm" />
+    <MASM Include="qlogicae_core_test\assembly\x64_masm__main.asm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
