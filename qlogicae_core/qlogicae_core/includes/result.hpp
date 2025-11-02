@@ -550,31 +550,31 @@ namespace QLogicaeCore
     template <typename ValueType>
     void Result<ValueType>::set_status_to_bad()
     {
-        set_status(ResultStatus::GOOD);
+        set_status(ResultStatus::BAD);
     }
 
     template <typename ValueType>
     void Result<ValueType>::set_status_to_info()
     {
-        set_status(ResultStatus::GOOD);
+        set_status(ResultStatus::INFO);
     }
 
     template <typename ValueType>
     void Result<ValueType>::set_status_to_debug()
     {
-        set_status(ResultStatus::GOOD);
+        set_status(ResultStatus::DEBUG);
     }
 
     template <typename ValueType>
     void Result<ValueType>::set_status_to_warning()
     {
-        set_status(ResultStatus::GOOD);
+        set_status(ResultStatus::WARNING);
     }
 
     template <typename ValueType>
     void Result<ValueType>::set_status_to_exception()
     {
-        set_status(ResultStatus::GOOD);
+        set_status(ResultStatus::EXCEPTION);
     }
 
     template <typename ValueType>
