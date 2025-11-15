@@ -32,7 +32,8 @@ namespace QLogicaeCore
 
     void RocksDBDatabase::setup(
         const std::string& path,
-        const RocksDBConfig& config)
+        const RocksDBConfig& config
+    )
     {
         close_db();
 
@@ -780,5 +781,23 @@ namespace QLogicaeCore
     )
     {
         result.set_to_good_status_without_value();
+    }
+
+    RocksDBDatabase& RocksDBDatabase::get_instance()
+    {
+        static RocksDBDatabase instance;
+
+        return instance;
+    }
+
+    void RocksDBDatabase::get_instance(
+        Result<RocksDBDatabase*>& result
+    )
+    {
+        static RocksDBDatabase instance;
+
+        result.set_to_good_status_with_value(
+            &instance
+        );
     }
 }

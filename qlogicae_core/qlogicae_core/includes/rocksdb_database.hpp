@@ -293,6 +293,12 @@ namespace QLogicaeCore
             const Type&
         );
 
+        static RocksDBDatabase& get_instance();
+
+        static void get_instance(
+            Result<RocksDBDatabase*>& result
+        );
+
     protected:
         RocksDBConfig _config;
         
@@ -431,10 +437,6 @@ namespace QLogicaeCore
         return data;
     }
 
-
-
-
-
     template <typename Type>
     void RocksDBDatabase::get_value(
         Result<Type>& result,
@@ -537,4 +539,7 @@ namespace QLogicaeCore
             })
         );
     }
+
+    inline static RocksDBDatabase& ROCKSDB_DATABASE = 
+        RocksDBDatabase::get_instance();
 }

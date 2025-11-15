@@ -712,7 +712,31 @@ namespace QLogicaeCore
             );
         }
 
-        from_base64_to_utf8(result, text);
+        Result<std::vector<unsigned char>> bytes_result;
+        from_base64_to_bytes(bytes_result, text);
+
+        if (!bytes_result.is_status_safe())
+        {
+            return result.set_to_bad_status_without_value(
+                bytes_result.get_message()
+            );
+        }
+
+        Result<std::string> hex_result;
+        from_bytes_to_hex(hex_result,
+            bytes_result.get_value().data(),
+            bytes_result.get_value().size());
+
+        if (!hex_result.is_status_safe())
+        {
+            return result.set_to_bad_status_without_value(
+                hex_result.get_message()
+            );
+        }
+
+        result.set_to_good_status_with_value(
+            hex_result.get_value()
+        );
     }
 
     Encoder& Encoder::get_instance()

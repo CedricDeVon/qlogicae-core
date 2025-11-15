@@ -2,6 +2,9 @@
 
 #include "result.hpp"
 #include "logger.hpp"
+#include "utilities.hpp"
+#include "rocksdb_database.hpp"
+#include "application_utilities.hpp"
 #include "abstract_application.hpp"
 
 namespace QLogicaeCore

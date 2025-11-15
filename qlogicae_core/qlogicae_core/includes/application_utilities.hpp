@@ -14,7 +14,7 @@
 namespace QLogicaeCore
 {
     class ApplicationUtilities :
-        AbstractApplication
+        public AbstractApplication
     {
     public:
         std::string CONFIGURATIONS_APPLICATION_ID;

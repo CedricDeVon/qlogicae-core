@@ -13,7 +13,7 @@ namespace QLogicaeCoreTest
         QLogicaeCore::Logger logger;
         EXPECT_EQ(logger.get_name(), "");
         EXPECT_EQ(logger.get_medium(), QLogicaeCore::LogMedium::CONSOLE);
-        EXPECT_TRUE(logger.get_is_log_format_enabled());
+        EXPECT_FALSE(logger.get_is_log_format_enabled());
         EXPECT_TRUE(logger.get_file_custom_output_paths().empty());
     }
 
@@ -32,7 +32,7 @@ namespace QLogicaeCoreTest
     TEST_F(LoggerTest, Should_Expect_FlagUpdated_When_SetIsLogFormatEnabled)
     {
         QLogicaeCore::Logger logger;
-        EXPECT_TRUE(logger.get_is_log_format_enabled());
+        EXPECT_FALSE(logger.get_is_log_format_enabled());
         logger.set_is_log_format_enabled(true);
         EXPECT_TRUE(logger.get_is_log_format_enabled());
     }

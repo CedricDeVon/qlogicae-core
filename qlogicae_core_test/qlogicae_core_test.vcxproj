@@ -153,13 +153,20 @@
     <ClCompile Include="qlogicae_core_test\sources\assembly.cpp" />
     <ClCompile Include="qlogicae_core_test\sources\bad_result.cpp" />
     <ClCompile Include="qlogicae_core_test\sources\bcrypt_hash_cryptographer.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\binary_file_io.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\boost_interprocess_cache.cpp" />
     <ClCompile Include="qlogicae_core_test\sources\cli_io.cpp" />
     <ClCompile Include="qlogicae_core_test\sources\cryptographer.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\csv_file_io.cpp" />
     <ClCompile Include="qlogicae_core_test\sources\dot_env.cpp" />
     <ClCompile Include="qlogicae_core_test\sources\dot_env_value_extractor.cpp" />
     <ClCompile Include="qlogicae_core_test\sources\encoder.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\event_dispatcher.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\file_uri_io.cpp" />
     <ClCompile Include="qlogicae_core_test\sources\generator.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\gmail_mailer.cpp" />
     <ClCompile Include="qlogicae_core_test\sources\good_result.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\interval.cpp" />
     <ClCompile Include="qlogicae_core_test\sources\jsonwebtoken_cryptographer.cpp" />
     <ClCompile Include="qlogicae_core_test\sources\json_file_io.cpp" />
     <ClCompile Include="qlogicae_core_test\sources\logger.cpp" />
@@ -169,19 +176,29 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="qlogicae_core_test\sources\network_ping.cpp" />
     <ClCompile Include="qlogicae_core_test\sources\placeholder_value_extractor.cpp" />
     <ClCompile Include="qlogicae_core_test\sources\regular_expression.cpp" />
     <ClCompile Include="qlogicae_core_test\sources\result.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\rocksdb_database.cpp" />
     <ClCompile Include="qlogicae_core_test\sources\sha256_hash_cryptographer.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\sqlite.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\statistician.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\string_builder.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\string_memory_pool.cpp" />
     <ClCompile Include="qlogicae_core_test\sources\system_access.cpp" />
     <ClCompile Include="qlogicae_core_test\sources\text_file_io.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\thread_pool.cpp" />
     <ClCompile Include="qlogicae_core_test\sources\time.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\timeout.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\toml_file_io.cpp" />
     <ClCompile Include="qlogicae_core_test\sources\transformer.cpp" />
     <ClCompile Include="qlogicae_core_test\sources\validators.cpp" />
     <ClCompile Include="qlogicae_core_test\sources\windows_registry.cpp" />
     <ClCompile Include="qlogicae_core_test\sources\windows_registry_value_extractor.cpp" />
     <ClCompile Include="qlogicae_core_test\sources\xchacha20_poly1305_cipher_cryptographer.cpp" />
     <ClCompile Include="qlogicae_core_test\sources\time_delay.cpp" />
+    <ClCompile Include="qlogicae_core_test\sources\xml_file_io.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\qlogicae_core\qlogicae_core.vcxproj">

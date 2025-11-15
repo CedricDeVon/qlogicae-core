@@ -169,7 +169,7 @@ namespace QLogicaeCore
         {
             Result<std::string> string_result;
 
-            random_hex(
+            random_base64(
                 string_result,
                 length,
                 character_set
@@ -296,7 +296,7 @@ namespace QLogicaeCore
         {
             Result<std::string> string_result;
 
-            random_rgba_hex(
+            random_uuid4(
                 string_result
             );
 

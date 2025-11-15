@@ -1,6 +1,5 @@
 #include "pch.hpp"
 
-#include "../includes/utilities.hpp"
 #include "../includes/application_cache.hpp"
 
 namespace QLogicaeCore
@@ -42,6 +41,34 @@ namespace QLogicaeCore
                     "QLogicaeCore::ApplicationCache::setup() - Can only be called once"
                 );
             }
+
+            if (!QLOGICAE_APPLICATION_UTILITIES.get_is_enabled())
+            {
+                LOGGER.handle_exception_async(
+                    "QLogicaeCore::ApplicationCache::setup()",
+                    "QLogicaeApplicationUtilities is not enabled"
+                );
+
+                return result.set_to_bad_status_without_value(
+                    "QLogicaeCore::ApplicationCache::setup() - QLogicaeApplicationUtilities is not enabled"
+                );
+            }
+
+            std::string cache_main_path =
+                UTILITIES.FULL_ROAMING_APPDATA_FOLDER_PATH +
+                "\\" + UTILITIES.RELATIVE_QLOGICAE_FOLDER_PATH_3 +
+                "\\" + QLOGICAE_APPLICATION_UTILITIES.CONFIGURATIONS_APPLICATION_ID +
+                "\\" + QLOGICAE_APPLICATION_UTILITIES.CONFIGURATIONS_ENVIRONMENT_ID +
+                "\\" + "caches" +
+                "\\" + "main";
+
+            std::filesystem::create_directories(
+                cache_main_path
+            );
+
+            ROCKSDB_DATABASE.setup(
+                cache_main_path
+            );
 
             set_is_enabled(true);
 

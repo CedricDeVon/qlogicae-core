@@ -780,7 +780,6 @@ namespace QLogicaeCore
 		);
 	}
 
-
 	bool Logger::get_is_log_format_enabled()
 	{
 		return _configurations.is_format_enabled;

@@ -280,6 +280,7 @@ namespace QLogicaeCore
                 "\\" + CONFIGURATIONS_APPLICATION_ID +
                 "\\" + CONFIGURATIONS_ENVIRONMENT_ID
             );
+            
             std::filesystem::create_directories(
                 UTILITIES.FULL_ROAMING_APPDATA_FOLDER_PATH +
                 "\\" + UTILITIES.RELATIVE_QLOGICAE_FOLDER_PATH_3 +
@@ -287,6 +288,7 @@ namespace QLogicaeCore
                 "\\" + CONFIGURATIONS_ENVIRONMENT_ID +
                 "\\" + UTILITIES.RELATIVE_QLOGICAE_LOGS_FOLDER_PATH_1
             );
+
             std::filesystem::create_directories(
                 UTILITIES.FULL_ROAMING_APPDATA_FOLDER_PATH +
                 "\\" + UTILITIES.RELATIVE_QLOGICAE_FOLDER_PATH_3 +

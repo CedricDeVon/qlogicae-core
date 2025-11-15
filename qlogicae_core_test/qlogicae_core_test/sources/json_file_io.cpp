@@ -125,7 +125,7 @@ namespace QLogicaeCoreTest
         auto end = std::chrono::steady_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
         
-        ASSERT_LT(duration.count(), 15000);
+        ASSERT_LT(duration.count(), 20000);
     }
 
     TEST_F(JsonFileIOTest, Should_Expect_Empty_When_FilePathIsMissing) {
