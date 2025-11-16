@@ -61,11 +61,20 @@ namespace QLogicaeCore
 			false;
 
 		TimeFormat file_fragmentation_file_name_format =
-			TimeFormat::DATE_DMY_SLASHED;
+			TimeFormat::DATE_DASHED;
 
 		std::string file_fragmentation_folder_path =
+			"";		
+
+		std::string file_exception_file_name =
+			"exception.log";
+
+		std::string file_exception_folder_path =
 			"";
-		
+
+		std::string file_exception_file_path =
+			"";
+
 		bool is_file_custom_enabled =
 			false;
 

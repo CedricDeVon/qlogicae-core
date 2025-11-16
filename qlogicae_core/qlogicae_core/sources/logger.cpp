@@ -42,9 +42,15 @@ namespace QLogicaeCore
 		_configurations.file_fragmentation_file_name_format = DEFAULT_LOGGER_CONFIGURATIONS.file_fragmentation_file_name_format;
 		_configurations.file_fragmentation_folder_path = DEFAULT_LOGGER_CONFIGURATIONS.file_fragmentation_folder_path;
 
+		_configurations.file_exception_file_name = DEFAULT_LOGGER_CONFIGURATIONS.file_exception_file_name;
+		_configurations.file_exception_folder_path = DEFAULT_LOGGER_CONFIGURATIONS.file_exception_folder_path;
+
 		_configurations.is_file_custom_enabled = DEFAULT_LOGGER_CONFIGURATIONS.is_file_custom_enabled;
 		_configurations.is_file_custom_format_enabled = DEFAULT_LOGGER_CONFIGURATIONS.is_file_custom_format_enabled;
 		_configurations.file_custom_output_paths = DEFAULT_LOGGER_CONFIGURATIONS.file_custom_output_paths;
+
+		_configurations.file_collectivization_file_path =
+			_generate_log_collectivization_file_path();
 	}
 
 	Logger::~Logger()
@@ -78,9 +84,15 @@ namespace QLogicaeCore
 		_configurations.file_fragmentation_file_name_format = DEFAULT_LOGGER_CONFIGURATIONS.file_fragmentation_file_name_format;
 		_configurations.file_fragmentation_folder_path = DEFAULT_LOGGER_CONFIGURATIONS.file_fragmentation_folder_path;
 
+		_configurations.file_exception_file_name = DEFAULT_LOGGER_CONFIGURATIONS.file_exception_file_name;
+		_configurations.file_exception_folder_path = DEFAULT_LOGGER_CONFIGURATIONS.file_exception_folder_path;
+
 		_configurations.is_file_custom_enabled = DEFAULT_LOGGER_CONFIGURATIONS.is_file_custom_enabled;
 		_configurations.is_file_custom_format_enabled = is_log_format_enabled;
 		_configurations.file_custom_output_paths = DEFAULT_LOGGER_CONFIGURATIONS.file_custom_output_paths;
+
+		_configurations.file_collectivization_file_path =
+			_generate_log_collectivization_file_path();
 	}
 
 	Logger::Logger(
@@ -112,9 +124,15 @@ namespace QLogicaeCore
 		_configurations.file_fragmentation_file_name_format = DEFAULT_LOGGER_CONFIGURATIONS.file_fragmentation_file_name_format;
 		_configurations.file_fragmentation_folder_path = DEFAULT_LOGGER_CONFIGURATIONS.file_fragmentation_folder_path;
 
+		_configurations.file_exception_file_name = DEFAULT_LOGGER_CONFIGURATIONS.file_exception_file_name;
+		_configurations.file_exception_folder_path = DEFAULT_LOGGER_CONFIGURATIONS.file_exception_folder_path;
+
 		_configurations.is_file_custom_enabled = DEFAULT_LOGGER_CONFIGURATIONS.is_file_custom_enabled;
 		_configurations.is_file_custom_format_enabled = is_log_format_enabled;
 		_configurations.file_custom_output_paths = output_paths;
+
+		_configurations.file_collectivization_file_path =
+			_generate_log_collectivization_file_path();
 	}
 
 	Logger::Logger(
@@ -143,15 +161,15 @@ namespace QLogicaeCore
 		_configurations.file_fragmentation_file_name_format = configurations.file_fragmentation_file_name_format;
 		_configurations.file_fragmentation_folder_path = configurations.file_fragmentation_folder_path;
 
+		_configurations.file_exception_file_name = DEFAULT_LOGGER_CONFIGURATIONS.file_exception_file_name;
+		_configurations.file_exception_folder_path = DEFAULT_LOGGER_CONFIGURATIONS.file_exception_folder_path;
+
 		_configurations.is_file_custom_enabled = configurations.is_file_custom_enabled;
 		_configurations.is_file_custom_format_enabled = configurations.is_file_custom_format_enabled;
 		_configurations.file_custom_output_paths = configurations.file_custom_output_paths;
 
-		if (_configurations.is_file_collectivization_enabled)
-		{
-			_configurations.file_collectivization_file_path =
-				_generate_log_collectivization_file_path();
-		}
+		_configurations.file_collectivization_file_path =
+			_generate_log_collectivization_file_path();
 	}
 
 	bool Logger::setup()
@@ -200,9 +218,15 @@ namespace QLogicaeCore
 		_configurations.file_fragmentation_file_name_format = DEFAULT_LOGGER_CONFIGURATIONS.file_fragmentation_file_name_format;
 		_configurations.file_fragmentation_folder_path = DEFAULT_LOGGER_CONFIGURATIONS.file_fragmentation_folder_path;
 
+		_configurations.file_exception_file_name = DEFAULT_LOGGER_CONFIGURATIONS.file_exception_file_name;
+		_configurations.file_exception_folder_path = DEFAULT_LOGGER_CONFIGURATIONS.file_exception_folder_path;
+
 		_configurations.is_file_custom_enabled = DEFAULT_LOGGER_CONFIGURATIONS.is_file_custom_enabled;
 		_configurations.is_file_custom_format_enabled = DEFAULT_LOGGER_CONFIGURATIONS.is_file_custom_format_enabled;
 		_configurations.file_custom_output_paths = DEFAULT_LOGGER_CONFIGURATIONS.file_custom_output_paths;
+		
+		_configurations.file_collectivization_file_path =
+			_generate_log_collectivization_file_path();
 
 		result.set_to_good_status_without_value();
 	}
@@ -259,9 +283,15 @@ namespace QLogicaeCore
 		_configurations.file_fragmentation_file_name_format = DEFAULT_LOGGER_CONFIGURATIONS.file_fragmentation_file_name_format;
 		_configurations.file_fragmentation_folder_path = DEFAULT_LOGGER_CONFIGURATIONS.file_fragmentation_folder_path;
 
+		_configurations.file_exception_file_name = DEFAULT_LOGGER_CONFIGURATIONS.file_exception_file_name;
+		_configurations.file_exception_folder_path = DEFAULT_LOGGER_CONFIGURATIONS.file_exception_folder_path;
+
 		_configurations.is_file_custom_enabled = DEFAULT_LOGGER_CONFIGURATIONS.is_file_custom_enabled;
 		_configurations.is_file_custom_format_enabled = is_log_format_enabled;
 		_configurations.file_custom_output_paths = DEFAULT_LOGGER_CONFIGURATIONS.file_custom_output_paths;
+
+		_configurations.file_collectivization_file_path =
+			_generate_log_collectivization_file_path();
 
 		result.set_to_good_status_without_value();
 	}
@@ -327,9 +357,15 @@ namespace QLogicaeCore
 		_configurations.file_fragmentation_file_name_format = DEFAULT_LOGGER_CONFIGURATIONS.file_fragmentation_file_name_format;
 		_configurations.file_fragmentation_folder_path = DEFAULT_LOGGER_CONFIGURATIONS.file_fragmentation_folder_path;
 
+		_configurations.file_exception_file_name = DEFAULT_LOGGER_CONFIGURATIONS.file_exception_file_name;
+		_configurations.file_exception_folder_path = DEFAULT_LOGGER_CONFIGURATIONS.file_exception_folder_path;
+
 		_configurations.is_file_custom_enabled = DEFAULT_LOGGER_CONFIGURATIONS.is_file_custom_enabled;
 		_configurations.is_file_custom_format_enabled = is_log_format_enabled;
 		_configurations.file_custom_output_paths = output_paths;
+
+		_configurations.file_collectivization_file_path =
+			_generate_log_collectivization_file_path();
 
 		result.set_to_good_status_without_value();
 	}
@@ -386,15 +422,15 @@ namespace QLogicaeCore
 		_configurations.file_fragmentation_file_name_format = configurations.file_fragmentation_file_name_format;
 		_configurations.file_fragmentation_folder_path = configurations.file_fragmentation_folder_path;
 
+		_configurations.file_exception_file_name = DEFAULT_LOGGER_CONFIGURATIONS.file_exception_file_name;
+		_configurations.file_exception_folder_path = DEFAULT_LOGGER_CONFIGURATIONS.file_exception_folder_path;
+
 		_configurations.is_file_custom_enabled = configurations.is_file_custom_enabled;
 		_configurations.is_file_custom_format_enabled = configurations.is_file_custom_format_enabled;
 		_configurations.file_custom_output_paths = configurations.file_custom_output_paths;
 
-		if (_configurations.is_file_collectivization_enabled)
-		{
-			_configurations.file_collectivization_file_path =
-				_generate_log_collectivization_file_path();
-		}
+		_configurations.file_collectivization_file_path =
+			_generate_log_collectivization_file_path();
 
 		result.set_to_good_status_without_value();
 	}
@@ -1333,8 +1369,8 @@ namespace QLogicaeCore
 		const std::string& origin,
 		const std::string& message
 	)
-	{		
-		std::scoped_lock lock(_mutex);
+	{	
+		std::shared_lock lock(_mutex);
 
 		Result<void> result;
 
@@ -1357,7 +1393,7 @@ namespace QLogicaeCore
 			UTILITIES.BOOST_ASIO_POOL,
 			[this, origin, message,
 			promise = std::move(promise)]() mutable
-			{
+			{				
 				handle_exception(
 					origin,
 					message
@@ -2380,7 +2416,13 @@ namespace QLogicaeCore
 		Result<void>& result,
 		const std::string& text
 	)
-	{		
+	{
+		if (!_configurations.file_collectivization_folder_path.empty() &&
+			!std::filesystem::exists(_configurations.file_collectivization_folder_path))
+		{
+			std::filesystem::create_directories(_configurations.file_collectivization_folder_path);
+		}
+
 		fast_io::obuf_file append_file(
 			_configurations.file_collectivization_file_path,
 			fast_io::open_mode::app
@@ -2557,6 +2599,12 @@ namespace QLogicaeCore
 	)
 	{		
 		Result<std::string> string_result;
+
+		if (!_configurations.file_fragmentation_folder_path.empty() &&
+			!std::filesystem::exists(_configurations.file_fragmentation_folder_path))
+		{
+			std::filesystem::create_directories(_configurations.file_fragmentation_folder_path);
+		}
 
 		_generate_log_fragmentation_file_path(
 			string_result
@@ -2839,7 +2887,8 @@ namespace QLogicaeCore
 		const std::string& text
 	)
 	{		
-		if (_configurations.file_custom_output_paths.empty())
+		if (_configurations.file_custom_output_paths.empty() ||
+			_configurations.file_custom_output_paths.size() == 0)
 		{
 			return;
 		}
@@ -2931,10 +2980,10 @@ namespace QLogicaeCore
 	void Logger::_generate_log_fragmentation_file_path(
 		Result<std::string>& result
 	)
-	{
+	{	
 		result.set_to_good_status_with_value(
-			_configurations.file_fragmentation_folder_path +
-				"\\" + _time_now(_configurations.file_fragmentation_file_name_format) + ".log"
+			((_configurations.file_fragmentation_folder_path.empty()) ? "" : _configurations.file_fragmentation_folder_path + "\\") +
+		    _time_now(_configurations.file_fragmentation_file_name_format) + ".log"
 		);
 	}
 
@@ -2963,8 +3012,8 @@ namespace QLogicaeCore
 	)
 	{
 		result.set_to_good_status_with_value(
-			_configurations.file_collectivization_folder_path +
-			"\\" + _configurations.file_collectivization_file_name
+			((_configurations.file_collectivization_folder_path.empty()) ? "" : _configurations.file_collectivization_folder_path + "\\") +
+		    _configurations.file_collectivization_file_name
 		);
 	}
 
@@ -3008,7 +3057,7 @@ namespace QLogicaeCore
 		);
 		result.get_value().reserve(256);
 		result.set_value(			
-			(_configurations.name.empty()) ? "" : ("[" + _configurations.name + "] [") +
+			((_configurations.name.empty()) ? "[" : "[" + _configurations.name + "] [") +
 			result.get_value() +
 			"] [" +
 			UTILITIES.LOG_LEVEL_ENUMS_2.at(log_level) +

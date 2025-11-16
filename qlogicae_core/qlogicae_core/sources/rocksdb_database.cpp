@@ -17,12 +17,280 @@ namespace QLogicaeCore
     }
 
     RocksDBDatabase::RocksDBDatabase(
-        const std::string_view& path,
-        const RocksDBConfig& config)
-            : _file_path(path), _config(config)
+        const std::string& path,
+        const RocksDBConfig& config
+    ) :
+            _file_path(path),
+            _config(config)
     {
         setup_db();
         open_db();
+    }
+
+    bool RocksDBDatabase::setup()
+    {
+        try
+        {
+            Result<void> result;
+
+            setup(
+                result
+            );
+
+            return result.is_status_safe();
+        }
+        catch (const std::exception& exception)
+        {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::RocksDBDatabase::setup()",
+                exception.what()
+            );
+
+            return false;
+        }
+    }
+
+    void RocksDBDatabase::setup(
+        Result<void>& result
+    )
+    {
+        close_db();
+
+        _file_path = "";
+        _config = {};
+
+        setup_db();
+        open_db();
+
+        result.set_to_good_status_without_value();
+    }
+
+    std::future<bool> RocksDBDatabase::setup_async()
+    {
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    setup()
+                );
+            }
+        );
+
+        return future;
+    }
+
+    void RocksDBDatabase::setup_async(
+        Result<std::future<void>>& result
+    )
+    {
+        std::promise<void> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this,
+            promise = std::move(promise)]() mutable
+            {
+                Result<void> result;
+
+                setup(
+                    result
+                );
+
+                promise.set_value();
+            }
+        );
+
+        result.set_to_good_status_with_value(
+            std::move(future)
+        );
+    }
+
+    void RocksDBDatabase::setup_async(
+        const std::function<void(const bool& result)>& callback
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, callback]() mutable
+            {
+                callback(
+                    setup()
+                );
+            }
+        );
+    }
+
+    void RocksDBDatabase::setup_async(
+        const std::function<void(Result<void>& result)>& callback
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, callback]() mutable
+            {
+                Result<void> result;
+
+                setup(
+                    result
+                );
+
+                callback(
+                    result
+                );
+            }
+        );
+    }
+
+    bool RocksDBDatabase::setup(
+        const std::string& path,
+        const RocksDBConfig& configurations
+    )
+    {
+        try
+        {
+            Result<void> result;
+
+            setup(
+                result,
+                path,
+                configurations
+            );
+
+            return result.is_status_safe();
+        }
+        catch (const std::exception& exception)
+        {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::RocksDBDatabase::setup()",
+                exception.what()
+            );
+
+            return false;
+        }
+    }
+
+    void RocksDBDatabase::setup(
+        Result<void>& result,
+        const std::string& path,
+        const RocksDBConfig& configurations
+    )
+    {
+        close_db();
+
+        _file_path = path;
+        _config = configurations;
+
+        setup_db();
+        open_db();
+
+        result.set_to_good_status_without_value();
+    }
+
+    std::future<bool> RocksDBDatabase::setup_async(
+        const std::string& path,
+        const RocksDBConfig& configurations
+    )
+    {
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, path, configurations,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    setup(
+                        path,
+                        configurations
+                    )
+                );
+            }
+        );
+
+        return future;
+    }
+
+    void RocksDBDatabase::setup_async(
+        Result<std::future<void>>& result,
+        const std::string& path,
+        const RocksDBConfig& configurations
+    )
+    {
+        std::promise<void> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, path, configurations,
+            promise = std::move(promise)]() mutable
+            {
+                Result<void> result;
+
+                setup(
+                    result,
+                    path,
+                    configurations
+                );
+
+                promise.set_value();
+            }
+        );
+
+        result.set_to_good_status_with_value(
+            std::move(future)
+        );
+    }
+
+    void RocksDBDatabase::setup_async(
+        const std::function<void(const bool& result)>& callback,
+        const std::string& path,
+        const RocksDBConfig& configurations
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, path, configurations, callback]() mutable
+            {
+                callback(
+                    setup(
+                        path,
+                        configurations
+                    )
+                );
+            }
+        );
+    }
+
+    void RocksDBDatabase::setup_async(
+        const std::function<void(Result<void>& result)>& callback,
+        const std::string& path,
+        const RocksDBConfig& configurations
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, path, configurations, callback]() mutable
+            {
+                Result<void> result;
+
+                setup(
+                    result,
+                    path,
+                    configurations
+                );
+
+                callback(
+                    result
+                );
+            }
+        );
     }
 
     std::string RocksDBDatabase::get_file_path()
@@ -30,383 +298,615 @@ namespace QLogicaeCore
         return _file_path;
     }
 
-    void RocksDBDatabase::setup(
-        const std::string& path,
-        const RocksDBConfig& config
+    bool RocksDBDatabase::is_path_found(
+        const std::string& path
     )
     {
-        close_db();
-
-        _file_path = path;
-        _config = config;
-
-        setup_db();
-        open_db();
-    }
-
-    bool RocksDBDatabase::is_path_found(
-        const std::string_view& path)
-    {
-        std::shared_lock lock(_mutex);
-
         return std::filesystem::exists(path);
     }
 
     bool RocksDBDatabase::is_key_found(
-        const std::string_view& key)
-    {
-        std::shared_lock lock(_mutex);
-
-        if (_object == nullptr)
+        const std::string& key
+    )
+    {        
+        try
         {
-            return false;
-        }
-        std::string value;
-        auto s = _object->Get(_read_options, std::string(key), &value);
+            if (_object == nullptr)
+            {
+                return false;
+            }
 
-        return s.ok();
+            std::string value;
+
+            return _object->Get(
+                _read_options,
+                std::string(key),
+                &value
+            ).ok();
+        }
+        catch (const std::exception& exception)
+        {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::RocksDBDatabase::is_key_found()",
+                exception.what()
+            );
+
+            return false;
+        }        
     }
 
     bool RocksDBDatabase::remove_value(
-        const std::string_view& key)
+        const std::string& key
+    )
     {
-        std::unique_lock lock(_mutex);
+        try
+        {
+            std::unique_lock lock(_mutex);
 
-        auto string = _object->Delete(
-            _write_options, key.data());
+            return _object->Delete(_write_options, key).ok();
+        }
+        catch (const std::exception& exception)
+        {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::RocksDBDatabase::remove_value()",
+                exception.what()
+            );
 
-        return string.ok();
+            return false;
+        }        
     }
 
     bool RocksDBDatabase::batch_execute()
     {
-        std::unique_lock lock(_mutex);
+        try
+        {
+            std::unique_lock lock(_mutex);
 
-        auto string = _object->Write(
-            _write_options, &_write_batch);
-        _write_batch.Clear();
+            auto string = _object->Write(
+                _write_options, &_write_batch);
+            _write_batch.Clear();
 
-        return string.ok();
+            return string.ok();
+        }
+        catch (const std::exception& exception)
+        {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::RocksDBDatabase::batch_execute()",
+                exception.what()
+            );
+
+            return false;
+        }        
     }
 
     std::future<bool> RocksDBDatabase::remove_value_async(
-        const std::string_view& key)
-    {
+        const std::string& key
+    )
+    {        
         std::string key_str(key);
-        return std::async(std::launch::async,
-            [this, key_str = std::move(key_str)]()
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, key_str,
+            promise = std::move(promise)]() mutable
             {
-                return remove_value(key_str);
+                promise.set_value(
+                    remove_value(key_str)
+                );
             }
         );
+
+        return future;
     }
 
     std::future<bool> RocksDBDatabase::batch_execute_async()
     {
-        return std::async(std::launch::async, [this]()
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, 
+            promise = std::move(promise)]() mutable
             {
-                return batch_execute();
-            });
+                promise.set_value(
+                    batch_execute()
+                );
+            }
+        );
+
+        return future;
     }
 
     bool RocksDBDatabase::create_column_family(
-        const std::string_view& name)
+        const std::string& name
+    )
     {
-        std::unique_lock lock(_mutex);
-
-        std::string name_key(name);
-        rocksdb::ColumnFamilyHandle* handle = nullptr;
-        auto s = _object->CreateColumnFamily(
-            rocksdb::ColumnFamilyOptions(), name_key, &handle);
-        if (s.ok())
+        try
         {
-            _column_families.emplace(std::move(name_key), handle);
+            std::unique_lock lock(_mutex);
+
+            std::string name_key(name);
+            rocksdb::ColumnFamilyHandle* handle = nullptr;
+            bool result = _object->CreateColumnFamily(
+                rocksdb::ColumnFamilyOptions(), name_key, &handle).ok();
+            if (result)
+            {
+                _column_families.emplace(std::move(name_key), handle);
+            }
+            return result;
         }
-        return s.ok();
+        catch (const std::exception& exception)
+        {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::RocksDBDatabase::create_column_family()",
+                exception.what()
+            );
+
+            return false;
+        }        
     }
 
     bool RocksDBDatabase::drop_column_family(
-        const std::string_view& name)
+        const std::string& name
+    )
     {
-        std::unique_lock lock(_mutex);
+        try
+        {
+            std::unique_lock lock(_mutex);
 
-        std::string name_key(name);
-        auto iterator = _column_families.find(name_key);
-        if (iterator == _column_families.end())
+            std::string name_key(name);
+            auto iterator = _column_families.find(name_key);
+            if (iterator == _column_families.end())
+            {                
+                return false;
+            }
+            bool result = _object->DropColumnFamily(iterator->second).ok();
+            if (result)
+            {
+                _object->DestroyColumnFamilyHandle(iterator->second);
+                _column_families.erase(iterator);
+            }
+
+            return result;
+        }
+        catch (const std::exception& exception)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::RocksDBDatabase::drop_column_family()",
+                exception.what()
+            );
+
             return false;
-        }
-        auto s = _object->DropColumnFamily(iterator->second);
-        if (s.ok())
-        {
-            _object->DestroyColumnFamilyHandle(iterator->second);
-            _column_families.erase(iterator);
-        }
-        return s.ok();
+        }        
     }
 
-    bool RocksDBDatabase::use_column_family(const std::string_view& name)
+    bool RocksDBDatabase::use_column_family(
+        const std::string& name
+    )
     {
-        return _column_families.contains(name.data());
+        return _column_families.contains(
+            name
+        );
     }
 
     void RocksDBDatabase::begin_batch()
     {
-        std::unique_lock lock(_mutex);
+        try
+        {
+            std::unique_lock lock(_mutex);
 
-        _write_batch.Clear();
+            _write_batch.Clear();
+        }
+        catch (const std::exception& exception)
+        {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::RocksDBDatabase::begin_batch()",
+                exception.what()
+            );
+        }        
     }
 
     bool RocksDBDatabase::commit_batch()
     {
-        return batch_execute();
+        try
+        {
+            return batch_execute();
+        }
+        catch (const std::exception& exception)
+        {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::RocksDBDatabase::commit_batch()",
+                exception.what()
+            );
+
+            return false;
+        }        
     }
 
-    bool RocksDBDatabase::create_backup(const std::string_view& path)
+    bool RocksDBDatabase::create_backup(
+        const std::string& path
+    )
     {
-        std::shared_lock lock(_mutex);
-
-        rocksdb::BackupEngine* backup;
-        rocksdb::BackupEngineOptions options(path.data());
-        auto string = rocksdb::BackupEngine::Open(
-            rocksdb::Env::Default(), options, &backup);
-        if (!string.ok())
+        try
         {
-            return false;
-        }
-        string = backup->CreateNewBackup(_object);
-        delete backup;
+            std::shared_lock lock(_mutex);
 
-        return string.ok();
+            rocksdb::BackupEngine* backup;
+            rocksdb::BackupEngineOptions options(path);
+            auto result = rocksdb::BackupEngine::Open(
+                rocksdb::Env::Default(), options, &backup);
+            if (!result.ok())
+            {                
+                return false;
+            }
+            result = backup->CreateNewBackup(_object);
+            delete backup;
+
+            return result.ok();
+        }
+        catch (const std::exception& exception)
+        {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::RocksDBDatabase::create_backup()",
+                exception.what()
+            );
+
+            return false;
+        }        
     }
 
-    bool RocksDBDatabase::restore_backup(const std::string_view& path)
+    bool RocksDBDatabase::restore_backup(
+        const std::string& path
+    )
     {
-        std::unique_lock lock(_mutex);
-
-        close_db();
-        rocksdb::BackupEngineReadOnly* backup;
-        rocksdb::BackupEngineOptions options(path.data());
-        auto string = rocksdb::BackupEngineReadOnly::Open(
-            rocksdb::Env::Default(),
-            options, &backup
-        );
-        if (!string.ok())
+        try
         {
-            return false;
-        }
-        string = backup->RestoreDBFromLatestBackup(_file_path, _file_path);
-        delete backup;
-        if (!string.ok())
-        {
-            return false;
-        }
-        open_db();
+            std::unique_lock lock(_mutex);
 
-        return true;
+            close_db();
+
+            rocksdb::BackupEngineReadOnly* backup;
+            rocksdb::BackupEngineOptions options(path);
+            auto result = rocksdb::BackupEngineReadOnly::Open(
+                rocksdb::Env::Default(),
+                options, &backup
+            );
+            if (!result.ok())
+            {                
+                return false;
+            }
+            result = backup->RestoreDBFromLatestBackup(_file_path, _file_path);
+            delete backup;
+            if (!result.ok())
+            {
+                return false;
+            }
+            open_db();
+
+            return true;
+        }
+        catch (const std::exception& exception)
+        {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::RocksDBDatabase::restore_backup()",
+                exception.what()
+            );
+
+            return false;
+        }        
     }
 
     bool RocksDBDatabase::create_checkpoint(
-        const std::string_view& path)
+        const std::string& path
+    )
     {
-        std::shared_lock lock(_mutex);
-
-        rocksdb::Checkpoint* checkpoint;
-        auto string = rocksdb::Checkpoint::Create(_object, &checkpoint);
-        if (!string.ok())
+        try
         {
-            return false;
-        }
-        string = checkpoint->CreateCheckpoint(path.data());
-        delete checkpoint;
+            std::shared_lock lock(_mutex);
 
-        return string.ok();
+            rocksdb::Checkpoint* checkpoint;
+            auto string = rocksdb::Checkpoint::Create(_object, &checkpoint);
+            if (!string.ok())
+            {                
+                return false;
+            }
+            string = checkpoint->CreateCheckpoint(path);
+            delete checkpoint;
+
+            return string.ok();
+        }
+        catch (const std::exception& exception)
+        {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::RocksDBDatabase::create_checkpoint()",
+                exception.what()
+            );
+
+            return false;
+        }        
     }
 
     std::optional<std::string> RocksDBDatabase::get_with_bounds(
-        const std::string_view& key, uint64_t offset, uint64_t size)
+        const std::string& key,
+        const uint64_t& offset,
+        const uint64_t& size
+    )
     {
-        std::shared_lock lock(_mutex);
+        try
+        {
+            std::shared_lock lock(_mutex);
 
-        if (_object == nullptr)
-        {
-            return std::nullopt;
-        }
-        rocksdb::PinnableSlice pvalue;
-        rocksdb::ReadOptions options;
-        options.verify_checksums = true;
-        auto s = _object->Get(options, _object->DefaultColumnFamily(),
-            std::string(key), &pvalue);
-        if (!s.ok())
-        {
-            return std::nullopt;
-        }
-        const uint64_t psize = static_cast<uint64_t>(pvalue.size());
-        if (offset >= psize)
-        {
-            return std::nullopt;
-        }
-        const uint64_t max_size = psize - offset;
-        const size_t use_size = static_cast<size_t>(std::min<uint64_t>(size, max_size));
+            if (_object == nullptr)
+            {
+                return std::nullopt;
+            }
 
-        return std::string(pvalue.data() + static_cast<size_t>(offset), use_size);
+            rocksdb::PinnableSlice pvalue;
+            rocksdb::ReadOptions options;
+            options.verify_checksums = true;
+            auto s = _object->Get(options, _object->DefaultColumnFamily(),
+                std::string(key), &pvalue);
+            if (!s.ok())
+            {                                
+                return std::nullopt;
+            }
+            const uint64_t psize = static_cast<uint64_t>(pvalue.size());
+            if (offset >= psize)
+            {                
+                return std::nullopt;
+            }
+            const uint64_t max_size = psize - offset;
+            const size_t use_size = static_cast<size_t>(std::min<uint64_t>(size, max_size));
+
+            return std::string(pvalue.data() + static_cast<size_t>(offset), use_size);
+        }
+        catch (const std::exception& exception)
+        {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::RocksDBDatabase::get_with_bounds()",
+                exception.what()
+            );
+
+            return std::nullopt;
+        }        
     }
 
     bool RocksDBDatabase::begin_transaction()
     {
-        std::unique_lock lock(_mutex);
-
-        if (_transaction)
+        try
         {
-            return false;
-        }
-        _transaction = _transaction_db->BeginTransaction(
-            _write_options);
+            std::unique_lock lock(_mutex);
 
-        return _transaction != nullptr;
+            if (_transaction)
+            {                
+                return false;
+            }
+            _transaction = _transaction_db->BeginTransaction(
+                _write_options);
+
+            return _transaction != nullptr;
+        }
+        catch (const std::exception& exception)
+        {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::RocksDBDatabase::begin_transaction()",
+                exception.what()
+            );
+
+            return false;
+        }        
     }
 
     bool RocksDBDatabase::commit_transaction()
     {
-        std::unique_lock lock(_mutex);
-
-        if (!_transaction)
+        try
         {
-            return false;
-        }
-        auto string = _transaction->Commit();
-        delete _transaction;
-        _transaction = nullptr;
+            std::unique_lock lock(_mutex);
 
-        return string.ok();
+            if (!_transaction)
+            {                
+                return false;
+            }
+            auto string = _transaction->Commit();
+            delete _transaction;
+            _transaction = nullptr;
+
+            return string.ok();
+        }
+        catch (const std::exception& exception)
+        {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::RocksDBDatabase::commit_transaction()",
+                exception.what()
+            );
+
+            return false;
+        }        
     }
 
     bool RocksDBDatabase::rollback_transaction()
     {
-        std::unique_lock lock(_mutex);
-
-        if (!_transaction)
+        try
         {
-            return false;
-        }
-        auto string = _transaction->Rollback();
-        delete _transaction;
-        _transaction = nullptr;
+            std::unique_lock lock(_mutex);
 
-        return string.ok();
+            if (!_transaction)
+            {                
+                return false;
+            }
+            auto string = _transaction->Rollback();
+            delete _transaction;
+            _transaction = nullptr;
+
+            return string.ok();
+        }
+        catch (const std::exception& exception)
+        {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::RocksDBDatabase::rollback_transaction()",
+                exception.what()
+            );
+
+            return false;
+        }        
     }
 
     void RocksDBDatabase::setup_db()
     {
-        _options.create_if_missing = _config.create_if_missing;
-        _options.max_open_files = _config.max_open_files;
-        _options.use_fsync = _config.use_fsync;
-        _options.use_direct_reads = _config.use_direct_reads;
-        _options.use_direct_io_for_flush_and_compaction =
-            _config.use_direct_io_for_flush_and_compaction;
-        _options.max_background_flushes = _config.max_background_flushes;
-        _options.compression = _config.compression;
+        try
+        {
+            _options.create_if_missing = _config.create_if_missing;
+            _options.max_open_files = _config.max_open_files;
+            _options.use_fsync = _config.use_fsync;
+            _options.use_direct_reads = _config.use_direct_reads;
+            _options.use_direct_io_for_flush_and_compaction =
+                _config.use_direct_io_for_flush_and_compaction;
+            _options.max_background_flushes = _config.max_background_flushes;
+            _options.compression = _config.compression;
 
-        _options.compaction_style = _config.compaction_style;
-        _options.level0_file_num_compaction_trigger =
-            _config.level0_file_num_compaction_trigger;
-        _options.level0_slowdown_writes_trigger =
-            _config.level0_slowdown_writes_trigger;
-        _options.level0_stop_writes_trigger =
-            _config.level0_stop_writes_trigger;
+            _options.compaction_style = _config.compaction_style;
+            _options.level0_file_num_compaction_trigger =
+                _config.level0_file_num_compaction_trigger;
+            _options.level0_slowdown_writes_trigger =
+                _config.level0_slowdown_writes_trigger;
+            _options.level0_stop_writes_trigger =
+                _config.level0_stop_writes_trigger;
 
-        _options.write_buffer_size = _config.write_buffer_size;
-        _options.max_write_buffer_number = _config.max_write_buffer_number;
-        _options.min_write_buffer_number_to_merge =
-            _config.min_write_buffer_number_to_merge;
-        _options.target_file_size_base = _config.target_file_size_base;
-        _options.max_bytes_for_level_base = _config.max_bytes_for_level_base;
-        _options.bytes_per_sync = _config.bytes_per_sync;
+            _options.write_buffer_size = _config.write_buffer_size;
+            _options.max_write_buffer_number = _config.max_write_buffer_number;
+            _options.min_write_buffer_number_to_merge =
+                _config.min_write_buffer_number_to_merge;
+            _options.target_file_size_base = _config.target_file_size_base;
+            _options.max_bytes_for_level_base = _config.max_bytes_for_level_base;
+            _options.bytes_per_sync = _config.bytes_per_sync;
 
-        _write_options.sync = _config.write_sync;
-        _write_options.disableWAL = _config.write_disable_wal;
+            _write_options.sync = _config.write_sync;
+            _write_options.disableWAL = _config.write_disable_wal;
 
-        _table_options.no_block_cache = _config.no_block_cache;
-        _table_options.block_restart_interval = _config.block_restart_interval;
-        _table_options.block_size = _config.block_size;
+            _table_options.no_block_cache = _config.no_block_cache;
+            _table_options.block_restart_interval = _config.block_restart_interval;
+            _table_options.block_size = _config.block_size;
 
-        _options.IncreaseParallelism(static_cast<int>(
-            std::thread::hardware_concurrency()));
-        _options.OptimizeLevelStyleCompaction();
-        _options.env->SetBackgroundThreads(static_cast<int>(
-            _config.background_threads));
+            _options.IncreaseParallelism(static_cast<int>(
+                std::thread::hardware_concurrency()));
+            _options.OptimizeLevelStyleCompaction();
+            _options.env->SetBackgroundThreads(static_cast<int>(
+                _config.background_threads));
 
-        _table_options.filter_policy.reset(
-            rocksdb::NewBloomFilterPolicy(_config.new_bloom_filter_policy));
+            _table_options.filter_policy.reset(
+                rocksdb::NewBloomFilterPolicy(_config.new_bloom_filter_policy));
 
-        _options.table_factory.reset(
-            rocksdb::NewBlockBasedTableFactory(_table_options));
+            _options.table_factory.reset(
+                rocksdb::NewBlockBasedTableFactory(_table_options));
+        }
+        catch (const std::exception& exception)
+        {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::RocksDBDatabase::setup_db()",
+                exception.what()
+            );
+        }        
     }
 
     void RocksDBDatabase::open_db()
     {
-        if (!std::filesystem::exists(_file_path))
+        try
         {
-            std::filesystem::create_directories(_file_path);
+            if (!std::filesystem::exists(_file_path))
+            {
+                std::filesystem::create_directories(_file_path);
+            }
+
+            _status = rocksdb::TransactionDB::Open(
+                _options, _txn_db_options, _file_path, &_transaction_db);
+
+            if (!_status.ok())
+            {                                
+                return;
+            }
+
+            _object = _transaction_db;
         }
-
-        _status = rocksdb::TransactionDB::Open(
-            _options, _txn_db_options, _file_path, &_transaction_db);
-
-        if (!_status.ok())
+        catch (const std::exception& exception)
         {
-            throw std::runtime_error(
-                "Exception at RocksDBDatabase::open_db(): Failed to open RocksDB: " + _status.ToString());
-        }
-
-        _object = _transaction_db;
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::RocksDBDatabase::open_db()",
+                exception.what()
+            );
+        }        
     }
 
     void RocksDBDatabase::close_db()
     {
-        std::unique_lock lock(_mutex);
-
-        if (_object != nullptr)
+        try
         {
-            for (auto& [name, handle] : _column_families)
+            std::unique_lock lock(_mutex);
+
+            if (_object != nullptr)
             {
-                if (handle != nullptr)
+                for (auto& [name, handle] : _column_families)
                 {
-                    _object->DestroyColumnFamilyHandle(handle);
+                    if (handle != nullptr)
+                    {
+                        _object->DestroyColumnFamilyHandle(handle);
+                    }
                 }
             }
-        }
-        _column_families.clear();
+            _column_families.clear();
 
-        if (_transaction != nullptr)
-        {
-            delete _transaction;
-            _transaction = nullptr;
+            if (_transaction != nullptr)
+            {
+                delete _transaction;
+                _transaction = nullptr;
+            }
+            if (_transaction_db != nullptr)
+            {
+                delete _transaction_db;
+                _transaction_db = nullptr;
+            }
+            _object = nullptr;
         }
-        if (_transaction_db != nullptr)
+        catch (const std::exception& exception)
         {
-            delete _transaction_db;
-            _transaction_db = nullptr;
-        }
-        _object = nullptr;
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::RocksDBDatabase::close_db()",
+                exception.what()
+            );
+        }        
     }
 
     rocksdb::ColumnFamilyHandle* RocksDBDatabase::get_cf_handle(
         const std::string& name
     )
     {
-        std::string name_key(name);
+        try
+        {
+            std::string name_key(name);
 
-        auto iterator = _column_families.find(name_key);
-        if (iterator != _column_families.end())
-        {
-            return iterator->second;
+            auto iterator = _column_families.find(name_key);
+            if (iterator != _column_families.end())
+            {
+                return iterator->second;
+            }
+            if (_object != nullptr)
+            {
+                return _object->DefaultColumnFamily();
+            }
+
+            return nullptr;
         }
-        if (_object != nullptr)
+        catch (const std::exception& exception)
         {
-            return _object->DefaultColumnFamily();
-        }
-        return nullptr;
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::RocksDBDatabase::get_cf_handle()",
+                exception.what()
+            );
+
+            return nullptr;
+        }        
     }
 
     void RocksDBDatabase::get_file_path(
@@ -416,23 +916,6 @@ namespace QLogicaeCore
         result.set_to_good_status_with_value(
             _file_path
         );
-    }
-
-    void RocksDBDatabase::setup(
-        Result<void>& result,
-        const std::string& path,
-        const RocksDBConfig& config
-    )
-    {
-        close_db();
-
-        _file_path = path;
-        _config = config;
-
-        setup_db();
-        open_db();
-
-        result.set_to_good_status_without_value();
     }
 
     void RocksDBDatabase::is_path_found(
@@ -455,19 +938,18 @@ namespace QLogicaeCore
         std::shared_lock lock(_mutex);
 
         if (_object == nullptr)
-        {
+        {            
             return result.set_to_bad_status_without_value();
         }
 
-        std::string value;
-        auto s = _object->Get(
-            _read_options,
-            std::string(key),
-            &value
-        );
-
+        std::string result_value;
+        
         result.set_to_good_status_with_value(
-            s.ok()
+            _object->Get(
+                _read_options,
+                std::string(key),
+                &result_value
+            ).ok()
         );
     }
 
@@ -478,11 +960,8 @@ namespace QLogicaeCore
     {
         std::unique_lock lock(_mutex);
 
-        auto string = _object->Delete(
-            _write_options, key.data());
-
         result.set_to_good_status_with_value(
-            string.ok()
+            _object->Delete(_write_options, key).ok()
         );
     }
 
@@ -492,12 +971,12 @@ namespace QLogicaeCore
     {
         std::unique_lock lock(_mutex);
 
-        auto string = _object->Write(
+        auto result_value = _object->Write(
             _write_options, &_write_batch);
         _write_batch.Clear();
 
         result.set_to_good_status_with_value(
-            string.ok()
+            result_value.ok()
         );
     }
 
@@ -510,12 +989,12 @@ namespace QLogicaeCore
 
         std::string name_key(name);
         rocksdb::ColumnFamilyHandle* handle = nullptr;
-        auto s = _object->CreateColumnFamily(
+        bool result_value = _object->CreateColumnFamily(
             rocksdb::ColumnFamilyOptions(),
             name_key,
             &handle
-        );
-        if (s.ok())
+        ).ok();
+        if (result_value)
         {
             _column_families.emplace(
                 std::move(name_key),
@@ -524,7 +1003,7 @@ namespace QLogicaeCore
         }
 
         result.set_to_good_status_with_value(
-            s.ok()
+            result_value
         );
     }
 
@@ -538,13 +1017,13 @@ namespace QLogicaeCore
         std::string name_key(name);
         auto iterator = _column_families.find(name_key);
         if (iterator == _column_families.end())
-        {
+        {            
             return result.set_to_bad_status_without_value();
         }
-        auto s = _object->DropColumnFamily(
+        bool result_value = _object->DropColumnFamily(
             iterator->second
-        );
-        if (s.ok())
+        ).ok();
+        if (result_value)
         {
             _object->DestroyColumnFamilyHandle(
                 iterator->second
@@ -552,7 +1031,7 @@ namespace QLogicaeCore
             _column_families.erase(iterator);
         }
         result.set_to_good_status_with_value(
-            s.ok()
+            result_value
         );
     }
 
@@ -562,7 +1041,7 @@ namespace QLogicaeCore
     )
     {
         result.set_to_good_status_with_value(
-            _column_families.contains(name.data())
+            _column_families.contains(name)
         );
     }
 
@@ -591,22 +1070,22 @@ namespace QLogicaeCore
 
         rocksdb::BackupEngine* backup;
         rocksdb::BackupEngineOptions options(
-            path.data()
+            path
         );
-        auto string = rocksdb::BackupEngine::Open(
+        auto result_value = rocksdb::BackupEngine::Open(
             rocksdb::Env::Default(),
             options,
             &backup
         );
-        if (!string.ok())
-        {
+        if (!result_value.ok())
+        {            
             return result.set_to_bad_status_without_value();
         }
-        string = backup->CreateNewBackup(_object);
+        result_value = backup->CreateNewBackup(_object);
         delete backup;
 
         result.set_to_good_status_with_value(
-            string.ok()
+            result_value.ok()
         );
     }
 
@@ -619,22 +1098,22 @@ namespace QLogicaeCore
 
         close_db();
         rocksdb::BackupEngineReadOnly* backup;
-        rocksdb::BackupEngineOptions options(path.data());
-        auto string = rocksdb::BackupEngineReadOnly::Open(
+        rocksdb::BackupEngineOptions options(path);
+        auto result_value = rocksdb::BackupEngineReadOnly::Open(
             rocksdb::Env::Default(),
             options, &backup
         );
-        if (!string.ok())
-        {
+        if (!result_value.ok())
+        {            
             return result.set_to_bad_status_without_value();
         }
-        string = backup->RestoreDBFromLatestBackup(
+        result_value = backup->RestoreDBFromLatestBackup(
             _file_path,
             _file_path
         );
         delete backup;
-        if (!string.ok())
-        {
+        if (!result_value.ok())
+        {            
             return result.set_to_bad_status_without_value();
         }
         open_db();
@@ -652,29 +1131,29 @@ namespace QLogicaeCore
         std::shared_lock lock(_mutex);
 
         rocksdb::Checkpoint* checkpoint;
-        auto string = rocksdb::Checkpoint::Create(
+        auto result_value = rocksdb::Checkpoint::Create(
             _object,
             &checkpoint
         );
-        if (!string.ok())
-        {
+        if (!result_value.ok())
+        {            
             return result.set_to_bad_status_without_value();
         }
-        string = checkpoint->CreateCheckpoint(
-            path.data()
+        result_value = checkpoint->CreateCheckpoint(
+            path
         );
         delete checkpoint;
 
         result.set_to_good_status_with_value(
-            string.ok()
+            result_value.ok()
         );
     }
 
     void RocksDBDatabase::get_with_bounds(
         Result<std::optional<std::string>>& result,
         const std::string& key,
-        uint64_t offset,
-        uint64_t size
+        const uint64_t& offset,
+        const uint64_t& size
     )
     {
         std::shared_lock lock(_mutex);
@@ -687,9 +1166,9 @@ namespace QLogicaeCore
         rocksdb::PinnableSlice pvalue;
         rocksdb::ReadOptions options;
         options.verify_checksums = true;
-        auto s = _object->Get(options, _object->DefaultColumnFamily(),
-            std::string(key), &pvalue);
-        if (!s.ok())
+        bool result_value = _object->Get(options, _object->DefaultColumnFamily(),
+            std::string(key), &pvalue).ok();
+        if (!result_value)
         {
             return result.set_to_bad_status_without_value();
         }
@@ -739,12 +1218,12 @@ namespace QLogicaeCore
             return result.set_to_bad_status_without_value();
         }
 
-        auto string = _transaction->Commit();
+        auto result_value = _transaction->Commit();
         delete _transaction;
         _transaction = nullptr;
 
         result.set_to_good_status_with_value(
-            string.ok()
+            result_value.ok()
         );
     }
 
@@ -755,16 +1234,16 @@ namespace QLogicaeCore
         std::unique_lock lock(_mutex);
 
         if (!_transaction)
-        {
+        {            
             return result.set_to_bad_status_without_value();
         }
 
-        auto string = _transaction->Rollback();
+        auto result_value = _transaction->Rollback();
         delete _transaction;
         _transaction = nullptr;
 
         result.set_to_good_status_with_value(
-            string.ok()
+            result_value.ok()
         );
     }
 
@@ -773,14 +1252,173 @@ namespace QLogicaeCore
         const std::string& key
     )
     {
-        result.set_to_good_status_without_value();
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, key,
+            promise = std::move(promise)]() mutable
+            {
+                Result<bool> result;
+
+                remove_value(
+                    result,
+                    key
+                );
+
+                promise.set_value(
+                    result.get_value()
+                );
+            }
+        );
+
+        result.set_to_good_status_with_value(
+            std::move(future)
+        );
     }
 
     void RocksDBDatabase::batch_execute_async(
         Result<std::future<bool>>& result
     )
     {
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this,
+            promise = std::move(promise)]() mutable
+            {
+                Result<bool> result;
+
+                batch_execute(
+                    result
+                );
+
+                promise.set_value(
+                    result.get_value()
+                );
+            }
+        );
+
+        result.set_to_good_status_with_value(
+            std::move(future)
+        );
+    }
+
+    bool RocksDBDatabase::terminate()
+    {
+        try
+        {
+            Result<void> result;
+
+            setup(
+                result
+            );
+
+            return result.is_status_safe();
+        }
+        catch (const std::exception& exception)
+        {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::RocksDBDatabase::terminate()",
+                exception.what()
+            );
+
+            return false;
+        }
+    }
+
+    void RocksDBDatabase::terminate(
+        Result<void>& result
+    )
+    {
+        close_db();
+
         result.set_to_good_status_without_value();
+    }
+
+    std::future<bool> RocksDBDatabase::terminate_async()
+    {
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    setup()
+                );
+            }
+        );
+
+        return future;
+    }
+
+    void RocksDBDatabase::terminate_async(
+        Result<std::future<void>>& result
+    )
+    {
+        std::promise<void> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this,
+            promise = std::move(promise)]() mutable
+            {
+                Result<void> result;
+
+                setup(
+                    result
+                );
+
+                promise.set_value();
+            }
+        );
+
+        result.set_to_good_status_with_value(
+            std::move(future)
+        );
+    }
+
+    void RocksDBDatabase::terminate_async(
+        const std::function<void(const bool& result)>& callback
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, callback]() mutable
+            {
+                callback(
+                    setup()
+                );
+            }
+        );
+    }
+
+    void RocksDBDatabase::terminate_async(
+        const std::function<void(Result<void>& result)>& callback
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, callback]() mutable
+            {
+                Result<void> result;
+
+                setup(
+                    result
+                );
+
+                callback(
+                    result
+                );
+            }
+        );
     }
 
     RocksDBDatabase& RocksDBDatabase::get_instance()

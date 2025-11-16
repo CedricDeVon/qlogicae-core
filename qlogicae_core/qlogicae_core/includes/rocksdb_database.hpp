@@ -1,6 +1,7 @@
 #pragma once
 
 #include "result.hpp"
+#include "logger.hpp"
 #include "utilities.hpp"
 #include "rocksdb_config.hpp"
 
@@ -37,8 +38,8 @@ namespace QLogicaeCore
         ~RocksDBDatabase();
 
         RocksDBDatabase(
-            const std::string_view&,
-            const RocksDBConfig & = {}
+            const std::string&,
+            const RocksDBConfig& = {}
         );
         
         RocksDBDatabase(
@@ -59,75 +60,107 @@ namespace QLogicaeCore
 
         std::string get_file_path();
         
+        bool setup();
+
         void setup(
+            Result<void>& result
+        );
+
+        std::future<bool> setup_async();
+
+        void setup_async(
+            const std::function<void(const bool& result)>& callback
+        );
+
+        void setup_async(
+            Result<std::future<void>>& result
+        );
+
+        void setup_async(
+            const std::function<void(Result<void>& result)>& callback
+        );
+
+        bool setup(
             const std::string& path,
-            const RocksDBConfig& config = {}
+            const RocksDBConfig& configurations
+        );
+
+        void setup(
+            Result<void>& result,
+            const std::string& path,
+            const RocksDBConfig& configurations
+        );
+
+        std::future<bool> setup_async(
+            const std::string& path,
+            const RocksDBConfig& configurations
+        );
+
+        void setup_async(
+            const std::function<void(const bool& result)>& callback,
+            const std::string& path,
+            const RocksDBConfig& configurations
+        );
+
+        void setup_async(
+            Result<std::future<void>>& result,
+            const std::string& path,
+            const RocksDBConfig& configurations
+        );
+
+        void setup_async(
+            const std::function<void(Result<void>& result)>& callback,
+            const std::string& path,
+            const RocksDBConfig& configurations
         );
 
         bool is_path_found(
-            const std::string_view&
+            const std::string&
         );
         
         bool is_key_found(
-            const std::string_view&
+            const std::string&
         );
 
         bool remove_value(
-            const std::string_view&
+            const std::string&
         );
         
         bool batch_execute();
 
-        template <typename T>
-        T get_value(
-            const std::string_view&
+        template <typename Type>
+        Type get_value(
+            const std::string&
         );
 
-        template <typename T>
+        template <typename Type>
         void set_value(
-            const std::string_view&,
-            const T&
+            const std::string&,
+            const Type&
         );
 
-        template <typename T>
+        template <typename Type>
         void batch_set_value(
-            const std::string_view&,
-            const T&
+            const std::string&,
+            const Type&
         );
 
-        template <typename T>
+        template <typename Type>
         void batch_remove_value(
-            const std::string_view&,
-            const T&
-        );
-
-        std::future<bool> remove_value_async(
-            const std::string_view&
-        );
-        
-        std::future<bool> batch_execute_async();
-
-        template <typename T>
-        std::future<T> get_value_async(
-            const std::string_view&
-        );
-
-        template <typename T>
-        std::future<void> set_value_async(
-            const std::string_view&,
-            const T&
+            const std::string&,
+            const Type&
         );
 
         bool create_column_family(
-            const std::string_view&
+            const std::string&
         );
         
         bool drop_column_family(
-            const std::string_view&
+            const std::string&
         );
         
         bool use_column_family(
-            const std::string_view&
+            const std::string&
         );
 
         void begin_batch();
@@ -135,21 +168,21 @@ namespace QLogicaeCore
         bool commit_batch();
 
         bool create_backup(
-            const std::string_view&
+            const std::string&
         );
         
         bool restore_backup(
-            const std::string_view&
+            const std::string&
         );
 
         bool create_checkpoint(
-            const std::string_view&
+            const std::string&
         );
 
         std::optional<std::string> get_with_bounds(
-            const std::string_view&,
-            uint64_t,
-            uint64_t
+            const std::string&,
+            const uint64_t&,
+            const uint64_t&
         );
 
         bool begin_transaction();
@@ -160,12 +193,6 @@ namespace QLogicaeCore
 
         void get_file_path(
             Result<std::string>& result
-        );
-
-        void setup(
-            Result<void>& result,
-            const std::string& path,
-            const RocksDBConfig& config = {}
         );
 
         void is_path_found(
@@ -228,8 +255,8 @@ namespace QLogicaeCore
         void get_with_bounds(
             Result<std::optional<std::string>>& result,
             const std::string&,
-            uint64_t,
-            uint64_t
+            const uint64_t&,
+            const uint64_t&
         );
 
         void begin_transaction(
@@ -242,15 +269,6 @@ namespace QLogicaeCore
 
         void rollback_transaction(
             Result<bool>& result
-        );
-
-        void remove_value_async(
-            Result<std::future<bool>>& result,
-            const std::string&
-        );
-
-        void batch_execute_async(
-            Result<std::future<bool>>& result
         );
 
         template <typename Type>
@@ -280,6 +298,56 @@ namespace QLogicaeCore
             const Type&
         );
 
+        bool terminate();
+
+        void terminate(
+            Result<void>& result
+        );
+
+        std::future<bool> remove_value_async(
+            const std::string&
+        );
+
+        std::future<bool> batch_execute_async();
+
+        void remove_value_async(
+            Result<std::future<bool>>& result,
+            const std::string&
+        );
+
+        void batch_execute_async(
+            Result<std::future<bool>>& result
+        );
+
+        void remove_value_async(
+            const std::function<void(const bool& result)>& callback,
+            const std::string& key
+        );
+
+        void batch_execute_async(
+            const std::function<void(const bool& result)>& callback
+        );
+
+        void remove_value_async(
+            const std::function<void(Result<bool>& result)>& callback,
+            const std::string& key
+        );
+
+        void batch_execute_async(
+            const std::function<void(Result<bool>& result)>& callback
+        );
+
+        template <typename Type>
+        std::future<Type> get_value_async(
+            const std::string&
+        );
+
+        template <typename Type>
+        std::future<void> set_value_async(
+            const std::string&,
+            const Type&
+        );
+
         template <typename Type>
         void get_value_async(
             Result<std::future<Type>>& result,
@@ -291,6 +359,46 @@ namespace QLogicaeCore
             Result<std::future<void>>& result,
             const std::string&,
             const Type&
+        );
+
+        template <typename Type>
+        void get_value_async(
+            const std::function<void(const Type& result)>& callback,
+            const std::string&
+        );
+
+        template <typename Type>
+        void set_value_async(
+            const std::function<void()>& callback,
+            const std::string&,
+            const Type&
+        );
+
+        template <typename Type>
+        void get_value_async(
+            const std::function<void(Result<Type>& result)>& callback,
+            const std::string&
+        );
+
+        template <typename Type>
+        void set_value_async(
+            const std::function<void(Result<void>& result)>& callback,
+            const std::string&,
+            const Type&
+        );
+
+        std::future<bool> terminate_async();
+
+        void terminate_async(
+            const std::function<void(const bool& result)>& callback
+        );
+
+        void terminate_async(
+            Result<std::future<void>>& result
+        );
+
+        void terminate_async(
+            const std::function<void(Result<void>& result)>& callback
         );
 
         static RocksDBDatabase& get_instance();
@@ -342,99 +450,240 @@ namespace QLogicaeCore
 
         rocksdb::ColumnFamilyHandle* get_cf_handle(const std::string& name);
 
-        template <typename T>
-        static std::string serialize(const T& value);
+        template <typename Type>
+        static std::string serialize(const Type& value);
 
-        template <typename T>
-        static T deserialize(const std::string& data);
+        template <typename Type>
+        static Type deserialize(const std::string& data);
     };
 
-    template <typename T>
-    inline T RocksDBDatabase::get_value(const std::string_view& key)
+    template <typename Type>
+    inline Type RocksDBDatabase::get_value(
+        const std::string& key
+    )
     {
-        std::shared_lock lock(_mutex);
+        try
+        {
+            std::shared_lock lock(_mutex);
 
-        std::string value;
-        auto s = _object->Get(_read_options, key.data(), &value);
-        if (!s.ok())
-            throw std::runtime_error("Failed to get key: " + std::string(key));
+            std::string value = "";
 
-        return deserialize<T>(value);
-    }
+            _object->Get(_read_options, key, &value);
 
-    template <typename T>
-    inline void RocksDBDatabase::set_value(const std::string_view& key, const T& value)
-    {
-        std::unique_lock lock(_mutex);
+            return deserialize<Type>(value);
+        }
+        catch (const std::exception& exception)
+        {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::RocksDBDatabase::get_value()",
+                exception.what()
+            );
 
-        auto serialized = serialize(value);
-        rocksdb::WriteOptions options;
-        options.sync = true;
-        auto s = _object->Put(options, key.data(), serialized);
-        if (!s.ok()) {
-            throw std::runtime_error("Failed to set key: " + std::string(key) + ", reason: " + s.ToString());
+            return deserialize<Type>("");
         }
     }
 
-    template <typename T>
-    inline void RocksDBDatabase::batch_set_value(const std::string_view& key, const T& value)
+    template <typename Type>
+    inline void RocksDBDatabase::set_value(
+        const std::string& key,
+        const Type& value
+    )
     {
-        std::unique_lock lock(_mutex);
+        try
+        {
+            std::unique_lock lock(_mutex);
 
-        _write_batch.Put(key.data(), serialize(value));
+            auto result_value = _object->Put(
+                _write_options,
+                key,
+                serialize(value)
+            );
+        }
+        catch (const std::exception& exception)
+        {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::RocksDBDatabase::set_value()",
+                exception.what()
+            );
+        }
     }
 
-    template <typename T>
-    inline void RocksDBDatabase::batch_remove_value(const std::string_view& key, const T&)
+    template <typename Type>
+    inline void RocksDBDatabase::batch_set_value(
+        const std::string& key,
+        const Type& value
+    )
     {
-        std::unique_lock lock(_mutex);
+        try
+        {
+            std::unique_lock lock(_mutex);
 
-        _write_batch.Delete(key.data());
+            _write_batch.Put(key, serialize(value));
+        }
+        catch (const std::exception& exception)
+        {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::RocksDBDatabase::batch_set_value()",
+                exception.what()
+            );
+        }
     }
 
-    template <typename T>
-    inline std::future<T> RocksDBDatabase::get_value_async(const std::string_view& key)
+    template <typename Type>
+    inline void RocksDBDatabase::batch_remove_value(
+        const std::string& key,
+        const Type&
+    )
     {
-        return std::async(std::launch::async, [this, key = std::move(key)]() {
-            return get_value<T>(key);
-            });
+        try
+        {
+            std::unique_lock lock(_mutex);
+
+            _write_batch.Delete(key);
+        }
+        catch (const std::exception& exception)
+        {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::RocksDBDatabase::batch_remove_value()",
+                exception.what()
+            );
+        }
     }
 
-    template <typename T>
-    inline std::future<void> RocksDBDatabase::set_value_async(const std::string_view& key, const T& value)
+    template <typename Type>
+    inline std::future<Type> RocksDBDatabase::get_value_async(
+        const std::string& key
+    )
     {
-        return std::async(std::launch::async, [this, key = std::move(key), value = std::move(value)]() {
-            set_value<T>(key, value);
-        });
+        std::promise<Type> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, key,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    get_value<Type>(
+                        key
+                    )
+                );
+            }
+        );
+
+        return future;
     }
 
-    template <typename T>
-    inline static std::string RocksDBDatabase::serialize(const T& value)
+    template <typename Type>
+    inline std::future<void> RocksDBDatabase::set_value_async(
+        const std::string& key,
+        const Type& value
+    )
     {
-        std::ostringstream oss;
-        oss << value;
-        return oss.str();
+        std::promise<void> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, key, value,
+            promise = std::move(promise)]() mutable
+            {
+                set_value<Type>(key, value);
+
+                promise.set_value();
+            }
+        );
+
+        return future;
     }
 
-    template <typename T>
-    inline static T RocksDBDatabase::deserialize(const std::string& data)
+    template <typename Type>
+    inline static std::string RocksDBDatabase::serialize(
+        const Type& value
+    )
     {
-        std::istringstream iss(data);
-        T value;
-        iss >> value;
-        return value;
+        try
+        {            
+            std::ostringstream oss;
+
+            oss << value;
+
+            return oss.str();
+        }
+        catch (const std::exception& exception)
+        {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::RocksDBDatabase::serialize()",
+                exception.what()
+            );
+
+            return {};
+        }        
+    }
+
+    template <typename Type>
+    inline static Type RocksDBDatabase::deserialize(
+        const std::string& data
+    )
+    {
+        try
+        {
+            std::istringstream iss(data);
+
+            Type value;
+            iss >> value;
+
+            return value;
+        }
+        catch (const std::exception& exception)
+        {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::RocksDBDatabase::deserialize()",
+                exception.what()
+            );
+
+            return {};
+        }        
     }
 
     template <>
-    inline std::string RocksDBDatabase::serialize<std::string>(const std::string& value)
+    inline std::string RocksDBDatabase::serialize<std::string>(
+        const std::string& value
+    )
     {
-        return value;
+        try
+        {
+            return value;
+        }
+        catch (const std::exception& exception)
+        {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::RocksDBDatabase::serialize()",
+                exception.what()
+            );
+
+            return {};
+        }        
     }
 
     template <>
-    inline std::string RocksDBDatabase::deserialize<std::string>(const std::string& data)
+    inline std::string RocksDBDatabase::deserialize<std::string>(
+        const std::string& data
+    )
     {
-        return data;
+        try
+        {
+            return data;
+        }
+        catch (const std::exception& exception)
+        {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::RocksDBDatabase::deserialize()",
+                exception.what()
+            );
+
+            return {};
+        }
     }
 
     template <typename Type>
@@ -442,13 +691,10 @@ namespace QLogicaeCore
         Result<Type>& result,
         const std::string& key
     )
-    {
-        std::shared_lock lock(_mutex);
-
+    {        
         std::string value;
-        auto s = _object->Get(_read_options, key, &value);
-        if (!s.ok())
-        {
+        if (!_object->Get(_read_options, key, &value).ok())
+        {            
             return result.set_to_bad_status_without_value();
         }
             
@@ -463,13 +709,10 @@ namespace QLogicaeCore
         const std::string& key,
         const Type& value
     )
-    {
-        std::unique_lock lock(_mutex);
-
+    {        
         auto serialized = serialize(value);
-        auto s = _object->Put(_options, key, serialized);
-        if (!s.ok())
-        {
+        if (!_object->Put(_options, key, serialized).ok())
+        {            
             return result.set_to_bad_status_without_value();
         }
 
@@ -482,9 +725,7 @@ namespace QLogicaeCore
         const std::string& key,
         const Type& value
     )
-    {
-        std::unique_lock lock(_mutex);
-
+    {        
         _write_batch.Put(key, serialize(value));
 
         result.set_to_good_status_without_value();
@@ -496,9 +737,7 @@ namespace QLogicaeCore
         const std::string& key,
         const Type& value
     )
-    {
-        std::unique_lock lock(_mutex);
-        
+    {        
         _write_batch.Delete(key);
 
         result.set_to_good_status_without_value();
@@ -510,15 +749,29 @@ namespace QLogicaeCore
         const std::string& key
     )
     {
-        result.set_to_good_status_with_value(
-            std::async(std::launch::async, [this, key = std::move(key)]()
+        std::promise<Type> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, key,
+            promise = std::move(promise)]() mutable
             {
                 Result<Type> result;
 
-                get_value<Type>(result, key);
+                get_value<Type>(
+                    result,
+                    key
+                );
 
-                return result.get_value();
-            })
+                promise.set_value(
+                    result.get_value()
+                );
+            }
+        );
+
+        result.set_to_good_status_with_value(
+            std::move(future)
         );
     }
 
@@ -529,14 +782,28 @@ namespace QLogicaeCore
         const Type& value
     )
     {
-        result.set_to_good_status_without_value(
-            std::async(std::launch::async,
-                [this, key = std::move(key), value = std::move(value)]()
-            {
-                    Result<Type> result;
+        std::promise<Type> promise;
+        auto future = promise.get_future();
 
-                    set_value<Type>(key, value);
-            })
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, key, value,
+            promise = std::move(promise)]() mutable
+            {
+                Result<Type> result;
+
+                set_value<Type>(
+                    result,
+                    key,
+                    value
+                );
+
+                promise.set_value();
+            }
+        );
+
+        result.set_to_good_status_with_value(
+            std::move(future)
         );
     }
 

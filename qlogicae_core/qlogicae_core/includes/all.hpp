@@ -39,6 +39,7 @@
 #include "../includes/json_value_pointer.hpp"
 #include "../includes/vector_string_equal.hpp"
 #include "../includes/environment_variable.hpp"
+#include "../includes/cache_configurations.hpp"
 #include "../includes/network_ping_response.hpp"
 #include "../includes/network_ping_settings.hpp"
 #include "../includes/temperature_unit_type.hpp"

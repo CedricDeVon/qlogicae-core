@@ -198,10 +198,10 @@ namespace QLogicaeCoreTest
         EXPECT_EQ(f2.get(), 123);
     }
 
-    TEST_F(RocksDBDatabaseTest, Should_Throw_When_KeyDoesNotExist) {
-        EXPECT_THROW({
+    TEST_F(RocksDBDatabaseTest, Should_Not_Throw_When_KeyDoesNotExist) {
+        EXPECT_NO_THROW({
             db->get_value<int>("nonexistent");
-            }, std::runtime_error);
+            });
     }
 
     TEST_F(RocksDBDatabaseTest, Should_WorkCorrectly_When_MultithreadedWrite) {
@@ -266,9 +266,9 @@ namespace QLogicaeCoreTest
         db->begin_batch();
         db->batch_remove_value<int>("to_delete", 0);
         db->commit_batch();
-        EXPECT_THROW({
+        EXPECT_NO_THROW({
             db->get_value<int>("to_delete");
-            }, std::runtime_error);
+            });
     }
 
     TEST_F(RocksDBDatabaseTest, Should_WorkCorrectly_When_BackupAndRestore) {
@@ -321,10 +321,10 @@ namespace QLogicaeCoreTest
         EXPECT_EQ(result, json);
     }
 
-    TEST_F(RocksDBDatabaseTest, Should_Throw_When_JsonKeyNotFound) {
-        EXPECT_THROW({
+    TEST_F(RocksDBDatabaseTest, Should_Not_Throw_When_JsonKeyNotFound) {
+        EXPECT_NO_THROW({
             db->get_value<std::string>("missing_json");
-            }, std::runtime_error);
+            });
     }
 
     TEST_F(RocksDBDatabaseTest, Should_StressTest_When_JsonWritesAreHighVolume) {
@@ -551,13 +551,14 @@ namespace QLogicaeCoreTest
     }
 
     TEST_F(RocksDBDatabaseTest,
-        Should_Throw_When_DatabasePathIsReadOnlyOrInvalid)
+        Should_Not_Throw_When_DatabasePathIsReadOnlyOrInvalid)
     {
         std::string path = "/";
+        QLogicaeCore::RocksDBConfig config;
 
-        EXPECT_THROW({
-            QLogicaeCore::RocksDBDatabase db_invalid(path);
-            }, std::runtime_error);
+        EXPECT_NO_THROW({
+            QLogicaeCore::RocksDBDatabase db_invalid(path, config);
+            });
     }
 
     INSTANTIATE_TEST_CASE_P(RocksDBDatabaseTest_Param, RocksDBDatabaseTest_Param,

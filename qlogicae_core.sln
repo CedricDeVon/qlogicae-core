@@ -12,6 +12,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "qlogicae_core_sandbox", "ql
 		{07F44EB2-776B-4BB0-B462-589523A3D3F3} = {07F44EB2-776B-4BB0-B462-589523A3D3F3}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "qlogicae", "qlogicae\qlogicae.vcxproj", "{05B6E090-9A45-4F8B-B176-78A0E23BF70E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -44,6 +46,14 @@ Global
 		{74446EE3-EAB1-49D0-BDEF-AB898C2293FC}.Release|x64.Build.0 = Release|x64
 		{74446EE3-EAB1-49D0-BDEF-AB898C2293FC}.Release|x86.ActiveCfg = Release|Win32
 		{74446EE3-EAB1-49D0-BDEF-AB898C2293FC}.Release|x86.Build.0 = Release|Win32
+		{05B6E090-9A45-4F8B-B176-78A0E23BF70E}.Debug|x64.ActiveCfg = Debug|x64
+		{05B6E090-9A45-4F8B-B176-78A0E23BF70E}.Debug|x64.Build.0 = Debug|x64
+		{05B6E090-9A45-4F8B-B176-78A0E23BF70E}.Debug|x86.ActiveCfg = Debug|Win32
+		{05B6E090-9A45-4F8B-B176-78A0E23BF70E}.Debug|x86.Build.0 = Debug|Win32
+		{05B6E090-9A45-4F8B-B176-78A0E23BF70E}.Release|x64.ActiveCfg = Release|x64
+		{05B6E090-9A45-4F8B-B176-78A0E23BF70E}.Release|x64.Build.0 = Release|x64
+		{05B6E090-9A45-4F8B-B176-78A0E23BF70E}.Release|x86.ActiveCfg = Release|Win32
+		{05B6E090-9A45-4F8B-B176-78A0E23BF70E}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

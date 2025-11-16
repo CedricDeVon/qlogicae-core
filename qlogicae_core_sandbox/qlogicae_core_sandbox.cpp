@@ -2,6 +2,32 @@
 
 #include "pch.h"
 
+int main(void)
+{
+    try
+    {
+        for (int i = 0; i < 1000; ++i)
+        {
+            QLogicaeCore::LOGGER.handle_exception_async(
+                "QLogicaeCore::RocksDBDatabase::commit_transaction()",
+                "Sample"
+            );
+        }
+
+        // QLogicaeCore::UTILITIES.BOOST_ASIO_POOL.join();
+    }
+    catch (const std::exception& exception)
+    {
+        std::cout << exception.what() << "\n";
+    }    
+
+    bool exit_code;
+    std::cin >> exit_code;
+
+    return 0;
+}
+
+/*
 static std::string make_large_string(std::size_t len)
 {
     std::string s;
@@ -18,7 +44,7 @@ static void benchmark_boost_cache()
     try
     {
         using namespace ankerl::nanobench;
-    
+
         QLogicaeCore::BoostInterprocessCache cache("BoostInterprocessCache", QLogicaeCore::BytesSize::MB_4);
         QLogicaeCore::RocksDBDatabase db;
         db.setup("rocks_bench_db");
@@ -36,7 +62,7 @@ static void benchmark_boost_cache()
         bench.title("BoostInterprocessCache Benchmark")
             .unit("ops")
             .minEpochIterations(1'000);
-    
+
         bench.run("Boost: Write", [&] {
             cache.write(key_1, value_1, write_result);
             });
@@ -94,3 +120,5 @@ int main()
 
     return 0;
 }
+
+*/
