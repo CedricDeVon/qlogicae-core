@@ -213,6 +213,7 @@
     <ClInclude Include="qlogicae_core\includes\boost_interprocess_cache.hpp" />
     <ClInclude Include="qlogicae_core\includes\boost_interprocess_cache_shared_data.hpp" />
     <ClInclude Include="qlogicae_core\includes\byte_size.hpp" />
+    <ClInclude Include="qlogicae_core\includes\cache_configurations.hpp" />
     <ClInclude Include="qlogicae_core\includes\case_aware_equal.hpp" />
     <ClInclude Include="qlogicae_core\includes\case_aware_hash.hpp" />
     <ClInclude Include="qlogicae_core\includes\case_sensitivity.hpp" />
@@ -386,6 +387,7 @@
     <ClCompile Include="qlogicae_core\sources\boost_interprocess_cache.cpp" />
     <ClCompile Include="qlogicae_core\sources\boost_interprocess_cache_shared_data.cpp" />
     <ClCompile Include="qlogicae_core\sources\byte_size.cpp" />
+    <ClCompile Include="qlogicae_core\sources\cache_configurations.cpp" />
     <ClCompile Include="qlogicae_core\sources\cli_io.cpp" />
     <ClCompile Include="qlogicae_core\sources\cryptographer.cpp" />
     <ClCompile Include="qlogicae_core\sources\event_dispatcher_subscription_handle.cpp" />

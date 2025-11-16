@@ -7,6 +7,7 @@
 #include "time_format.hpp"
 #include "application_file_io.hpp"
 #include "abstract_application.hpp"
+#include "cache_configurations.hpp"
 #include "logger_configurations.hpp"
 
 #include <filesystem>
@@ -33,7 +34,6 @@ namespace QLogicaeCore
 
         std::string CONFIGURATIONS_APPLICATION_ARCHITECTURE;
 
-
         std::string CONFIGURATIONS_ENVIRONMENT_ID;
 
         std::string CONFIGURATIONS_ENVIRONMENT_NAME;
@@ -42,7 +42,11 @@ namespace QLogicaeCore
         
         std::string CONFIGURATIONS_ENVIRONMENT_LANGUAGE_SELECTED;
 
+        std::string CONFIGURATIONS_ROAMING_APPDATA_APPLICTION_FOLDER;
+
         LoggerConfigurations CONFIGURATIONS_ENVIRONMENT_LOG;
+
+        CacheConfigurations CONFIGURATIONS_ENVIRONMENT_CACHE;
 
         bool setup();
 

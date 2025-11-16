@@ -248,21 +248,21 @@ namespace QLogicaeCore
                 }
             );
 
-            std::vector<std::any> log_file_output_paths = {};
             // Post JSON Extraction        
-
-            CONFIGURATIONS_ENVIRONMENT_LOG.file_collectivization_folder_path =
+            std::vector<std::any> log_file_output_paths = {};
+            
+            CONFIGURATIONS_ROAMING_APPDATA_APPLICTION_FOLDER =
                 UTILITIES.FULL_ROAMING_APPDATA_FOLDER_PATH +
                 "\\" + UTILITIES.RELATIVE_QLOGICAE_FOLDER_PATH_3 +
                 "\\" + CONFIGURATIONS_APPLICATION_ID +
-                "\\" + CONFIGURATIONS_ENVIRONMENT_ID +
+                "\\" + CONFIGURATIONS_ENVIRONMENT_ID;
+
+            CONFIGURATIONS_ENVIRONMENT_LOG.file_collectivization_folder_path =
+                CONFIGURATIONS_ROAMING_APPDATA_APPLICTION_FOLDER +
                 "\\" + UTILITIES.RELATIVE_QLOGICAE_LOGS_FOLDER_PATH_1;
 
             CONFIGURATIONS_ENVIRONMENT_LOG.file_fragmentation_folder_path =
-                UTILITIES.FULL_ROAMING_APPDATA_FOLDER_PATH +
-                "\\" + UTILITIES.RELATIVE_QLOGICAE_FOLDER_PATH_3 +
-                "\\" + CONFIGURATIONS_APPLICATION_ID +
-                "\\" + CONFIGURATIONS_ENVIRONMENT_ID +
+                CONFIGURATIONS_ROAMING_APPDATA_APPLICTION_FOLDER +
                 "\\" + UTILITIES.RELATIVE_QLOGICAE_LOGS_FOLDER_PATH_1 +
                 "\\" + UTILITIES.RELATIVE_QLOGICAE_LOGS_FRAGMENTS_FOLDER_PATH_1;
 
@@ -275,27 +275,33 @@ namespace QLogicaeCore
             }
 
             std::filesystem::create_directories(
-                UTILITIES.FULL_ROAMING_APPDATA_FOLDER_PATH +
-                "\\" + UTILITIES.RELATIVE_QLOGICAE_FOLDER_PATH_3 +
-                "\\" + CONFIGURATIONS_APPLICATION_ID +
-                "\\" + CONFIGURATIONS_ENVIRONMENT_ID
-            );
-            
-            std::filesystem::create_directories(
-                UTILITIES.FULL_ROAMING_APPDATA_FOLDER_PATH +
-                "\\" + UTILITIES.RELATIVE_QLOGICAE_FOLDER_PATH_3 +
-                "\\" + CONFIGURATIONS_APPLICATION_ID +
-                "\\" + CONFIGURATIONS_ENVIRONMENT_ID +
-                "\\" + UTILITIES.RELATIVE_QLOGICAE_LOGS_FOLDER_PATH_1
+                CONFIGURATIONS_ROAMING_APPDATA_APPLICTION_FOLDER
             );
 
             std::filesystem::create_directories(
-                UTILITIES.FULL_ROAMING_APPDATA_FOLDER_PATH +
-                "\\" + UTILITIES.RELATIVE_QLOGICAE_FOLDER_PATH_3 +
-                "\\" + CONFIGURATIONS_APPLICATION_ID +
-                "\\" + CONFIGURATIONS_ENVIRONMENT_ID +
-                "\\" + UTILITIES.RELATIVE_QLOGICAE_LOGS_FOLDER_PATH_1 +
-                "\\" + UTILITIES.RELATIVE_QLOGICAE_LOGS_FRAGMENTS_FOLDER_PATH_1
+                CONFIGURATIONS_ENVIRONMENT_LOG.file_collectivization_folder_path
+            );
+
+            std::filesystem::create_directories(
+                CONFIGURATIONS_ENVIRONMENT_LOG.file_fragmentation_folder_path
+            );
+
+
+
+            CONFIGURATIONS_ENVIRONMENT_CACHE.relative_root_folder_path =
+                CONFIGURATIONS_ROAMING_APPDATA_APPLICTION_FOLDER +
+                "\\" + "caches";
+
+            CONFIGURATIONS_ENVIRONMENT_CACHE.relative_main_folder_path =
+                CONFIGURATIONS_ENVIRONMENT_CACHE.relative_root_folder_path +
+                "\\" + "main";
+
+            std::filesystem::create_directories(
+                CONFIGURATIONS_ENVIRONMENT_CACHE.relative_root_folder_path
+            );
+
+            std::filesystem::create_directories(
+                CONFIGURATIONS_ENVIRONMENT_CACHE.relative_main_folder_path
             );
 
             set_is_enabled(true);

@@ -54,20 +54,8 @@ namespace QLogicaeCore
                 );
             }
 
-            std::string cache_main_path =
-                UTILITIES.FULL_ROAMING_APPDATA_FOLDER_PATH +
-                "\\" + UTILITIES.RELATIVE_QLOGICAE_FOLDER_PATH_3 +
-                "\\" + QLOGICAE_APPLICATION_UTILITIES.CONFIGURATIONS_APPLICATION_ID +
-                "\\" + QLOGICAE_APPLICATION_UTILITIES.CONFIGURATIONS_ENVIRONMENT_ID +
-                "\\" + "caches" +
-                "\\" + "main";
-
-            std::filesystem::create_directories(
-                cache_main_path
-            );
-
             ROCKSDB_DATABASE.setup(
-                cache_main_path
+                QLOGICAE_APPLICATION_UTILITIES.CONFIGURATIONS_ENVIRONMENT_CACHE.relative_main_folder_path
             );
 
             set_is_enabled(true);
