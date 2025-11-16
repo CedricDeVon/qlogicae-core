@@ -153,8 +153,10 @@
       <StringPooling>true</StringPooling>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <OmitFramePointers>true</OmitFramePointers>
-      <EnableEnhancedInstructionSet>AdvancedVectorExtensions512</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions101</EnableEnhancedInstructionSet>
       <FloatingPointModel>Fast</FloatingPointModel>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -165,14 +167,30 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="pch.cpp" />
-    <ClCompile Include="qlogicae_core_sandbox.cpp" />
+    <ClCompile Include="qlogicae_core_sandbox\sources\all.cpp" />
+    <ClCompile Include="qlogicae_core_sandbox\sources\application.cpp" />
+    <ClCompile Include="qlogicae_core_sandbox\sources\assembly.cpp" />
+    <ClCompile Include="qlogicae_core_sandbox\sources\utilities.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="pch.h" />
+    <ClInclude Include="main.hpp" />
+    <ClInclude Include="pch.hpp" />
+    <ClInclude Include="qlogicae_core_sandbox\includes\all.hpp" />
+    <ClInclude Include="qlogicae_core_sandbox\includes\application.hpp" />
+    <ClInclude Include="qlogicae_core_sandbox\includes\assembly.hpp" />
+    <ClInclude Include="qlogicae_core_sandbox\includes\utilities.hpp" />
+    <ClInclude Include="qlogicae_core_sandbox\resources\resource.h" />
   </ItemGroup>
   <ItemGroup>
-    <MASM Include="assembly.asm" />
+    <MASM Include="qlogicae_core_sandbox\assembly\x64_masm__main.asm" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="qlogicae_core_sandbox\resources\resource.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="qlogicae\application\assets\application.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

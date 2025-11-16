@@ -110,7 +110,7 @@
       <PreprocessorDefinitions>NOMINMAX;WIN32_LEAN_AND_MEAN;HASH_LEN=32;PCRE2_CODE_UNIT_WIDTH=8;SALT_LEN=crypto_pwhash_SALTBYTES;_WIN32_WINNT=0x0601;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat>None</DebugInformationFormat>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <AdditionalIncludeDirectories>../qlogicae_core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -123,7 +123,7 @@
       <OmitFramePointers>true</OmitFramePointers>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <StringPooling>true</StringPooling>
-      <EnableEnhancedInstructionSet>AdvancedVectorExtensions512</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions101</EnableEnhancedInstructionSet>
       <FloatingPointModel>Fast</FloatingPointModel>
       <MultiProcessorCompilation>false</MultiProcessorCompilation>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -143,6 +143,7 @@
   <ItemGroup>
     <ClInclude Include="pch.hpp" />
     <ClInclude Include="qlogicae_core_test\includes\assembly.hpp" />
+    <ClInclude Include="qlogicae_core_test\resources\resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="qlogicae_core_test\sources\abstract_file_io.cpp" />
@@ -210,6 +211,12 @@
   </ItemGroup>
   <ItemGroup>
     <MASM Include="qlogicae_core_test\assembly\x64_masm__main.asm" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="qlogicae\application\assets\application.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="qlogicae_core_test\resources\resource.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

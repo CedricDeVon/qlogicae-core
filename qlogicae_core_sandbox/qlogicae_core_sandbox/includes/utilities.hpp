@@ -1,6 +1,6 @@
 #pragma once
 
-#include "pch.hpp"
+#include "assembly.hpp"
 
 namespace QLogicaeCoreSandbox
 {
