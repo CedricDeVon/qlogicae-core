@@ -306,7 +306,7 @@
     <ClInclude Include="qlogicae_core\includes\validation_password_rules.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="qlogicae_core\includes\rocksdb_config.hpp">
+    <ClInclude Include="qlogicae_core\includes\rocksdb_configurations.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="qlogicae_core\includes\outlier_removal_options.hpp">

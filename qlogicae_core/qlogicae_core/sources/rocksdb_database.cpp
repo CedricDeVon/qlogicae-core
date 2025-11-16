@@ -18,7 +18,7 @@ namespace QLogicaeCore
 
     RocksDBDatabase::RocksDBDatabase(
         const std::string& path,
-        const RocksDBConfig& config
+        const RocksDBConfigurations& config
     ) :
             _file_path(path),
             _config(config)
@@ -149,7 +149,7 @@ namespace QLogicaeCore
 
     bool RocksDBDatabase::setup(
         const std::string& path,
-        const RocksDBConfig& configurations
+        const RocksDBConfigurations& configurations
     )
     {
         try
@@ -178,7 +178,7 @@ namespace QLogicaeCore
     void RocksDBDatabase::setup(
         Result<void>& result,
         const std::string& path,
-        const RocksDBConfig& configurations
+        const RocksDBConfigurations& configurations
     )
     {
         close_db();
@@ -194,7 +194,7 @@ namespace QLogicaeCore
 
     std::future<bool> RocksDBDatabase::setup_async(
         const std::string& path,
-        const RocksDBConfig& configurations
+        const RocksDBConfigurations& configurations
     )
     {
         std::promise<bool> promise;
@@ -220,7 +220,7 @@ namespace QLogicaeCore
     void RocksDBDatabase::setup_async(
         Result<std::future<void>>& result,
         const std::string& path,
-        const RocksDBConfig& configurations
+        const RocksDBConfigurations& configurations
     )
     {
         std::promise<void> promise;
@@ -251,7 +251,7 @@ namespace QLogicaeCore
     void RocksDBDatabase::setup_async(
         const std::function<void(const bool& result)>& callback,
         const std::string& path,
-        const RocksDBConfig& configurations
+        const RocksDBConfigurations& configurations
     )
     {
         boost::asio::post(
@@ -271,7 +271,7 @@ namespace QLogicaeCore
     void RocksDBDatabase::setup_async(
         const std::function<void(Result<void>& result)>& callback,
         const std::string& path,
-        const RocksDBConfig& configurations
+        const RocksDBConfigurations& configurations
     )
     {
         boost::asio::post(

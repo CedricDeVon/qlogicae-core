@@ -3,7 +3,7 @@
 #include "result.hpp"
 #include "logger.hpp"
 #include "utilities.hpp"
-#include "rocksdb_config.hpp"
+#include "rocksdb_configurations.hpp"
 
 #include <rocksdb/db.h>
 #include <rocksdb/slice.h>
@@ -39,7 +39,7 @@ namespace QLogicaeCore
 
         RocksDBDatabase(
             const std::string&,
-            const RocksDBConfig& = {}
+            const RocksDBConfigurations& = {}
         );
         
         RocksDBDatabase(
@@ -82,36 +82,36 @@ namespace QLogicaeCore
 
         bool setup(
             const std::string& path,
-            const RocksDBConfig& configurations
+            const RocksDBConfigurations& configurations
         );
 
         void setup(
             Result<void>& result,
             const std::string& path,
-            const RocksDBConfig& configurations
+            const RocksDBConfigurations& configurations
         );
 
         std::future<bool> setup_async(
             const std::string& path,
-            const RocksDBConfig& configurations
+            const RocksDBConfigurations& configurations
         );
 
         void setup_async(
             const std::function<void(const bool& result)>& callback,
             const std::string& path,
-            const RocksDBConfig& configurations
+            const RocksDBConfigurations& configurations
         );
 
         void setup_async(
             Result<std::future<void>>& result,
             const std::string& path,
-            const RocksDBConfig& configurations
+            const RocksDBConfigurations& configurations
         );
 
         void setup_async(
             const std::function<void(Result<void>& result)>& callback,
             const std::string& path,
-            const RocksDBConfig& configurations
+            const RocksDBConfigurations& configurations
         );
 
         bool is_path_found(
@@ -408,7 +408,7 @@ namespace QLogicaeCore
         );
 
     protected:
-        RocksDBConfig _config;
+        RocksDBConfigurations _config;
         
         rocksdb::DB* _object{};
         

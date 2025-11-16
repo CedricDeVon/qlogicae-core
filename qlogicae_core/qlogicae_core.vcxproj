@@ -253,7 +253,7 @@
     <ClInclude Include="qlogicae_core\includes\raw.hpp" />
     <ClInclude Include="qlogicae_core\includes\result.hpp" />
     <ClInclude Include="qlogicae_core\includes\result_status.hpp" />
-    <ClInclude Include="qlogicae_core\includes\rocksdb_config.hpp" />
+    <ClInclude Include="qlogicae_core\includes\rocksdb_configurations.hpp" />
     <ClInclude Include="qlogicae_core\includes\sha256_hash_cryptographer.hpp" />
     <ClInclude Include="qlogicae_core\includes\small_task_object.hpp" />
     <ClInclude Include="qlogicae_core\includes\sqlite.hpp" />

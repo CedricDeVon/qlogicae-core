@@ -1,5 +1,7 @@
 #pragma once
 
+#include "qlogicae_core/includes/assembly.hpp"
+
 // System
 #include "qlogicae_core/includes/system_access.hpp"
 
@@ -26,7 +28,6 @@
 #include "qlogicae_core/includes/json_visitor.hpp"
 #include "qlogicae_core/includes/encoding_type.hpp"
 #include "qlogicae_core/includes/task_priority.hpp"
-#include "qlogicae_core/includes/rocksdb_config.hpp"
 #include "qlogicae_core/includes/json_value_type.hpp"
 #include "qlogicae_core/includes/case_aware_hash.hpp"
 #include "qlogicae_core/includes/time_scale_unit.hpp"
@@ -37,9 +38,11 @@
 #include "qlogicae_core/includes/json_value_pointer.hpp"
 #include "qlogicae_core/includes/vector_string_equal.hpp"
 #include "qlogicae_core/includes/environment_variable.hpp"
+#include "qlogicae_core/includes/cache_configurations.hpp"
 #include "qlogicae_core/includes/network_ping_response.hpp"
 #include "qlogicae_core/includes/network_ping_settings.hpp"
 #include "qlogicae_core/includes/temperature_unit_type.hpp"
+#include "qlogicae_core/includes/rocksdb_configurations.hpp"
 #include "qlogicae_core/includes/supported_qlogicae_ide.hpp"
 #include "qlogicae_core/includes/outlier_removal_options.hpp"
 #include "qlogicae_core/includes/cryptographer_properties.hpp"

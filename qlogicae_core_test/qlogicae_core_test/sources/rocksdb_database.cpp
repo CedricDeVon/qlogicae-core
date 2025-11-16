@@ -535,7 +535,7 @@ namespace QLogicaeCoreTest
     TEST_F(RocksDBDatabaseTest,
         Should_Expect_Success_When_InitializedWithCustomConfig)
     {
-        QLogicaeCore::RocksDBConfig config;
+        QLogicaeCore::RocksDBConfigurations config;
         config.base_block_cache_size = 128 * 1024 * 1024;
         config.base_write_buffer_size = 32 * 1024 * 1024;
         config.base_max_background_jobs = 8;
@@ -554,7 +554,7 @@ namespace QLogicaeCoreTest
         Should_Not_Throw_When_DatabasePathIsReadOnlyOrInvalid)
     {
         std::string path = "/";
-        QLogicaeCore::RocksDBConfig config;
+        QLogicaeCore::RocksDBConfigurations config;
 
         EXPECT_NO_THROW({
             QLogicaeCore::RocksDBDatabase db_invalid(path, config);

@@ -16,7 +16,7 @@
 
 namespace QLogicaeCore
 {
-    struct RocksDBConfig
+    struct RocksDBConfigurations
     {
         bool create_if_missing = true;
         

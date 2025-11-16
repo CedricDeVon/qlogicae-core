@@ -45,6 +45,21 @@ namespace QLogicaeCore
             const std::string& file_path
         );
 
+
+
+        void setup(
+            Result<void>& result,
+            const std::string& file_path
+        );
+
+        void setup(
+            Result<void>& result,
+            const std::string& name,
+            const std::string& file_path
+        );
+
+
+
         bool is_corrupted();
 
         size_t get_row_count();
@@ -261,15 +276,10 @@ namespace QLogicaeCore
             const std::string& values
         );
 
-        void setup(
-            Result<void>& result,
-            const std::string& file_path
-        );
+        static CsvFileIO& get_instance();
 
-        void setup(
-            Result<void>& result,
-            const std::string& name,
-            const std::string& file_path
+        static void get_instance(
+            Result<CsvFileIO*>& result
         );
 
     protected:
@@ -283,5 +293,8 @@ namespace QLogicaeCore
 
         std::optional<rapidcsv::Document> _temporary_csv_document_1;
     };
+
+    inline static CsvFileIO& CSV_FILE_IO =
+        CsvFileIO::get_instance();
 }
 
