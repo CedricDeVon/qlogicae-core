@@ -417,7 +417,7 @@
     <ClInclude Include="qlogicae_core\sources\qlogicae_visual_studio_2022_build_architecture.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="qlogicae_core\sources\rocksdb_config.cpp">
+    <ClInclude Include="qlogicae_core\sources\rocksdb_configurations.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="qlogicae_core\sources\small_task_object.cpp">

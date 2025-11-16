@@ -807,6 +807,116 @@ namespace QLogicaeCore
         );
     }
 
+
+    template <typename Type>
+    void RocksDBDatabase::get_value_async(
+        const std::function<void(const Type& result)>& callback,
+        const std::string& key
+    )
+    {
+        std::promise<Type> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, key, callback, promise = std::move(promise)]() mutable
+            {
+                Type value = get_value<Type>(
+                    key
+                );
+
+                promise.set_value(
+                    value
+                );
+
+                callback(
+                    value
+                );
+            }
+        );
+    }
+
+    template <typename Type>
+    void RocksDBDatabase::set_value_async(
+        const std::function<void()>& callback,
+        const std::string& key,
+        const Type& value
+    )
+    {
+        std::promise<Type> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, key, value, callback, promise = std::move(promise)]() mutable
+            {
+                set_value<Type>(
+                    key,
+                    value
+                );
+
+                promise.set_value();
+
+                callback();
+            }
+        );
+    }
+
+    template <typename Type>
+    void RocksDBDatabase::get_value_async(
+        const std::function<void(Result<Type>& result)>& callback,
+        const std::string& key
+    )
+    {
+        std::promise<Type> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, key, callback, promise = std::move(promise)]() mutable
+            {
+                Result<Type> void_result;
+
+                get_value<Type>(void_result, key);
+
+                promise.get_value(
+                    void_result.get_value()
+                );
+
+                callback(
+                    void_result
+                );
+            }
+        );
+    }
+
+    template <typename Type>
+    void RocksDBDatabase::set_value_async(
+        const std::function<void(Result<void>& result)>& callback,
+        const std::string& key,
+        const Type& value
+    )
+    {
+        std::promise<Type> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, key, callback, promise = std::move(promise)]() mutable
+            {
+                Result<void> void_result;
+
+                set_value<Type>(void_result, key, value);
+
+                promise.set_value();
+
+                callback(
+                    void_result
+                );
+            }
+        );
+    }
+
     inline static RocksDBDatabase& ROCKSDB_DATABASE = 
         RocksDBDatabase::get_instance();
 }

@@ -333,7 +333,7 @@
     <ClInclude Include="qlogicae_core\sources\outlier_removal_options.cpp" />
     <ClInclude Include="qlogicae_core\sources\qlogicae_visual_studio_2022_build.cpp" />
     <ClInclude Include="qlogicae_core\sources\qlogicae_visual_studio_2022_build_architecture.cpp" />
-    <ClInclude Include="qlogicae_core\sources\rocksdb_config.cpp" />
+    <ClInclude Include="qlogicae_core\sources\rocksdb_configurations.cpp" />
     <ClInclude Include="qlogicae_core\sources\small_task_object.cpp" />
     <ClInclude Include="qlogicae_core\sources\string_memory_pool_snapshot.cpp" />
     <ClInclude Include="qlogicae_core\sources\supported_qlogicae_ide.cpp" />

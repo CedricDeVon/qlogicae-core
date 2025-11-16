@@ -4,21 +4,30 @@
 
 namespace QLogicaeCore
 {
-    CsvFileIO::~CsvFileIO() = default;
+    CsvFileIO::CsvFileIO() :
+        AbstractFileIO("", "")
+    {
+
+    }
+
+    CsvFileIO::~CsvFileIO()
+    {
+
+    }
 
     CsvFileIO::CsvFileIO(
-        const std::string& path
+        const std::string& file_path
     ) :
-        AbstractFileIO(path)
+        AbstractFileIO(file_path)
     {
         
     }
 
     CsvFileIO::CsvFileIO(
-        const std::string& path,
+        const std::string& file_path,
         const std::string& content
     ) :
-            AbstractFileIO(path, content)
+        AbstractFileIO(file_path, content)
     {
 
     }
@@ -27,11 +36,23 @@ namespace QLogicaeCore
         const std::string& file_path
     )
     {
-        Result<void> void_result;
+        try
+        {
+            Result<void> result;
 
-        setup(void_result, file_path);
+            setup(result, file_path);
 
-        return void_result.is_status_safe();
+            return result.is_status_safe();
+        }
+        catch (const std::exception& exception)
+        {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::CsvFileIO::setup()",
+                exception.what()
+            );
+
+            return false;
+        }
     }
 
     bool CsvFileIO::setup(
@@ -39,11 +60,216 @@ namespace QLogicaeCore
         const std::string& file_path
     )
     {
-        Result<void> void_result;
+        try
+        {
+            Result<void> result;
 
-        setup(void_result, name, file_path);
+            setup(result, name, file_path);
 
-        return void_result.is_status_safe();
+            return result.is_status_safe();
+        }
+        catch (const std::exception& exception)
+        {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::CsvFileIO::setup()",
+                exception.what()
+            );
+
+            return false;
+        }
+    }
+
+    std::future<bool> CsvFileIO::setup_async(
+        const std::string& file_path
+    )
+    {
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, file_path,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    setup(
+                        file_path
+                    )
+                );
+            }
+        );
+
+        return future;
+    }
+
+    void CsvFileIO::setup_async(
+        Result<std::future<void>>& result,
+        const std::string& file_path
+    )
+    {
+        std::promise<void> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, file_path,
+            promise = std::move(promise)]() mutable
+            {
+                Result<void> result;
+
+                setup(
+                    result,
+                    file_path
+                );
+
+                promise.set_value();
+            }
+        );
+
+        result.set_to_good_status_with_value(
+            std::move(future)
+        );
+    }
+
+    void CsvFileIO::setup_async(
+        const std::function<void(const bool& result)>& callback,
+        const std::string& file_path
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, file_path, callback]() mutable
+            {
+                callback(
+                    setup(
+                        file_path
+                    )
+                );
+            }
+        );
+    }
+
+    void CsvFileIO::setup_async(
+        const std::function<void(Result<void>& result)>& callback,
+        const std::string& file_path
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, file_path, callback]() mutable
+            {
+                Result<void> result;
+
+                setup(
+                    result,
+                    file_path
+                );
+
+                callback(
+                    result
+                );
+            }
+        );
+    }
+
+    std::future<bool> CsvFileIO::setup_async(
+        const std::string& name,
+        const std::string& file_path
+    )
+    {
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, name, file_path,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    setup(
+                        name, file_path
+                    )
+                );
+            }
+        );
+
+        return future;
+    }
+
+    void CsvFileIO::setup_async(
+        Result<std::future<void>>& result,
+        const std::string& name,
+        const std::string& file_path
+    )
+    {
+        std::promise<void> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, name, file_path,
+            promise = std::move(promise)]() mutable
+            {
+                Result<void> result;
+
+                setup(
+                    result,
+                    name,
+                    file_path
+                );
+
+                promise.set_value();
+            }
+        );
+
+        result.set_to_good_status_with_value(
+            std::move(future)
+        );
+    }
+
+    void CsvFileIO::setup_async(
+        const std::function<void(const bool& result)>& callback,
+        const std::string& name,
+        const std::string& file_path
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, name, file_path, callback]() mutable
+            {
+                callback(
+                    setup(
+                        name,
+                        file_path
+                    )
+                );
+            }
+        );
+    }
+
+    void CsvFileIO::setup_async(
+        const std::function<void(Result<void>& result)>& callback,
+        const std::string& name,
+        const std::string& file_path
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, name, file_path, callback]() mutable
+            {
+                Result<void> result;
+
+                setup(
+                    result,
+                    name,
+                    file_path
+                );
+
+                callback(
+                    result
+                );
+            }
+        );
     }
 
     std::string CsvFileIO::trim(
@@ -60,7 +286,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at CsvFileIO::open(): " + exception.what());
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::CsvFileIO::trim()",
+                exception.what()
+            );
+
+            return "";
         }
     }
 
@@ -88,7 +319,12 @@ namespace QLogicaeCore
         {
             _corrupted = true;
 
-            throw std::runtime_error(std::string() + "Exception at CsvFileIO::close(): " + exception.what());
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::CsvFileIO::clear()",
+                exception.what()
+            );
+
+            return false;
         }
     }
 
@@ -132,7 +368,12 @@ namespace QLogicaeCore
             _corrupted = true;
             _temporary_csv_document_1.reset();
 
-            throw std::runtime_error(std::string() + "Exception at CsvFileIO::open(): " + exception.what());
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::CsvFileIO::open()",
+                exception.what()
+            );
+
+            return false;
         }
     }
 
@@ -148,7 +389,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at CsvFileIO::close(): " + exception.what());
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::CsvFileIO::close()",
+                exception.what()
+            );
+
+            return false;
         }
     }
 
@@ -167,7 +413,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at CsvFileIO::get_row_count(): " + exception.what());
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::CsvFileIO::get_row_count()",
+                exception.what()
+            );
+
+            return 0;
         }
     }
 
@@ -186,7 +437,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at CsvFileIO::get_column_count(): " + exception.what());
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::CsvFileIO::get_column_count()",
+                exception.what()
+            );
+
+            return 0;
         }
     }
 
@@ -205,7 +461,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at CsvFileIO::get_headers(): " + exception.what());
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::CsvFileIO::get_headers()",
+                exception.what()
+            );
+
+            return {};
         }
     }
 
@@ -235,7 +496,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at CsvFileIO::get_row(): " + exception.what());
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::CsvFileIO::get_row()",
+                exception.what()
+            );
+
+            return "";
         }
     }
 
@@ -263,6 +529,11 @@ namespace QLogicaeCore
         }
         catch (...)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::CsvFileIO::is_header_found()",
+                "Header cannot be found"
+            );
+
             return false;
         }
     }
@@ -295,7 +566,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at CsvFileIO::get_column(): " + exception.what());
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::CsvFileIO::get_column()",
+                exception.what()
+            );
+
+            return "";
         }
     }
 
@@ -319,7 +595,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at CsvFileIO::get_cell(): " + exception.what());
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::CsvFileIO::get_cell()",
+                exception.what()
+            );
+
+            return "";
         }
     }
 
@@ -340,7 +621,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at CsvFileIO::save(): " + exception.what());
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::CsvFileIO::save()",
+                exception.what()
+            );
+
+            return false;
         }
     }
 
@@ -358,11 +644,18 @@ namespace QLogicaeCore
         {
             _corrupted = true;
 
-            throw std::runtime_error(std::string() + "Exception at CsvFileIO::read(): " + exception.what());
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::CsvFileIO::read()",
+                exception.what()
+            );
+
+            return "";
         }
     }
 
-    bool CsvFileIO::write(const std::string& content)
+    bool CsvFileIO::write(
+        const std::string& content
+    )
     {
         try
         {
@@ -373,7 +666,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at CsvFileIO::write(): " + exception.what());
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::CsvFileIO::write()",
+                exception.what()
+            );
+
+            return false;
         }
     }
 
@@ -417,7 +715,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at CsvFileIO::write(): " + exception.what());
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::CsvFileIO::write()",
+                exception.what()
+            );
+
+            return false;
         }
     }
 
@@ -441,7 +744,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at CsvFileIO::append(): " + exception.what());
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::CsvFileIO::append()",
+                exception.what()
+            );
+
+            return false;
         }
     }
 
@@ -455,7 +763,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at CsvFileIO::set_delimiter(): " + exception.what());
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::CsvFileIO::set_delimiter()",
+                exception.what()
+            );
         }
     }
 
@@ -469,7 +780,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at CsvFileIO::set_quote_character(): " + exception.what());
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::CsvFileIO::set_quote_character()",
+                exception.what()
+            );
         }
     }
 
@@ -485,7 +799,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at CsvFileIO::set_label_params(): " + exception.what());
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::CsvFileIO::set_label_params()",
+                exception.what()
+            );
         }
     }
 
@@ -508,7 +825,12 @@ namespace QLogicaeCore
         {
             _corrupted = true;
 
-            throw std::runtime_error(std::string() + "Exception at CsvFileIO::validate_headers(): " + exception.what());
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::CsvFileIO::validate_headers()",
+                exception.what()
+            );
+
+            return false;
         }
     }
 
@@ -531,6 +853,11 @@ namespace QLogicaeCore
         }
         catch (...)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::CsvFileIO::is_valid_index()",
+                "Index is not valid"
+            );
+     
             return false;
         }
     }
@@ -561,7 +888,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at CsvFileIO::get_row_as_map(): " + exception.what());
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::CsvFileIO::get_row_as_map()",
+                exception.what()
+            );
+
+            return {};
         }
     }
 
@@ -605,7 +937,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at CsvFileIO::get_all_rows_as_map(): " + exception.what());
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::CsvFileIO::get_all_rows_as_map()",
+                exception.what()
+            );
+
+            return {};
         }
     }
 
@@ -619,6 +956,11 @@ namespace QLogicaeCore
         }
         catch (...)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::CsvFileIO::is_corrupted()",
+                "File is corrupted"
+            );
+
             return false;
         }
     }
@@ -665,7 +1007,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at CsvFileIO::export_to_json(): " + exception.what());
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::CsvFileIO::export_to_json()",
+                exception.what()
+            );
+
+            return "";
         }
     }
 
@@ -727,7 +1074,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at CsvFileIO::import_from_json(): " + exception.what());
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::CsvFileIO::import_from_json()",
+                exception.what()
+            );
+
+            return false;
         }
     }
 
@@ -750,6 +1102,11 @@ namespace QLogicaeCore
         }
         catch (...)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::CsvFileIO::has_column()",
+                "File does not contain the specified column"
+            );
+
             return false;
         }
     }
@@ -771,6 +1128,11 @@ namespace QLogicaeCore
         }
         catch (...)
         {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::CsvFileIO::has_row()",
+                "File does not contain the specified row"
+            );
+
             return false;
         }
     }
@@ -799,7 +1161,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at CsvFileIO::remove_row(): " + exception.what());
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::CsvFileIO::remove_row()",
+                exception.what()
+            );
+
+            return false;
         }
     }
 
@@ -828,7 +1195,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at CsvFileIO::insert_row(): " + exception.what());
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::CsvFileIO::insert_row()",
+                exception.what()
+            );
+
+            return false;
         }
     }
 
@@ -861,7 +1233,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at CsvFileIO::update_row(): " + exception.what());
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::CsvFileIO::update_row()",
+                exception.what()
+            );
+
+            return false;
         }
     }
 
@@ -883,7 +1260,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at CsvFileIO::remove_column(): " + exception.what());
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::CsvFileIO::remove_column()",
+                exception.what()
+            );
+
+            return false;
         }
     }
 
@@ -911,7 +1293,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at CsvFileIO::update_column(): " + exception.what());
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::CsvFileIO::update_column()",
+                exception.what()
+            );
+
+            return false;
         }
     }
 
@@ -941,7 +1328,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at CsvFileIO::update_cell(): " + exception.what());
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::CsvFileIO::update_cell()",
+                exception.what()
+            );
+
+            return false;
         }
     }
 
@@ -975,7 +1367,12 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(std::string() + "Exception at CsvFileIO::insert_column(): " + exception.what());
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::CsvFileIO::insert_column()",
+                exception.what()
+            );
+
+            return false;
         }
     }
 
@@ -983,137 +1380,353 @@ namespace QLogicaeCore
         const std::string& content
     )
     {
-        return std::async(std::launch::async, [this, content]()
-        {
-            return this->append(content);
-        });
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, content,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    append(
+                        content
+                    )
+                );
+            }
+        );
+
+        return future;
     }
 
     std::future<size_t> CsvFileIO::get_row_count_async()
     {
-        return std::async(std::launch::async, [this]()
-        {
-            return this->get_row_count();
-        });
+        std::promise<size_t> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    get_row_count()
+                );
+            }
+        );
+
+        return future;
     }
 
     std::future<size_t> CsvFileIO::get_column_count_async()
     {
-        return std::async(std::launch::async, [this]()
-        {
-            return this->get_column_count();
-        });
+        std::promise<size_t> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    get_column_count()
+                );
+            }
+        );
+
+        return future;
     }
 
     std::future<std::vector<std::string>> CsvFileIO::get_headers_async()
     {
-        return std::async(std::launch::async, [this]()
-        {
-            return this->get_headers();
-        });
+        std::promise<std::vector<std::string>> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    get_headers()
+                );
+            }
+        );
+
+        return future;
     }
 
     std::future<std::string> CsvFileIO::get_row_async(
-        const unsigned int& row)
+        const unsigned int& row
+    )
     {
-        return std::async(std::launch::async, [this, row]()
-        {
-            return this->get_row(row);
-        });
+        std::promise<std::string> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, row,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    get_row(
+                        row
+                    )
+                );
+            }
+        );
+
+        return future;
     }
 
     std::future<bool> CsvFileIO::is_header_found_async(
-        const std::string& header)
+        const std::string& header
+    )
     {
-        return std::async(std::launch::async, [this, header]()
-        {
-            return this->is_header_found(header);
-        });
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, header,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    is_header_found(
+                        header
+                    )
+                );
+            }
+        );
+
+        return future;
     }
 
     std::future<std::string> CsvFileIO::get_column_async(
-        const std::string& header)
+        const std::string& header
+    )
     {
-        return std::async(std::launch::async, [this, header]()
-        {
-            return this->get_column(header);
-        });
+        std::promise<std::string> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, header,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    get_column(
+                        header
+                    )
+                );
+            }
+        );
+
+        return future;
     }
 
     std::future<std::string> CsvFileIO::get_cell_async(
-        const std::string& header, const unsigned int& row)
+        const std::string& header,
+        const unsigned int& row
+    )
     {
-        return std::async(std::launch::async, [this, header, row]()
-        {
-            return this->get_cell(header, row);
-        });
+        std::promise<std::string> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, header, row,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    get_cell(
+                        header,
+                        row
+                    )
+                );
+            }
+        );
+
+        return future;
     }
 
     std::future<bool> CsvFileIO::save_async()
     {
-        return std::async(std::launch::async, [this]()
-        {
-            return this->save();
-        });
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    save()
+                );
+            }
+        );
+
+        return future;
     }
 
     std::future<std::string> CsvFileIO::read_async()
     {
-        return std::async(std::launch::async, [this]()
-        {
-            return this->read();
-        });
+        std::promise<std::string> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    read()
+                );
+            }
+        );
+
+        return future;
     }
 
-    std::future<bool> CsvFileIO::write_async(const std::string& content)
+    std::future<bool> CsvFileIO::write_async(
+        const std::string& content
+    )
     {
-        return std::async(std::launch::async, [this, content]()
-        {
-            return this->write(content);
-        });
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, content,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    write(
+                        content
+                    )
+                );
+            }
+        );
+
+        return future;
     }
 
-    std::future<bool> CsvFileIO::remove_row_async(const unsigned int& index)
+    std::future<bool> CsvFileIO::remove_row_async(
+        const unsigned int& index
+    )
     {
-        return std::async(std::launch::async, [this, index]()
-        {
-            return this->remove_row(index);
-        });
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, index,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    remove_row(
+                        index
+                    )
+                );
+            }
+        );
+
+        return future;
     }
 
-    std::future<bool> CsvFileIO::remove_column_async(const std::string& header)
+    std::future<bool> CsvFileIO::remove_column_async(
+        const std::string& header
+    )
     {
-        return std::async(std::launch::async, [this, header]()
-        {
-            return this->remove_column(header);
-        });
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, header,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    remove_column(
+                        header
+                    )
+                );
+            }
+        );
+
+        return future;
     }
 
     std::future<bool> CsvFileIO::insert_row_async(
-        const unsigned int& index, const std::vector<std::string>& row)
+        const unsigned int& index,
+        const std::vector<std::string>& row
+    )
     {
-        return std::async(std::launch::async, [this, index, row]()
-        {
-            return this->insert_row(index, row);
-        });
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, index, row,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    insert_row(
+                        index, row
+                    )
+                );
+            }
+        );
+
+        return future;
     }
 
     std::future<bool> CsvFileIO::update_row_async(
-        const unsigned int& index, const std::vector<std::string>& row)
+        const unsigned int& index,
+        const std::vector<std::string>& row
+    )
     {
-        return std::async(std::launch::async, [this, index, row]()
-        {
-            return this->update_row(index, row);
-        });
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, index, row,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    update_row(
+                        index, row
+                    )
+                );
+            }
+        );
+
+        return future;
     }
 
     std::future<bool> CsvFileIO::update_column_async(
-        const std::string& row, const std::vector<std::string>& column)
+        const std::string& row,
+        const std::vector<std::string>& column
+    )
     {
-        return std::async(std::launch::async, [this, row, column]()
-        {
-            return this->update_column(row, column);
-        });
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, row, column,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    update_column(
+                        row, column
+                    )
+                );
+            }
+        );
+
+        return future;
     }
 
     std::future<bool> CsvFileIO::update_cell_async(
@@ -1122,10 +1735,23 @@ namespace QLogicaeCore
         const std::string& value
     )
     {
-        return std::async(std::launch::async, [this, column, row_index, value]()
-        {
-            return this->update_cell(column, row_index, value);
-        });
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, column, row_index, value,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    update_cell(
+                        column, row_index, value
+                    )
+                );
+            }
+        );
+
+        return future;
     }
 
     std::future<bool> CsvFileIO::insert_column_async(
@@ -1134,62 +1760,144 @@ namespace QLogicaeCore
         const std::string& column
     )
     {
-        return std::async(std::launch::async, [this, index, values, column]()
-        {
-            return this->insert_column(index, values, column);
-        });
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, index, values, column,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    insert_column(index, values, column)
+                );
+            }
+        );
+
+        return future;
     }
 
     std::future<bool> QLogicaeCore::CsvFileIO::open_async()
     {
-        return std::async(std::launch::async, [this]()
-        {
-            return this->open();
-        });
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    open()
+                );
+            }
+        );
+
+        return future;
     }
 
     std::future<bool> QLogicaeCore::CsvFileIO::close_async()
     {
-        return std::async(std::launch::async, [this]()
-        {
-            return this->close();
-        });
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    close()
+                );
+            }
+        );
+
+        return future;
     }
 
     std::future<std::map<std::string, std::string>> QLogicaeCore::CsvFileIO
-        ::get_row_as_map_async(const unsigned int& index)
+        ::get_row_as_map_async(const unsigned int& index
+    )
     {
-        return std::async(std::launch::async, [this, index]()
-        {
-            return this->get_row_as_map(index);
-        });
+        std::promise<std::map<std::string, std::string>> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, index,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    get_row_as_map(
+                        index
+                    )
+                );
+            }
+        );
+
+        return future;
     }
 
     std::future<std::vector<std::map<std::string, std::string>>>
         QLogicaeCore::CsvFileIO::get_all_rows_as_map_async()
     {
-        return std::async(std::launch::async, [this]()
-        {
-            return this->get_all_rows_as_map();
-        });
+        std::promise<std::vector<std::map<std::string, std::string>>> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    get_all_rows_as_map()
+                );
+            }
+        );
+
+        return future;
     }
 
     std::future<std::string> QLogicaeCore::CsvFileIO::export_to_json_async()
     {
-        return std::async(std::launch::async, [this]()
-        {
-            return this->export_to_json();
-        });
+        std::promise<std::string> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    export_to_json()
+                );
+            }
+        );
+
+        return future;
     }
 
     std::future<bool> QLogicaeCore::CsvFileIO::import_from_json_async(
         const std::string& json
     )
     {
-        return std::async(std::launch::async, [this, json]()
-        {
-            return this->import_from_json(json);
-        });
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, json,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    import_from_json(
+                        json
+                    )
+                );
+            }
+        );
+
+        return future;
     }
 
     void CsvFileIO::setup(
@@ -1212,6 +1920,136 @@ namespace QLogicaeCore
         _file_path = file_path;
 
         result.set_to_good_status_without_value();
+    }
+
+    bool CsvFileIO::terminate()
+    {
+        try
+        {
+            Result<void> result;
+
+            terminate(
+                result
+            );
+
+            return result.is_status_safe();
+        }
+        catch (const std::exception& exception)
+        {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::CsvFileIO::terminate()",
+                exception.what()
+            );
+
+            return false;
+        }
+    }
+
+    void CsvFileIO::terminate(
+        Result<void>& result
+    )
+    {        
+        result.set_to_good_status_without_value();
+    }
+
+    std::future<bool> CsvFileIO::terminate_async()
+    {
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    terminate()
+                );
+            }
+        );
+
+        return future;
+    }
+
+    void CsvFileIO::terminate_async(
+        Result<std::future<void>>& result
+    )
+    {
+        std::promise<void> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this,
+            promise = std::move(promise)]() mutable
+            {
+                Result<void> result;
+
+                terminate(
+                    result
+                );
+
+                promise.set_value();
+            }
+        );
+
+        result.set_to_good_status_with_value(
+            std::move(future)
+        );
+    }
+
+    void CsvFileIO::terminate_async(
+        const std::function<void(const bool& result)>& callback
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, callback]() mutable
+            {
+                callback(
+                    terminate()
+                );
+            }
+        );
+    }
+
+    void CsvFileIO::terminate_async(
+        const std::function<void(Result<void>& result)>& callback
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, callback]() mutable
+            {
+                Result<void> result;
+
+                terminate(
+                    result
+                );
+
+                callback(
+                    result
+                );
+            }
+        );
+    }
+
+    CsvFileIO& CsvFileIO::get_instance()
+    {
+        static CsvFileIO instance;
+
+        return instance;
+    }
+
+    void CsvFileIO::get_instance(
+        Result<CsvFileIO*>& result
+    )
+    {
+        static CsvFileIO instance;
+
+        result.set_to_good_status_with_value(
+            &instance
+        );
     }
 }
 

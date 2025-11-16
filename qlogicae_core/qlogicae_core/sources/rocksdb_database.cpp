@@ -1307,13 +1307,118 @@ namespace QLogicaeCore
         );
     }
 
+    void RocksDBDatabase::remove_value_async(
+        const std::function<void(const bool& result)>& callback,
+        const std::string& key
+    )
+    {
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, key, callback, promise = std::move(promise)]() mutable
+            {
+                bool result_value = remove_value(
+                    key
+                );
+
+                promise.set_value(
+                    result_value
+                );
+
+                callback(
+                    result_value
+                );
+            }
+        );
+    }
+
+    void RocksDBDatabase::batch_execute_async(
+        const std::function<void(const bool& result)>& callback
+    )
+    {
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, callback, promise = std::move(promise)]() mutable
+            {
+                bool result_value = batch_execute();
+
+                promise.set_value(
+                    result_value
+                );
+
+                callback(
+                    result_value
+                );
+            }
+        );
+    }
+
+    void RocksDBDatabase::remove_value_async(
+        const std::function<void(Result<bool>& result)>& callback,
+        const std::string& key
+    )
+    {
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, key, callback, promise = std::move(promise)]() mutable
+            {
+                Result<bool> result;
+
+                remove_value(result, key);
+
+                promise.set_value(
+                    result.get_value()
+                );
+
+                callback(
+                    result
+                );
+            }
+        );
+    }
+
+    void RocksDBDatabase::batch_execute_async(
+        const std::function<void(Result<bool>& result)>& callback
+    )
+    {
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, callback, promise = std::move(promise)]() mutable
+            {
+                Result<bool> result;
+
+                batch_execute(result);
+
+                promise.set_value(
+                    result.get_value()
+                );
+
+                callback(
+                    result
+                );
+            }
+        );
+    }
+
+
     bool RocksDBDatabase::terminate()
     {
         try
         {
             Result<void> result;
 
-            setup(
+            terminate(
                 result
             );
 
@@ -1350,7 +1455,7 @@ namespace QLogicaeCore
             promise = std::move(promise)]() mutable
             {
                 promise.set_value(
-                    setup()
+                    terminate()
                 );
             }
         );
@@ -1372,7 +1477,7 @@ namespace QLogicaeCore
             {
                 Result<void> result;
 
-                setup(
+                terminate(
                     result
                 );
 
@@ -1394,7 +1499,7 @@ namespace QLogicaeCore
             [this, callback]() mutable
             {
                 callback(
-                    setup()
+                    terminate()
                 );
             }
         );
@@ -1410,7 +1515,7 @@ namespace QLogicaeCore
             {
                 Result<void> result;
 
-                setup(
+                terminate(
                     result
                 );
 

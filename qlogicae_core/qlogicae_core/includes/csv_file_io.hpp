@@ -1,6 +1,7 @@
 #pragma once
 
 #include "result.hpp"
+#include "logger.hpp"
 #include "abstract_file_io.hpp"
 
 #include <rapidcsv.h>
@@ -15,9 +16,9 @@ namespace QLogicaeCore
         public AbstractFileIO
     {
     public:
-        ~CsvFileIO();
+        CsvFileIO();
 
-        CsvFileIO() = default;
+        ~CsvFileIO();
 
         CsvFileIO(
             const std::string& file_path
@@ -45,8 +46,6 @@ namespace QLogicaeCore
             const std::string& file_path
         );
 
-
-
         void setup(
             Result<void>& result,
             const std::string& file_path
@@ -58,7 +57,47 @@ namespace QLogicaeCore
             const std::string& file_path
         );
 
+        std::future<bool> setup_async(
+            const std::string& name
+        );
 
+        void setup_async(
+            const std::function<void(const bool& result)>& callback,
+            const std::string& name
+        );
+
+        void setup_async(
+            Result<std::future<void>>& result,
+            const std::string& name
+        );
+
+        void setup_async(
+            const std::function<void(Result<void>& result)>& callback,
+            const std::string& name
+        );
+
+        std::future<bool> setup_async(
+            const std::string& name,
+            const std::string& file_path
+        );
+
+        void setup_async(
+            const std::function<void(const bool& result)>& callback,
+            const std::string& name,
+            const std::string& file_path
+        );
+
+        void setup_async(
+            Result<std::future<void>>& result,
+            const std::string& name,
+            const std::string& file_path
+        );
+
+        void setup_async(
+            const std::function<void(Result<void>& result)>& callback,
+            const std::string& name,
+            const std::string& file_path
+        );
 
         bool is_corrupted();
 
@@ -276,6 +315,26 @@ namespace QLogicaeCore
             const std::string& values
         );
 
+        bool terminate();
+
+        void terminate(
+            Result<void>& result
+        );
+
+        std::future<bool> terminate_async();
+
+        void terminate_async(
+            const std::function<void(const bool& result)>& callback
+        );
+
+        void terminate_async(
+            Result<std::future<void>>& result
+        );
+
+        void terminate_async(
+            const std::function<void(Result<void>& result)>& callback
+        );
+
         static CsvFileIO& get_instance();
 
         static void get_instance(
@@ -287,7 +346,7 @@ namespace QLogicaeCore
         
         std::recursive_mutex _mutex;
         
-        rapidcsv::LabelParams _label_params{ 0, -1 };
+        rapidcsv::LabelParams _label_params { 0, -1 };
         
         rapidcsv::SeparatorParams _separator_params{ ',' };
 
