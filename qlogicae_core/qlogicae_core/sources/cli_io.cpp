@@ -466,9 +466,11 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, callback, promise = std::move(promise)]() mutable
+			[this, callback, text, promise = std::move(promise)]() mutable
 			{
-				print_with_new_line();
+				print_with_new_line(
+					text
+				);
 
 				promise.set_value();
 
@@ -493,11 +495,14 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, callback, promise = std::move(promise)]() mutable
+			[this, callback, text, promise = std::move(promise)]() mutable
 			{
 				Result<void> result;
 
-				print_with_new_line(result);
+				print_with_new_line(
+					result,
+					text
+				);
 
 				promise.set_value();
 
@@ -524,9 +529,11 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, callback, promise = std::move(promise)]() mutable
+			[this, callback, text, promise = std::move(promise)]() mutable
 			{
-				builtin_print_with_new_line();
+				builtin_print_with_new_line(
+					text
+				);
 
 				promise.set_value();
 
@@ -551,11 +558,14 @@ namespace QLogicaeCore
 
 		boost::asio::post(
 			UTILITIES.BOOST_ASIO_POOL,
-			[this, callback, promise = std::move(promise)]() mutable
+			[this, callback, text, promise = std::move(promise)]() mutable
 			{
 				Result<void> result;
 
-				builtin_print_with_new_line(result);
+				builtin_print_with_new_line(
+					result,
+					text
+				);
 
 				promise.set_value();
 
