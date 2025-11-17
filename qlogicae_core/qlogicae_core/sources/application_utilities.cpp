@@ -7,7 +7,7 @@ namespace QLogicaeCore
     ApplicationUtilities::ApplicationUtilities() :
         AbstractApplication()
     {
-        CONFIGURATIONS_ENVIRONMENT_LOG =
+        CONFIGURATIONS_ENVIRONMENT_LOGGER =
             DEFAULT_LOGGER_CONFIGURATIONS;
     }
 
@@ -145,106 +145,106 @@ namespace QLogicaeCore
 
 
 
-            CONFIGURATIONS_ENVIRONMENT_LOG.name = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_string(
+            CONFIGURATIONS_ENVIRONMENT_LOGGER.name = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_string(
                 {
-                    "log", "name"
+                    "logger", "name"
                 }
             );
 
             string_output = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_string(
                 {
-                    "log", "format"
+                    "logger", "format"
                 }
             );
 
-            CONFIGURATIONS_ENVIRONMENT_LOG.format = UTILITIES.TIME_FORMAT_STRINGS_1.at(
+            CONFIGURATIONS_ENVIRONMENT_LOGGER.format = UTILITIES.TIME_FORMAT_STRINGS_1.at(
                 UTILITIES.TIME_FORMAT_STRINGS_1.contains(string_output) ? string_output : UTILITIES.TIME_FORMAT_FULL_TIMESTAMP_1
             );
 
-            CONFIGURATIONS_ENVIRONMENT_LOG.is_enabled = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_bool(
+            CONFIGURATIONS_ENVIRONMENT_LOGGER.is_enabled = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_bool(
                 {
-                    "log", "is_enabled"
+                    "logger", "is_enabled"
                 }
             );
 
-            CONFIGURATIONS_ENVIRONMENT_LOG.is_format_enabled = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_bool(
+            CONFIGURATIONS_ENVIRONMENT_LOGGER.is_format_enabled = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_bool(
                 {
-                    "log", "is_format_enabled"
+                    "logger", "is_format_enabled"
                 }
             );
 
-            CONFIGURATIONS_ENVIRONMENT_LOG.is_console_enabled = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_bool(
+            CONFIGURATIONS_ENVIRONMENT_LOGGER.is_console_enabled = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_bool(
                 {
-                    "log", "console", "is_enabled"
+                    "logger", "console", "is_enabled"
                 }
             );
 
-            CONFIGURATIONS_ENVIRONMENT_LOG.is_format_enabled = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_bool(
+            CONFIGURATIONS_ENVIRONMENT_LOGGER.is_format_enabled = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_bool(
                 {
-                    "log", "console", "is_format_enabled"
+                    "logger", "console", "is_format_enabled"
                 }
             );
 
-            CONFIGURATIONS_ENVIRONMENT_LOG.is_file_enabled = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_bool(
+            CONFIGURATIONS_ENVIRONMENT_LOGGER.is_file_enabled = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_bool(
                 {
-                    "log", "file", "is_enabled"
+                    "logger", "file", "is_enabled"
                 }
             );
 
-            CONFIGURATIONS_ENVIRONMENT_LOG.is_file_format_enabled = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_bool(
+            CONFIGURATIONS_ENVIRONMENT_LOGGER.is_file_format_enabled = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_bool(
                 {
-                    "log", "file", "is_format_enabled"
+                    "logger", "file", "is_format_enabled"
                 }
             );
 
-            CONFIGURATIONS_ENVIRONMENT_LOG.is_file_collectivization_enabled = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_bool(
+            CONFIGURATIONS_ENVIRONMENT_LOGGER.is_file_collectivization_enabled = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_bool(
                 {
-                    "log", "file", "collectivization", "is_enabled"
+                    "logger", "file", "collectivization", "is_enabled"
                 }
             );
 
-            CONFIGURATIONS_ENVIRONMENT_LOG.is_file_collectivization_format_enabled = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_bool(
+            CONFIGURATIONS_ENVIRONMENT_LOGGER.is_file_collectivization_format_enabled = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_bool(
                 {
-                    "log", "file", "collectivization", "is_format_enabled"
+                    "logger", "file", "collectivization", "is_format_enabled"
                 }
             );
 
-            CONFIGURATIONS_ENVIRONMENT_LOG.file_collectivization_file_name = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_string(
+            CONFIGURATIONS_ENVIRONMENT_LOGGER.file_collectivization_file_name = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_string(
                 {
-                    "log", "file", "collectivization", "file_name"
+                    "logger", "file", "collectivization", "file_name"
                 }
             );
 
-            CONFIGURATIONS_ENVIRONMENT_LOG.is_file_fragmentation_enabled = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_bool(
+            CONFIGURATIONS_ENVIRONMENT_LOGGER.is_file_fragmentation_enabled = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_bool(
                 {
-                    "log", "file", "fragmentation", "is_enabled"
+                    "logger", "file", "fragmentation", "is_enabled"
                 }
             );
 
-            CONFIGURATIONS_ENVIRONMENT_LOG.is_file_fragmentation_format_enabled = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_bool(
+            CONFIGURATIONS_ENVIRONMENT_LOGGER.is_file_fragmentation_format_enabled = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_bool(
                 {
-                    "log", "file", "fragmentation", "is_format_enabled"
+                    "logger", "file", "fragmentation", "is_format_enabled"
                 }
             );
 
             string_output = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_string(
                 {
-                    "log", "file", "fragmentation", "file_name_format"
+                    "logger", "file", "fragmentation", "file_name_format"
                 }
             );
-            CONFIGURATIONS_ENVIRONMENT_LOG.file_fragmentation_file_name_format = UTILITIES.TIME_FORMAT_STRINGS_1.at(
+            CONFIGURATIONS_ENVIRONMENT_LOGGER.file_fragmentation_file_name_format = UTILITIES.TIME_FORMAT_STRINGS_1.at(
                 UTILITIES.TIME_FORMAT_STRINGS_1.contains(string_output) ? string_output : UTILITIES.TIME_FORMAT_DATE_DASHED_1
             );
 
-            CONFIGURATIONS_ENVIRONMENT_LOG.is_file_custom_enabled = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_bool(
+            CONFIGURATIONS_ENVIRONMENT_LOGGER.is_file_custom_enabled = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_bool(
                 {
-                    "log", "file", "custom", "is_enabled"
+                    "logger", "file", "custom", "is_enabled"
                 }
             );
 
-            CONFIGURATIONS_ENVIRONMENT_LOG.is_file_custom_format_enabled = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_bool(
+            CONFIGURATIONS_ENVIRONMENT_LOGGER.is_file_custom_format_enabled = QLOGICAE_APPLICATION_FILE_IO.JSON_FILE_IO.get_bool(
                 {
-                    "log", "file", "custom", "is_format_enabled"
+                    "logger", "file", "custom", "is_format_enabled"
                 }
             );
 
@@ -257,19 +257,27 @@ namespace QLogicaeCore
                 "\\" + CONFIGURATIONS_APPLICATION_ID +
                 "\\" + CONFIGURATIONS_ENVIRONMENT_ID;
 
-            CONFIGURATIONS_ENVIRONMENT_LOG.file_collectivization_folder_path =
+            CONFIGURATIONS_ENVIRONMENT_LOGGER.relative_root_folder_path =
                 CONFIGURATIONS_ROAMING_APPDATA_APPLICTION_FOLDER +
                 "\\" + UTILITIES.RELATIVE_QLOGICAE_LOGS_FOLDER_PATH_1;
 
-            CONFIGURATIONS_ENVIRONMENT_LOG.file_fragmentation_folder_path =
+            CONFIGURATIONS_ENVIRONMENT_CACHES.relative_root_folder_path =
                 CONFIGURATIONS_ROAMING_APPDATA_APPLICTION_FOLDER +
-                "\\" + UTILITIES.RELATIVE_QLOGICAE_LOGS_FOLDER_PATH_1 +
+                "\\" + UTILITIES.RELATIVE_QLOGICAE_CACHES_FOLDER_PATH_1;
+
+
+
+            CONFIGURATIONS_ENVIRONMENT_LOGGER.file_collectivization_folder_path =
+                CONFIGURATIONS_ENVIRONMENT_LOGGER.relative_root_folder_path;
+
+            CONFIGURATIONS_ENVIRONMENT_LOGGER.file_fragmentation_folder_path =
+                CONFIGURATIONS_ENVIRONMENT_LOGGER.relative_root_folder_path +
                 "\\" + UTILITIES.RELATIVE_QLOGICAE_LOGS_FRAGMENTS_FOLDER_PATH_1;
 
-            CONFIGURATIONS_ENVIRONMENT_LOG.file_custom_output_paths = {};
+            CONFIGURATIONS_ENVIRONMENT_LOGGER.file_custom_output_paths = {};
             for (const auto& output_path : log_file_output_paths)
             {
-                CONFIGURATIONS_ENVIRONMENT_LOG.file_custom_output_paths.push_back(
+                CONFIGURATIONS_ENVIRONMENT_LOGGER.file_custom_output_paths.push_back(
                     std::any_cast<std::string>(output_path)
                 );
             }
@@ -279,29 +287,26 @@ namespace QLogicaeCore
             );
 
             std::filesystem::create_directories(
-                CONFIGURATIONS_ENVIRONMENT_LOG.file_collectivization_folder_path
+                CONFIGURATIONS_ENVIRONMENT_LOGGER.file_collectivization_folder_path
             );
 
             std::filesystem::create_directories(
-                CONFIGURATIONS_ENVIRONMENT_LOG.file_fragmentation_folder_path
+                CONFIGURATIONS_ENVIRONMENT_LOGGER.file_fragmentation_folder_path
             );
 
 
 
-            CONFIGURATIONS_ENVIRONMENT_CACHE.relative_root_folder_path =
-                CONFIGURATIONS_ROAMING_APPDATA_APPLICTION_FOLDER +
-                "\\" + "caches";
-
-            CONFIGURATIONS_ENVIRONMENT_CACHE.relative_main_folder_path =
-                CONFIGURATIONS_ENVIRONMENT_CACHE.relative_root_folder_path +
-                "\\" + "main";
+            
+            CONFIGURATIONS_ENVIRONMENT_CACHES.relative_main_folder_path =
+                CONFIGURATIONS_ENVIRONMENT_CACHES.relative_root_folder_path +
+                "\\" + UTILITIES.RELATIVE_QLOGICAE_CACHES_MAIN_FOLDER_PATH_1;
 
             std::filesystem::create_directories(
-                CONFIGURATIONS_ENVIRONMENT_CACHE.relative_root_folder_path
+                CONFIGURATIONS_ENVIRONMENT_CACHES.relative_root_folder_path
             );
 
             std::filesystem::create_directories(
-                CONFIGURATIONS_ENVIRONMENT_CACHE.relative_main_folder_path
+                CONFIGURATIONS_ENVIRONMENT_CACHES.relative_main_folder_path
             );
 
             set_is_enabled(true);

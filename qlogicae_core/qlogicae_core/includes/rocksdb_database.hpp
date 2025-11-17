@@ -337,6 +337,28 @@ namespace QLogicaeCore
             const std::function<void(Result<bool>& result)>& callback
         );
 
+        bool clear();
+
+        void clear(
+            Result<void>& result
+        );
+
+        std::future<bool> clear_async();
+
+        void clear_async(
+            const std::function<void(const bool& result)>& callback
+        );
+
+        void clear_async(
+            Result<std::future<void>>& result
+        );
+
+        void clear_async(
+            const std::function<void(Result<void>& result)>& callback
+        );
+        
+
+
         template <typename Type>
         std::future<Type> get_value_async(
             const std::string&
@@ -401,6 +423,12 @@ namespace QLogicaeCore
             const std::function<void(Result<void>& result)>& callback
         );
 
+        void open_db();
+
+        void close_db();
+
+        void setup_db();
+
         static RocksDBDatabase& get_instance();
 
         static void get_instance(
@@ -441,12 +469,6 @@ namespace QLogicaeCore
         std::unique_ptr<const rocksdb::FilterPolicy> _bloom_filter;
 
         std::unordered_map<std::string, rocksdb::ColumnFamilyHandle*> _column_families;
-
-        void open_db();
-        
-        void close_db();
-        
-        void setup_db();
 
         rocksdb::ColumnFamilyHandle* get_cf_handle(const std::string& name);
 

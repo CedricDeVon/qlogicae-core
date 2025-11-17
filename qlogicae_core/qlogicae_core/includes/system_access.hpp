@@ -4,6 +4,9 @@
 #include "logger.hpp"
 #include "encoder.hpp"
 
+#include <windows.h>
+#include <filesystem>
+
 namespace QLogicaeCore
 {
     class SystemAccess
@@ -103,6 +106,15 @@ namespace QLogicaeCore
 
         void get_roaming_appdata_folder_path(
             Result<std::string>& result
+        );
+
+        bool clear_files(
+            const std::string& root_path
+        );
+
+        void clear_files(
+            Result<void>& result,
+            const std::string& root_path
         );
 
         static SystemAccess& get_instance();

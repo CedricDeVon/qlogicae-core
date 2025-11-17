@@ -48,7 +48,7 @@ namespace QLogicaeCore
 
             QLOGICAE_APPLICATION_LOGGER.setup(
                 result,
-                QLOGICAE_APPLICATION_UTILITIES.CONFIGURATIONS_ENVIRONMENT_LOG
+                QLOGICAE_APPLICATION_UTILITIES.CONFIGURATIONS_ENVIRONMENT_LOGGER
             );
             if (result.is_status_unsafe())
             {

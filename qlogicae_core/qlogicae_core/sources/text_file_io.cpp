@@ -56,11 +56,10 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception(
+            LOGGER.handle_exception_async(
                 "QLogicaeCore::TextFileIO::setup()",
                 exception.what()
             );
-
         }
     }
 
@@ -89,7 +88,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception(
+            LOGGER.handle_exception_async(
                 "QLogicaeCore::TextFileIO::setup()",
                 exception.what()
             );
@@ -127,7 +126,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception(
+            LOGGER.handle_exception_async(
                 "QLogicaeCore::TextFileIO::open()",
                 exception.what()
             );
@@ -211,7 +210,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception(
+            LOGGER.handle_exception_async(
                 "QLogicaeCore::TextFileIO::close()",
                 exception.what()
             );
@@ -286,7 +285,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception(
+            LOGGER.handle_exception_async(
                 "QLogicaeCore::TextFileIO::is_open()",
                 exception.what()
             );
@@ -345,7 +344,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception(
+            LOGGER.handle_exception_async(
                 "QLogicaeCore::TextFileIO::read()",
                 exception.what()
             );
@@ -396,7 +395,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception(
+            LOGGER.handle_exception_async(
                 "QLogicaeCore::TextFileIO::write()",
                 exception.what()
             );
@@ -450,7 +449,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception(
+            LOGGER.handle_exception_async(
                 "QLogicaeCore::TextFileIO::open()",
                 exception.what()
             );

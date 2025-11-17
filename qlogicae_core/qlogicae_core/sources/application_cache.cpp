@@ -55,7 +55,7 @@ namespace QLogicaeCore
             }
 
             ROCKSDB_DATABASE.setup(
-                QLOGICAE_APPLICATION_UTILITIES.CONFIGURATIONS_ENVIRONMENT_CACHE.relative_main_folder_path,
+                QLOGICAE_APPLICATION_UTILITIES.CONFIGURATIONS_ENVIRONMENT_CACHES.relative_main_folder_path,
                 {}
             );
 

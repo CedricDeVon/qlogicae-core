@@ -63,9 +63,8 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(
-                std::string() +
-                "Exception at Temperature::convert(): " +
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Temperature::convert()",
                 exception.what()
             );
         }

@@ -1126,6 +1126,36 @@ namespace QLogicaeCore
             { RESULT_STATUS_ERROR_STRING_3, ResultStatus::ERROR_ }
         };
 
+        const std::vector<std::string> VISUAL_STUDIO_2022_BUILD_ARCHITECTURE_TYPES =
+        {
+            "x64", "x86"
+        };
+
+        const std::vector<std::string> VISUAL_STUDIO_2022_BUILD_TYPES =
+        {
+            "Release", "Debug"
+        };
+
+        const std::vector<std::string> WINDOWS_REGISTRY_ROOT_PATH =
+        {
+            "hkcu", "hklm"
+        };
+
+        const std::vector<std::string> ENVIRONMENT_VARIABLE_TYPES =
+        {
+            "user", "system"
+        };
+
+        const std::vector<std::string> IDE_TYPES =
+        {
+            "vs2022"
+        };
+
+        const std::vector<std::string> INSTALLER_TYPES =
+        {
+            "inno-setup"
+        };
+
         const std::string DEFAULT_BOOST_INTERPROCESS_CACHE =
             "BoostInterprocessCache";
 
@@ -1159,6 +1189,24 @@ namespace QLogicaeCore
         const std::string RELATIVE_QLOGICAE_LOGS_FOLDER_PATH_3 =
             "Logs";
         
+        const std::string RELATIVE_QLOGICAE_CACHES_FOLDER_PATH_1 =
+            "caches";
+
+        const std::string RELATIVE_QLOGICAE_CACHES_FOLDER_PATH_2 =
+            "CACHES";
+
+        const std::string RELATIVE_QLOGICAE_CACHES_FOLDER_PATH_3 =
+            "Caches";
+
+        const std::string RELATIVE_QLOGICAE_CACHES_MAIN_FOLDER_PATH_1 =
+            "main";
+
+        const std::string RELATIVE_QLOGICAE_CACHES_MAIN_FOLDER_PATH_2 =
+            "MAIN";
+
+        const std::string RELATIVE_QLOGICAE_CACHES_MAIN_FOLDER_PATH_3 =
+            "Main";
+
         const std::string RELATIVE_QLOGICAE_LOGS_FRAGMENTS_FOLDER_PATH_1 =
             "fragments";
 
@@ -1171,20 +1219,11 @@ namespace QLogicaeCore
         const std::string RELATIVE_QLOGICAE_ALL_LOGS_FILE_PATH =
             "all.log";
 
-		const std::string RELATIVE_APPLICATION_FOLDER_PATH =
-			"application";
-
-		const std::string RELATIVE_CONFIGURATIONS_FOLDER_PATH =
-			"configurations";
-
 		const std::string RELATIVE_ASSETS_FOLDER_PATH =
 			"assets";
 
 		const std::string RELATIVE_DOCUMENTATION_FOLDER_PATH =
 			"documentation";
-
-		const std::string RELATIVE_QLOGICAE_FILE_PATH =
-			"qlogicae.json";
 
 		const std::string RELATIVE_ENVIRONMENT_FILE_PATH =
 			"environment.json";
@@ -1192,11 +1231,81 @@ namespace QLogicaeCore
 		const std::string RELATIVE_LICENSE_FILE_PATH =
 			"LICENSE.txt";
 
-		const std::string RELATIVE_APPLICATION_ICON_FILE_PATH =
-			"application.ico";
+        const std::string RELATIVE_APPLICATION_FOLDER_PATH =
+            "application";
+
+        const std::string RELATIVE_APPLICATION_ICON_FILE_PATH =
+            "application.ico";
+
+        const std::string RELATIVE_QLOGICAE_FILE_PATH =
+            "qlogicae.json";
+
+        const std::string RELATIVE_CONFIGURATIONS_FOLDER_PATH =
+            "configurations";
+
+        const std::string RELATIVE_INNO_SETUP_FILE_PATH =
+            "setup.iss";
+
+        const std::string RELATIVE_INNO_SETUP_TARGET_POWERSHELL_FILE_PATH =
+            "target.ps1";
+
+        const std::string RELATIVE_INNO_SETUP_TARGET_FILE_PATH =
+            "target.iss";
+
+        const std::string RELATIVE_DEFAULT_OUTPUT_FILE_PATH =
+            "output.txt";
+
+        const std::string RELATIVE_DEFAULT_FOLDER_PATH =
+            "default";
+
+        const std::string RELATIVE_DEVELOPMENT_FOLDER_PATH =
+            "development";
+
+        const std::string RELATIVE_DEBUG_FOLDER_PATH =
+            "debug";
+
+        const std::string RELATIVE_TEST_FOLDER_PATH =
+            "test";
+
+        const std::string RELATIVE_RELEASE_FOLDER_PATH =
+            "release";
+
+        const std::string RELATIVE_INNO_SETUP_RUN_POWERSHELL_FILE_PATH =
+            "run.ps1";
+
+        const std::string RELATIVE_BUILD_FOLDER_PATH =
+            "build";
+
+        const std::string RELATIVE_SETUP_FOLDER_PATH =
+            "setup";
+
+        std::string RELATIVE_ENVIRONMENT_VARIABLES_FOLDER_PATH =
+            "environment_variables";
+
+        std::string RELATIVE_SYSTEM_FOLDER_PATH =
+            "system";
+
+        std::string RELATIVE_USER_FOLDER_PATH =
+            "user";
+
+        std::string RELATIVE_INNO_SETUP_FOLDER_PATH =
+            "inno_setup";
+
+        std::string RELATIVE_SCRIPTS_FOLDER_PATH =
+            "scripts";
+
+        std::string RELATIVE_TEMPLATES_FOLDER_PATH =
+            "templates";
+
+        std::string RELATIVE_VISUAL_STUDIO_2022_PATH =
+            "visual_studio_2022";
+
+        std::string RELATIVE_WINDOWS_REGISTRY_FOLDER_PATH =
+            "windows_registry";
 
         const std::string RELATIVE_QLOGICAE_WINDOWS_REGISTRY_SUB_PATH =
             "Software\\QLogicae";
+
 
         std::string FULL_EXECUTABLE_FOLDER_PATH;
 

@@ -44,9 +44,9 @@ namespace QLogicaeCore
 
         std::string CONFIGURATIONS_ROAMING_APPDATA_APPLICTION_FOLDER;
 
-        LoggerConfigurations CONFIGURATIONS_ENVIRONMENT_LOG;
+        LoggerConfigurations CONFIGURATIONS_ENVIRONMENT_LOGGER;
 
-        CacheConfigurations CONFIGURATIONS_ENVIRONMENT_CACHE;
+        CacheConfigurations CONFIGURATIONS_ENVIRONMENT_CACHES;
 
         bool setup();
 

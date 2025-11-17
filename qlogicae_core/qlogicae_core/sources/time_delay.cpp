@@ -178,7 +178,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception(
+            LOGGER.handle_exception_async(
                 "QLogicaeCore::TimeDelay::calibrate()",
                 exception.what()
             );
@@ -220,7 +220,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception(
+            LOGGER.handle_exception_async(
                 "QLogicaeCore::TimeDelay::query_performance_counter()",
                 exception.what()
             );
@@ -261,7 +261,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception(
+            LOGGER.handle_exception_async(
                 "QLogicaeCore::TimeDelay::real_time_stamp_counter()",
                 exception.what()
             );
@@ -287,7 +287,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception(
+            LOGGER.handle_exception_async(
                 "QLogicaeCore::TimeDelay::in_nanoseconds()",
                 exception.what()
             );
@@ -335,7 +335,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception(
+            LOGGER.handle_exception_async(
                 "QLogicaeCore::TimeDelay::in_microseconds()",
                 exception.what()
             );
@@ -361,7 +361,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception(
+            LOGGER.handle_exception_async(
                 "QLogicaeCore::TimeDelay::in_milliseconds()",
                 exception.what()
             );
@@ -387,7 +387,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception(
+            LOGGER.handle_exception_async(
                 "QLogicaeCore::TimeDelay::in_seconds()",
                 exception.what()
             );
@@ -413,7 +413,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception(
+            LOGGER.handle_exception_async(
                 "QLogicaeCore::TimeDelay::in_minutes()",
                 exception.what()
             );
@@ -439,7 +439,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception(
+            LOGGER.handle_exception_async(
                 "QLogicaeCore::TimeDelay::in_hours()",
                 exception.what()
             );
@@ -465,7 +465,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception(
+            LOGGER.handle_exception_async(
                 "QLogicaeCore::TimeDelay::in_days()",
                 exception.what()
             );
@@ -491,7 +491,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception(
+            LOGGER.handle_exception_async(
                 "QLogicaeCore::TimeDelay::in_months()",
                 exception.what()
             );
@@ -517,7 +517,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception(
+            LOGGER.handle_exception_async(
                 "QLogicaeCore::TimeDelay::in_years()",
                 exception.what()
             );

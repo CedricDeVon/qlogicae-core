@@ -1,8 +1,9 @@
 #pragma once
 
 #include "result.hpp"
-#include "utilities.hpp"
+#include "logger.hpp"
 #include "encoder.hpp"
+#include "utilities.hpp"
 
 namespace QLogicaeCore
 {

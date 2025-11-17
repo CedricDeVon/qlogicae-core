@@ -45,6 +45,9 @@ namespace QLogicaeCore
 		bool is_file_collectivization_format_enabled =
 			false;
 
+		std::string relative_root_folder_path =
+			"";
+
 		std::string file_collectivization_file_name =
 			"all.log";
 

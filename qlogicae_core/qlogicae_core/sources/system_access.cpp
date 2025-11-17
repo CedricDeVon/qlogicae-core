@@ -26,7 +26,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception(
+            LOGGER.handle_exception_async(
                 "QLogicaeCore::SystemAccess::setup()",
                 exception.what()
             );
@@ -148,7 +148,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception(
+            LOGGER.handle_exception_async(
                 "QLogicaeCore::SystemAccess::has_admin_access()",
                 exception.what()
             );
@@ -217,7 +217,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception(
+            LOGGER.handle_exception_async(
                 "QLogicaeCore::SystemAccess::get_executable_dir()",
                 exception.what()
             );
@@ -238,7 +238,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception(
+            LOGGER.handle_exception_async(
                 "QLogicaeCore::SystemAccess::get_executed_folder()",
                 exception.what()
             );
@@ -259,7 +259,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception(
+            LOGGER.handle_exception_async(
                 "QLogicaeCore::SystemAccess::get_executable_folder()",
                 exception.what()
             );
@@ -303,7 +303,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception(
+            LOGGER.handle_exception_async(
                 "QLogicaeCore::SystemAccess::restart_with_admin_access()",
                 exception.what()
             );
@@ -340,7 +340,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception(
+            LOGGER.handle_exception_async(
                 "QLogicaeCore::SystemAccess::get_roaming_appdata_folder_path()",
                 exception.what()
             );
@@ -376,7 +376,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception(
+            LOGGER.handle_exception_async(
                 "QLogicaeCore::SystemAccess::get_local_appdata_folder_path()",
                 exception.what()
             );
@@ -411,7 +411,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception(
+            LOGGER.handle_exception_async(
                 "QLogicaeCore::SystemAccess::get_programdata_folder_path()",
                 exception.what()
             );
@@ -440,7 +440,7 @@ namespace QLogicaeCore
             DOMAIN_ALIAS_RID_ADMINS,
             0, 0, 0, 0, 0, 0,
             &administrators_group)
-        )
+            )
         {
             CheckTokenMembership(
                 nullptr,
@@ -477,7 +477,7 @@ namespace QLogicaeCore
 
         std::filesystem::path dir =
             std::filesystem::path(buffer)
-                .parent_path();
+            .parent_path();
         const std::wstring& wstr =
             dir.wstring();
         if (wstr.empty())
@@ -502,7 +502,7 @@ namespace QLogicaeCore
         WideCharToMultiByte(
             CP_UTF8,
             0,
-            wstr.data(), 
+            wstr.data(),
             -1,
             converted.data(),
             size_needed,
@@ -537,10 +537,10 @@ namespace QLogicaeCore
     {
         wchar_t file_path[MAX_PATH];
         if (::GetEnvironmentVariableW(
-                L"VSAPPIDDIR",
-                nullptr,
-                0
-            ) > 0 ||
+            L"VSAPPIDDIR",
+            nullptr,
+            0
+        ) > 0 ||
             GetModuleFileNameW(
                 nullptr,
                 file_path,
@@ -576,7 +576,7 @@ namespace QLogicaeCore
             0,
             NULL,
             &path))
-        )
+            )
         {
             wresult.assign(path);
             CoTaskMemFree(path);
@@ -596,7 +596,7 @@ namespace QLogicaeCore
             0,
             NULL,
             &path))
-        )
+            )
         {
             wresult.assign(path);
             CoTaskMemFree(path);
@@ -616,7 +616,7 @@ namespace QLogicaeCore
             0,
             NULL,
             &path))
-        )
+            )
         {
             wresult.assign(path);
             CoTaskMemFree(path);
@@ -640,7 +640,7 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            LOGGER.handle_exception(
+            LOGGER.handle_exception_async(
                 "QLogicaeCore::SystemAccess::run_process()",
                 exception.what()
             );
@@ -669,7 +669,7 @@ namespace QLogicaeCore
             nullptr,
             &si,
             &pi)
-        )
+            )
         {
             result.set_to_good_status_with_value(
                 false
@@ -685,7 +685,6 @@ namespace QLogicaeCore
             true
         );
     }
-
 
     std::future<bool> SystemAccess::run_process_async(
         const std::string& command
@@ -782,6 +781,73 @@ namespace QLogicaeCore
         );
     }
 
+    bool SystemAccess::clear_files(
+        const std::string& root_path
+    )
+    {
+        try
+        {
+            Result<void> void_result;
+
+            clear_files(
+                void_result,
+                root_path
+            );
+
+            return void_result.is_status_safe();
+        }
+        catch (const std::exception& exception)
+        {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::SystemAccess::clear_files()",
+                exception.what()
+            );
+
+            return false;
+        }
+    }
+
+    void SystemAccess::clear_files(
+        Result<void>& result,
+        const std::string& root_path
+    )
+    {
+        if (root_path.empty() ||
+            !std::filesystem::exists(root_path) ||
+            !std::filesystem::is_directory(root_path))
+        {
+            return result.set_to_bad_status_without_value();
+        }
+
+        std::wstring wroot = std::filesystem::path(root_path).wstring();
+
+        std::wstring escaped;
+        escaped.reserve(wroot.size());
+        for (wchar_t character : wroot)
+        {
+            if (character == L'\'')
+            {
+                escaped.push_back(L'\'');
+                escaped.push_back(L'\'');
+            }
+            else
+            {
+                escaped.push_back(character);
+            }
+        }
+
+        std::wstring cmd =
+            L"powershell.exe -NoProfile -NoLogo -Command "
+            L"\"Get-ChildItem -LiteralPath '" + escaped +
+            L"' -Recurse -File | Remove-Item -Force\"";
+
+        int code = _wsystem(cmd.c_str());
+
+        return (code != 0) ?
+            result.set_to_bad_status_without_value() :
+            result.set_to_good_status_without_value();
+    }
+
     SystemAccess& SystemAccess::get_instance()
     {
         static SystemAccess get_instance;
@@ -798,5 +864,3 @@ namespace QLogicaeCore
         results.set_to_good_status_with_value(&instance);
     }
 }
-
-

@@ -1411,6 +1411,132 @@ namespace QLogicaeCore
         );
     }
 
+    bool RocksDBDatabase::clear()
+    {
+        try
+        {
+            Result<void> result;
+
+            clear(
+                result
+            );
+
+            return result.is_status_safe();
+        }
+        catch (const std::exception& exception)
+        {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::RocksDBDatabase::clear()",
+                exception.what()
+            );
+
+            return false;
+        }
+    }
+
+    void RocksDBDatabase::clear(
+        Result<void>& result
+    )
+    {
+        close_db();
+
+        rocksdb::Options options;
+        rocksdb::Status status = rocksdb::DestroyDB(_file_path, options);
+
+        if (!status.ok())
+        {
+            return result.set_to_bad_status_without_value();
+        }
+
+        open_db();
+
+        return result.set_to_good_status_without_value();
+    }
+
+
+    std::future<bool> RocksDBDatabase::clear_async()
+    {
+        std::promise<bool> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this,
+            promise = std::move(promise)]() mutable
+            {
+                promise.set_value(
+                    clear()
+                );
+            }
+        );
+
+        return future;
+    }
+
+    void RocksDBDatabase::clear_async(
+        Result<std::future<void>>& result
+    )
+    {
+        std::promise<void> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this,
+            promise = std::move(promise)]() mutable
+            {
+                Result<void> result;
+
+                clear(
+                    result
+                );
+
+                promise.set_value();
+            }
+        );
+
+        result.set_to_good_status_with_value(
+            std::move(future)
+        );
+    }
+
+    void RocksDBDatabase::clear_async(
+        const std::function<void(const bool& result)>& callback
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, callback]() mutable
+            {
+                callback(
+                    clear()
+                );
+            }
+        );
+    }
+
+    void RocksDBDatabase::clear_async(
+        const std::function<void(Result<void>& result)>& callback
+    )
+    {
+        boost::asio::post(
+            UTILITIES.BOOST_ASIO_POOL,
+            [this, callback]() mutable
+            {
+                Result<void> result;
+
+                clear(
+                    result
+                );
+
+                callback(
+                    result
+                );
+            }
+        );
+    }
+
+
 
     bool RocksDBDatabase::terminate()
     {

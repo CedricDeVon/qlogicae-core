@@ -86,9 +86,8 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(
-                std::string() +
-                "Exception at Timeout::cancel(): " +
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Timeout::cancel()",
                 exception.what()
             );
         }
@@ -107,9 +106,8 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(
-                std::string() +
-                "Exception at Timeout::restart(): " +
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Timeout::restart()",
                 exception.what()
             );
         }
@@ -123,9 +121,8 @@ namespace QLogicaeCore
         }
         catch (const std::exception& exception)
         {
-            throw std::runtime_error(
-                std::string() +
-                "Exception at Timeout::is_cancelled(): " +
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Timeout::is_cancelled()",
                 exception.what()
             );
         }
