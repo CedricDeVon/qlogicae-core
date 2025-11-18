@@ -167,7 +167,19 @@ namespace QLogicaeCore
         );
     }
 
-    double Time::day(const TimeZone& zone)
+    void Time::month(
+        Result<std::string>& result,
+        const TimeZone& zone
+    )
+    {
+        result.set_to_good_status_with_value(
+            absl::StrCat(static_cast<int>(_get_time_zone(zone).tm_mon) + 1)
+        );
+    }
+
+    double Time::day(
+        const TimeZone& zone
+    )
     {
         try
         {
@@ -198,6 +210,16 @@ namespace QLogicaeCore
     {
         result.set_to_good_status_with_value(
             static_cast<double>(_get_time_zone(zone).tm_mday)
+        );
+    }
+
+    void Time::day(
+        Result<std::string>& result,
+        const TimeZone& zone
+    )
+    {
+        result.set_to_good_status_with_value(
+            absl::StrCat(static_cast<int>(_get_time_zone(zone).tm_mday))
         );
     }
 
@@ -237,6 +259,16 @@ namespace QLogicaeCore
         );
     }
 
+    void Time::minute(
+        Result<std::string>& result,
+        const TimeZone& zone
+    )
+    {
+        result.set_to_good_status_with_value(
+            absl::StrCat(static_cast<int>(_get_time_zone(zone).tm_min))
+        );
+    }
+
     double Time::second(
         const TimeZone& zone
     )
@@ -270,6 +302,16 @@ namespace QLogicaeCore
     {
         result.set_to_good_status_with_value(
             static_cast<double>(_get_time_zone(zone).tm_sec)
+        );
+    }
+
+    void Time::second(
+        Result<std::string>& result,
+        const TimeZone& zone
+    )
+    {
+        result.set_to_good_status_with_value(
+            absl::StrCat(static_cast<int>(_get_time_zone(zone).tm_sec))
         );
     }
 
@@ -308,6 +350,18 @@ namespace QLogicaeCore
                 .count() % 1'000));
     }
 
+    void Time::millisecond(
+        Result<std::string>& result
+    )
+    {
+        result.set_to_good_status_with_value(
+            absl::StrCat(static_cast<int>(
+                std::chrono::duration_cast<std::chrono::milliseconds>(
+                    std::chrono::system_clock::now()
+                    .time_since_epoch())
+                .count() % 1'000)));
+    }
+
     double Time::microsecond()
     {
         try
@@ -343,6 +397,18 @@ namespace QLogicaeCore
                 .count() % 1'000'000));
     }
 
+    void Time::microsecond(
+        Result<std::string>& result
+    )
+    {
+        result.set_to_good_status_with_value(
+            absl::StrCat(static_cast<int>(
+                std::chrono::duration_cast<std::chrono::microseconds>(
+                    std::chrono::system_clock::now()
+                    .time_since_epoch())
+                .count() % 1'000'000)));
+    }
+
     double Time::nanosecond()
     {
         try
@@ -376,6 +442,18 @@ namespace QLogicaeCore
                     std::chrono::system_clock::now()
                     .time_since_epoch())
                 .count() % 1'000'000'000));
+    }
+
+    void Time::nanosecond(
+        Result<std::string>& result
+    )
+    {
+        result.set_to_good_status_with_value(
+            absl::StrCat(static_cast<int>(
+                std::chrono::duration_cast<std::chrono::nanoseconds>(
+                    std::chrono::system_clock::now()
+                    .time_since_epoch())
+                .count() % 1'000'000'000)));
     }
 
     double Time::hour(
@@ -414,6 +492,16 @@ namespace QLogicaeCore
         );
     }
 
+    void Time::hour(
+        Result<std::string>& result,
+        const TimeZone& zone
+    )
+    {
+        result.set_to_good_status_with_value(
+            absl::StrCat((static_cast<int>(_get_time_zone(zone).tm_hour)))
+        );
+    }
+
     double Time::year(
         const TimeZone& zone
     )
@@ -447,7 +535,19 @@ namespace QLogicaeCore
     {
         result.set_to_good_status_with_value(
             static_cast<double>(_get_time_zone(zone).tm_year) +
-            UTILITIES.UNIX_START_YEAR_OFFSET);
+            UTILITIES.UNIX_START_YEAR_OFFSET
+        );
+    }
+
+    void Time::year(
+        Result<std::string>& result,
+        const TimeZone& zone
+    )
+    {
+        result.set_to_good_status_with_value(
+            absl::StrCat(static_cast<int>(_get_time_zone(zone).tm_year) +
+            UTILITIES.UNIX_START_YEAR_OFFSET)
+        );
     }
 
     std::string Time::now(

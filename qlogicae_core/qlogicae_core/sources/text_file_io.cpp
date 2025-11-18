@@ -60,6 +60,8 @@ namespace QLogicaeCore
                 "QLogicaeCore::TextFileIO::setup()",
                 exception.what()
             );
+
+            return false;
         }
     }
 
@@ -301,30 +303,30 @@ namespace QLogicaeCore
     {
         switch (file_mode)
         {
-        case FileMode::READ:
-        {
-            return result.set_to_good_status_with_value(
-                _read_file.has_value()
-            );
-        }
-        case FileMode::WRITE:
-        {
-            return result.set_to_good_status_with_value(
-                _write_file.has_value()
-            );
-        }
-        case FileMode::APPEND:
-        {
-            return result.set_to_good_status_with_value(
-                _append_file.has_value()
-            );
-        }
-        default:
-        {
-            return result.set_to_bad_status_with_value(
-                false, "Invalid file mode"
-            );
-        }
+            case FileMode::READ:
+            {
+                return result.set_to_good_status_with_value(
+                    _read_file.has_value()
+                );
+            }
+            case FileMode::WRITE:
+            {
+                return result.set_to_good_status_with_value(
+                    _write_file.has_value()
+                );
+            }
+            case FileMode::APPEND:
+            {
+                return result.set_to_good_status_with_value(
+                    _append_file.has_value()
+                );
+            }
+            default:
+            {
+                return result.set_to_bad_status_with_value(
+                    false, "Invalid file mode"
+                );
+            }
         }
     }
 

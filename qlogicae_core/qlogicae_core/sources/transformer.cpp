@@ -227,6 +227,45 @@ namespace QLogicaeCore
         }
     }
 
+    std::string Transformer::replace_tokens(
+        const std::string& text,
+        const std::unordered_map<std::string, std::string> dictionary
+    )
+    {
+        try
+        {
+            Result<std::string> string_result;
+            
+            replace_tokens(
+                string_result,
+                text,
+                dictionary
+            );
+
+            return string_result.get_value();
+        }
+        catch (const std::exception& exception)
+        {
+            LOGGER.handle_exception_async(
+                "QLogicaeCore::Transformer::replace_tokens()",
+                exception.what()
+            );
+
+            return "";
+        }
+    }
+
+    void Transformer::replace_tokens(
+        Result<std::string>& result,
+        const std::string& text,
+        const std::unordered_map<std::string, std::string> dictionary
+    )
+    {
+        result.set_to_good_status_with_value(
+            absl::StrReplaceAll(text, dictionary)
+        );
+    }
+
     void Transformer::to_none_format(
         Result<std::string>& result,
         const std::string& text

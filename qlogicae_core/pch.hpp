@@ -51,6 +51,7 @@
 #include <rapidjson/prettywriter.h>
 #include <rapidjson/stringbuffer.h>
 #include <absl/strings/str_split.h>
+#include <absl/strings/str_replace.h>
 #include <rapidjson/ostreamwrapper.h>
 #include <concurrentqueue/concurrentqueue.h>
 

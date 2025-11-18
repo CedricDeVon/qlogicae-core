@@ -45,16 +45,28 @@ namespace QLogicaeCore
             Result<double>& result
         );
 
+        void nanosecond(
+            Result<std::string>& result
+        );
+
         double millisecond();
 
         void millisecond(
             Result<double>& result
         );
 
+        void millisecond(
+            Result<std::string>& result
+        );
+
         double microsecond();
 
         void microsecond(
             Result<double>& result
+        );
+
+        void microsecond(
+            Result<std::string>& result
         );
 
         double day(
@@ -68,6 +80,12 @@ namespace QLogicaeCore
                 TimeZone::LOCAL
         );
 
+        void day(
+            Result<std::string>& result,
+            const TimeZone& time_zone =
+            TimeZone::LOCAL
+        );
+
         double hour(
             const TimeZone& time_zone =
                 TimeZone::LOCAL
@@ -77,6 +95,12 @@ namespace QLogicaeCore
             Result<double>& result,
             const TimeZone& time_zone =
                 TimeZone::LOCAL
+        );
+
+        void hour(
+            Result<std::string>& result,
+            const TimeZone& time_zone =
+            TimeZone::LOCAL
         );
 
         double year(
@@ -90,6 +114,12 @@ namespace QLogicaeCore
                 TimeZone::LOCAL
         );
 
+        void year(
+            Result<std::string>& result,
+            const TimeZone& time_zone =
+            TimeZone::LOCAL
+        );
+
         double month(
             const TimeZone& time_zone =
                 TimeZone::LOCAL
@@ -99,6 +129,12 @@ namespace QLogicaeCore
             Result<double>& result,
             const TimeZone& time_zone =
                 TimeZone::LOCAL
+        );
+        
+        void month(
+            Result<std::string>& result,
+            const TimeZone& time_zone =
+            TimeZone::LOCAL
         );
 
         double second(
@@ -111,6 +147,12 @@ namespace QLogicaeCore
             const TimeZone& time_zone =
                 TimeZone::LOCAL
         );
+        
+        void second(
+            Result<std::string>& result,
+            const TimeZone& time_zone =
+            TimeZone::LOCAL
+        );
 
         double minute(
             const TimeZone& time_zone =
@@ -121,6 +163,12 @@ namespace QLogicaeCore
             Result<double>& result,
             const TimeZone& time_zone =
                 TimeZone::LOCAL
+        );
+
+        void minute(
+            Result<std::string>& result,
+            const TimeZone& time_zone =
+            TimeZone::LOCAL
         );
 
         std::string now(

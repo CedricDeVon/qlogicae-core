@@ -53,11 +53,13 @@ namespace QLogicaeCore
                     "QLogicaeCore::ApplicationCache::setup() - QLogicaeApplicationUtilities is not enabled"
                 );
             }
-
+            
+            /*
             ROCKSDB_DATABASE.setup(
                 QLOGICAE_APPLICATION_UTILITIES.CONFIGURATIONS_ENVIRONMENT_CACHES.relative_main_folder_path,
                 {}
             );
+            */
 
             set_is_enabled(true);
 

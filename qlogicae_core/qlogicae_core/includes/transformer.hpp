@@ -7,6 +7,8 @@
 #include "time_format.hpp"
 #include "result_status.hpp"
 
+#include <absl/strings/str_replace.h>
+
 namespace QLogicaeCore
 {
     class Transformer
@@ -45,6 +47,17 @@ namespace QLogicaeCore
         void to_na_format(
             Result<std::string>& result,
             const std::string& text = ""
+        );
+
+        std::string replace_tokens(
+            const std::string& text,
+            const std::unordered_map<std::string, std::string> dictionary
+        );
+
+        void replace_tokens(
+            Result<std::string>& result,
+            const std::string& text,
+            const std::unordered_map<std::string, std::string> dictionary
         );
 
         std::string to_none_format(
