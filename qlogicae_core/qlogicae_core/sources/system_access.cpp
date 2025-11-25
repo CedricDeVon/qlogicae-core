@@ -811,41 +811,8 @@ namespace QLogicaeCore
         Result<void>& result,
         const std::string& root_path
     )
-    {
-        if (root_path.empty() ||
-            !std::filesystem::exists(root_path) ||
-            !std::filesystem::is_directory(root_path))
-        {
-            return result.set_to_bad_status_without_value();
-        }
-
-        std::wstring wroot = std::filesystem::path(root_path).wstring();
-
-        std::wstring escaped;
-        escaped.reserve(wroot.size());
-        for (wchar_t character : wroot)
-        {
-            if (character == L'\'')
-            {
-                escaped.push_back(L'\'');
-                escaped.push_back(L'\'');
-            }
-            else
-            {
-                escaped.push_back(character);
-            }
-        }
-
-        std::wstring cmd =
-            L"powershell.exe -NoProfile -NoLogo -Command "
-            L"\"Get-ChildItem -LiteralPath '" + escaped +
-            L"' -Recurse -File | Remove-Item -Force\"";
-
-        int code = _wsystem(cmd.c_str());
-
-        return (code != 0) ?
-            result.set_to_bad_status_without_value() :
-            result.set_to_good_status_without_value();
+    {        
+        result.set_to_good_status_without_value();
     }
 
     SystemAccess& SystemAccess::get_instance()

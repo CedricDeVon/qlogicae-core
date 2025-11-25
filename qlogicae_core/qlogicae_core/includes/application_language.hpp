@@ -27,6 +27,153 @@ namespace QLogicaeCore
             [](Result<void>& result) {}
         );
 
+
+
+        bool is_language_found(
+            const std::string& language_name
+        );
+
+        void is_language_found(
+            Result<void>& result,
+            const std::string& language_name
+        );
+
+        bool is_language_key_found(
+            const std::string& language_name,
+            const std::string& key
+        );
+
+        void is_language_key_found(
+            Result<void>& result,
+            const std::string& language_name,
+            const std::string& key
+        );
+
+
+
+        bool load(
+            const std::string& langauge_name
+        );
+
+        void load(
+            Result<void>& result,
+            const std::string& langauge_name
+        );
+
+        std::future<bool> load_async(
+            const std::string& langauge_name
+        );
+
+        void load_async(
+            const std::function<void(const bool& result)>& callback,
+            const std::string& langauge_name
+        );
+
+        void load_async(
+            Result<std::future<void>>& result,
+            const std::string& langauge_name
+        );
+
+        void load_async(
+            const std::function<void(Result<void>& result)>& callback,
+            const std::string& langauge_name
+        );
+
+
+
+        bool unload(
+            const std::string& langauge_name
+        );
+
+        void unload(
+            Result<void>& result,
+            const std::string& langauge_name
+        );
+
+        std::future<bool> unload_async(
+            const std::string& langauge_name
+        );
+
+        void unload_async(
+            const std::function<void(const bool& result)>& callback,
+            const std::string& langauge_name
+        );
+
+        void unload_async(
+            Result<std::future<void>>& result,
+            const std::string& langauge_name
+        );
+
+        void unload_async(
+            const std::function<void(Result<void>& result)>& callback,
+            const std::string& langauge_name
+        );
+
+
+
+        std::string read_one(
+            const std::string& language_name,
+            const std::string& key
+        );
+
+        void read_one(
+            Result<std::string>& result,
+            const std::string& language_name,
+            const std::string& key
+        );
+
+        std::future<std::string> read_one_async(
+            const std::string& language_name,
+            const std::string& key
+        );
+
+        void read_one_async(
+            const std::function<void(const std::string& result)>& callback,
+            const std::string& language_name,
+            const std::string& key
+        );
+
+        void read_one_async(
+            Result<std::future<std::string>>& result,
+            const std::string& language_name,
+            const std::string& key
+        );
+
+        void read_one_async(
+            const std::function<void(Result<std::string>& result)>& callback,
+            const std::string& language_name,
+            const std::string& key
+        );
+
+        std::unordered_map<std::string, std::string> read_all(
+            const std::string& language_name
+        );
+
+        void read_all(
+            Result<std::unordered_map<std::string, std::string>>& result,
+            const std::string& language_name
+        );
+
+        std::future<std::unordered_map<std::string, std::string>> read_all_async(
+            const std::string& language_name
+        );
+
+        void read_all_async(
+            const std::function<void(const std::unordered_map<std::string, std::string>& result)>& callback,
+            const std::string& language_name
+        );
+
+        void read_all_async(
+            Result<std::future<std::unordered_map<std::string, std::string>>>& result,
+            const std::string& language_name
+        );
+
+        void read_all_async(
+            const std::function<void(Result<std::unordered_map<std::string, std::string>>& result)>& callback,
+            const std::string& language_name
+        );
+
+
         bool terminate();
 
         std::future<bool> terminate_async(
