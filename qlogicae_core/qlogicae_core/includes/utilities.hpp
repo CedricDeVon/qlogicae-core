@@ -1162,6 +1162,24 @@ namespace QLogicaeCore
         const std::string DEFAULT_BOOST_INTERPROCESS_CACHE_SEGMENT_NAME =
             "BoostInterprocessCacheSharedData";
 
+        const std::string RELATIVE_PUBLIC_FOLDER_PATH_1 =
+            "public";
+
+        const std::string RELATIVE_PUBLIC_FOLDER_PATH_2 =
+            "PRIVATE";
+
+        const std::string RELATIVE_PUBLIC_FOLDER_PATH_3 =
+            "Public";
+
+        const std::string RELATIVE_PRIVATE_FOLDER_PATH_1 =
+            "private";
+
+        const std::string RELATIVE_PRIVATE_FOLDER_PATH_2 =
+            "PRIVATE";
+
+        const std::string RELATIVE_PRIVATE_FOLDER_PATH_3 =
+            "PRIVATE";
+
 		const std::string RELATIVE_DOT_QLOGICAE_FOLDER_PATH_1 =
 			".qlogicae";
 
