@@ -213,9 +213,6 @@
     <MASM Include="qlogicae_core_test\assembly\x64_masm__main.asm" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="qlogicae\application\assets\application.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <ResourceCompile Include="qlogicae_core_test\resources\resource.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

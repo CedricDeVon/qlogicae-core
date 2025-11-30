@@ -86,6 +86,9 @@
 #include "qlogicae_core/includes/timeout.hpp"
 #include "qlogicae_core/includes/interval.hpp"
 
+// File System
+#include "qlogicae_core/includes/file_system.hpp"
+
 // String Memory Pool
 #include "qlogicae_core/includes/string_memory_pool.hpp"
 #include "qlogicae_core/includes/string_memory_pool_diagnostics.hpp"

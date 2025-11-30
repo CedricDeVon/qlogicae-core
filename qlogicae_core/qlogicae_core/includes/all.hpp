@@ -86,6 +86,9 @@
 #include "../includes/timeout.hpp"
 #include "../includes/interval.hpp"
 
+// File System
+#include "../includes/file_system.hpp"
+
 // String Memory Pool
 #include "../includes/string_memory_pool.hpp"
 #include "../includes/string_memory_pool_diagnostics.hpp"

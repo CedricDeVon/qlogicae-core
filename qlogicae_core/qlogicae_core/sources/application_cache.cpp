@@ -54,13 +54,21 @@ namespace QLogicaeCore
                 );
             }
             
-            /*
-            ROCKSDB_DATABASE.setup(
+            if (!ROCKSDB_DATABASE.setup(
                 QLOGICAE_APPLICATION_UTILITIES.CONFIGURATIONS_ENVIRONMENT_CACHES.relative_main_folder_path,
                 {}
-            );
-            */
+            ))
+            {
+                LOGGER.handle_exception_async(
+                    "QLogicaeCore::ApplicationCache::setup()",
+                    "Can only be called once"
+                );
 
+                return result.set_to_bad_status_without_value(
+                    "QLogicaeCore::ApplicationCache::setup() - ROCKSDB_DATABASE is not enabled"
+                );
+            }
+            
             set_is_enabled(true);
 
             result.set_to_good_status_without_value();
@@ -162,6 +170,8 @@ namespace QLogicaeCore
         Result<void>& result
     )
     {
+        ROCKSDB_DATABASE.terminate();
+
         set_is_enabled(false);
 
         result.set_to_good_status_without_value();

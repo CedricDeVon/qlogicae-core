@@ -8,19 +8,19 @@ namespace QLogicaeCore
 		BOOST_ASIO_POOL(std::thread::hardware_concurrency())
     {
 		FULL_EXECUTABLE_FOLDER_PATH =
-			SYSTEM_ACCESS.get_executable_folder();
+			FILE_SYSTEM.get_executable_folder();
 
 		FULL_EXECUTED_FOLDER_PATH =
-			SYSTEM_ACCESS.get_executed_folder();
+			FILE_SYSTEM.get_executed_folder();
 
 		FULL_ROAMING_APPDATA_FOLDER_PATH =
-			SYSTEM_ACCESS.get_roaming_appdata_folder_path();
+			FILE_SYSTEM.get_roaming_appdata_folder_path();
 
 		FULL_LOCAL_APPDATA_FOLDER_PATH =
-			SYSTEM_ACCESS.get_local_appdata_folder_path();
+			FILE_SYSTEM.get_local_appdata_folder_path();
 
 		FULL_PROGRAMDATA_FOLDER_PATH =
-			SYSTEM_ACCESS.get_programdata_folder_path();
+			FILE_SYSTEM.get_programdata_folder_path();
 
 		FULL_APPLICATION_QLOGICAE_FOLDER_PATH =
 			FULL_EXECUTABLE_FOLDER_PATH;

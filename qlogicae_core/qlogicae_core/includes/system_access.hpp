@@ -62,59 +62,30 @@ namespace QLogicaeCore
 
         bool has_admin_access();
         
-        std::string get_executable_dir();
-
-        std::string get_executable_folder();
-
-        std::string get_executed_folder();
-        
         void restart_with_admin_access();
         
-        std::string get_programdata_folder_path();
-        
-        std::string get_local_appdata_folder_path();
-        
-        std::string get_roaming_appdata_folder_path();
-
         void has_admin_access(
             Result<void>& result
         );
 
-        void get_executable_dir(
-            Result<std::string>& result
-        );
+        bool terminate();
 
-        void get_executable_folder(
-            Result<std::string>& result
-        );
-
-        void get_executed_folder(
-            Result<std::string>& result
-        );
-
-        void restart_with_admin_access(
+        void terminate(
             Result<void>& result
         );
 
-        void get_programdata_folder_path(
-            Result<std::string>& result
+        std::future<bool> terminate_async();
+
+        void terminate_async(
+            const std::function<void(const bool& result)>& callback
         );
 
-        void get_local_appdata_folder_path(
-            Result<std::string>& result
+        void terminate_async(
+            Result<std::future<void>>& result
         );
 
-        void get_roaming_appdata_folder_path(
-            Result<std::string>& result
-        );
-
-        bool clear_files(
-            const std::string& root_path
-        );
-
-        void clear_files(
-            Result<void>& result,
-            const std::string& root_path
+        void terminate_async(
+            const std::function<void(Result<void>& result)>& callback
         );
 
         static SystemAccess& get_instance();

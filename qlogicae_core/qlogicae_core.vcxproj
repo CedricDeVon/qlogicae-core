@@ -222,6 +222,7 @@
     <ClInclude Include="qlogicae_core\includes\environment_variable.hpp" />
     <ClInclude Include="qlogicae_core\includes\event_dispatcher_subscription_handle.hpp" />
     <ClInclude Include="qlogicae_core\includes\file_mode.hpp" />
+    <ClInclude Include="qlogicae_core\includes\file_system.hpp" />
     <ClInclude Include="qlogicae_core\includes\groq_cloud_client_api.hpp" />
     <ClInclude Include="qlogicae_core\includes\cli_io.hpp" />
     <ClInclude Include="qlogicae_core\includes\cryptographer.hpp" />
@@ -391,6 +392,7 @@
     <ClCompile Include="qlogicae_core\sources\cli_io.cpp" />
     <ClCompile Include="qlogicae_core\sources\cryptographer.cpp" />
     <ClCompile Include="qlogicae_core\sources\event_dispatcher_subscription_handle.cpp" />
+    <ClCompile Include="qlogicae_core\sources\file_system.cpp" />
     <ClCompile Include="qlogicae_core\sources\file_uri_io.cpp" />
     <ClCompile Include="qlogicae_core\sources\gmail_mailer.cpp" />
     <ClCompile Include="qlogicae_core\sources\groq_cloud_client_api.cpp" />

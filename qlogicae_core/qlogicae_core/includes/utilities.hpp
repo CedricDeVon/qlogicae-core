@@ -4,6 +4,7 @@
 #include "log_level.hpp"
 #include "log_medium.hpp"
 #include "time_format.hpp"
+#include "file_system.hpp"
 #include "system_access.hpp"
 #include "time_scale_unit.hpp"
 #include "environment_variable.hpp"

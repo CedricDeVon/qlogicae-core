@@ -939,8 +939,6 @@ namespace QLogicaeCore
         );
     }
 
-    /*
     inline static RocksDBDatabase& ROCKSDB_DATABASE = 
         RocksDBDatabase::get_instance();
-    */
 }
