@@ -22,6 +22,29 @@
 #include <rapidjson/writer.h>
 #include <rapidjson/stringbuffer.h>
 
+#include <unordered_map>
+#include <boost/container/vector.hpp>
+#include <boost/container/small_vector.hpp>
+#include <boost/unordered/unordered_map.hpp>
+#include "absl/container/inlined_vector.h"
+#include "absl/container/flat_hash_map.h"
+#include <boost/container/list.hpp>
+#include <absl/container/inlined_vector.h>
+
+
+#include <string>
+
+#include <boost/container/vector.hpp>
+#include <boost/container/list.hpp>
+#include <boost/unordered_map.hpp>
+#include <boost/container/string.hpp>
+
+#include <absl/container/inlined_vector.h>
+#include <absl/container/flat_hash_map.h>
+#include <absl/strings/str_cat.h>
+
+#include <boost/lexical_cast.hpp>
+
 int main(int, char**);
 
 int WINAPI WinMain(
