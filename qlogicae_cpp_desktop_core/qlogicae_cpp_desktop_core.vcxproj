@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{d8c93387-35bc-46ba-88e5-cca80dd9279e}</ProjectGuid>
-    <RootNamespace>qlogicae_desktop_cpp_core</RootNamespace>
+    <ProjectGuid>{ab122c6b-5279-4209-9755-d3f55c48a94d}</ProjectGuid>
+    <RootNamespace>qlogicae_cpp_desktop_core</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>qlogicae_vs2022_static_library</ProjectName>
   </PropertyGroup>
