@@ -1,6 +1,7 @@
 #pragma once
 
 #include "result.hpp"
+#include "utilities.hpp"
 #include "instance_manager.hpp"
 
 #include <stdexcept>
@@ -38,6 +39,37 @@ namespace QLogicaeCppCore
             const InputCallback& input_callback,
             const InputCallbackArguments&... input_callback_arguments
         );        
+
+        template <typename ResultType, typename InputObjectType, typename InputCallback, typename... InputCallbackArguments>
+        static std::future<ResultType> call_async(
+            InputObjectType& input_object,
+            const InputCallback& input_callback,
+            const InputCallbackArguments&... input_callback_arguments
+        );
+
+        template <typename ResultType, typename InputObjectType, typename InputCallback, typename... InputCallbackArguments>
+        static void call_async(
+            const std::function<void(ResultType result)>& output_callback,
+            InputObjectType& input_object,
+            const InputCallback& input_callback,
+            const InputCallbackArguments&... input_callback_arguments
+        );
+
+        template <typename ResultType, typename InputObjectType, typename InputCallback, typename... InputCallbackArguments>
+        static void call_async(
+            Result<std::future<ResultType>>& result,
+            InputObjectType& input_object,
+            const InputCallback& input_callback,
+            const InputCallbackArguments&... input_callback_arguments
+        );
+
+        template <typename ResultType, typename InputObjectType, typename InputCallback, typename... InputCallbackArguments>
+        static void call_async(
+            const std::function<void(Result<ResultType>& result)>& output_callback,
+            InputObjectType& input_object,
+            const InputCallback& input_callback,
+            const InputCallbackArguments&... input_callback_arguments
+        );
     };
 
     template <typename ResultType, typename InputObjectType, typename InputCallback, typename... InputCallbackArguments>
@@ -66,77 +98,141 @@ namespace QLogicaeCppCore
             return result_value;
         }
     }
-
-    inline static FunctionWrapper& FUNCTION_WRAPPER =
-        INSTANCE_MANAGER.get_instance<FunctionWrapper>();
-}
-
-
-
-/*
-        template <typename ResultType, typename InputObjectType, typename InputCallback, typename... InputCallbackArguments>
-        static std::future<ResultType> call_async(
-            InputObjectType& input_object,
-            const InputCallback& input_callback,
-            const InputCallbackArguments&... input_callback_arguments
-        );
-
-        template <typename ResultType, typename InputObjectType, typename InputCallback, typename... InputCallbackArguments>
-        static std::future<Result<ResultType>> call_async(
-            InputObjectType& input_object,
-            const InputCallback& input_callback,
-            const InputCallbackArguments&... input_callback_arguments
-        );
-
-        template <typename ResultType, typename InputObjectType, typename InputCallback, typename... InputCallbackArguments>
-        static void call_async(
-            const std::function<void(const ResultType& result)> output_callback,
-            InputObjectType& input_object,
-            const InputCallback& input_callback,
-            const InputCallbackArguments&... input_callback_arguments
-        );
-
-        template <typename ResultType, typename InputObjectType, typename InputCallback, typename... InputCallbackArguments>
-        static void call_async(
-            const std::function<void(Result<ResultType>& result)> output_callback,
-            InputObjectType& input_object,
-            const InputCallback& input_callback,
-            const InputCallbackArguments&... input_callback_arguments
-        );
-
-* 
-* 
-        template <typename ResultType, typename InputCallback, typename... InputCallbackArguments>
-        static ResultType call_safely(
-            const InputCallback& input_callback,
-            const InputCallbackArguments&... input_callback_arguments
-        );
-
-    template <typename ResultType, typename InputCallback, typename... InputCallbackArguments>
-    ResultType FunctionWrapper::call_safely(
+    
+    template <typename ResultType, typename InputObjectType, typename InputCallback, typename... InputCallbackArguments>
+    static std::future<ResultType> FunctionWrapper::call_async(
+        InputObjectType& input_object,
         const InputCallback& input_callback,
         const InputCallbackArguments&... input_callback_arguments
     )
     {
-        ResultType result_value;
-        QLogicaeCppCore::Result<ResultType> result;
+        std::promise<ResultType> promise;
+        auto future = promise.get_future();
 
-        try
-        {
-            callback(result, arguments...);
-            result.get_value(result_value);
+        boost::asio::post(
+            UTILITIES.THREAD_POOL,
+            [
+                this,
+                input_object,
+                input_callback,
+                input_callback_arguments,
+                promise = std::move(promise)
+            ]() mutable
+            {
+                promise.set_value(
+                    call_safely(
+                        input_object,
+                        input_callback,
+                        input_callback_arguments
+                    )
+                );
+            }
+        );
 
-            return result_value;
-        }
-        catch (const std::exception& exception)
-        {
-            throw std::runtime_error(
-                exception.what()
-            );
-
-            return result_value;
-        }
+        return future;
     }
 
-        */
+    template <typename ResultType, typename InputObjectType, typename InputCallback, typename... InputCallbackArguments>
+    static void FunctionWrapper::call_async(
+        const std::function<void(ResultType result)>& output_callback,
+        InputObjectType& input_object,
+        const InputCallback& input_callback,
+        const InputCallbackArguments&... input_callback_arguments
+    )
+    {
+        boost::asio::post(
+            UTILITIES.THREAD_POOL,
+            [
+                this,
+                input_object,
+                input_callback,
+                input_callback_arguments,
+                output_callback
+            ]() mutable
+            {
+                output_callback(
+                    call_safely(
+                        input_object,
+                        input_callback,
+                        input_callback_arguments
+                    )
+                );
+            }
+        );
+    }
+
+    template <typename ResultType, typename InputObjectType, typename InputCallback, typename... InputCallbackArguments>
+    static void FunctionWrapper::call_async(
+        Result<std::future<ResultType>>& result,
+        InputObjectType& input_object,
+        const InputCallback& input_callback,
+        const InputCallbackArguments&... input_callback_arguments
+    )
+    {
+        std::promise<ResultType> promise;
+        auto future = promise.get_future();
+
+        boost::asio::post(
+            UTILITIES.THREAD_POOL,
+            [
+                this,
+                input_object,
+                input_callback,
+                input_callback_arguments,
+                promise = std::move(promise)
+            ]() mutable
+            {                
+                promise.set_value(
+                    call_safely(
+                        input_object,
+                        input_callback,
+                        input_callback_arguments
+                    )
+                );
+            }
+        );
+
+        result.set_to_good_status_with_value(
+            std::move(future)
+        );
+    }
+
+    template <typename ResultType, typename InputObjectType, typename InputCallback, typename... InputCallbackArguments>
+    static void FunctionWrapper::call_async(
+        const std::function<void(Result<ResultType>& result)>& output_callback,
+        InputObjectType& input_object,
+        const InputCallback& input_callback,
+        const InputCallbackArguments&... input_callback_arguments
+    )
+    {
+        boost::asio::post(
+            UTILITIES.THREAD_POOL,
+            [
+                this,
+                input_object,
+                input_callback,
+                input_callback_arguments,
+                output_callback
+            ]() mutable
+            {
+                Result<ResultType> result;
+
+                result.set_to_good_status_with_value(
+                    call_safely(
+                        input_object,
+                        input_callback,
+                        input_callback_arguments
+                    )
+                );
+
+                output_callback(
+                    result
+                );
+            }
+        );
+    }
+
+    inline static FunctionWrapper& FUNCTION_WRAPPER =
+        INSTANCE_MANAGER.get_instance<FunctionWrapper>();
+}
 

@@ -30,12 +30,11 @@ namespace QLogicaeCppCore
             const Utilities& instance
             ) = delete;
 
+        boost::asio::thread_pool THREAD_POOL;
+
         int a = 101;
 
-        void sum(Result<int>& result, int x, int y);
-        
-    protected:
-        boost::asio::thread_pool _THREAD_POOL;
+        void sum(Result<int>& result, int x, int y);        
     };
 
     inline static Utilities& UTILITIES =
