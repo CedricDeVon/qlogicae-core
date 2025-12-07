@@ -3,7 +3,9 @@
 #include "result.hpp"
 #include "utilities.hpp"
 #include "instance_manager.hpp"
+#include "asynchronous_manager.hpp"
 
+#include <future>
 #include <stdexcept>
 #include <functional>
 #include <forward_list>
@@ -109,8 +111,7 @@ namespace QLogicaeCppCore
         std::promise<ResultType> promise;
         auto future = promise.get_future();
 
-        boost::asio::post(
-            UTILITIES.THREAD_POOL,
+        ASYNCHRONOUS_MANAGER.begin_one_thread(
             [
                 this,
                 input_object,
@@ -140,8 +141,7 @@ namespace QLogicaeCppCore
         const InputCallbackArguments&... input_callback_arguments
     )
     {
-        boost::asio::post(
-            UTILITIES.THREAD_POOL,
+        ASYNCHRONOUS_MANAGER.begin_one_thread(
             [
                 this,
                 input_object,
@@ -172,8 +172,7 @@ namespace QLogicaeCppCore
         std::promise<ResultType> promise;
         auto future = promise.get_future();
 
-        boost::asio::post(
-            UTILITIES.THREAD_POOL,
+        ASYNCHRONOUS_MANAGER.begin_one_thread(
             [
                 this,
                 input_object,
@@ -181,7 +180,7 @@ namespace QLogicaeCppCore
                 input_callback_arguments,
                 promise = std::move(promise)
             ]() mutable
-            {                
+            {
                 promise.set_value(
                     call_safely(
                         input_object,
@@ -205,8 +204,7 @@ namespace QLogicaeCppCore
         const InputCallbackArguments&... input_callback_arguments
     )
     {
-        boost::asio::post(
-            UTILITIES.THREAD_POOL,
+        ASYNCHRONOUS_MANAGER.begin_one_thread(
             [
                 this,
                 input_object,

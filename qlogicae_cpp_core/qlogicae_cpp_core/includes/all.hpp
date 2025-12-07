@@ -8,10 +8,13 @@
 #include "instance_manager.hpp"
 #include "function_wrapper.hpp"
 
+#include "asynchronous_manager.hpp"
+
+#include "utilities.hpp"
+
 #include "entity_activation_status.hpp"
 #include "entity_activation_manager.hpp"
 
-#include "utilities.hpp"
 #include "application.hpp"
 
 namespace QLogicaeCppCore

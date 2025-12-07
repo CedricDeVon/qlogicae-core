@@ -63,6 +63,9 @@
     <ClInclude Include="qlogicae_cpp_core\includes\entity_activation_status.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="qlogicae_cpp_core\includes\asynchronous_manager.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <MASM Include="qlogicae_cpp_core\assembly\x64_masm__main.asm">
@@ -101,6 +104,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="qlogicae_cpp_core\sources\entity_activation_status.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="qlogicae_cpp_core\sources\asynchronous_manager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

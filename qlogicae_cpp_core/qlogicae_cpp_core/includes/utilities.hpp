@@ -3,8 +3,6 @@
 #include "result.hpp"
 #include "instance_manager.hpp"
 
-#include <boost/asio.hpp>
-
 namespace QLogicaeCppCore
 {
     class Utilities
@@ -24,19 +22,20 @@ namespace QLogicaeCppCore
 
         Utilities& operator = (
             Utilities&& instance
-            ) = delete;
+        ) = delete;
 
         Utilities& operator = (
             const Utilities& instance
-            ) = delete;
+        ) = delete;
 
-        boost::asio::thread_pool THREAD_POOL;
-
-        int a = 101;
-
-        void sum(Result<int>& result, int x, int y);        
+        void sum(Result<int>& result, int x, int y);
     };
 
     inline static Utilities& UTILITIES =
         INSTANCE_MANAGER.get_instance<Utilities>();
 }
+
+
+/*
+
+*/
