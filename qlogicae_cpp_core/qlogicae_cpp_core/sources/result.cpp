@@ -6,6 +6,11 @@
 
 namespace QLogicaeCppCore
 {            
+    ResultStatus Result<void>::get_status()
+    {
+        return _status;
+    }
+
     void Result<void>::get_status(
         ResultStatus& value
     )
@@ -129,7 +134,12 @@ namespace QLogicaeCppCore
     {
         _status = ResultStatus::ERROR_;
     }
-    
+
+    std::string Result<void>::get_message()
+    {
+        return _message;
+    }
+
     void Result<void>::get_message(
         std::string_view& value
     )

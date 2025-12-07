@@ -3,10 +3,21 @@
 #include "main.hpp"
 
 int main(int argc, char** argv)
-{	
-	int a = 1;
-	int b = 2;
-	int c = a + b;
+{		
+	QLogicaeCppCore::Utilities* a;
+	QLogicaeCppCore::Result<QLogicaeCppCore::Utilities*> r;
+
+	QLogicaeCppCore::INSTANCE_MANAGER.get_instance(r);
+	r.get_value(a);
+
+	std::cout << QLogicaeCppCore::FUNCTION_WRAPPER.call_safely<int>(a, &QLogicaeCppCore::Utilities::sum, 1, 2) << "\n";
+
+	std::cout << &QLogicaeCppCore::InstanceManager::get_instance<QLogicaeCppCore::InstanceManager>() << "\n";
+	std::cout << &QLogicaeCppCore::InstanceManager::get_instance<QLogicaeCppCore::InstanceManager>() << "\n";
+	std::cout << &QLogicaeCppCore::InstanceManager::get_instance<QLogicaeCppCore::InstanceManager>() << "\n";
+	std::cout << &QLogicaeCppCore::InstanceManager::get_instance<QLogicaeCppCore::InstanceManager>() << "\n";
+	std::cout << &QLogicaeCppCore::InstanceManager::get_instance<QLogicaeCppCore::InstanceManager>() << "\n";
+	std::cout << &QLogicaeCppCore::InstanceManager::get_instance<QLogicaeCppCore::InstanceManager>() << "\n";
 
 	bool exit_code;
 	std::cin >> exit_code;

@@ -12,6 +12,8 @@ namespace QLogicaeCppCore
     struct Result
     {
     public:        
+        ValueType& get_value(); //
+
         void get_value(
             ValueType& value
         );
@@ -24,9 +26,15 @@ namespace QLogicaeCppCore
             ValueType&& value
         );
 
+        ResultStatus get_status(); //
+
         void get_status(
             ResultStatus& value
         );
+
+        bool is_status(
+            ResultStatus& status
+        ); //
 
         void is_status(
             bool& value,
@@ -86,14 +94,6 @@ namespace QLogicaeCppCore
         void set_status_to_exception();
 
         void set_status_to_error();
-
-        void get_message(
-            std::string_view& value
-        );
-
-        void set_message(
-            const std::string_view& value
-        );
 
         void set_to_status_without_value(
             const ResultStatus& status
@@ -174,6 +174,16 @@ namespace QLogicaeCppCore
             const std::string_view& message
         );
 
+        std::string get_message(); //
+
+        void get_message(
+            std::string_view& value
+        );
+
+        void set_message(
+            const std::string_view& value
+        );
+
     protected:
         ValueType _value;
 
@@ -185,7 +195,9 @@ namespace QLogicaeCppCore
     template <>
     struct Result<void>
     {
-    public:        
+    public:
+        ResultStatus get_status(); //
+
         void get_status(
             ResultStatus& value
         );
@@ -253,14 +265,6 @@ namespace QLogicaeCppCore
 
         void set_status_to_error();
 
-        void get_message(
-            std::string_view& value
-        );
-
-        void set_message(
-            const std::string_view& value
-        );
-
         void set_to_status_without_value(
             const ResultStatus& status
         );
@@ -282,11 +286,27 @@ namespace QLogicaeCppCore
             const std::string_view& message
         );
 
+        std::string get_message(); //
+
+        void get_message(
+            std::string_view& value
+        );
+
+        void set_message(
+            const std::string_view& value
+        );
+
     protected:
         ResultStatus _status;
 
         std::string _message;
     };
+
+    template <typename ValueType>
+    ValueType& Result<ValueType>::get_value()
+    {
+        return _value;
+    }
 
     template <typename ValueType>
     void Result<ValueType>::get_value(
@@ -296,6 +316,14 @@ namespace QLogicaeCppCore
         value = _value;
     }
 
+    template <typename ValueType>
+    bool Result<ValueType>::is_status(
+        ResultStatus& status
+    )
+    {
+        return _status == status;
+    }
+    
     template <typename ValueType>
     void Result<ValueType>::is_status(
         bool& value,
@@ -398,6 +426,12 @@ namespace QLogicaeCppCore
     }
 
     template <typename ValueType>
+    ResultStatus Result<ValueType>::get_status()
+    {
+        return _status;
+    }
+
+    template <typename ValueType>
     void Result<ValueType>::get_status(
         ResultStatus& value
     )
@@ -461,6 +495,12 @@ namespace QLogicaeCppCore
     void Result<ValueType>::set_status_to_error()
     {
         set_status(ResultStatus::ERROR_);
+    }
+
+    template <typename ValueType>
+    std::string Result<ValueType>::get_message()
+    {
+        return _message;
     }
 
     template <typename ValueType>
