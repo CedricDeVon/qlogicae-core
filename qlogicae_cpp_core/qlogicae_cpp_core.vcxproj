@@ -190,6 +190,8 @@
   <ItemGroup>
     <ClInclude Include="framework.hpp" />
     <ClInclude Include="pch.hpp" />
+    <ClInclude Include="qlogicae_cpp_core\includes\entity_activation_status.hpp" />
+    <ClInclude Include="qlogicae_cpp_core\includes\entity_activation_manager.hpp" />
     <ClInclude Include="qlogicae_cpp_core\includes\all.hpp" />
     <ClInclude Include="qlogicae_cpp_core\includes\application.hpp" />
     <ClInclude Include="qlogicae_cpp_core\includes\assembly.hpp" />
@@ -204,6 +206,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="qlogicae_cpp_core\sources\entity_activation_status.cpp" />
+    <ClCompile Include="qlogicae_cpp_core\sources\entity_activation_manager.cpp" />
     <ClCompile Include="qlogicae_cpp_core\sources\all.cpp" />
     <ClCompile Include="qlogicae_cpp_core\sources\application.cpp" />
     <ClCompile Include="qlogicae_cpp_core\sources\assembly.cpp" />
