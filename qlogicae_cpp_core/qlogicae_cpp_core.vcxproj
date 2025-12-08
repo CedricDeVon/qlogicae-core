@@ -200,6 +200,8 @@
     <ClInclude Include="qlogicae_cpp_core\includes\result.hpp" />
     <ClInclude Include="qlogicae_cpp_core\includes\result_status.hpp" />
     <ClInclude Include="qlogicae_cpp_core\includes\instance_manager.hpp" />
+    <ClInclude Include="qlogicae_cpp_core\includes\temperature_calculator.hpp" />
+    <ClInclude Include="qlogicae_cpp_core\includes\temperature_unit_type.hpp" />
     <ClInclude Include="qlogicae_cpp_core\includes\utilities.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -217,6 +219,8 @@
     <ClCompile Include="qlogicae_cpp_core\sources\result.cpp" />
     <ClCompile Include="qlogicae_cpp_core\sources\instance_manager.cpp" />
     <ClCompile Include="qlogicae_cpp_core\sources\result_status.cpp" />
+    <ClCompile Include="qlogicae_cpp_core\sources\temperature_calculator.cpp" />
+    <ClCompile Include="qlogicae_cpp_core\sources\temperature_unit_type.cpp" />
     <ClCompile Include="qlogicae_cpp_core\sources\utilities.cpp" />
   </ItemGroup>
   <ItemGroup>

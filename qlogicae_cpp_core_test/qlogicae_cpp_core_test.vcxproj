@@ -175,6 +175,7 @@
     <ClCompile Include="qlogicae_cpp_core_test\sources\function_wrapper.cpp" />
     <ClCompile Include="qlogicae_cpp_core_test\sources\instance_manager.cpp" />
     <ClCompile Include="qlogicae_cpp_core_test\sources\result.cpp" />
+    <ClCompile Include="qlogicae_cpp_core_test\sources\temperature_calculator.cpp" />
     <ClCompile Include="qlogicae_cpp_core_test\sources\utilities.cpp" />
   </ItemGroup>
   <ItemGroup>
