@@ -8,6 +8,10 @@
     <ClCompile Include="qlogicae_cpp_core_test\sources\assembly.cpp" />
     <ClCompile Include="qlogicae_cpp_core_test\sources\utilities.cpp" />
     <ClCompile Include="qlogicae_cpp_core_test\sources\result.cpp" />
+    <ClCompile Include="qlogicae_cpp_core_test\sources\asynchronous_manager.cpp" />
+    <ClCompile Include="qlogicae_cpp_core_test\sources\entity_activation_manager.cpp" />
+    <ClCompile Include="qlogicae_cpp_core_test\sources\instance_manager.cpp" />
+    <ClCompile Include="qlogicae_cpp_core_test\sources\function_wrapper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.hpp" />
@@ -17,6 +21,10 @@
     <ClInclude Include="qlogicae_cpp_core_test\includes\assembly.hpp" />
     <ClInclude Include="qlogicae_cpp_core_test\includes\utilities.hpp" />
     <ClInclude Include="qlogicae_cpp_core_test\resources\application.h" />
+    <ClInclude Include="qlogicae_cpp_core_test\includes\asynchronous_manager.hpp" />
+    <ClInclude Include="qlogicae_cpp_core_test\includes\entity_activation_manager.hpp" />
+    <ClInclude Include="qlogicae_cpp_core_test\includes\function_manager.hpp" />
+    <ClInclude Include="qlogicae_cpp_core_test\includes\instance_manager.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

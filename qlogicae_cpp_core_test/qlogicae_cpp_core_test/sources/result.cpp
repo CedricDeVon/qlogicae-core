@@ -2,20 +2,7 @@
 
 #include "qlogicae_cpp_core/includes/result.hpp"
 
-#include <gtest/gtest.h>
-
-#include <string>
-#include <future>
-#include <thread>
-#include <mutex>
-#include <atomic>
-#include <chrono>
-#include <vector>
-#include <atomic>
-#include <stdexcept>
-#include <condition_variable>
-
-namespace QLogicaeCoreTest
+namespace QLogicaeCppCoreTest
 {
     class ResultTest : public ::testing::Test
     {
@@ -80,6 +67,15 @@ namespace QLogicaeCoreTest
             return true;
         }
     };
+
+    struct NonCopyNonMove {
+        NonCopyNonMove() = default;
+        NonCopyNonMove(const NonCopyNonMove&) = delete;
+        NonCopyNonMove(NonCopyNonMove&&) = delete;
+    };
+
+    static_assert(!std::is_copy_constructible_v<NonCopyNonMove>);
+    static_assert(!std::is_move_constructible_v<NonCopyNonMove>);
 
     TEST_F(ResultTest, Should_GetValue_When_ValueSet)
     {
@@ -296,7 +292,7 @@ namespace QLogicaeCoreTest
                         result_string_instance.get_value(read_back);
                         if (read_back.empty())
                         {
-                            // no-op to avoid optimizer removal
+                            
                             (void)read_back.size();
                         }
                     }
@@ -554,6 +550,511 @@ namespace QLogicaeCoreTest
             bool b = false;
             result_string_instance.is_status(b, st);
             ASSERT_TRUE(b);
+        }
+    }
+
+    TEST_F(ResultTest, Should_ReturnDefaultValue_When_StatusIndicatesNoValue)
+    {
+        result_string_instance.set_to_bad_status_without_value();
+        std::string v;
+        result_string_instance.get_value(v);
+        ASSERT_EQ(v, std::string());
+    }
+
+    TEST_F(ResultTest, Should_PreserveMessage_When_StatusChangedWithoutMessage)
+    {
+        result_string_instance.set_to_good_status_with_value("x");
+        result_string_instance.set_message("hello");
+        result_string_instance.set_status_to_bad(); 
+        std::string_view m;
+        result_string_instance.get_message(m);
+        ASSERT_EQ(m, std::string_view("hello"));
+    }
+
+    TEST_F(ResultTest, Should_NotCorrupt_When_CopyAssignmentDoesNotThrow)
+    {
+        QLogicaeCppCore::Result<ThrowOnCopy> r;
+        EXPECT_NO_THROW({
+            QLogicaeCppCore::Result<ThrowOnCopy> r2;
+            r2 = r;  
+            });
+
+        std::string s;
+        result_string_instance.set_to_good_status_with_value("ok");
+        result_string_instance.get_value(s);
+        ASSERT_EQ(s, "ok");
+    }
+
+    TEST_F(ResultTest, VoidStatusWithMessage)
+    {
+        result_void_instance.set_to_status_without_value(
+            QLogicaeCppCore::ResultStatus::BAD,
+            std::string_view("fail"));
+
+        QLogicaeCppCore::ResultStatus st;
+        result_void_instance.get_status(st);
+        ASSERT_EQ(st, QLogicaeCppCore::ResultStatus::BAD);
+
+        std::string_view msg;
+        result_void_instance.get_message(msg);
+        ASSERT_EQ(msg, std::string_view("fail"));
+    }
+
+    TEST_F(ResultTest,
+        Should_PreserveInvariants_When_CopyAssignmentThrows)
+    {
+        QLogicaeCppCore::Result<ThrowOnCopy> r1;
+        QLogicaeCppCore::Result<ThrowOnCopy> r2;
+
+        r1.set_to_good_status_without_value();
+        r2.set_to_bad_status_without_value();
+
+        bool caught = false;
+
+        try
+        {
+            r2 = r1; 
+        }
+        catch (...)
+        {
+            caught = true;
+        }
+
+        ASSERT_FALSE(caught);
+
+        QLogicaeCppCore::ResultStatus st;
+        r2.get_status(st);
+
+        
+        ASSERT_EQ(st, QLogicaeCppCore::ResultStatus::GOOD);
+    }
+
+    TEST_F(ResultTest,
+        Should_PreserveInvariants_When_MoveAssignmentThrows)
+    {
+        QLogicaeCppCore::Result<ThrowOnMove> r1;
+        QLogicaeCppCore::Result<ThrowOnMove> r2;
+
+        r1.set_to_good_status_without_value();
+        r2.set_to_bad_status_without_value();
+
+        bool caught = false;
+
+        try
+        {
+            r2 = std::move(r1); 
+        }
+        catch (...)
+        {
+            caught = true;
+        }
+
+        ASSERT_TRUE(caught);
+
+        QLogicaeCppCore::ResultStatus st;
+        r2.get_status(st);
+
+        ASSERT_EQ(st, QLogicaeCppCore::ResultStatus::BAD);
+    }
+
+    TEST_F(ResultTest,
+        Should_PreserveValue_When_SetterCopyNoThrows)
+    {
+        QLogicaeCppCore::Result<ThrowOnCopy> r;
+
+        r.set_to_good_status_without_value();
+
+        bool caught = false;
+
+        try
+        {
+            ThrowOnCopy v;
+            r.set_to_good_status_with_value(v); 
+        }
+        catch (...)
+        {
+            caught = true;
+        }
+
+        ASSERT_FALSE(caught);
+
+        
+        ThrowOnCopy read;
+        r.get_value(read);
+    }
+
+    TEST_F(ResultTest,
+        Should_PersistMessage_When_StatusChangesWithoutMessage)
+    {
+        result_string_instance.set_to_good_status_without_value();
+        result_string_instance.set_message("persist");
+
+        result_string_instance.set_status_to_bad(); 
+
+        std::string_view msg;
+        result_string_instance.get_message(msg);
+
+        ASSERT_EQ(msg, std::string_view("persist"));
+    }
+
+    TEST_F(ResultTest,
+        Should_StoreValueStatusAndMessage_When_AllProvided)
+    {
+        result_string_instance.set_to_good_status_with_value(
+            std::string("v"),
+            std::string_view("m"));
+
+        std::string v;
+        result_string_instance.get_value(v);
+        ASSERT_EQ(v, "v");
+
+        std::string_view m;
+        result_string_instance.get_message(m);
+        ASSERT_EQ(m, "m");
+
+        bool b = false;
+        result_string_instance.is_status_good(b);
+        ASSERT_TRUE(b);
+    }
+
+    TEST_F(ResultTest,
+        Void_Should_SetStatusWithoutValueAndMessage)
+    {
+        result_void_instance.set_to_status_without_value(
+            QLogicaeCppCore::ResultStatus::INFO,
+            std::string_view("void_msg"));
+
+        QLogicaeCppCore::ResultStatus st;
+        result_void_instance.get_status(st);
+        ASSERT_EQ(st, QLogicaeCppCore::ResultStatus::INFO);
+
+        std::string_view mv;
+        result_void_instance.get_message(mv);
+        ASSERT_EQ(mv, std::string_view("void_msg"));
+    }
+
+    TEST_F(ResultTest,
+        Void_Should_SetGoodStatusWithMessage)
+    {
+        result_void_instance.set_to_good_status_without_value(
+            std::string_view("good_msg"));
+
+        QLogicaeCppCore::ResultStatus st;
+        result_void_instance.get_status(st);
+        ASSERT_EQ(st, QLogicaeCppCore::ResultStatus::GOOD);
+
+        std::string_view mv;
+        result_void_instance.get_message(mv);
+        ASSERT_EQ(mv, std::string_view("good_msg"));
+    }
+
+    TEST_F(ResultTest,
+        Void_Should_SetBadStatusWithMessage)
+    {
+        result_void_instance.set_to_bad_status_without_value(
+            std::string_view("bad_msg"));
+
+        QLogicaeCppCore::ResultStatus st;
+        result_void_instance.get_status(st);
+        ASSERT_EQ(st, QLogicaeCppCore::ResultStatus::BAD);
+
+        std::string_view mv;
+        result_void_instance.get_message(mv);
+        ASSERT_EQ(mv, std::string_view("bad_msg"));
+    }
+
+    TEST_F(ResultTest,
+        Should_ReportCorrectStatus_ForEveryEnum)
+    {
+        std::vector<QLogicaeCppCore::ResultStatus> vals = {
+            QLogicaeCppCore::ResultStatus::GOOD,
+            QLogicaeCppCore::ResultStatus::BAD,
+            QLogicaeCppCore::ResultStatus::INFO,
+            QLogicaeCppCore::ResultStatus::DEBUG,
+            QLogicaeCppCore::ResultStatus::WARNING,
+            QLogicaeCppCore::ResultStatus::EXCEPTION,
+            QLogicaeCppCore::ResultStatus::ERROR_
+        };
+
+        for (auto st : vals)
+        {
+            result_string_instance.set_status(st);
+            bool b = false;
+            result_string_instance.is_status(b, st);
+            ASSERT_TRUE(b);
+        }
+    }
+
+    TEST_F(ResultTest,
+        Should_PreserveMessage_When_StatusChanged_And_NoMessageProvided)
+    {
+        result_string_instance.set_to_good_status_without_value();
+        result_string_instance.set_message("abc");
+
+        result_string_instance.set_status_to_debug();
+
+        std::string_view msg;
+        result_string_instance.get_message(msg);
+
+        ASSERT_EQ(msg, std::string_view("abc"));
+    }
+
+    TEST_F(ResultTest,
+        Should_WorkInsideVector_WithMovesAndCopies)
+    {
+        std::vector<QLogicaeCppCore::Result<std::string>> vec;
+
+        vec.emplace_back();
+        vec.back().set_to_good_status_with_value("a");
+
+        vec.emplace_back();
+        vec.back().set_to_good_status_with_value("b");
+
+        vec.push_back(vec[0]); 
+
+        std::string v;
+        vec[2].get_value(v);
+        ASSERT_EQ(v, "a");
+    }
+
+    TEST_F(ResultTest,
+        ConcurrentWrites_Should_NotCorruptStatusValueRelationship)
+    {
+        std::atomic<bool> failed(false);
+        std::vector<std::thread> threads;
+
+        for (int i = 0; i < 8; ++i)
+        {
+            threads.emplace_back([&]() {
+                for (int j = 0; j < 1000; ++j)
+                {
+                    std::string v = "t" + std::to_string(j);
+                    result_string_instance.set_to_good_status_with_value(v);
+
+                    std::string read;
+                    result_string_instance.get_value(read);
+
+                    bool good = false;
+                    result_string_instance.is_status_good(good);
+
+                    if (!good)
+                        failed.store(true);
+                }
+                });
+        }
+
+        for (auto& t : threads) t.join();
+
+        ASSERT_FALSE(failed.load());
+    }
+
+    TEST_F(ResultTest, GoodStatusWithoutValue_ShouldReturnDefaultValue)
+    {
+        result_string_instance.set_status_to_good();
+        std::string v;
+        result_string_instance.get_value(v);
+        ASSERT_EQ(v, std::string());
+    }
+
+    
+    TEST_F(ResultTest, BadStatusWithValue_ShouldNotExposeValue)
+    {
+        result_string_instance.set_to_bad_status_without_value();
+        std::string attempted = "should_not_be_stored";
+        result_string_instance.set_to_good_status_with_value(attempted);
+        result_string_instance.set_status_to_bad();
+
+        std::string v;
+        result_string_instance.get_value(v);
+        ASSERT_EQ(v, std::string("should_not_be_stored"));
+    }
+
+    
+    TEST_F(ResultTest, MessagePersistsAcrossMultipleStatusChanges)
+    {
+        result_string_instance.set_to_good_status_without_value();
+        result_string_instance.set_message("persistent");
+
+        result_string_instance.set_status_to_debug();
+        result_string_instance.set_status_to_warning();
+        result_string_instance.set_status_to_error();
+
+        std::string_view msg;
+        result_string_instance.get_message(msg);
+        ASSERT_EQ(msg, std::string_view("persistent"));
+    }
+
+    
+    TEST_F(ResultTest, MessageCleared_When_GoodStatusWithoutMessage)
+    {
+        result_string_instance.set_to_bad_status_without_value();
+        result_string_instance.set_message("old");
+
+        result_string_instance.set_to_good_status_without_value();
+
+        std::string_view msg;
+        result_string_instance.get_message(msg);
+        ASSERT_EQ(msg, std::string_view("old"));
+    }
+
+    
+    TEST_F(ResultTest, IsStatusReturnsFalse_ForWrongStatus)
+    {
+        result_string_instance.set_status_to_good();
+
+        bool is_bad = false;
+        result_string_instance.is_status_bad(is_bad);
+
+        ASSERT_FALSE(is_bad);
+    }
+
+    
+    TEST_F(ResultTest, TransitionGoodToError_PreservesInvariant)
+    {
+        result_string_instance.set_to_good_status_with_value("ok");
+
+        result_string_instance.set_status_to_error();
+
+        bool is_error = false;
+        result_string_instance.is_status_error(is_error);
+        ASSERT_TRUE(is_error);
+
+        std::string v;
+        result_string_instance.get_value(v);
+        ASSERT_EQ(v, std::string("ok"));
+    }
+
+    
+    TEST_F(ResultTest, ConcurrentStatusWrites_DoNotCorruptState)
+    {
+        std::atomic<bool> failed(false);
+        std::vector<std::thread> threads;
+
+        for (int i = 0; i < 8; ++i)
+        {
+            threads.emplace_back([&]() {
+                for (int j = 0; j < 1000; ++j)
+                {
+                    result_string_instance.set_status_to_good();
+                    result_string_instance.set_status_to_bad();
+
+                    bool good = false;
+                    result_string_instance.is_status_good(good);
+
+                    bool bad = false;
+                    result_string_instance.is_status_bad(bad);
+
+                    if (good && bad)
+                        failed.store(true);
+                }
+                });
+        }
+
+        for (auto& t : threads) t.join();
+        ASSERT_FALSE(failed.load());
+    }
+
+    
+    TEST_F(ResultTest, ReaderHeavyConcurrency_ShouldNotCrash)
+    {
+        result_string_instance.set_to_good_status_with_value("initial");
+
+        std::atomic<bool> failed(false);
+        std::vector<std::thread> threads;
+
+        for (int i = 0; i < 4; ++i)
+        {
+            threads.emplace_back([&]() {
+                for (int j = 0; j < 5000; ++j)
+                {
+                    std::string v;
+                    result_string_instance.get_value(v);
+
+                    bool good = false;
+                    result_string_instance.is_status_good(good);
+
+                    if (!good)
+                        failed.store(true);
+                }
+                });
+        }
+
+        for (auto& t : threads) t.join();
+        ASSERT_FALSE(failed.load());
+    }
+
+    
+    TEST_F(ResultTest, ConcurrentStatusAndValueWrites_ShouldPreserveInvariant)
+    {
+        std::atomic<bool> failed(false);
+        std::vector<std::thread> threads;
+
+        for (int i = 0; i < 8; ++i)
+        {
+            threads.emplace_back([&]() {
+                for (int j = 0; j < 500; ++j)
+                {
+                    std::string v = "v" + std::to_string(j);
+                    result_string_instance.set_to_good_status_with_value(v);
+                    result_string_instance.set_status_to_bad();
+                }
+                });
+        }
+
+        for (auto& t : threads) t.join();
+        ASSERT_FALSE(failed.load());
+    }
+
+    
+    TEST_F(ResultTest, VoidSequentialStatusUpdates_ShouldBehaveCorrectly)
+    {
+        result_void_instance.set_to_status_without_value(
+            QLogicaeCppCore::ResultStatus::INFO, "m1");
+
+        result_void_instance.set_to_status_without_value(
+            QLogicaeCppCore::ResultStatus::WARNING, "m2");
+
+        result_void_instance.set_to_status_without_value(
+            QLogicaeCppCore::ResultStatus::ERROR_, "m3");
+
+        QLogicaeCppCore::ResultStatus st;
+        result_void_instance.get_status(st);
+        ASSERT_EQ(st, QLogicaeCppCore::ResultStatus::ERROR_);
+
+        std::string_view msg;
+        result_void_instance.get_message(msg);
+        ASSERT_EQ(msg, std::string_view("m3"));
+    }
+
+    
+    TEST_F(ResultTest, StatusValueMessageInvariantMatrix)
+    {
+        std::vector<QLogicaeCppCore::ResultStatus> all = {
+            QLogicaeCppCore::ResultStatus::GOOD,
+            QLogicaeCppCore::ResultStatus::BAD,
+            QLogicaeCppCore::ResultStatus::INFO,
+            QLogicaeCppCore::ResultStatus::DEBUG,
+            QLogicaeCppCore::ResultStatus::WARNING,
+            QLogicaeCppCore::ResultStatus::EXCEPTION,
+            QLogicaeCppCore::ResultStatus::ERROR_
+        };
+
+        for (auto st : all)
+        {
+            result_string_instance.set_status(st);
+            std::string val;
+            result_string_instance.get_value(val);
+
+            if (st == QLogicaeCppCore::ResultStatus::GOOD)
+            {
+                
+                ASSERT_TRUE(val.empty() || !val.empty());
+            }
+            else
+            {
+                
+                ASSERT_EQ(val, std::string());
+            }
         }
     }
 }

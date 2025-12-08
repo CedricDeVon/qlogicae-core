@@ -4,47 +4,61 @@
 
 namespace QLogicaeCppCore
 {
-    AsynchronousManager::AsynchronousManager() :
-        _THREAD_POOL(std::thread::hardware_concurrency())
+    AsynchronousManager::AsynchronousManager()        
     {
-        
+        _THREAD_POOL =
+            std::make_shared<boost::asio::thread_pool>(
+                std::thread::hardware_concurrency()
+            );
     }
 
     AsynchronousManager::~AsynchronousManager()
     {
+        Result<bool> result;
 
+        complete_all_threads(result);
     }
 
     void AsynchronousManager::begin_one_thread(
+        Result<bool>& result,
         const std::function<void()>& callback
     )
     {
-        try
+        std::lock_guard<std::mutex> lock(_mutex);
+
+        if (_THREAD_POOL == nullptr)
         {
-            boost::asio::post(
-                _THREAD_POOL,
-                callback
-            );
+            _THREAD_POOL =
+                std::make_shared<boost::asio::thread_pool>(
+                    std::thread::hardware_concurrency());
         }
-        catch (const std::exception& exception)
-        {
-            throw std::runtime_error(
-                exception.what()
-            );
-        }
+
+        boost::asio::post(*_THREAD_POOL, callback);
+
+        result.set_to_good_status_with_value(
+            true
+        );
     }
 
-    void AsynchronousManager::complete_all_threads()
+    void AsynchronousManager::complete_all_threads(
+        Result<bool>& result
+    )
     {
-        try
+        std::shared_ptr<boost::asio::thread_pool> pool;
+
         {
-            _THREAD_POOL.join();           
+            std::lock_guard<std::mutex> lock(_mutex);
+            pool = _THREAD_POOL;
+            _THREAD_POOL.reset();
         }
-        catch (const std::exception& exception)
+
+        if (pool)
         {
-            throw std::runtime_error(
-                exception.what()
-            );
+            pool->join();
         }
+
+        result.set_to_good_status_with_value(
+            true
+        );
     }
 }

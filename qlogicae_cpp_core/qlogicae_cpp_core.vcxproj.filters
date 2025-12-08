@@ -91,9 +91,6 @@
     <ClCompile Include="qlogicae_cpp_core\sources\result.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="qlogicae_cpp_core\sources\result_status.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="qlogicae_cpp_core\sources\instance_manager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -103,10 +100,13 @@
     <ClCompile Include="qlogicae_cpp_core\sources\entity_activation_manager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="qlogicae_cpp_core\sources\asynchronous_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="qlogicae_cpp_core\sources\entity_activation_status.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="qlogicae_cpp_core\sources\asynchronous_manager.cpp">
+    <ClCompile Include="qlogicae_cpp_core\sources\result_status.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

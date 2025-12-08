@@ -2,8 +2,6 @@
 
 #include "result_status.hpp"
 
-#include <string>
-
 namespace QLogicaeCppCore
 {
     template <
@@ -12,10 +10,14 @@ namespace QLogicaeCppCore
     struct Result
     {
     public:        
-        ValueType& get_value(); //
+        ValueType& get_value();
 
         void get_value(
             ValueType& value
+        );
+
+        void get_value( 
+            ValueType&& value
         );
 
         void set_value(
@@ -26,7 +28,7 @@ namespace QLogicaeCppCore
             ValueType&& value
         );
 
-        ResultStatus get_status(); //
+        ResultStatus get_status();
 
         void get_status(
             ResultStatus& value
@@ -34,7 +36,7 @@ namespace QLogicaeCppCore
 
         bool is_status(
             ResultStatus& status
-        ); //
+        );
 
         void is_status(
             bool& value,
@@ -174,7 +176,7 @@ namespace QLogicaeCppCore
             const std::string_view& message
         );
 
-        std::string get_message(); //
+        std::string get_message();
 
         void get_message(
             std::string_view& value
@@ -196,7 +198,7 @@ namespace QLogicaeCppCore
     struct Result<void>
     {
     public:
-        ResultStatus get_status(); //
+        ResultStatus get_status();
 
         void get_status(
             ResultStatus& value
@@ -286,7 +288,7 @@ namespace QLogicaeCppCore
             const std::string_view& message
         );
 
-        std::string get_message(); //
+        std::string get_message();
 
         void get_message(
             std::string_view& value
@@ -314,6 +316,14 @@ namespace QLogicaeCppCore
     )
     {
         value = _value;
+    }
+
+    template <typename ValueType>
+    void Result<ValueType>::get_value(
+        ValueType&& value
+    )
+    {
+        value = std::move(_value);
     }
 
     template <typename ValueType>

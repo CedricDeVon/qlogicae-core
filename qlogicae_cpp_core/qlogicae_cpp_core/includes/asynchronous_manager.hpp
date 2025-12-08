@@ -3,11 +3,6 @@
 #include "result.hpp"
 #include "instance_manager.hpp"
 
-#include <boost/asio.hpp>
-#include <boost/thread/thread_pool.hpp>
-
-#include <functional>
-
 namespace QLogicaeCppCore
 {
     class AsynchronousManager
@@ -34,13 +29,18 @@ namespace QLogicaeCppCore
             ) = delete;
 
         void begin_one_thread(
+            Result<bool>& result,
             const std::function<void()>& callback
         );
 
-        void complete_all_threads();
+        void complete_all_threads(
+            Result<bool>& result
+        );
 
     protected:
-        boost::asio::thread_pool _THREAD_POOL;
+        std::mutex _mutex;
+
+        std::shared_ptr<boost::asio::thread_pool> _THREAD_POOL;
 
     };
 

@@ -35,7 +35,6 @@ namespace QLogicaeCppCore
         INSTANCE_MANAGER.get_instance<Utilities>();
 }
 
-
 /*
 
 */

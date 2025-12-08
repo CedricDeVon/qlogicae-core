@@ -1,7 +1,5 @@
 #pragma once
 
-#include <cstdint>
-
 namespace QLogicaeCppCore
 {
 	enum class EntityActivationStatus :
@@ -11,6 +9,8 @@ namespace QLogicaeCppCore
 
 		INACTIVE,
 
-		PENDING
+		PENDING,
+
+		NONE
 	};
 }

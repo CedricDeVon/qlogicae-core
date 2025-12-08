@@ -5,11 +5,6 @@
 #include "instance_manager.hpp"
 #include "asynchronous_manager.hpp"
 
-#include <future>
-#include <stdexcept>
-#include <functional>
-#include <forward_list>
-
 namespace QLogicaeCppCore
 {
     class FunctionWrapper
@@ -86,7 +81,7 @@ namespace QLogicaeCppCore
 
         try
         {
-            (input_object->*input_callback)(result, input_callback_arguments...);
+            (input_object.*input_callback)(result, input_callback_arguments...);
             result.get_value(result_value);
 
             return result_value;
@@ -100,31 +95,33 @@ namespace QLogicaeCppCore
             return result_value;
         }
     }
-    
+
     template <typename ResultType, typename InputObjectType, typename InputCallback, typename... InputCallbackArguments>
-    static std::future<ResultType> FunctionWrapper::call_async(
-        InputObjectType& input_object,
-        const InputCallback& input_callback,
-        const InputCallbackArguments&... input_callback_arguments
+    std::future<ResultType> FunctionWrapper::call_async(
+        InputObjectType& object,
+        const InputCallback& callback,
+        const InputCallbackArguments&... args
     )
     {
-        std::promise<ResultType> promise;
-        auto future = promise.get_future();
+        Result<bool> result;
+
+        auto promise = std::make_shared<std::promise<ResultType>>();
+        std::future<ResultType> future = promise->get_future();
 
         ASYNCHRONOUS_MANAGER.begin_one_thread(
+            result,
             [
-                this,
-                input_object,
-                input_callback,
-                input_callback_arguments,
-                promise = std::move(promise)
+                &object,
+                callback,
+                promise,
+                args...
             ]() mutable
             {
-                promise.set_value(
-                    call_safely(
-                        input_object,
-                        input_callback,
-                        input_callback_arguments
+                promise->set_value(
+                    call_safely<ResultType>(
+                        object,
+                        callback,
+                        args...
                     )
                 );
             }
@@ -134,27 +131,29 @@ namespace QLogicaeCppCore
     }
 
     template <typename ResultType, typename InputObjectType, typename InputCallback, typename... InputCallbackArguments>
-    static void FunctionWrapper::call_async(
-        const std::function<void(ResultType result)>& output_callback,
-        InputObjectType& input_object,
-        const InputCallback& input_callback,
-        const InputCallbackArguments&... input_callback_arguments
+    void FunctionWrapper::call_async(
+        const std::function<void(ResultType)>& output_callback,
+        InputObjectType& object,
+        const InputCallback& callback,
+        const InputCallbackArguments&... args
     )
     {
+        Result<bool> result;
+
         ASYNCHRONOUS_MANAGER.begin_one_thread(
+            result,
             [
-                this,
-                input_object,
-                input_callback,
-                input_callback_arguments,
-                output_callback
+                &object,
+                callback,
+                output_callback,
+                args...
             ]() mutable
             {
                 output_callback(
-                    call_safely(
-                        input_object,
-                        input_callback,
-                        input_callback_arguments
+                    call_safely<ResultType>(
+                        object,
+                        callback,
+                        args...
                     )
                 );
             }
@@ -162,73 +161,39 @@ namespace QLogicaeCppCore
     }
 
     template <typename ResultType, typename InputObjectType, typename InputCallback, typename... InputCallbackArguments>
-    static void FunctionWrapper::call_async(
-        Result<std::future<ResultType>>& result,
-        InputObjectType& input_object,
-        const InputCallback& input_callback,
-        const InputCallbackArguments&... input_callback_arguments
+    void FunctionWrapper::call_async(
+        const std::function<void(Result<ResultType>&)>& output_callback,
+        InputObjectType& object,
+        const InputCallback& callback,
+        const InputCallbackArguments&... args
     )
     {
-        std::promise<ResultType> promise;
-        auto future = promise.get_future();
+        Result<bool> result;
 
         ASYNCHRONOUS_MANAGER.begin_one_thread(
+            result,
             [
-                this,
-                input_object,
-                input_callback,
-                input_callback_arguments,
-                promise = std::move(promise)
+                &object,
+                callback,
+                output_callback,
+                args...
             ]() mutable
             {
-                promise.set_value(
-                    call_safely(
-                        input_object,
-                        input_callback,
-                        input_callback_arguments
-                    )
-                );
-            }
-        );
+                Result<ResultType> wrapper;
 
-        result.set_to_good_status_with_value(
-            std::move(future)
-        );
-    }
-
-    template <typename ResultType, typename InputObjectType, typename InputCallback, typename... InputCallbackArguments>
-    static void FunctionWrapper::call_async(
-        const std::function<void(Result<ResultType>& result)>& output_callback,
-        InputObjectType& input_object,
-        const InputCallback& input_callback,
-        const InputCallbackArguments&... input_callback_arguments
-    )
-    {
-        ASYNCHRONOUS_MANAGER.begin_one_thread(
-            [
-                this,
-                input_object,
-                input_callback,
-                input_callback_arguments,
-                output_callback
-            ]() mutable
-            {
-                Result<ResultType> result;
-
-                result.set_to_good_status_with_value(
-                    call_safely(
-                        input_object,
-                        input_callback,
-                        input_callback_arguments
+                wrapper.set_to_good_status_with_value(
+                    call_safely<ResultType>(
+                        object,
+                        callback,
+                        args...
                     )
                 );
 
-                output_callback(
-                    result
-                );
+                output_callback(wrapper);
             }
         );
     }
+
 
     inline static FunctionWrapper& FUNCTION_WRAPPER =
         INSTANCE_MANAGER.get_instance<FunctionWrapper>();

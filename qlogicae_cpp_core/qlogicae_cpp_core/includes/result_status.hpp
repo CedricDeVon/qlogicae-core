@@ -1,7 +1,5 @@
 #pragma once
 
-#include <cstdint>
-
 namespace QLogicaeCppCore
 {
 	enum class ResultStatus :
