@@ -81,7 +81,15 @@ namespace QLogicaeCppCore
 
         try
         {
-            (input_object.*input_callback)(result, input_callback_arguments...);
+            if constexpr (std::is_pointer_v<InputObjectType>)
+            {                
+                (input_object->*input_callback)(result, input_callback_arguments...);
+            }
+            else
+            {
+                (input_object.*input_callback)(result, input_callback_arguments...);
+            }
+
             result.get_value(result_value);
 
             return result_value;

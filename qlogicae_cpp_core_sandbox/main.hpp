@@ -4,9 +4,6 @@
 
 #include "qlogicae_cpp_core/includes/all.hpp"
 
-#include <iostream>
-#include <windows.h>
-
 int main(int, char**);
 
 int WINAPI WinMain(

@@ -17,6 +17,8 @@ namespace QLogicaeCppCore
 
 		EXCEPTION,
 
-		ERROR_
+		ERROR_,
+
+		NONE
 	};
 }
