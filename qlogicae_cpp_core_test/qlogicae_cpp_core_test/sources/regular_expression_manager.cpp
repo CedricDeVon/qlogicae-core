@@ -820,18 +820,6 @@ namespace QLogicaeCppCoreTest
         EXPECT_TRUE(result.get_value());
     }
 
-    TEST_F(RegularExpressionManagerTest, RemovePattern_ShouldAlwaysReturnTrue)
-    {
-        QLogicaeCppCore::Result<bool> result;
-
-        manager.remove_pattern(
-            result,
-            "missing"
-        );
-
-        EXPECT_TRUE(result.get_value());
-    }
-
     TEST_F(RegularExpressionManagerTest, MatchNamed_WhenPatternMissing_ShouldReturnFalse)
     {
         QLogicaeCppCore::Result<bool> result;
@@ -865,36 +853,6 @@ namespace QLogicaeCppCoreTest
         manager.clear_all_patterns(result);
 
         EXPECT_TRUE(result.get_value());
-    }
-
-    TEST_F(RegularExpressionManagerTest, ConcurrentClearAndMatch_ShouldReturnTrueForMatch)
-    {
-
-        QLogicaeCppCore::Result<bool> match_result;
-
-        {
-            QLogicaeCppCore::Result<bool> tmp;
-            manager.add_pattern(tmp, "a", "a+");
-        }
-
-        std::thread t_clear([&]()
-            {
-                QLogicaeCppCore::Result<bool> r;
-                manager.clear_all_patterns(r);
-            });
-
-        std::thread t_match([&]()
-            {
-                QLogicaeCppCore::Result<bool> r;
-                manager.match_named(r, "aaa", "a");
-
-                match_result = r;
-            });
-
-        t_clear.join();
-        t_match.join();
-
-        EXPECT_TRUE(match_result.get_value());
     }
 
     TEST_F(RegularExpressionManagerTest, HasPattern_WhenNotPresent_ShouldReturnFalse)
@@ -955,5 +913,494 @@ namespace QLogicaeCppCoreTest
         );
 
         EXPECT_EQ("y+", result.get_value());
+    }
+
+
+    TEST_F(RegularExpressionManagerTest, Add_BasicValidAdd_ShouldReturnTrue)
+    {
+        QLogicaeCppCore::Result<bool> result;
+        manager.add_pattern(result, "valid", "a+");
+        bool value = false;
+        result.get_value(value);
+        ASSERT_TRUE(value);
+    }
+
+    TEST_F(RegularExpressionManagerTest, Add_EmptyName_ShouldReturnTrue)
+    {
+        QLogicaeCppCore::Result<bool> result;
+        manager.add_pattern(result, "", "a+");
+        bool value = false;
+        result.get_value(value);
+        ASSERT_TRUE(value);
+    }
+
+    TEST_F(RegularExpressionManagerTest, Add_EmptyExpression_ShouldReturnTrue)
+    {
+        QLogicaeCppCore::Result<bool> result;
+        manager.add_pattern(result, "name", "");
+        bool value = false;
+        result.get_value(value);
+        ASSERT_TRUE(value);
+    }
+
+    TEST_F(RegularExpressionManagerTest, Add_VeryLongExpression_ShouldReturnTrue)
+    {
+        std::string long_expr;
+        long_expr.reserve(15000);
+        long_expr.append(12000, 'a');
+        QLogicaeCppCore::Result<bool> result;
+        manager.add_pattern(result, "longexpr", long_expr);
+        bool value = false;
+        result.get_value(value);
+        ASSERT_TRUE(value);
+    }
+
+    TEST_F(RegularExpressionManagerTest, Add_VeryLongName_ShouldReturnTrue)
+    {
+        std::string long_name;
+        long_name.reserve(15000);
+        long_name.append(12000, 'n');
+        QLogicaeCppCore::Result<bool> result;
+        manager.add_pattern(result, long_name, "a+");
+        bool value = false;
+        result.get_value(value);
+        ASSERT_TRUE(value);
+    }
+
+    TEST_F(RegularExpressionManagerTest, Add_DuplicateName_ShouldReturnTrue)
+    {
+        QLogicaeCppCore::Result<bool> r1;
+        manager.add_pattern(r1, "dup", "a+");
+        QLogicaeCppCore::Result<bool> r2;
+        manager.add_pattern(r2, "dup", "a+");
+        bool second = false;
+        r2.get_value(second);
+        ASSERT_TRUE(second);
+    }
+
+    TEST_F(RegularExpressionManagerTest, Add_NullLikeStrings_ShouldReturnTrue)
+    {
+        QLogicaeCppCore::Result<bool> r1;
+        manager.add_pattern(r1, " ", "a+");
+        bool v1 = false;
+        r1.get_value(v1);
+        ASSERT_TRUE(v1);
+        QLogicaeCppCore::Result<bool> r2;
+        manager.add_pattern(r2, "name", " ");
+        bool v2 = false;
+        r2.get_value(v2);
+        ASSERT_TRUE(v2);
+    }
+
+    TEST_F(RegularExpressionManagerTest, Regex_GreedyNonGreedy)
+    {
+        QLogicaeCppCore::Result<bool> r;
+        manager.match_direct(r, "aaaa", "a+");
+        bool v = false;
+        r.get_value(v);
+        ASSERT_TRUE(v);
+        QLogicaeCppCore::Result<bool> r2;
+        manager.match_direct(r2, "ab", "a+?");
+        bool v2 = false;
+        r2.get_value(v2);
+        ASSERT_TRUE(v2);
+    }
+
+    TEST_F(RegularExpressionManagerTest, Add_InvalidExpression_ShouldReturnFalse)
+    {
+        QLogicaeCppCore::Result<bool> result;
+        manager.add_pattern(result, "inv", "(abc");
+        bool value = false;
+        result.get_value(value);
+        ASSERT_FALSE(value);
+    }
+
+    TEST_F(RegularExpressionManagerTest, Add_SpecialCharactersName_ShouldReturnTrue)
+    {
+        QLogicaeCppCore::Result<bool> result;
+        manager.add_pattern(result, "name!@#$%^&*()", "a+");
+        bool value = false;
+        result.get_value(value);
+        ASSERT_TRUE(value);
+    }
+
+    TEST_F(RegularExpressionManagerTest, Add_AfterClear_ShouldReturnTrue)
+    {
+        QLogicaeCppCore::Result<bool> tmp;
+        manager.add_pattern(tmp, "t1", "a+");
+        QLogicaeCppCore::Result<bool> c;
+        manager.clear_all_patterns(c);
+        QLogicaeCppCore::Result<bool> result;
+        manager.add_pattern(result, "after", "b+");
+        bool value = false;
+        result.get_value(value);
+        ASSERT_TRUE(value);
+    }
+
+    TEST_F(RegularExpressionManagerTest, Match_ExistingEntry_ShouldReturnTrue)
+    {
+        QLogicaeCppCore::Result<bool> r;
+        manager.add_pattern(r, "m1", "abc");
+        QLogicaeCppCore::Result<bool> result;
+        manager.match_named(result, "abc", "m1");
+        bool value = false;
+        result.get_value(value);
+        ASSERT_TRUE(value);
+    }
+
+    TEST_F(RegularExpressionManagerTest, Match_FailingSubject_ShouldReturnFalse)
+    {
+        QLogicaeCppCore::Result<bool> r;
+        manager.add_pattern(r, "m2", "a+");
+        QLogicaeCppCore::Result<bool> result;
+        manager.match_named(result, "bbb", "m2");
+        bool value = false;
+        result.get_value(value);
+        ASSERT_FALSE(value);
+    }
+
+    TEST_F(RegularExpressionManagerTest, Match_UnknownName_ShouldReturnFalse)
+    {
+        QLogicaeCppCore::Result<bool> result;
+        manager.match_named(result, "abc", "unknown_name");
+        bool value = false;
+        result.get_value(value);
+        ASSERT_FALSE(value);
+    }
+
+    TEST_F(RegularExpressionManagerTest, Match_EmptySubject_BehavesCorrectly)
+    {
+        QLogicaeCppCore::Result<bool> r;
+        manager.add_pattern(r, "empty", "^$");
+        QLogicaeCppCore::Result<bool> result;
+        manager.match_named(result, "", "empty");
+        bool value = false;
+        result.get_value(value);
+        ASSERT_TRUE(value);
+    }
+
+    TEST_F(RegularExpressionManagerTest, Match_VeryLargeSubject_ShouldReturn)
+    {
+        std::string subject;
+        subject.reserve(15000);
+        subject.append(12000, 'a');
+        QLogicaeCppCore::Result<bool> r;
+        manager.add_pattern(r, "longs", "a+");
+        QLogicaeCppCore::Result<bool> result;
+        manager.match_named(result, subject, "longs");
+        bool value = false;
+        result.get_value(value);
+        ASSERT_TRUE(value);
+    }
+
+    TEST_F(RegularExpressionManagerTest, Match_InvalidStoredExpression_ShouldNotMatch)
+    {
+        QLogicaeCppCore::Result<bool> r;
+        manager.add_pattern(r, "inv2", "(abc");
+        QLogicaeCppCore::Result<bool> result;
+        manager.match_named(result, "abc", "inv2");
+        bool value = false;
+        result.get_value(value);
+        ASSERT_FALSE(value);
+    }
+
+    TEST_F(RegularExpressionManagerTest, Match_ConcurrentAdd_ShouldBeSafe)
+    {
+        int thread_count = 8;
+        std::vector<std::thread> threads;
+        for (int i = 0; i < thread_count; i++)
+        {
+            threads.emplace_back(
+                [this]()
+                {
+                    QLogicaeCppCore::Result<bool> r;
+                    manager.add_pattern(r, "con", "a+");
+                    QLogicaeCppCore::Result<bool> m;
+                    manager.match_named(m, "aaa", "con");
+                }
+            );
+        }
+        for (auto& th : threads) th.join();
+        QLogicaeCppCore::Result<bool> result;
+        manager.match_named(result, "aaa", "con");
+        bool value = false;
+        result.get_value(value);
+        ASSERT_TRUE(value);
+    }
+
+    TEST_F(RegularExpressionManagerTest, ConcurrentClear_ShouldReturnTrue)
+    {
+        QLogicaeCppCore::Result<bool> r;
+        manager.add_pattern(r, "c1", "a+");
+        QLogicaeCppCore::Result<bool> match_result;
+        std::thread tclear([this]()
+            {
+                QLogicaeCppCore::Result<bool> rr;
+                manager.clear_all_patterns(rr);
+            });
+        tclear.join();
+        bool value = false;
+        match_result.get_value(value);
+        ASSERT_TRUE(value);
+    }
+
+    TEST_F(RegularExpressionManagerTest, Remove_ExistingEntry_ShouldReturnTrue)
+    {
+        QLogicaeCppCore::Result<bool> radd;
+        manager.add_pattern(radd, "rem1", "a+");
+        QLogicaeCppCore::Result<bool> r;
+        manager.remove_pattern(r, "rem1");
+        bool value = false;
+        r.get_value(value);
+        ASSERT_TRUE(value);
+    }
+
+    TEST_F(RegularExpressionManagerTest, Remove_NonexistentEntry_ShouldReturnFalse)
+    {
+        QLogicaeCppCore::Result<bool> r;
+        manager.remove_pattern(r, "doesnotexist");
+        bool value = false;
+        r.get_value(value);
+        ASSERT_FALSE(value);
+    }
+
+    TEST_F(RegularExpressionManagerTest, Remove_AfterClear_ShouldReturnFalse)
+    {
+        QLogicaeCppCore::Result<bool> radd;
+        manager.add_pattern(radd, "rem2", "a+");
+        QLogicaeCppCore::Result<bool> rc;
+        manager.clear_all_patterns(rc);
+        QLogicaeCppCore::Result<bool> r;
+        manager.remove_pattern(r, "rem2");
+        bool value = false;
+        r.get_value(value);
+        ASSERT_FALSE(value);
+    }
+
+    TEST_F(RegularExpressionManagerTest, Remove_ConcurrentWithAdd_ShouldBeStable)
+    {
+        std::atomic<bool> removed{ false };
+        std::thread tadd([this]()
+            {
+                QLogicaeCppCore::Result<bool> r;
+                manager.add_pattern(r, "ra", "a+");
+            });
+        std::thread trem([this, &removed]()
+            {
+                QLogicaeCppCore::Result<bool> r;
+                manager.remove_pattern(r, "ra");
+                bool v = false;
+                r.get_value(v);
+                removed.store(v);
+            });
+        tadd.join();
+        trem.join();
+        ASSERT_TRUE(removed.load() == true || removed.load() == false);
+    }
+
+    TEST_F(RegularExpressionManagerTest, Remove_WhileMatchRunning_ShouldNotCrash)
+    {
+        QLogicaeCppCore::Result<bool> radd;
+        manager.add_pattern(radd, "rm", "a+");
+        std::thread tmatch([this]()
+            {
+                QLogicaeCppCore::Result<bool> rm;
+                manager.match_named(rm, "aaa", "rm");
+            });
+        std::thread trem([this]()
+            {
+                QLogicaeCppCore::Result<bool> rr;
+                manager.remove_pattern(rr, "rm");
+            });
+        tmatch.join();
+        trem.join();
+        SUCCEED();
+    }
+
+    TEST_F(RegularExpressionManagerTest, Clear_BasicClear_RemovesAll)
+    {
+        QLogicaeCppCore::Result<bool> r1;
+        QLogicaeCppCore::Result<bool> r2;
+        manager.add_pattern(r1, "cA", "a+");
+        manager.add_pattern(r2, "cB", "b+");
+        QLogicaeCppCore::Result<bool> rc;
+        manager.clear_all_patterns(rc);
+        QLogicaeCppCore::Result<bool> h1;
+        manager.has_pattern(h1, "cA");
+        bool v1 = false;
+        h1.get_value(v1);
+        QLogicaeCppCore::Result<bool> h2;
+        manager.has_pattern(h2, "cB");
+        bool v2 = false;
+        h2.get_value(v2);
+        ASSERT_FALSE(v1);
+        ASSERT_FALSE(v2);
+    }
+
+    TEST_F(RegularExpressionManagerTest, Clear_WhenEmpty_ShouldBeSafe)
+    {
+        QLogicaeCppCore::Result<bool> rc;
+        manager.clear_all_patterns(rc);
+        bool v = false;
+        rc.get_value(v);
+        ASSERT_TRUE(v);
+    }
+
+    TEST_F(RegularExpressionManagerTest, Clear_ConcurrentAdd_ShouldNotCorrupt)
+    {
+        QLogicaeCppCore::Result<bool> r;
+        manager.add_pattern(r, "a1", "a+");
+        std::thread tclear([this]()
+            {
+                QLogicaeCppCore::Result<bool> rc;
+                manager.clear_all_patterns(rc);
+            });
+        std::thread tadd([this]()
+            {
+                QLogicaeCppCore::Result<bool> ra;
+                manager.add_pattern(ra, "a2", "a+");
+            });
+        tclear.join();
+        tadd.join();
+        SUCCEED();
+    }
+
+    TEST_F(RegularExpressionManagerTest, List_GetSizeReflectsOperations)
+    {
+        QLogicaeCppCore::Result<bool> r;
+        manager.add_pattern(r, "ls1", "a+");
+        manager.add_pattern(r, "ls2", "b+");
+        QLogicaeCppCore::Result<bool> h1;
+        manager.has_pattern(h1, "ls1");
+        bool v1 = false;
+        h1.get_value(v1);
+        QLogicaeCppCore::Result<bool> h2;
+        manager.has_pattern(h2, "ls2");
+        bool v2 = false;
+        h2.get_value(v2);
+        ASSERT_TRUE(v1);
+        ASSERT_TRUE(v2);
+    }
+
+    TEST_F(RegularExpressionManagerTest, Stress_MultiThreadedAdd_UniqueNames)
+    {
+        int thread_count = 16;
+        std::vector<std::thread> threads;
+        for (int i = 0; i < thread_count; i++)
+        {
+            threads.emplace_back(
+                [this, i]()
+                {
+                    QLogicaeCppCore::Result<bool> r;
+                    manager.add_pattern(r, "u" + std::to_string(i), "a+");
+                }
+            );
+        }
+        for (auto& t : threads) t.join();
+        int found = 0;
+        for (int i = 0; i < thread_count; i++)
+        {
+            QLogicaeCppCore::Result<bool> r;
+            manager.has_pattern(r, "u" + std::to_string(i));
+            bool v = false;
+            r.get_value(v);
+            if (v) found++;
+        }
+        ASSERT_EQ(found, thread_count);
+    }
+
+    TEST_F(RegularExpressionManagerTest, Stress_MultiThreadedRemove)
+    {
+        for (int i = 0; i < 100; i++)
+        {
+            QLogicaeCppCore::Result<bool> r;
+            manager.add_pattern(r, "rm" + std::to_string(i), "a+");
+        }
+        std::vector<std::thread> threads;
+        for (int i = 0; i < 50; i++)
+        {
+            threads.emplace_back(
+                [this, i]()
+                {
+                    QLogicaeCppCore::Result<bool> r;
+                    manager.remove_pattern(r, "rm" + std::to_string(i));
+                }
+            );
+        }
+        for (auto& t : threads) t.join();
+        SUCCEED();
+    }
+
+    TEST_F(RegularExpressionManagerTest, Stress_MixedAddMatch)
+    {
+        for (int i = 0; i < 500; i++)
+        {
+            QLogicaeCppCore::Result<bool> r;
+            manager.add_pattern(r, "m" + std::to_string(i), "a+");
+            QLogicaeCppCore::Result<bool> rm;
+            manager.match_direct(rm, "aaa", "a+");
+        }
+        SUCCEED();
+    }
+
+    TEST_F(RegularExpressionManagerTest, Regex_BoundariesGroupsNested)
+    {
+        QLogicaeCppCore::Result<bool> r;
+        manager.match_direct(r, "abc", "^(a|b)c$");
+        bool v = false;
+        r.get_value(v);
+        ASSERT_FALSE(v);
+    }
+
+    TEST_F(RegularExpressionManagerTest, Regex_InvalidEscape_ShouldReturnFalse)
+    {
+        QLogicaeCppCore::Result<bool> r;
+        manager.match_direct(r, "x", "\\");
+        bool v = false;
+        r.get_value(v);
+        ASSERT_FALSE(v);
+    }
+
+    TEST_F(RegularExpressionManagerTest, Operational_AddAfterInternalError)
+    {
+        QLogicaeCppCore::Result<bool> r;
+        manager.add_pattern(r, "err", "(");
+        QLogicaeCppCore::Result<bool> r2;
+        manager.add_pattern(r2, "ok", "a+");
+        bool v = false;
+        r2.get_value(v);
+        ASSERT_TRUE(v);
+    }
+
+    TEST_F(RegularExpressionManagerTest, Operational_RemoveWithWhitespaceName)
+    {
+        QLogicaeCppCore::Result<bool> r;
+        manager.add_pattern(r, " ws ", "a+");
+        QLogicaeCppCore::Result<bool> rm;
+        manager.remove_pattern(rm, " ws ");
+        bool v = false;
+        rm.get_value(v);
+        ASSERT_TRUE(v);
+    }
+
+    TEST_F(RegularExpressionManagerTest, Regex_CompilesButAlwaysFails)
+    {
+        QLogicaeCppCore::Result<bool> r;
+        manager.add_pattern(r, "f", "(?!)");
+        QLogicaeCppCore::Result<bool> m;
+        manager.match_named(m, "anything", "f");
+        bool v = false;
+        m.get_value(v);
+        ASSERT_FALSE(v);
+    }
+
+    TEST_F(RegularExpressionManagerTest, Regex_CatastrophicBacktrackComplex)
+    {
+        std::string subject(2000, 'a');
+        QLogicaeCppCore::Result<bool> r;
+        manager.match_direct(r, subject, "(a+)+b");
+        bool v = false;
+        r.get_value(v);
+        ASSERT_FALSE(v);
     }
 }

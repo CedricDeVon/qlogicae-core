@@ -41,8 +41,21 @@ namespace QLogicaeCppCore
         const std::string_view& name
     )
     {
+        std::shared_lock lock(_mutex);
+
+        auto pair = _compiled_patterns.find(name.data());
+
+        if (pair != _compiled_patterns.end())
+        {
+            _compiled_patterns.erase(name.data());
+            result.set_to_good_status_with_value(
+                true
+            );
+            return;
+        }
+        
         result.set_to_good_status_with_value(
-            true
+            false
         );
     }
 
