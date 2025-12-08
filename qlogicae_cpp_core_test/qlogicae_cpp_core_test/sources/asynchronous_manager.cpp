@@ -847,6 +847,3 @@ namespace QLogicaeCppCoreTest
     }
 
 }
-/*
-"東京"
-*/

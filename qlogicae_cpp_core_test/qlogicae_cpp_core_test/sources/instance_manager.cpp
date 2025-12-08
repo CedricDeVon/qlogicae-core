@@ -263,6 +263,3 @@ namespace QLogicaeCppCoreTest
         ::testing::Values(0, 1, 2)
     );
 }
-/*
-"??"
-*/

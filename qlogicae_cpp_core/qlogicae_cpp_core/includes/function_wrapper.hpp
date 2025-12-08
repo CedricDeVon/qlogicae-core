@@ -46,7 +46,7 @@ namespace QLogicaeCppCore
 
         template <typename ResultType, typename InputObjectType, typename InputCallback, typename... InputCallbackArguments>
         static void call_async(
-            const std::function<void(ResultType result)>& output_callback,
+            std::future<Result<ResultType>>& promise_result,
             InputObjectType& input_object,
             const InputCallback& input_callback,
             const InputCallbackArguments&... input_callback_arguments
@@ -54,7 +54,7 @@ namespace QLogicaeCppCore
 
         template <typename ResultType, typename InputObjectType, typename InputCallback, typename... InputCallbackArguments>
         static void call_async(
-            Result<std::future<ResultType>>& result,
+            const std::function<void(ResultType result)>& output_callback,
             InputObjectType& input_object,
             const InputCallback& input_callback,
             const InputCallbackArguments&... input_callback_arguments
@@ -91,16 +91,14 @@ namespace QLogicaeCppCore
             throw std::runtime_error(
                 exception.what()
             );
-
-            return result_value;
         }
     }
 
     template <typename ResultType, typename InputObjectType, typename InputCallback, typename... InputCallbackArguments>
     std::future<ResultType> FunctionWrapper::call_async(
-        InputObjectType& object,
-        const InputCallback& callback,
-        const InputCallbackArguments&... args
+        InputObjectType& input_object,
+        const InputCallback& input_callback,
+        const InputCallbackArguments&... input_callback_arguments
     )
     {
         Result<bool> result;
@@ -111,19 +109,26 @@ namespace QLogicaeCppCore
         ASYNCHRONOUS_MANAGER.begin_one_thread(
             result,
             [
-                &object,
-                callback,
+                &input_object,
+                input_callback,
                 promise,
-                args...
+                input_callback_arguments...
             ]() mutable
             {
-                promise->set_value(
-                    call_safely<ResultType>(
-                        object,
-                        callback,
-                        args...
-                    )
-                );
+                try
+                {
+                    promise->set_value(
+                        call_safely<ResultType>(
+                            input_object,
+                            input_callback,
+                            input_callback_arguments...
+                        )
+                    );                    
+                }
+                catch (...)
+                {
+                    promise->set_exception(std::current_exception());
+                }
             }
         );
 
@@ -132,10 +137,53 @@ namespace QLogicaeCppCore
 
     template <typename ResultType, typename InputObjectType, typename InputCallback, typename... InputCallbackArguments>
     void FunctionWrapper::call_async(
+        std::future<Result<ResultType>>& promise_result,
+        InputObjectType& input_object,
+        const InputCallback& input_callback,
+        const InputCallbackArguments&... input_callback_arguments
+    )
+    {                
+        Result<bool> async_result;
+
+        ASYNCHRONOUS_MANAGER.begin_one_thread(
+            async_result,
+            [
+                &input_object,
+                input_callback,
+                promise_result,
+                input_callback_arguments...
+            ]() mutable
+            {
+                Result<ResultType> wrapper;
+                
+                try
+                {
+                    wrapper.set_to_good_status_with_value(
+                        call_safely<ResultType>(
+                            input_object,
+                            input_callback,
+                            input_callback_arguments...
+                        )
+                    );
+
+                    promise_result->set_value(
+                        wrapper
+                    );
+                }
+                catch (...)
+                {
+                    
+                }
+            }
+        );
+    }
+
+    template <typename ResultType, typename InputObjectType, typename InputCallback, typename... InputCallbackArguments>
+    void FunctionWrapper::call_async(
         const std::function<void(ResultType)>& output_callback,
-        InputObjectType& object,
-        const InputCallback& callback,
-        const InputCallbackArguments&... args
+        InputObjectType& input_object,
+        const InputCallback& input_callback,
+        const InputCallbackArguments&... input_callback_arguments
     )
     {
         Result<bool> result;
@@ -143,19 +191,36 @@ namespace QLogicaeCppCore
         ASYNCHRONOUS_MANAGER.begin_one_thread(
             result,
             [
-                &object,
-                callback,
+                &input_object,
+                input_callback,
                 output_callback,
-                args...
+                input_callback_arguments...
             ]() mutable
             {
-                output_callback(
-                    call_safely<ResultType>(
-                        object,
-                        callback,
-                        args...
-                    )
-                );
+                try
+                {
+                    if (output_callback)
+                    {
+                        try
+                        {
+                            output_callback(
+                                call_safely<ResultType>(
+                                    input_object,
+                                    input_callback,
+                                    input_callback_arguments...
+                                )
+                            );
+                        }
+                        catch (...)
+                        {
+
+                        }
+                    }                    
+                }
+                catch (...)
+                {
+                    
+                }
             }
         );
     }
@@ -163,9 +228,9 @@ namespace QLogicaeCppCore
     template <typename ResultType, typename InputObjectType, typename InputCallback, typename... InputCallbackArguments>
     void FunctionWrapper::call_async(
         const std::function<void(Result<ResultType>&)>& output_callback,
-        InputObjectType& object,
-        const InputCallback& callback,
-        const InputCallbackArguments&... args
+        InputObjectType& input_object,
+        const InputCallback& input_callback,
+        const InputCallbackArguments&... input_callback_arguments
     )
     {
         Result<bool> result;
@@ -173,27 +238,50 @@ namespace QLogicaeCppCore
         ASYNCHRONOUS_MANAGER.begin_one_thread(
             result,
             [
-                &object,
-                callback,
+                &input_object,
+                input_callback,
                 output_callback,
-                args...
+                input_callback_arguments...
             ]() mutable
             {
                 Result<ResultType> wrapper;
+                
+                try
+                {
+                    wrapper.set_to_good_status_with_value(
+                        call_safely<ResultType>(
+                            input_object,
+                            input_callback,
+                            input_callback_arguments...
+                        )
+                    );
+                }
+                catch (...)
+                {
+                    wrapper.set_to_bad_status_without_value();
+                }
 
-                wrapper.set_to_good_status_with_value(
-                    call_safely<ResultType>(
-                        object,
-                        callback,
-                        args...
-                    )
-                );
+                try
+                {
+                    if (output_callback)
+                    {
+                        try
+                        {
+                            output_callback(wrapper);
+                        }
+                        catch (...)
+                        {
 
-                output_callback(wrapper);
+                        }
+                    }
+                }
+                catch (...)
+                {
+                    
+                }
             }
         );
     }
-
 
     inline static FunctionWrapper& FUNCTION_WRAPPER =
         INSTANCE_MANAGER.get_instance<FunctionWrapper>();
