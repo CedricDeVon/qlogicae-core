@@ -1,8 +1,10 @@
 #pragma once
 
+#include "instance_manager.hpp"
+
 namespace QLogicaeCppCore
 {
-    struct ValidationPasswordRules
+    struct ValidationManagerPasswordRules
     {
         std::size_t minimum_length = 8;
         
@@ -18,4 +20,7 @@ namespace QLogicaeCppCore
         
         bool require_lowercase_characters = true;
     };
+
+    inline static ValidationManagerPasswordRules& VALIDATION_MANAGER_PASSWORD_RULES =
+        INSTANCE_MANAGER.get_instance<ValidationManagerPasswordRules>();
 }

@@ -2,7 +2,7 @@
 
 #include "result.hpp"
 #include "instance_manager.hpp"
-#include "validation_password_rules.hpp"
+#include "validation_manager_password_rules.hpp"
 
 namespace QLogicaeCppCore
 {    
@@ -530,7 +530,7 @@ namespace QLogicaeCppCore
         void is_strong_password(
             Result<bool>& result,
             const std::string_view& value,
-            const ValidationPasswordRules& rules
+            const ValidationManagerPasswordRules& rules
         );
         
         void is_character_repeated(

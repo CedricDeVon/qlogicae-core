@@ -2,8 +2,6 @@
 
 #include "qlogicae_cpp_core/includes/timeout.hpp"
 
-using namespace QLogicaeCppCore;
-
 namespace QLogicaeCppCoreTest
 {
     class TimeoutTest : public ::testing::Test
@@ -30,14 +28,14 @@ namespace QLogicaeCppCoreTest
     {
         std::atomic<bool> callback_executed{ false };
 
-        TimeoutConfigurations config;
+        QLogicaeCppCore::TimeoutConfigurations config;
         config.is_executed_immediately = true;
         config.callback = [&]()
             {
                 callback_executed.store(true);
             };
 
-        Timeout timeout(config);
+        QLogicaeCppCore::Timeout timeout(config);
 
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
         EXPECT_TRUE(callback_executed.load());
@@ -47,7 +45,7 @@ namespace QLogicaeCppCoreTest
     {
         std::atomic<bool> callback_executed{ false };
 
-        TimeoutConfigurations config;
+        QLogicaeCppCore::TimeoutConfigurations config;
         config.is_executed_immediately = false;
         config.delay_in_milliseconds = std::chrono::milliseconds(100);
         config.callback = [&]()
@@ -55,7 +53,7 @@ namespace QLogicaeCppCoreTest
                 callback_executed.store(true);
             };
 
-        Timeout timeout(config);
+        QLogicaeCppCore::Timeout timeout(config);
 
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
         EXPECT_FALSE(callback_executed.load());
@@ -68,7 +66,7 @@ namespace QLogicaeCppCoreTest
     {
         std::atomic<bool> callback_executed{ false };
 
-        TimeoutConfigurations config;
+        QLogicaeCppCore::TimeoutConfigurations config;
         config.is_executed_immediately = false;
         config.delay_in_milliseconds = std::chrono::milliseconds(100);
         config.callback = [&]()
@@ -76,8 +74,8 @@ namespace QLogicaeCppCoreTest
                 callback_executed.store(true);
             };
 
-        Timeout timeout(config);
-        Result<bool> result;
+        QLogicaeCppCore::Timeout timeout(config);
+        QLogicaeCppCore::Result<bool> result;
         timeout.cancel(result);
 
         std::this_thread::sleep_for(std::chrono::milliseconds(200));
@@ -87,13 +85,13 @@ namespace QLogicaeCppCoreTest
 
     TEST_F(TimeoutTest, Should_SetCancelledFlag_When_Cancelled)
     {
-        TimeoutConfigurations config;
-        Timeout timeout(config);
-        Result<bool> result;
+        QLogicaeCppCore::TimeoutConfigurations config;
+        QLogicaeCppCore::Timeout timeout(config);
+        QLogicaeCppCore::Result<bool> result;
 
         timeout.cancel(result);
 
-        Result<bool> is_cancelled_result;
+        QLogicaeCppCore::Result<bool> is_cancelled_result;
         timeout.is_cancelled(is_cancelled_result);
         EXPECT_TRUE(is_cancelled_result.get_value());
     }
@@ -102,7 +100,7 @@ namespace QLogicaeCppCoreTest
     {
         std::atomic<int> callback_counter{ 0 };
 
-        TimeoutConfigurations config;
+        QLogicaeCppCore::TimeoutConfigurations config;
         config.is_executed_immediately = false;
         config.delay_in_milliseconds = std::chrono::milliseconds(50);
         config.callback = [&]()
@@ -110,8 +108,8 @@ namespace QLogicaeCppCoreTest
                 callback_counter.fetch_add(1);
             };
 
-        Timeout timeout(config);
-        Result<bool> result;
+        QLogicaeCppCore::Timeout timeout(config);
+        QLogicaeCppCore::Result<bool> result;
         timeout.restart(result);
 
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -120,14 +118,14 @@ namespace QLogicaeCppCoreTest
 
     TEST_F(TimeoutTest, Should_HandleExceptionsInCallbackGracefully)
     {
-        TimeoutConfigurations config;
+        QLogicaeCppCore::TimeoutConfigurations config;
         config.callback = []()
             {
                 throw std::runtime_error("callback exception");
             };
         config.is_executed_immediately = true;
 
-        Timeout timeout(config);
+        QLogicaeCppCore::Timeout timeout(config);
 
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
     }
@@ -137,16 +135,16 @@ namespace QLogicaeCppCoreTest
         constexpr int iterations = 50;
         std::atomic<int> callback_counter{ 0 };
 
-        std::vector<std::unique_ptr<Timeout>> timeouts;
+        std::vector<std::unique_ptr<QLogicaeCppCore::Timeout>> timeouts;
         for (int i = 0; i < iterations; ++i)
         {
-            TimeoutConfigurations config;
+            QLogicaeCppCore::TimeoutConfigurations config;
             config.is_executed_immediately = true;
             config.callback = [&]()
                 {
                     callback_counter.fetch_add(1);
                 };
-            timeouts.push_back(std::make_unique<Timeout>(config));
+            timeouts.push_back(std::make_unique<QLogicaeCppCore::Timeout>(config));
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -157,7 +155,7 @@ namespace QLogicaeCppCoreTest
     {
         std::atomic<bool> callback_executed{ false };
 
-        TimeoutConfigurations config;
+        QLogicaeCppCore::TimeoutConfigurations config;
         config.is_executed_immediately = false;
         config.delay_in_milliseconds = std::chrono::milliseconds(0);
         config.callback = [&]()
@@ -165,7 +163,7 @@ namespace QLogicaeCppCoreTest
                 callback_executed.store(true);
             };
 
-        Timeout timeout(config);
+        QLogicaeCppCore::Timeout timeout(config);
 
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
         EXPECT_TRUE(callback_executed.load());
@@ -175,18 +173,18 @@ namespace QLogicaeCppCoreTest
     {
         std::atomic<int> callback_counter{ 0 };
 
-        TimeoutConfigurations config;
+        QLogicaeCppCore::TimeoutConfigurations config;
         config.is_executed_immediately = true;
         config.callback = [&]()
             {
                 callback_counter.fetch_add(1);
             };
 
-        Timeout timeout(config);
-        Result<bool> result1;
+        QLogicaeCppCore::Timeout timeout(config);
+        QLogicaeCppCore::Result<bool> result1;
         timeout.construct(result1, config);
 
-        Result<bool> result2;
+        QLogicaeCppCore::Result<bool> result2;
         timeout.construct(result2, config);
 
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -200,7 +198,7 @@ namespace QLogicaeCppCoreTest
     {
         std::atomic<int> callback_counter{ 0 };
 
-        TimeoutConfigurations config;
+        QLogicaeCppCore::TimeoutConfigurations config;
         config.is_executed_immediately = false;
         config.delay_in_milliseconds = std::chrono::milliseconds(50);
         config.callback = [&]()
@@ -208,8 +206,8 @@ namespace QLogicaeCppCoreTest
                 callback_counter.fetch_add(1);
             };
 
-        Timeout timeout(config);
-        Result<bool> result1;
+        QLogicaeCppCore::Timeout timeout(config);
+        QLogicaeCppCore::Result<bool> result1;
         timeout.restart(result1);
 
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -217,7 +215,7 @@ namespace QLogicaeCppCoreTest
 
         config.is_executed_immediately = true;
         timeout.configurations = config;
-        Result<bool> result2;
+        QLogicaeCppCore::Result<bool> result2;
         timeout.restart(result2);
 
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -228,7 +226,7 @@ namespace QLogicaeCppCoreTest
     {
         std::atomic<int> callback_counter{ 0 };
 
-        TimeoutConfigurations config;
+        QLogicaeCppCore::TimeoutConfigurations config;
         config.is_executed_immediately = false;
         config.delay_in_milliseconds = std::chrono::milliseconds(20);
         config.callback = [&]()
@@ -236,14 +234,14 @@ namespace QLogicaeCppCoreTest
                 callback_counter.fetch_add(1);
             };
 
-        Timeout timeout(config);
+        QLogicaeCppCore::Timeout timeout(config);
 
         for (int i = 0; i < 10; ++i)
         {
-            Result<bool> cancel_result;
+            QLogicaeCppCore::Result<bool> cancel_result;
             timeout.cancel(cancel_result);
 
-            Result<bool> restart_result;
+            QLogicaeCppCore::Result<bool> restart_result;
             timeout.restart(restart_result);
         }
 
@@ -256,12 +254,12 @@ namespace QLogicaeCppCoreTest
         std::atomic<bool> callback_executed{ false };
 
         TimeoutParamTestData param = GetParam();
-        TimeoutConfigurations config;
+        QLogicaeCppCore::TimeoutConfigurations config;
         config.is_executed_immediately = param.is_executed_immediately;
         config.delay_in_milliseconds = param.delay_in_milliseconds;
         config.callback = [&]() { callback_executed.store(true); };
 
-        Timeout timeout(config);
+        QLogicaeCppCore::Timeout timeout(config);
 
         std::this_thread::sleep_for(param.delay_in_milliseconds + std::chrono::milliseconds(50));
         EXPECT_TRUE(callback_executed.load());
@@ -283,13 +281,13 @@ namespace QLogicaeCppCoreTest
         std::atomic<bool> callback_executed{ false };
 
         {
-            TimeoutConfigurations config;
+            QLogicaeCppCore::TimeoutConfigurations config;
             config.is_executed_immediately = false;
             config.delay_in_milliseconds = std::chrono::milliseconds(100);
             config.callback = [&]() { callback_executed.store(true); };
 
-            Timeout timeout(config);
-        } 
+            QLogicaeCppCore::Timeout timeout(config);
+        }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(150));
         EXPECT_FALSE(callback_executed.load());
@@ -299,12 +297,12 @@ namespace QLogicaeCppCoreTest
     {
         std::atomic<bool> callback_executed{ false };
 
-        TimeoutConfigurations config;
+        QLogicaeCppCore::TimeoutConfigurations config;
         config.is_executed_immediately = false;
         config.delay_in_milliseconds = std::chrono::milliseconds(-100);
         config.callback = [&]() { callback_executed.store(true); };
 
-        Timeout timeout(config);
+        QLogicaeCppCore::Timeout timeout(config);
 
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
         EXPECT_TRUE(callback_executed.load());
@@ -314,20 +312,20 @@ namespace QLogicaeCppCoreTest
     {
         std::atomic<int> callback_counter{ 0 };
 
-        TimeoutConfigurations config;
+        QLogicaeCppCore::TimeoutConfigurations config;
         config.is_executed_immediately = false;
         config.delay_in_milliseconds = std::chrono::milliseconds(20);
         config.callback = [&]() { callback_counter.fetch_add(1); };
 
-        Timeout timeout(config);
+        QLogicaeCppCore::Timeout timeout(config);
 
         std::thread t1([&]() {
-            Result<bool> result1;
+            QLogicaeCppCore::Result<bool> result1;
             timeout.construct(result1, config);
             });
 
         std::thread t2([&]() {
-            Result<bool> result2;
+            QLogicaeCppCore::Result<bool> result2;
             timeout.restart(result2);
             });
 
@@ -343,12 +341,12 @@ namespace QLogicaeCppCoreTest
         std::promise<void> callback_done;
         auto callback_future = callback_done.get_future();
 
-        TimeoutConfigurations config;
+        QLogicaeCppCore::TimeoutConfigurations config;
         config.is_executed_immediately = false;
         config.delay_in_milliseconds = std::chrono::milliseconds(50);
         config.callback = [&]() { callback_done.set_value(); };
 
-        Timeout timeout(config);
+        QLogicaeCppCore::Timeout timeout(config);
 
         auto status = callback_future.wait_for(std::chrono::milliseconds(100));
         EXPECT_EQ(status, std::future_status::ready);
@@ -356,11 +354,11 @@ namespace QLogicaeCppCoreTest
 
     TEST_F(TimeoutTest, Should_HandleCallbackThrowingNonStdException)
     {
-        TimeoutConfigurations config;
+        QLogicaeCppCore::TimeoutConfigurations config;
         config.is_executed_immediately = true;
         config.callback = []() { throw 42; };
 
-        Timeout timeout(config);
+        QLogicaeCppCore::Timeout timeout(config);
 
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
         SUCCEED();
@@ -371,34 +369,34 @@ namespace QLogicaeCppCoreTest
         std::atomic<bool> callback_started{ false };
         std::atomic<bool> callback_finished{ false };
 
-        TimeoutConfigurations config;
-        config.is_executed_immediately = false;
+        QLogicaeCppCore::TimeoutConfigurations config;
+        config.is_executed_immediately = true;
         config.delay_in_milliseconds = std::chrono::milliseconds(50);
         config.callback = [&]()
             {
                 callback_started.store(true);
-                std::this_thread::sleep_for(std::chrono::milliseconds(100));
+                std::this_thread::sleep_for(std::chrono::milliseconds(200));
                 callback_finished.store(true);
             };
 
-        auto timeout = std::make_unique<Timeout>(config);
+        auto timeout = std::make_unique<QLogicaeCppCore::Timeout>(config);
 
         std::this_thread::sleep_for(std::chrono::milliseconds(60));
-        timeout.reset(); 
+        timeout.reset();
 
-        EXPECT_TRUE(callback_started.load());        
+        EXPECT_TRUE(callback_started.load());
     }
 
     TEST_F(TimeoutTest, Should_WorkWithVeryLongDelay)
     {
         std::atomic<bool> callback_executed{ false };
 
-        TimeoutConfigurations config;
+        QLogicaeCppCore::TimeoutConfigurations config;
         config.is_executed_immediately = false;
-        config.delay_in_milliseconds = std::chrono::milliseconds(1000); 
+        config.delay_in_milliseconds = std::chrono::milliseconds(1000);
         config.callback = [&]() { callback_executed.store(true); };
 
-        Timeout timeout(config);
+        QLogicaeCppCore::Timeout timeout(config);
 
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
         EXPECT_FALSE(callback_executed.load());
@@ -411,14 +409,14 @@ namespace QLogicaeCppCoreTest
         auto shared_callback = [&]() { callback_counter.fetch_add(1); };
 
         constexpr int instances = 5;
-        std::vector<std::unique_ptr<Timeout>> timeouts;
+        std::vector<std::unique_ptr<QLogicaeCppCore::Timeout>> timeouts;
 
         for (int i = 0; i < instances; ++i)
         {
-            TimeoutConfigurations config;
+            QLogicaeCppCore::TimeoutConfigurations config;
             config.is_executed_immediately = true;
             config.callback = shared_callback;
-            timeouts.push_back(std::make_unique<Timeout>(config));
+            timeouts.push_back(std::make_unique<QLogicaeCppCore::Timeout>(config));
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(50));

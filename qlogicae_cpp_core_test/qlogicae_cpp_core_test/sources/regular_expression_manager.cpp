@@ -1,4 +1,4 @@
-#include "pch.hpp" //
+#include "pch.hpp"
 
 #include "qlogicae_cpp_core/includes/regular_expression_manager.hpp"
 

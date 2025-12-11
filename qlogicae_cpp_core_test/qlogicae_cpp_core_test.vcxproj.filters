@@ -16,6 +16,7 @@
     <ClCompile Include="qlogicae_cpp_core_test\sources\regular_expression_manager.cpp" />
     <ClCompile Include="qlogicae_cpp_core_test\sources\timeout.cpp" />
     <ClCompile Include="qlogicae_cpp_core_test\sources\interval.cpp" />
+    <ClCompile Include="qlogicae_cpp_core_test\sources\network_ping_manager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.hpp" />

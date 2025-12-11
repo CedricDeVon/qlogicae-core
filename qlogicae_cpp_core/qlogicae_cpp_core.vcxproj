@@ -200,6 +200,9 @@
     <ClInclude Include="qlogicae_cpp_core\includes\interval.hpp" />
     <ClInclude Include="qlogicae_cpp_core\includes\interval_configurations.hpp" />
     <ClInclude Include="qlogicae_cpp_core\includes\mutex_manager.hpp" />
+    <ClInclude Include="qlogicae_cpp_core\includes\network_ping_manager.hpp" />
+    <ClInclude Include="qlogicae_cpp_core\includes\network_ping_manager_response.hpp" />
+    <ClInclude Include="qlogicae_cpp_core\includes\network_ping_manager_configurations.hpp" />
     <ClInclude Include="qlogicae_cpp_core\includes\pair_hash_operator.hpp" />
     <ClInclude Include="qlogicae_cpp_core\includes\regular_expression_manager.hpp" />
     <ClInclude Include="qlogicae_cpp_core\includes\result.hpp" />
@@ -210,7 +213,7 @@
     <ClInclude Include="qlogicae_cpp_core\includes\timeout.hpp" />
     <ClInclude Include="qlogicae_cpp_core\includes\timeout_configurations.hpp" />
     <ClInclude Include="qlogicae_cpp_core\includes\utilities.hpp" />
-    <ClInclude Include="qlogicae_cpp_core\includes\validation_password_rules.hpp" />
+    <ClInclude Include="qlogicae_cpp_core\includes\validation_manager_password_rules.hpp" />
     <ClInclude Include="qlogicae_cpp_core\includes\validation_manager.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -228,6 +231,9 @@
     <ClCompile Include="qlogicae_cpp_core\sources\interval.cpp" />
     <ClCompile Include="qlogicae_cpp_core\sources\interval_configurations.cpp" />
     <ClCompile Include="qlogicae_cpp_core\sources\mutex_manager.cpp" />
+    <ClCompile Include="qlogicae_cpp_core\sources\network_ping_manager.cpp" />
+    <ClCompile Include="qlogicae_cpp_core\sources\network_ping_manager_response.cpp" />
+    <ClCompile Include="qlogicae_cpp_core\sources\network_ping_manager_configurations.cpp" />
     <ClCompile Include="qlogicae_cpp_core\sources\pair_hash_operator.cpp" />
     <ClCompile Include="qlogicae_cpp_core\sources\regular_expression_manager.cpp" />
     <ClCompile Include="qlogicae_cpp_core\sources\result.cpp" />
@@ -238,7 +244,7 @@
     <ClCompile Include="qlogicae_cpp_core\sources\timeout.cpp" />
     <ClCompile Include="qlogicae_cpp_core\sources\timeout_configurations.cpp" />
     <ClCompile Include="qlogicae_cpp_core\sources\utilities.cpp" />
-    <ClCompile Include="qlogicae_cpp_core\sources\validation_password_rules.cpp" />
+    <ClCompile Include="qlogicae_cpp_core\sources\validation_manager_password_rules.cpp" />
     <ClCompile Include="qlogicae_cpp_core\sources\validation_manager.cpp" />
   </ItemGroup>
   <ItemGroup>

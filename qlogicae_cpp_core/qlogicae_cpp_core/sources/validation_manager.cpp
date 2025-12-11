@@ -6,12 +6,16 @@ namespace QLogicaeCppCore
 {
     ValidationManager::ValidationManager()
     {
-        
+        Result<bool> result;
+
+        construct(result);
     }
 
     ValidationManager::~ValidationManager()
     {
+        Result<bool> result;
 
+        destruct(result);
     }
 
     void ValidationManager::construct(
@@ -1347,6 +1351,16 @@ namespace QLogicaeCppCore
 
     void ValidationManager::is_adult(
         Result<bool>& result,
+        const uint8_t& age
+    )
+    {
+        result.set_to_good_status_with_value(
+            age >= 18
+        );
+    }
+
+    void ValidationManager::is_adult(
+        Result<bool>& result,
         const uint8_t& age,
         const uint8_t& minimum_age
     )
@@ -1379,7 +1393,7 @@ namespace QLogicaeCppCore
     void ValidationManager::is_strong_password(
         Result<bool>& result,
         const std::string_view& value,
-        const ValidationPasswordRules& rules
+        const ValidationManagerPasswordRules& rules
     )
     {
         if (value.size() < rules.minimum_length ||

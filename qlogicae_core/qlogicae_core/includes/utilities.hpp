@@ -156,7 +156,7 @@ namespace QLogicaeCore
         
         const std::string STRING_NONE_2 =
             "N/A";
-
+        
         const std::string DEFAULT_HOST_ADDRESS =
             "1.1.1.1";
 
@@ -487,7 +487,7 @@ namespace QLogicaeCore
             { TimeFormat::DATE_DMY_SPACED, TIME_FORMAT_DATE_DMY_SPACED_1 },
 
             { TimeFormat::DATE_VERBOSE, TIME_FORMAT_DATE_VERBOSE_1 }
-        };
+        }; 
 
         const std::unordered_map<std::string, TimeFormat> TIME_FORMAT_STRINGS_1 =
         {

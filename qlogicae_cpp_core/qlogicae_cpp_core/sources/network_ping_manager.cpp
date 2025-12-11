@@ -6,247 +6,170 @@ namespace QLogicaeCppCore
 {
     NetworkPingManager::NetworkPingManager()
     {
+        Result<bool> result;
 
+        construct(result);
     }
 
     NetworkPingManager::~NetworkPingManager()
     {
+        Result<bool> result;
 
+        destruct(result);
     }
 
-
-    NetworkPingManager::NetworkPingManager(const NetworkPingSettings& settings) :
-        _settings(settings),
-        _interval(
-            [this](size_t) -> bool
-            {
-                auto result = _ping();
-                if (result && _settings.callback)
-                {
-                    _settings.callback(
-                        NetworkPingResponse{ *result }
-                    );
-                }
-                return _settings.is_listening;
-            },
-            settings.milliseconds_per_callback,
-            std::nullopt,
-            true)
+    NetworkPingManager::NetworkPingManager(
+        const NetworkPingManagerConfigurations& initial_configurations
+    )        
     {
-        if (_settings.is_listening)
-        {
-            _interval.start();
-        }
+        Result<bool> result;
+
+        construct(
+            result,
+            initial_configurations
+        );
     }
 
-    bool NetworkPingManager::continue_listening()
-    {
-        if (!_settings.is_listening)
-        {
-            _settings.is_listening = true;
-            _interval.resume();
-
-            return true;
-        }
-
-        return false;
-    }
-
-    bool NetworkPingManager::pause_listening()
-    {
-        if (_settings.is_listening)
-        {
-            _settings.is_listening = false;
-            _interval.pause();
-
-            return true;
-        }
-
-        return false;
-    }
-
-    bool NetworkPingManager::get_is_listening()
-    {
-        return _settings.is_listening;
-    }
-
-    void NetworkPingManager::set_is_listening(const bool& is_listening)
-    {
-        _settings.is_listening = is_listening;
-        is_listening ? _interval.resume() : _interval.pause();
-    }
-
-    std::string_view NetworkPingManager::get_name()
-    {
-        return _settings.name;
-    }
-
-    void NetworkPingManager::set_name(const std::string_view& name)
-    {
-        _settings.name = std::string(name);
-    }
-
-    std::string_view NetworkPingManager::get_host_address()
-    {
-        return _settings.host_address;
-    }
-
-    void NetworkPingManager::set_host_address(const std::string_view& address)
-    {
-        _settings.host_address = std::string(address);
-    }
-
-    std::chrono::milliseconds NetworkPingManager::
-        get_milliseconds_per_callback()
-    {
-        return _settings.milliseconds_per_callback;
-    }
-
-    void NetworkPingManager::set_milliseconds_per_callback(
-        const std::chrono::milliseconds& milliseconds)
-    {
-        _settings.milliseconds_per_callback = milliseconds;
-        _interval.set_interval(milliseconds);
-    }
-
-    std::optional<int64_t> NetworkPingManager::_ping()
-    {
-        try
-        {
-            boost::asio::io_context io;
-            boost::asio::ip::tcp::resolver resolver(io);
-            auto endpoints = resolver.resolve(_settings.host_address, "80");
-
-            boost::asio::ip::tcp::socket socket(io);
-            auto start = std::chrono::steady_clock::now();
-            boost::asio::connect(socket, endpoints);
-            auto end = std::chrono::steady_clock::now();
-
-            return std::chrono::duration_cast<std::chrono::milliseconds>(
-                end - start
-            ).count();
-        }
-        catch (...)
-        {
-            return std::nullopt;
-        }
-    }
-
-    void NetworkPingManager::setup(
-        Result<void>& result,
-        const NetworkPingSettings& network_ping_settings
+    void NetworkPingManager::construct(
+        Result<bool>& result
     )
     {
-        _settings = network_ping_settings;
+        NetworkPingManagerConfigurations initial_configurations;
 
-        result.set_to_good_status_without_value();
+        construct(
+            result,
+            initial_configurations
+        );
+    }
+
+    void NetworkPingManager::construct(
+        Result<bool>& result,
+        const NetworkPingManagerConfigurations& initial_configurations
+    )
+    {
+        configurations = initial_configurations;
+
+        auto self = this;
+
+        _interval.construct(
+            result,
+            IntervalConfigurations
+            {
+                [self](size_t) -> bool
+                {
+                    auto pingResult = self->_ping();
+                    if (pingResult && self->configurations.callback)
+                    {
+                        self->configurations.callback(
+                            NetworkPingManagerResponse{*pingResult}
+                        );
+                    }
+                    return self->configurations.is_listening;
+                },
+
+                configurations.delay_in_milliseconds,
+                false
+            }
+        );
+
+        if (configurations.is_listening)
+        {
+            _interval.start(result);
+        }
+
+        result.set_to_good_status_with_value(
+            true
+        );
+    }
+
+    void NetworkPingManager::destruct(
+        Result<bool>& result
+    )
+    {        
+        _interval.pause(result);
+        configurations.is_listening = false;
+
+        result.set_to_good_status_with_value(
+            true
+        );
     }
 
     void NetworkPingManager::get_is_listening(
         Result<bool>& result
     )
     {
-        result.set_to_good_status_with_value(
-            _settings.is_listening
-        );
+        result.set_to_good_status_with_value(configurations.is_listening);
     }
 
     void NetworkPingManager::set_is_listening(
-        Result<void>& result,
+        Result<bool>& result,
         const bool& is_listening
     )
     {
-        _settings.is_listening = is_listening;
-        is_listening ?
-            _interval.resume() :
-            _interval.pause();
+        if (is_listening)
+        {
+            _interval.resume(result);
+            if (result.get_status() == ResultStatus::GOOD)
+            {
+                configurations.is_listening = true;
+            }
+        }
+        else
+        {
+            _interval.pause(result);
+            if (result.get_status() == ResultStatus::GOOD)
+            {
+                configurations.is_listening = false;
+            }
+        }
 
-        result.set_to_good_status_without_value();
-    }
-
-    void NetworkPingManager::get_name(
-        Result<std::string_view>& result
-    )
-    {
-        result.set_to_good_status_with_value(
-            _settings.name
-        );
-    }
-
-    void NetworkPingManager::set_name(
-        Result<void>& result,
-        const std::string_view& value
-    )
-    {
-        _settings.name = std::string(value);
-        result.set_to_good_status_without_value();
-    }
-
-    void NetworkPingManager::get_host_address(
-        Result<std::string_view>& result
-    )
-    {
-        result.set_to_good_status_with_value(
-            _settings.host_address
-        );
-    }
-
-    void NetworkPingManager::set_host_address(
-        Result<void>& result,
-        const std::string_view& value
-    )
-    {
-        _settings.host_address = std::string(value);
-        result.set_to_good_status_without_value();
-    }
-
-    void NetworkPingManager::get_milliseconds_per_callback(
-        Result<std::chrono::milliseconds>& result
-    )
-    {
-        result.set_to_good_status_with_value(
-            _settings.milliseconds_per_callback
-        );
-    }
-
-    void NetworkPingManager::set_milliseconds_per_callback(
-        Result<void>& result,
-        const std::chrono::milliseconds& value
-    )
-    {
-        _settings.milliseconds_per_callback = value;
-        _interval.set_interval(value);
-
-        result.set_to_good_status_without_value();
+        result.set_to_good_status_with_value(true);
     }
 
     void NetworkPingManager::pause_listening(
-        Result<void>& result
+        Result<bool>& result
     )
     {
-        if (_settings.is_listening)
+        if (configurations.is_listening)
         {
-            _settings.is_listening = false;
-            _interval.pause();
-
-            return result.set_to_good_status_without_value();
+            set_is_listening(result, false);
+            return;
         }
 
-        result.set_to_bad_status_without_value();
+        result.set_to_bad_status_with_value(false);
     }
 
     void NetworkPingManager::continue_listening(
-        Result<void>& result
+        Result<bool>& result
     )
     {
-        if (!_settings.is_listening)
+        if (!configurations.is_listening)
         {
-            _settings.is_listening = true;
-            _interval.resume();
-
-            return result.set_to_good_status_without_value();
+            set_is_listening(result, true);
+            return;
         }
 
-        result.set_to_bad_status_without_value();
+        result.set_to_bad_status_with_value(false);
+    }
+
+    std::optional<int64_t> NetworkPingManager::_ping()
+    {        
+        try
+        {
+            boost::asio::io_context io;
+            boost::asio::ip::tcp::resolver resolver(io);
+            auto endpoints = resolver.resolve(configurations.host_address, "80");
+
+            boost::asio::ip::tcp::socket socket(io);
+            auto start = std::chrono::steady_clock::now();
+            boost::asio::connect(socket, endpoints);
+            auto end = std::chrono::steady_clock::now();
+
+            return std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+        }
+        catch (...)
+        {
+            return std::nullopt;
+        }
     }
 }

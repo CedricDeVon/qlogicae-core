@@ -27,8 +27,12 @@
 #include "interval.hpp"
 #include "interval_configurations.hpp"
 
+#include "network_ping_manager.hpp"
+#include "network_ping_manager_response.hpp"
+#include "network_ping_manager_configurations.hpp"
+
 #include "validation_manager.hpp"
-#include "validation_password_rules.hpp"
+#include "validation_manager_password_rules.hpp"
 
 #include "application.hpp"
 

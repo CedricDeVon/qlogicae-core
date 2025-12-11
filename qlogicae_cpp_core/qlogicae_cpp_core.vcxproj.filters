@@ -93,10 +93,19 @@
     <ClInclude Include="qlogicae_cpp_core\includes\interval_configurations.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="qlogicae_cpp_core\includes\validation_password_rules.hpp">
+    <ClInclude Include="qlogicae_cpp_core\includes\validation_manager_password_rules.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="qlogicae_cpp_core\includes\validation_manager.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="qlogicae_cpp_core\includes\network_ping_manager.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="qlogicae_cpp_core\includes\network_ping_manager_response.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="qlogicae_cpp_core\includes\network_ping_manager_configurations.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -169,10 +178,19 @@
     <ClCompile Include="qlogicae_cpp_core\sources\interval_configurations.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="qlogicae_cpp_core\sources\validation_password_rules.cpp">
+    <ClCompile Include="qlogicae_cpp_core\sources\validation_manager_password_rules.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="qlogicae_cpp_core\sources\validation_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="qlogicae_cpp_core\sources\network_ping_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="qlogicae_cpp_core\sources\network_ping_manager_response.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="qlogicae_cpp_core\sources\network_ping_manager_configurations.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
