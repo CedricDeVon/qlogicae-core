@@ -27,6 +27,9 @@
 #include "interval.hpp"
 #include "interval_configurations.hpp"
 
+#include "validation_manager.hpp"
+#include "validation_password_rules.hpp"
+
 #include "application.hpp"
 
 namespace QLogicaeCppCore

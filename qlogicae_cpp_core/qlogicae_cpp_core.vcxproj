@@ -210,6 +210,8 @@
     <ClInclude Include="qlogicae_cpp_core\includes\timeout.hpp" />
     <ClInclude Include="qlogicae_cpp_core\includes\timeout_configurations.hpp" />
     <ClInclude Include="qlogicae_cpp_core\includes\utilities.hpp" />
+    <ClInclude Include="qlogicae_cpp_core\includes\validation_password_rules.hpp" />
+    <ClInclude Include="qlogicae_cpp_core\includes\validation_manager.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -236,6 +238,8 @@
     <ClCompile Include="qlogicae_cpp_core\sources\timeout.cpp" />
     <ClCompile Include="qlogicae_cpp_core\sources\timeout_configurations.cpp" />
     <ClCompile Include="qlogicae_cpp_core\sources\utilities.cpp" />
+    <ClCompile Include="qlogicae_cpp_core\sources\validation_password_rules.cpp" />
+    <ClCompile Include="qlogicae_cpp_core\sources\validation_manager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <MASM Include="qlogicae_cpp_core\assembly\x64_masm__main.asm" />
