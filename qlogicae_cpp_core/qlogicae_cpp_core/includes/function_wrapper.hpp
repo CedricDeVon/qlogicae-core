@@ -30,6 +30,14 @@ namespace QLogicaeCppCore
             const FunctionWrapper& instance
         ) = delete;
 
+        void construct(
+            Result<bool>& result
+        );
+
+        void destruct(
+            Result<bool>& result
+        );
+
         template <typename ResultType, typename InputObjectType, typename InputCallback, typename... InputCallbackArguments>
         static ResultType call_safely(
             InputObjectType& input_object,

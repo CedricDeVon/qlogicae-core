@@ -6,13 +6,31 @@ namespace QLogicaeCppCore
 {    
     RegularExpressionManager::RegularExpressionManager()
     {
-        
+        Result<bool> result;
+
+        construct(result);
     }
 
     RegularExpressionManager::~RegularExpressionManager()
     {
         Result<bool> result;
 
+        destruct(result);
+    }
+
+    void RegularExpressionManager::construct(
+        Result<bool>& result
+    )
+    {
+        result.set_to_good_status_with_value(
+            true
+        );
+    }
+
+    void RegularExpressionManager::destruct(
+        Result<bool>& result
+    )
+    {
         clear_all_patterns(
             result
         );

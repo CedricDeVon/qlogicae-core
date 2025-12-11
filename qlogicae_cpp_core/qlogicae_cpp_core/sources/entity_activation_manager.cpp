@@ -6,12 +6,34 @@ namespace QLogicaeCppCore
 {
     EntityActivationManager::EntityActivationManager()
     {
+        Result<bool> result;
 
+        construct(result);
     }
 
     EntityActivationManager::~EntityActivationManager()
     {
+        Result<bool> result;
 
+        destruct(result);
+    }
+
+    void EntityActivationManager::construct(
+        Result<bool>& result
+    )
+    {
+        result.set_to_good_status_with_value(
+            true
+        );
+    }
+
+    void EntityActivationManager::destruct(
+        Result<bool>& result
+    )
+    {
+        result.set_to_good_status_with_value(
+            true
+        );
     }
 
     void EntityActivationManager::get_entity_collection_copy(

@@ -4,6 +4,7 @@
 
 #include "result.hpp"
 #include "result_status.hpp"
+#include "pair_hash_operator.hpp"
 
 #include "instance_manager.hpp"
 #include "function_wrapper.hpp"
@@ -20,10 +21,15 @@
 
 #include "regular_expression_manager.hpp"
 
+#include "timeout.hpp"
+#include "timeout_configurations.hpp"
+
+#include "interval.hpp"
+#include "interval_configurations.hpp"
+
 #include "application.hpp"
 
 namespace QLogicaeCppCore
 {
 
 }
-

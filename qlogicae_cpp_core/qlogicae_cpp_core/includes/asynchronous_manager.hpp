@@ -22,11 +22,19 @@ namespace QLogicaeCppCore
 
         AsynchronousManager& operator = (
             AsynchronousManager&& instance
-            ) = delete;
+        ) = delete;
 
         AsynchronousManager& operator = (
             const AsynchronousManager& instance
-            ) = delete;
+        ) = delete;
+
+        void construct(
+            Result<bool>& result
+        );
+
+        void destruct(
+            Result<bool>& result
+        );
 
         void begin_one_thread(
             Result<bool>& result,
@@ -41,7 +49,6 @@ namespace QLogicaeCppCore
         std::mutex _mutex;
 
         std::shared_ptr<boost::asio::thread_pool> _THREAD_POOL;
-
     };
 
     inline static AsynchronousManager& ASYNCHRONOUS_MANAGER =

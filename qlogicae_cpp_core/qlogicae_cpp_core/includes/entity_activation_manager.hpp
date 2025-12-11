@@ -29,6 +29,14 @@ namespace QLogicaeCppCore
             const EntityActivationManager& instance
         ) = delete;
 
+        void construct(
+            Result<bool>& result
+        );
+
+        void destruct(
+            Result<bool>& result
+        );
+
         void get_entity_collection_copy(
             Result<std::unordered_map<std::string, EntityActivationStatus>>& result
         );

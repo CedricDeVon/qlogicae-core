@@ -28,13 +28,17 @@ namespace QLogicaeCppCore
             const Utilities& instance
         ) = delete;
 
+        void construct(
+            Result<bool>& result
+        );
+
+        void destruct(
+            Result<bool>& result
+        );
+
         void sum(Result<int>& result, int x, int y);
     };
 
     inline static Utilities& UTILITIES =
         INSTANCE_MANAGER.get_instance<Utilities>();
 }
-
-/*
-
-*/

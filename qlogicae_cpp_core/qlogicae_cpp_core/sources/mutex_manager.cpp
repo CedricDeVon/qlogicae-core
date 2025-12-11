@@ -1,39 +1,38 @@
 #include "pch.hpp"
 
-#include "../includes/instance_manager.hpp"
+#include "../includes/mutex_manager.hpp"
 
 namespace QLogicaeCppCore
 {
-    InstanceManager::InstanceManager()
+    MutexManager::MutexManager()
     {
         Result<bool> result;
 
         construct(result);
     }
 
-    InstanceManager::~InstanceManager()
+    MutexManager::~MutexManager()
     {
         Result<bool> result;
 
         destruct(result);
     }
 
-    void InstanceManager::construct(
-        Result<bool>& result
-    )
-    {        
-        result.set_to_good_status_with_value(
-            true
-        );
-    }
-
-    void InstanceManager::destruct(
+    void MutexManager::construct(
         Result<bool>& result
     )
     {
         result.set_to_good_status_with_value(
             true
         );
-    }   
-}
+    }
 
+    void MutexManager::destruct(
+        Result<bool>& result
+    )
+    {
+        result.set_to_good_status_with_value(
+            true
+        );
+    }
+}

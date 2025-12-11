@@ -27,6 +27,14 @@ namespace QLogicaeCppCore
             const InstanceManager& instance
             ) = delete;
 
+        void construct(
+            Result<bool>& result
+        );
+
+        void destruct(
+            Result<bool>& result
+        );
+
         template <typename Type>
         static Type& get_instance();
 

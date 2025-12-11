@@ -6,16 +6,36 @@ namespace QLogicaeCppCore
 {
     AsynchronousManager::AsynchronousManager()        
     {
-        _THREAD_POOL =
-            std::make_shared<boost::asio::thread_pool>(
-                std::thread::hardware_concurrency()
-            );
+        Result<bool> result;
+
+        construct(result);
     }
 
     AsynchronousManager::~AsynchronousManager()
     {
         Result<bool> result;
 
+        destruct(result);
+    }
+
+    void AsynchronousManager::construct(
+        Result<bool>& result
+    )
+    {
+        _THREAD_POOL =
+            std::make_shared<boost::asio::thread_pool>(
+                std::thread::hardware_concurrency()
+            );
+
+        result.set_to_good_status_with_value(
+            true
+        );
+    }
+
+    void AsynchronousManager::destruct(
+        Result<bool>& result
+    )
+    {
         complete_all_threads(result);
     }
 

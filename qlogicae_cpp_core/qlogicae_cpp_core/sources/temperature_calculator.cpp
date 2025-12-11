@@ -6,12 +6,34 @@ namespace QLogicaeCppCore
 {       
     TemperatureCalculator::TemperatureCalculator()
     {
-        
+        Result<bool> result;
+
+        construct(result);
     }
 
     TemperatureCalculator::~TemperatureCalculator()
     {
-        
+        Result<bool> result;
+
+        destruct(result);
+    }
+
+    void TemperatureCalculator::construct(
+        Result<bool>& result
+    )
+    {
+        result.set_to_good_status_with_value(
+            true
+        );
+    }
+
+    void TemperatureCalculator::destruct(
+        Result<bool>& result
+    )
+    {
+        result.set_to_good_status_with_value(
+            true
+        );
     }
 
     void TemperatureCalculator::convert(

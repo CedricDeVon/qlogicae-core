@@ -22,11 +22,19 @@ namespace QLogicaeCppCore
 
 		RegularExpressionManager& operator = (
 			const RegularExpressionManager& instance
-			) = delete;
+		) = delete;
 
 		RegularExpressionManager& operator = (
 			RegularExpressionManager&& instance
-			) noexcept = default;
+		) noexcept = default;
+
+		void construct(
+			Result<bool>& result
+		);
+
+		void destruct(
+			Result<bool>& result
+		);
 
 		void clear_all_patterns(
 			Result<bool>& result

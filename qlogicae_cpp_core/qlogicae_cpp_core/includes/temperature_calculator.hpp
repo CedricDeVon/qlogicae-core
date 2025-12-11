@@ -29,6 +29,14 @@ namespace QLogicaeCppCore
             const TemperatureCalculator& instance
         ) = delete;
 
+        void construct(
+            Result<bool>& result
+        );
+
+        void destruct(
+            Result<bool>& result
+        );
+
         void convert(
             Result<double>& result,
             const double& value,

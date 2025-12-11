@@ -14,6 +14,8 @@
     <ClCompile Include="qlogicae_cpp_core_test\sources\function_wrapper.cpp" />
     <ClCompile Include="qlogicae_cpp_core_test\sources\temperature_calculator.cpp" />
     <ClCompile Include="qlogicae_cpp_core_test\sources\regular_expression_manager.cpp" />
+    <ClCompile Include="qlogicae_cpp_core_test\sources\timeout.cpp" />
+    <ClCompile Include="qlogicae_cpp_core_test\sources\interval.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.hpp" />

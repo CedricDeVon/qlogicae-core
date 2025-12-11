@@ -197,12 +197,18 @@
     <ClInclude Include="qlogicae_cpp_core\includes\application.hpp" />
     <ClInclude Include="qlogicae_cpp_core\includes\assembly.hpp" />
     <ClInclude Include="qlogicae_cpp_core\includes\function_wrapper.hpp" />
+    <ClInclude Include="qlogicae_cpp_core\includes\interval.hpp" />
+    <ClInclude Include="qlogicae_cpp_core\includes\interval_configurations.hpp" />
+    <ClInclude Include="qlogicae_cpp_core\includes\mutex_manager.hpp" />
+    <ClInclude Include="qlogicae_cpp_core\includes\pair_hash_operator.hpp" />
     <ClInclude Include="qlogicae_cpp_core\includes\regular_expression_manager.hpp" />
     <ClInclude Include="qlogicae_cpp_core\includes\result.hpp" />
     <ClInclude Include="qlogicae_cpp_core\includes\result_status.hpp" />
     <ClInclude Include="qlogicae_cpp_core\includes\instance_manager.hpp" />
     <ClInclude Include="qlogicae_cpp_core\includes\temperature_calculator.hpp" />
     <ClInclude Include="qlogicae_cpp_core\includes\temperature_unit_type.hpp" />
+    <ClInclude Include="qlogicae_cpp_core\includes\timeout.hpp" />
+    <ClInclude Include="qlogicae_cpp_core\includes\timeout_configurations.hpp" />
     <ClInclude Include="qlogicae_cpp_core\includes\utilities.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -217,12 +223,18 @@
     <ClCompile Include="qlogicae_cpp_core\sources\assembly.cpp" />
     <ClCompile Include="qlogicae_cpp_core\sources\entity_activation_status.cpp" />
     <ClCompile Include="qlogicae_cpp_core\sources\function_wrapper.cpp" />
+    <ClCompile Include="qlogicae_cpp_core\sources\interval.cpp" />
+    <ClCompile Include="qlogicae_cpp_core\sources\interval_configurations.cpp" />
+    <ClCompile Include="qlogicae_cpp_core\sources\mutex_manager.cpp" />
+    <ClCompile Include="qlogicae_cpp_core\sources\pair_hash_operator.cpp" />
     <ClCompile Include="qlogicae_cpp_core\sources\regular_expression_manager.cpp" />
     <ClCompile Include="qlogicae_cpp_core\sources\result.cpp" />
     <ClCompile Include="qlogicae_cpp_core\sources\instance_manager.cpp" />
     <ClCompile Include="qlogicae_cpp_core\sources\result_status.cpp" />
     <ClCompile Include="qlogicae_cpp_core\sources\temperature_calculator.cpp" />
     <ClCompile Include="qlogicae_cpp_core\sources\temperature_unit_type.cpp" />
+    <ClCompile Include="qlogicae_cpp_core\sources\timeout.cpp" />
+    <ClCompile Include="qlogicae_cpp_core\sources\timeout_configurations.cpp" />
     <ClCompile Include="qlogicae_cpp_core\sources\utilities.cpp" />
   </ItemGroup>
   <ItemGroup>
