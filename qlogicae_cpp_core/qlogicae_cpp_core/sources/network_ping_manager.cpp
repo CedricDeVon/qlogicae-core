@@ -1,10 +1,21 @@
 #include "pch.hpp"
 
-#include "../includes/network_ping.hpp"
+#include "../includes/network_ping_manager.hpp"
 
-namespace QLogicaeCore
+namespace QLogicaeCppCore
 {
-    NetworkPing::NetworkPing(const NetworkPingSettings& settings) :
+    NetworkPingManager::NetworkPingManager()
+    {
+
+    }
+
+    NetworkPingManager::~NetworkPingManager()
+    {
+
+    }
+
+
+    NetworkPingManager::NetworkPingManager(const NetworkPingSettings& settings) :
         _settings(settings),
         _interval(
             [this](size_t) -> bool
@@ -28,7 +39,7 @@ namespace QLogicaeCore
         }
     }
 
-    bool NetworkPing::continue_listening()
+    bool NetworkPingManager::continue_listening()
     {
         if (!_settings.is_listening)
         {
@@ -41,7 +52,7 @@ namespace QLogicaeCore
         return false;
     }
 
-    bool NetworkPing::pause_listening()
+    bool NetworkPingManager::pause_listening()
     {
         if (_settings.is_listening)
         {
@@ -54,51 +65,51 @@ namespace QLogicaeCore
         return false;
     }
 
-    bool NetworkPing::get_is_listening()
+    bool NetworkPingManager::get_is_listening()
     {
         return _settings.is_listening;
     }
 
-    void NetworkPing::set_is_listening(const bool& is_listening)
+    void NetworkPingManager::set_is_listening(const bool& is_listening)
     {
         _settings.is_listening = is_listening;
         is_listening ? _interval.resume() : _interval.pause();
     }
 
-    std::string_view NetworkPing::get_name()
+    std::string_view NetworkPingManager::get_name()
     {
         return _settings.name;
     }
 
-    void NetworkPing::set_name(const std::string_view& name)
+    void NetworkPingManager::set_name(const std::string_view& name)
     {
         _settings.name = std::string(name);
     }
 
-    std::string_view NetworkPing::get_host_address()
+    std::string_view NetworkPingManager::get_host_address()
     {
         return _settings.host_address;
     }
 
-    void NetworkPing::set_host_address(const std::string_view& address)
+    void NetworkPingManager::set_host_address(const std::string_view& address)
     {
         _settings.host_address = std::string(address);
     }
 
-    std::chrono::milliseconds NetworkPing::
+    std::chrono::milliseconds NetworkPingManager::
         get_milliseconds_per_callback()
     {
         return _settings.milliseconds_per_callback;
     }
 
-    void NetworkPing::set_milliseconds_per_callback(
+    void NetworkPingManager::set_milliseconds_per_callback(
         const std::chrono::milliseconds& milliseconds)
     {
         _settings.milliseconds_per_callback = milliseconds;
         _interval.set_interval(milliseconds);
     }
 
-    std::optional<int64_t> NetworkPing::_ping()
+    std::optional<int64_t> NetworkPingManager::_ping()
     {
         try
         {
@@ -121,7 +132,7 @@ namespace QLogicaeCore
         }
     }
 
-    void NetworkPing::setup(
+    void NetworkPingManager::setup(
         Result<void>& result,
         const NetworkPingSettings& network_ping_settings
     )
@@ -131,7 +142,7 @@ namespace QLogicaeCore
         result.set_to_good_status_without_value();
     }
 
-    void NetworkPing::get_is_listening(
+    void NetworkPingManager::get_is_listening(
         Result<bool>& result
     )
     {
@@ -140,7 +151,7 @@ namespace QLogicaeCore
         );
     }
 
-    void NetworkPing::set_is_listening(
+    void NetworkPingManager::set_is_listening(
         Result<void>& result,
         const bool& is_listening
     )
@@ -153,7 +164,7 @@ namespace QLogicaeCore
         result.set_to_good_status_without_value();
     }
 
-    void NetworkPing::get_name(
+    void NetworkPingManager::get_name(
         Result<std::string_view>& result
     )
     {
@@ -162,7 +173,7 @@ namespace QLogicaeCore
         );
     }
 
-    void NetworkPing::set_name(
+    void NetworkPingManager::set_name(
         Result<void>& result,
         const std::string_view& value
     )
@@ -171,7 +182,7 @@ namespace QLogicaeCore
         result.set_to_good_status_without_value();
     }
 
-    void NetworkPing::get_host_address(
+    void NetworkPingManager::get_host_address(
         Result<std::string_view>& result
     )
     {
@@ -180,7 +191,7 @@ namespace QLogicaeCore
         );
     }
 
-    void NetworkPing::set_host_address(
+    void NetworkPingManager::set_host_address(
         Result<void>& result,
         const std::string_view& value
     )
@@ -189,7 +200,7 @@ namespace QLogicaeCore
         result.set_to_good_status_without_value();
     }
 
-    void NetworkPing::get_milliseconds_per_callback(
+    void NetworkPingManager::get_milliseconds_per_callback(
         Result<std::chrono::milliseconds>& result
     )
     {
@@ -198,7 +209,7 @@ namespace QLogicaeCore
         );
     }
 
-    void NetworkPing::set_milliseconds_per_callback(
+    void NetworkPingManager::set_milliseconds_per_callback(
         Result<void>& result,
         const std::chrono::milliseconds& value
     )
@@ -209,7 +220,7 @@ namespace QLogicaeCore
         result.set_to_good_status_without_value();
     }
 
-    void NetworkPing::pause_listening(
+    void NetworkPingManager::pause_listening(
         Result<void>& result
     )
     {
@@ -224,7 +235,7 @@ namespace QLogicaeCore
         result.set_to_bad_status_without_value();
     }
 
-    void NetworkPing::continue_listening(
+    void NetworkPingManager::continue_listening(
         Result<void>& result
     )
     {

@@ -16,8 +16,6 @@
     <ClCompile Include="qlogicae_cpp_core_test\sources\regular_expression_manager.cpp" />
     <ClCompile Include="qlogicae_cpp_core_test\sources\timeout.cpp" />
     <ClCompile Include="qlogicae_cpp_core_test\sources\interval.cpp" />
-    <ClCompile Include="qlogicae_cpp_core_test\sources\validators.cpp" />
-    <ClCompile Include="qlogicae_cpp_core_test\sources\validation_password_rules.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.hpp" />

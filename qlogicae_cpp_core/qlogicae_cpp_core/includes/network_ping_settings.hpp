@@ -5,7 +5,7 @@
 
 #include <cstdint>
 
-namespace QLogicaeCore
+namespace QLogicaeCppCore
 {
     struct NetworkPingSettings
     {

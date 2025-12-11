@@ -1,6 +1,6 @@
 #pragma once
 
-namespace QLogicaeCore
+namespace QLogicaeCppCore
 {
     struct NetworkPingResponse
     {

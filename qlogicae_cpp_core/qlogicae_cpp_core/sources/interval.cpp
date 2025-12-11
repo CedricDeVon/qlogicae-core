@@ -49,7 +49,10 @@ namespace QLogicaeCppCore
     {
         configurations = initial_configurations;
 
-        _run_interval(result);
+        _is_cancelled.store(false);
+        _is_paused.store(false);
+        _is_running.store(false);
+        _execution_count.store(0);
 
         result.set_to_good_status_with_value(
             true
@@ -62,6 +65,11 @@ namespace QLogicaeCppCore
     {
         cancel(result);
 
+        if (_thread.joinable())
+        {
+            _thread.join();
+        }
+
         result.set_to_good_status_with_value(
             true
         );
@@ -72,12 +80,19 @@ namespace QLogicaeCppCore
     )
     {
         if (_thread.joinable())
-        {            
-            result.set_to_good_status_with_value(
-                false
-            );
+        {
+            if (!_is_running.load())
+            {
+                _thread.join();
+            }
+            else
+            {
+                result.set_to_good_status_with_value(
+                    false
+                );
 
-            return;
+                return;
+            }
         }
 
         _is_cancelled.store(false);
@@ -103,6 +118,11 @@ namespace QLogicaeCppCore
         _is_running.store(false);
         _is_paused.store(false);
         _condition_variable.notify_all();
+
+        if (_thread.joinable() && !_is_running.load())
+        {
+            _thread.join();
+        }
 
         result.set_to_good_status_with_value(
             true
@@ -140,7 +160,14 @@ namespace QLogicaeCppCore
     )
     {
         _is_cancelled.store(true);
+        _is_paused.store(false);
+        _is_running.store(false);
         _condition_variable.notify_all();
+
+        if (_thread.joinable())
+        {
+            _thread.join();
+        }
 
         result.set_to_good_status_with_value(
             true
@@ -151,18 +178,14 @@ namespace QLogicaeCppCore
         Result<bool>& result
     )
     {
-        cancel(
-            result
-        );
+        cancel(result);
 
-        if (_thread.joinable())
-        {
-            _thread.join();
-        }
+        _execution_count.store(0);
+        _is_cancelled.store(false);
+        _is_paused.store(false);
+        _is_running.store(false);
 
-        start(
-            result
-        );
+        start(result);
 
         result.set_to_good_status_with_value(
             true
@@ -209,20 +232,53 @@ namespace QLogicaeCppCore
         Result<bool>& result
     )
     {
+        _is_running.store(true);
+        _is_cancelled.store(false);
+
         if (configurations.is_executed_immediately &&
             !_is_cancelled.load())
         {
-            if (!configurations.callback(++_execution_count))
+            size_t current = ++_execution_count;
+
+            bool should_continue = false;
+            try
             {
-                stop(result);
+                should_continue = configurations.callback(current);
+            }
+            catch (...)
+            {
+                should_continue = false;
+            }
+
+            if (!should_continue)
+            {
+                _is_running.store(false);
+                _condition_variable.notify_all();
+
+                result.set_to_good_status_with_value(
+                    true
+                );
+
+                return;
+            }
+
+            if (configurations.maximum_interval_count &&
+                _execution_count.load() >= configurations.maximum_interval_count)
+            {
+                _is_running.store(false);
+                _condition_variable.notify_all();
+
+                result.set_to_good_status_with_value(
+                    true
+                );
 
                 return;
             }
         }
 
-        while (!_is_cancelled.load())
+        while (!_is_cancelled.load() && _is_running.load())
         {
-            std::unique_lock lock(_mutex);
+            std::unique_lock<std::mutex> lock(_mutex);
 
             if (_is_paused.load())
             {
@@ -231,18 +287,31 @@ namespace QLogicaeCppCore
                     });
             }
 
-            if (_is_cancelled.load())
+            if (_is_cancelled.load() || !_is_running.load())
             {
-                return;
+                break;
             }
 
             auto start = std::chrono::steady_clock::now();
             lock.unlock();
 
-            if (!configurations.callback(++_execution_count))
+            size_t current = ++_execution_count;
+
+            bool should_continue = false;
+            try
             {
-                stop(result);
-                
+                should_continue = configurations.callback(current);
+            }
+            catch (...)
+            {
+                should_continue = false;
+            }
+
+            if (!should_continue)
+            {
+                _is_running.store(false);
+                _condition_variable.notify_all();
+
                 result.set_to_good_status_with_value(
                     true
                 );
@@ -250,11 +319,12 @@ namespace QLogicaeCppCore
                 return;
             }
 
-            if (configurations.maximum_interval_count && _execution_count.load() >=
-                configurations.maximum_interval_count)
+            if (configurations.maximum_interval_count &&
+                _execution_count.load() >= configurations.maximum_interval_count)
             {
-                stop(result);
-                
+                _is_running.store(false);
+                _condition_variable.notify_all();
+
                 result.set_to_good_status_with_value(
                     true
                 );
@@ -271,8 +341,23 @@ namespace QLogicaeCppCore
                 configurations.delay_in_milliseconds > elapsed ?
                 configurations.delay_in_milliseconds - elapsed :
                 std::chrono::milliseconds(0);
-            std::this_thread::sleep_for(delay);
+
+            for (std::chrono::milliseconds waited(0);
+                waited < delay && !_is_cancelled.load() && _is_running.load();
+                )
+            {
+                auto to_wait = std::min<std::chrono::milliseconds>(
+                    std::chrono::milliseconds(50),
+                    delay - waited
+                );
+
+                std::this_thread::sleep_for(to_wait);
+                waited += to_wait;
+            }
         }
+
+        _is_running.store(false);
+        _condition_variable.notify_all();
 
         result.set_to_good_status_with_value(
             true

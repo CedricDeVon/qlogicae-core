@@ -2,7 +2,7 @@
 
 #include "../includes/network_ping_response.hpp"
 
-namespace QLogicaeCore
+namespace QLogicaeCppCore
 {
 
 }
