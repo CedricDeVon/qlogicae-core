@@ -176,6 +176,7 @@
     <ClCompile Include="qlogicae_cpp_core_test\sources\function_wrapper.cpp" />
     <ClCompile Include="qlogicae_cpp_core_test\sources\instance_manager.cpp" />
     <ClCompile Include="qlogicae_cpp_core_test\sources\interval_clock.cpp" />
+    <ClCompile Include="qlogicae_cpp_core_test\sources\mutex_manager.cpp" />
     <ClCompile Include="qlogicae_cpp_core_test\sources\network_ping_manager.cpp" />
     <ClCompile Include="qlogicae_cpp_core_test\sources\regular_expression_manager.cpp" />
     <ClCompile Include="qlogicae_cpp_core_test\sources\result.cpp" />

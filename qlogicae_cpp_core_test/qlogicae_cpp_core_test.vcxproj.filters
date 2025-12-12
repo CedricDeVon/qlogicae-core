@@ -20,6 +20,7 @@
     <ClCompile Include="qlogicae_cpp_core_test\sources\validation_manager.cpp" />
     <ClCompile Include="qlogicae_cpp_core_test\sources\file_system_manager.cpp" />
     <ClCompile Include="qlogicae_cpp_core_test\sources\time_delay_clock.cpp" />
+    <ClCompile Include="qlogicae_cpp_core_test\sources\mutex_manager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.hpp" />

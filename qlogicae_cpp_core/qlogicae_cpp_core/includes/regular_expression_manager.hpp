@@ -1,7 +1,9 @@
 #pragma once
 
 #include "result.hpp"
+#include "mutex_manager.hpp"
 #include "instance_manager.hpp"
+#include "pair_hash_operator.hpp"
 
 namespace QLogicaeCppCore
 {
@@ -73,9 +75,7 @@ namespace QLogicaeCppCore
 			const std::string_view& pattern
 		);
 
-	protected:		
-		mutable std::shared_mutex _mutex;
-
+	protected:				
 		std::unordered_map<std::string, std::pair<std::string, pcre2_code*>>
 			_compiled_patterns;
 

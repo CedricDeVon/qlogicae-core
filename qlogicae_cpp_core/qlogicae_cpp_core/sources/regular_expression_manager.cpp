@@ -40,7 +40,12 @@ namespace QLogicaeCppCore
         Result<bool>& result
     )
     {
-        std::unique_lock lock(_mutex);
+        MUTEX_MANAGER.lock_mutex<
+            std::unique_lock<std::shared_mutex>,
+            std::shared_mutex>(
+                result,
+                this
+        );
 
         for (auto& [_, pair] : _compiled_patterns)
         {
@@ -59,7 +64,12 @@ namespace QLogicaeCppCore
         const std::string_view& name
     )
     {
-        std::shared_lock lock(_mutex);
+        MUTEX_MANAGER.lock_mutex<
+            std::shared_lock<std::shared_mutex>,
+            std::shared_mutex>(
+                result,
+                this
+        );
 
         auto pair = _compiled_patterns.find(name.data());
 
@@ -71,7 +81,7 @@ namespace QLogicaeCppCore
             );
             return;
         }
-        
+
         result.set_to_good_status_with_value(
             false
         );
@@ -82,11 +92,16 @@ namespace QLogicaeCppCore
         const std::string_view& name
     )
     {
-        std::shared_lock lock(_mutex);
+        MUTEX_MANAGER.lock_mutex<
+            std::shared_lock<std::shared_mutex>,
+            std::shared_mutex>(
+                result,
+                this
+            );
 
         result.set_to_good_status_with_value(
             _compiled_patterns.find(name.data()) !=
-                _compiled_patterns.end()
+            _compiled_patterns.end()
         );
     }
 
@@ -95,7 +110,14 @@ namespace QLogicaeCppCore
         const std::string_view& value
     )
     {
-        std::shared_lock lock(_mutex);
+        Result<bool> bool_result;
+
+        MUTEX_MANAGER.lock_mutex<
+            std::shared_lock<std::shared_mutex>,
+            std::shared_mutex>(
+                bool_result,
+                this
+            );
 
         auto pair = _compiled_patterns.find(value.data());
 
@@ -129,7 +151,12 @@ namespace QLogicaeCppCore
             );
         }
 
-        std::unique_lock lock(_mutex);
+        MUTEX_MANAGER.lock_mutex<
+            std::unique_lock<std::shared_mutex>,
+            std::shared_mutex>(
+                result,
+                this
+            );
 
         if (_compiled_patterns.contains(name.data()))
         {
@@ -148,7 +175,12 @@ namespace QLogicaeCppCore
         const std::string_view& pattern_name
     )
     {
-        std::shared_lock lock(_mutex);
+        MUTEX_MANAGER.lock_mutex<
+            std::shared_lock<std::shared_mutex>,
+            std::shared_mutex>(
+                result,
+                this
+            );
 
         auto content = _compiled_patterns.find(pattern_name.data());
         if (content == _compiled_patterns.end())
