@@ -36,21 +36,6 @@ namespace QLogicaeCppCore
         );
     }
 
-    void ValidationManager::match_std_regex(
-        Result<bool>& result,
-        const std::string_view& input,
-        const std::string_view& pattern
-    )
-    {
-        result.set_to_good_status_with_value(
-            std::regex_match(
-                input.begin(),
-                input.end(),
-                std::regex(pattern.data())
-            )
-        );
-    }
-
     void ValidationManager::is_not_empty(
         Result<bool>& result,
         const std::string_view& value
@@ -182,18 +167,6 @@ namespace QLogicaeCppCore
         );
     }
 
-    void ValidationManager::is_base64(
-        Result<bool>& result,
-        const std::string_view& value
-    )
-    {
-        match_std_regex(
-            result,
-            value,
-            R"(^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$)"
-        );
-    }
-
     void ValidationManager::is_utf8(
         Result<bool>& result,
         const std::string_view& value
@@ -223,135 +196,16 @@ namespace QLogicaeCppCore
         );
     }
 
-    void ValidationManager::is_slug(
+    void ValidationManager::is_port_in_range(
         Result<bool>& result,
-        const std::string_view& value
+        const uint32_t& port
     )
     {
-        match_std_regex(
+        is_port_in_range(
             result,
-            value,
-            R"(^[a-z0-9]+(?:-[a-z0-9]+)*$)"
-        );
-    }
-
-    void ValidationManager::is_hex(
-        Result<bool>& result,
-        const std::string_view& value
-    )
-    {
-        match_std_regex(
-            result,
-            value,
-            R"(^(0x)?[0-9a-fA-F]+$)"
-        );
-    }
-
-    void ValidationManager::is_uuid4(
-        Result<bool>& result,
-        const std::string_view& value
-    )
-    {
-        match_std_regex(
-            result,
-            value,
-            R"(^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[89abAB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$)"
-        );
-    }
-
-    void ValidationManager::is_uuid6(
-        Result<bool>& result,
-        const std::string_view& value
-    )
-    {
-        match_std_regex(
-            result,
-            value,
-            R"(^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-6[a-fA-F0-9]{3}-[89abAB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$)"
-        );
-    }
-
-    void ValidationManager::is_ipv4(
-        Result<bool>& result,
-        const std::string_view& value
-    )
-    {
-        match_std_regex(
-            result,
-            value,
-            R"(^((25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)\.){3}(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)$)"
-        );
-    }
-
-    void ValidationManager::is_ipv6(
-        Result<bool>& result,
-        const std::string_view& value
-    )
-    {
-        match_std_regex(
-            result,
-            value,
-            R"(^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$)"
-        );
-    }
-
-    void ValidationManager::is_url(
-        Result<bool>& result,
-        const std::string_view& value
-    )
-    {
-        match_std_regex(
-            result,
-            value,
-            R"(^https?:\/\/(?:www\.)?[a-zA-Z0-9.-]+(?:\:\d+)?(?:\/\S*)?$)"
-        );
-    }
-
-    void ValidationManager::is_uri(
-        Result<bool>& result,
-        const std::string_view& value
-    )
-    {
-        match_std_regex(
-            result,
-            value,
-            R"(^[a-zA-Z][a-zA-Z0-9+.-]*:\/\/[^\s\/?#]+(?:[\/?#][^\s]*)?$)"
-        );
-    }
-
-    void ValidationManager::is_mac_address(
-        Result<bool>& result,
-        const std::string_view& value
-    )
-    {
-        match_std_regex(
-            result,
-            value,
-            R"(^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$)"
-        );
-    }
-
-    void ValidationManager::is_hostname(
-        Result<bool>& result,
-        const std::string_view& value
-    )
-    {
-        match_std_regex(
-            result,
-            value,
-            R"(^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$)"
-        );
-    }
-
-    void ValidationManager::is_domain(
-        Result<bool>& result,
-        const std::string_view& value
-    )
-    {
-        match_std_regex(
-            result,
-            value,
-            R"(^([a-zA-Z0-9]+(-[a-zA-Z0-9]+)*\.)+[a-zA-Z]{2,}$)"
+            port,
+            1,
+            65535
         );
     }
 
@@ -369,9 +223,23 @@ namespace QLogicaeCppCore
 
     void ValidationManager::is_port_in_range(
         Result<bool>& result,
+        const std::string_view& port
+    )
+    {
+        is_port_in_range(
+            result,
+            port,
+            1,
+            65535
+        );
+    }
+
+    void ValidationManager::is_port_in_range(
+        Result<bool>& result,
         const std::string_view& port,
         const uint32_t& minimum,
-        const uint32_t& maximum)
+        const uint32_t& maximum
+    )
     {
         uint32_t parsed_port = 0;
         auto [ptr, ec] = std::from_chars(
@@ -379,9 +247,11 @@ namespace QLogicaeCppCore
             port.data() + port.size(),
             parsed_port
         );
+    
         if (ec != std::errc())
         {
             result.set_to_good_status_with_value(false);
+        
             return;
         }
         
@@ -1067,6 +937,160 @@ namespace QLogicaeCppCore
         );
     }
 
+    void ValidationManager::match_std_regex(
+        Result<bool>& result,
+        const std::string_view& input,
+        const std::string_view& pattern
+    )
+    {
+        std::regex re(pattern.data());
+        result.set_to_good_status_with_value(std::regex_match(std::string(input), re));
+    }
+
+    void ValidationManager::is_base64(
+        Result<bool>& result,
+        const std::string_view& value
+    )
+    {
+        match_std_regex(
+            result,
+            value,
+            R"(^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$)"
+        );
+    }
+
+    void ValidationManager::is_slug(
+        Result<bool>& result,
+        const std::string_view& value
+    )
+    {
+        match_std_regex(
+            result,
+            value,
+            R"(^[a-z0-9]+(?:-[a-z0-9]+)*$)"
+        );
+    }
+
+    void ValidationManager::is_hex(
+        Result<bool>& result,
+        const std::string_view& value
+    )
+    {
+        match_std_regex(
+            result,
+            value,
+            R"(^(0x)?[0-9a-fA-F]+$)"
+        );
+    }
+
+    void ValidationManager::is_uuid4(
+        Result<bool>& result,
+        const std::string_view& value
+    )
+    {
+        match_std_regex(
+            result,
+            value,
+            R"(^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[89abAB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$)"
+        );
+    }
+
+    void ValidationManager::is_uuid6(
+        Result<bool>& result,
+        const std::string_view& value
+    )
+    {
+        match_std_regex(
+            result,
+            value,
+            R"(^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-6[a-fA-F0-9]{3}-[89abAB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$)"
+        );
+    }
+
+    void ValidationManager::is_ipv4(
+        Result<bool>& result,
+        const std::string_view& value
+    )
+    {
+        match_std_regex(
+            result,
+            value,
+            R"(^((25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)\.){3}(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)$)"
+        );
+    }
+
+    void ValidationManager::is_ipv6(
+        Result<bool>& result,
+        const std::string_view& value
+    )
+    {
+        match_std_regex(
+            result,
+            value,
+            R"(^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$)"
+        );
+    }
+
+    void ValidationManager::is_url(
+        Result<bool>& result,
+        const std::string_view& value
+    )
+    {
+        match_std_regex(
+            result,
+            value,
+            R"(^https?:\/\/(?:www\.)?[a-zA-Z0-9.-]+(?:\:\d+)?(?:\/\S*)?$)"
+        );
+    }
+
+    void ValidationManager::is_uri(
+        Result<bool>& result,
+        const std::string_view& value
+    )
+    {
+        match_std_regex(
+            result,
+            value,
+            R"(^[a-zA-Z][a-zA-Z0-9+.-]*:\/\/[^\s\/?#]+(?:[\/?#][^\s]*)?$)"
+        );
+    }
+
+    void ValidationManager::is_mac_address(
+        Result<bool>& result,
+        const std::string_view& value
+    )
+    {
+        match_std_regex(
+            result,
+            value,
+            R"(^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$)"
+        );
+    }
+
+    void ValidationManager::is_hostname(
+        Result<bool>& result,
+        const std::string_view& value
+    )
+    {
+        match_std_regex(
+            result,
+            value,
+            R"(^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$)"
+        );
+    }
+
+    void ValidationManager::is_domain(
+        Result<bool>& result,
+        const std::string_view& value
+    )
+    {
+        match_std_regex(
+            result,
+            value,
+            R"(^([a-zA-Z0-9]+(-[a-zA-Z0-9]+)*\.)+[a-zA-Z]{2,}$)"
+        );
+    }
+
     void ValidationManager::is_iso8601(
         Result<bool>& result,
         const std::string_view& value)
@@ -1141,16 +1165,6 @@ namespace QLogicaeCppCore
             result,
             value,
             R"(^[a-zA-Z0-9]+$)"
-        );
-    }
-
-    void ValidationManager::is_file_extension_allowed(
-        Result<bool>& result,
-        const std::string_view& value,
-        const std::set<std::string>& allowed_extensions)
-    {
-        result.set_to_good_status_with_value(
-            allowed_extensions.contains(std::string(value))
         );
     }
 
@@ -1238,6 +1252,16 @@ namespace QLogicaeCppCore
             result,
             value,
             R"(^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$)"
+        );
+    }
+
+    void ValidationManager::is_file_extension_allowed(
+        Result<bool>& result,
+        const std::string_view& value,
+        const std::set<std::string>& allowed_extensions)
+    {
+        result.set_to_good_status_with_value(
+            allowed_extensions.contains(std::string(value))
         );
     }
 

@@ -181,6 +181,7 @@
     <ClCompile Include="qlogicae_cpp_core_test\sources\temperature_calculator.cpp" />
     <ClCompile Include="qlogicae_cpp_core_test\sources\timeout.cpp" />
     <ClCompile Include="qlogicae_cpp_core_test\sources\utilities.cpp" />
+    <ClCompile Include="qlogicae_cpp_core_test\sources\validation_manager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

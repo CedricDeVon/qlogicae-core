@@ -861,5 +861,4 @@ namespace QLogicaeCoreTest
         ASSERT_TRUE(validators.is_data_uri("data:text/plain;base64,SGVsbG8gd29ybGQ="));
         ASSERT_FALSE(validators.is_data_uri("notdatauri"));
     }
-
 }
