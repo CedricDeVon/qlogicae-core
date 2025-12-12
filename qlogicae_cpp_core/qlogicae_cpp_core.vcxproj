@@ -198,8 +198,8 @@
     <ClInclude Include="qlogicae_cpp_core\includes\assembly.hpp" />
     <ClInclude Include="qlogicae_cpp_core\includes\file_system_manager.hpp" />
     <ClInclude Include="qlogicae_cpp_core\includes\function_wrapper.hpp" />
-    <ClInclude Include="qlogicae_cpp_core\includes\interval.hpp" />
-    <ClInclude Include="qlogicae_cpp_core\includes\interval_configurations.hpp" />
+    <ClInclude Include="qlogicae_cpp_core\includes\interval_clock.hpp" />
+    <ClInclude Include="qlogicae_cpp_core\includes\interval_clock_configurations.hpp" />
     <ClInclude Include="qlogicae_cpp_core\includes\mutex_manager.hpp" />
     <ClInclude Include="qlogicae_cpp_core\includes\network_ping_manager.hpp" />
     <ClInclude Include="qlogicae_cpp_core\includes\network_ping_manager_response.hpp" />
@@ -211,8 +211,9 @@
     <ClInclude Include="qlogicae_cpp_core\includes\instance_manager.hpp" />
     <ClInclude Include="qlogicae_cpp_core\includes\temperature_calculator.hpp" />
     <ClInclude Include="qlogicae_cpp_core\includes\temperature_unit_type.hpp" />
-    <ClInclude Include="qlogicae_cpp_core\includes\timeout.hpp" />
-    <ClInclude Include="qlogicae_cpp_core\includes\timeout_configurations.hpp" />
+    <ClInclude Include="qlogicae_cpp_core\includes\timeout_clock.hpp" />
+    <ClInclude Include="qlogicae_cpp_core\includes\timeout_clock_configurations.hpp" />
+    <ClInclude Include="qlogicae_cpp_core\includes\time_delay_clock.hpp" />
     <ClInclude Include="qlogicae_cpp_core\includes\utilities.hpp" />
     <ClInclude Include="qlogicae_cpp_core\includes\validation_manager_password_rules.hpp" />
     <ClInclude Include="qlogicae_cpp_core\includes\validation_manager.hpp" />
@@ -230,8 +231,8 @@
     <ClCompile Include="qlogicae_cpp_core\sources\entity_activation_status.cpp" />
     <ClCompile Include="qlogicae_cpp_core\sources\file_system_manager.cpp" />
     <ClCompile Include="qlogicae_cpp_core\sources\function_wrapper.cpp" />
-    <ClCompile Include="qlogicae_cpp_core\sources\interval.cpp" />
-    <ClCompile Include="qlogicae_cpp_core\sources\interval_configurations.cpp" />
+    <ClCompile Include="qlogicae_cpp_core\sources\interval_clock.cpp" />
+    <ClCompile Include="qlogicae_cpp_core\sources\interval_clock_configurations.cpp" />
     <ClCompile Include="qlogicae_cpp_core\sources\mutex_manager.cpp" />
     <ClCompile Include="qlogicae_cpp_core\sources\network_ping_manager.cpp" />
     <ClCompile Include="qlogicae_cpp_core\sources\network_ping_manager_response.cpp" />
@@ -243,8 +244,9 @@
     <ClCompile Include="qlogicae_cpp_core\sources\result_status.cpp" />
     <ClCompile Include="qlogicae_cpp_core\sources\temperature_calculator.cpp" />
     <ClCompile Include="qlogicae_cpp_core\sources\temperature_unit_type.cpp" />
-    <ClCompile Include="qlogicae_cpp_core\sources\timeout.cpp" />
-    <ClCompile Include="qlogicae_cpp_core\sources\timeout_configurations.cpp" />
+    <ClCompile Include="qlogicae_cpp_core\sources\timeout_clock.cpp" />
+    <ClCompile Include="qlogicae_cpp_core\sources\timeout_clock_configurations.cpp" />
+    <ClCompile Include="qlogicae_cpp_core\sources\time_delay_clock.cpp" />
     <ClCompile Include="qlogicae_cpp_core\sources\utilities.cpp" />
     <ClCompile Include="qlogicae_cpp_core\sources\validation_manager_password_rules.cpp" />
     <ClCompile Include="qlogicae_cpp_core\sources\validation_manager.cpp" />

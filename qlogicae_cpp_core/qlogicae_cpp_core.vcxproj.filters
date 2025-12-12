@@ -81,16 +81,16 @@
     <ClInclude Include="qlogicae_cpp_core\includes\pair_hash_operator.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="qlogicae_cpp_core\includes\timeout.hpp">
+    <ClInclude Include="qlogicae_cpp_core\includes\timeout_clock.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="qlogicae_cpp_core\includes\timeout_configurations.hpp">
+    <ClInclude Include="qlogicae_cpp_core\includes\timeout_clock_configurations.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="qlogicae_cpp_core\includes\interval.hpp">
+    <ClInclude Include="qlogicae_cpp_core\includes\interval_clock.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="qlogicae_cpp_core\includes\interval_configurations.hpp">
+    <ClInclude Include="qlogicae_cpp_core\includes\interval_clock_configurations.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="qlogicae_cpp_core\includes\validation_manager_password_rules.hpp">
@@ -109,6 +109,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="qlogicae_cpp_core\includes\file_system_manager.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="qlogicae_cpp_core\includes\time_delay_clock.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -169,16 +172,16 @@
     <ClCompile Include="qlogicae_cpp_core\sources\pair_hash_operator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="qlogicae_cpp_core\sources\timeout.cpp">
+    <ClCompile Include="qlogicae_cpp_core\sources\timeout_clock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="qlogicae_cpp_core\sources\timeout_configurations.cpp">
+    <ClCompile Include="qlogicae_cpp_core\sources\timeout_clock_configurations.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="qlogicae_cpp_core\sources\interval.cpp">
+    <ClCompile Include="qlogicae_cpp_core\sources\interval_clock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="qlogicae_cpp_core\sources\interval_configurations.cpp">
+    <ClCompile Include="qlogicae_cpp_core\sources\interval_clock_configurations.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="qlogicae_cpp_core\sources\validation_manager_password_rules.cpp">
@@ -197,6 +200,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="qlogicae_cpp_core\sources\file_system_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="qlogicae_cpp_core\sources\time_delay_clock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,0 +1,298 @@
+#pragma once
+
+#include "result.hpp"
+#include "logger.hpp"
+#include "utilities.hpp"
+#include "time_zone.hpp"
+#include "time_format.hpp"
+
+#include <absl/time/time.h>
+#include <absl/time/clock.h>
+#include <absl/strings/str_cat.h>
+#include <absl/strings/str_split.h>
+
+namespace QLogicaeCore
+{
+    class Time
+    {
+    public:
+        bool setup();
+
+        std::future<bool> setup_async(
+            const std::function<void(const bool& result)>& callback =
+                [](const bool& result) {}
+        );
+
+        void setup(
+            Result<void>& result
+        );
+
+        void setup_async(
+            Result<std::future<void>>& result,
+            const std::function<void(Result<void>& result)>& callback =
+                [](Result<void>& result) {}
+        );
+
+        double now();
+
+        void now(
+            Result<double>& result
+        );
+
+        double nanosecond();
+
+        void nanosecond(
+            Result<double>& result
+        );
+
+        void nanosecond(
+            Result<std::string>& result
+        );
+
+        double millisecond();
+
+        void millisecond(
+            Result<double>& result
+        );
+
+        void millisecond(
+            Result<std::string>& result
+        );
+
+        double microsecond();
+
+        void microsecond(
+            Result<double>& result
+        );
+
+        void microsecond(
+            Result<std::string>& result
+        );
+
+        double day(
+            const TimeZone& time_zone =
+                TimeZone::LOCAL
+        );
+
+        void day(
+            Result<double>& result,
+            const TimeZone& time_zone =
+                TimeZone::LOCAL
+        );
+
+        void day(
+            Result<std::string>& result,
+            const TimeZone& time_zone =
+            TimeZone::LOCAL
+        );
+
+        double hour(
+            const TimeZone& time_zone =
+                TimeZone::LOCAL
+        );
+
+        void hour(
+            Result<double>& result,
+            const TimeZone& time_zone =
+                TimeZone::LOCAL
+        );
+
+        void hour(
+            Result<std::string>& result,
+            const TimeZone& time_zone =
+            TimeZone::LOCAL
+        );
+
+        double year(
+            const TimeZone& time_zone =
+                TimeZone::LOCAL
+        );
+
+        void year(
+            Result<double>& result,
+            const TimeZone& time_zone =
+                TimeZone::LOCAL
+        );
+
+        void year(
+            Result<std::string>& result,
+            const TimeZone& time_zone =
+            TimeZone::LOCAL
+        );
+
+        double month(
+            const TimeZone& time_zone =
+                TimeZone::LOCAL
+        );
+
+        void month(
+            Result<double>& result,
+            const TimeZone& time_zone =
+                TimeZone::LOCAL
+        );
+        
+        void month(
+            Result<std::string>& result,
+            const TimeZone& time_zone =
+            TimeZone::LOCAL
+        );
+
+        double second(
+            const TimeZone& time_zone =
+                TimeZone::LOCAL
+        );
+
+        void second(
+            Result<double>& result,
+            const TimeZone& time_zone =
+                TimeZone::LOCAL
+        );
+        
+        void second(
+            Result<std::string>& result,
+            const TimeZone& time_zone =
+            TimeZone::LOCAL
+        );
+
+        double minute(
+            const TimeZone& time_zone =
+                TimeZone::LOCAL
+        );
+
+        void minute(
+            Result<double>& result,
+            const TimeZone& time_zone =
+                TimeZone::LOCAL
+        );
+
+        void minute(
+            Result<std::string>& result,
+            const TimeZone& time_zone =
+            TimeZone::LOCAL
+        );
+
+        std::string now(
+            const TimeFormat& time_format,
+            const TimeZone& time_zone =
+                TimeZone::LOCAL
+        );
+
+        void now(
+            Result<std::string>& result,
+            const TimeFormat& time_format,
+            const TimeZone& time_zone =
+                TimeZone::LOCAL
+        );
+
+        std::string_view get_time_unit_full_name(
+            const TimeScaleUnit& format
+        );
+
+        void get_time_unit_full_name(
+            Result<std::string>& result,
+            const TimeScaleUnit& format
+        );
+
+        std::string_view get_time_unit_abbreviation(
+            const TimeScaleUnit& format
+        );
+
+        void get_time_unit_abbreviation(
+            Result<std::string>& result,
+            const TimeScaleUnit& format
+        );
+
+        TimeScaleUnit get_time_unit_abbreviation(
+            const std::string& format
+        );
+
+        void get_time_unit_abbreviation(
+            Result<TimeScaleUnit>& result,
+            const std::string& format
+        );
+
+        double convert_seconds(
+            const double& time,
+            const TimeScaleUnit& format
+        );
+
+        void convert_seconds(
+            Result<double>& result,
+            const double& time,
+            const TimeScaleUnit& format
+        );
+
+        double convert_nanoseconds(
+            const double& time,
+            const TimeScaleUnit& format
+        );
+
+        void convert_nanoseconds(
+            Result<double>& result,
+            const double& time,
+            const TimeScaleUnit& format
+        );
+
+        static Time& get_instance();
+
+        static void get_instance(
+            Result<Time*>& result
+        );
+
+    protected:
+        Time();
+        
+        ~Time();
+        
+        Time(
+            const Time& time
+        ) = delete;
+        
+        Time(
+            Time&& time
+        ) noexcept = delete;
+        
+        Time& operator = (
+            Time&& time
+        ) = delete;
+        
+        Time& operator = (
+            const Time& time
+        ) = delete;
+
+        std::string _pad3(
+            int value
+        );
+        
+        std::tm _get_time_zone(
+            const TimeZone&
+        );
+        
+        std::string _format_time(
+            const std::tm& tm,
+            const char* fmt
+        );
+        
+        const char* _get_format_string(
+            const TimeFormat& time_format
+        );
+        
+        std::string _format_millisecond_level(
+            absl::Duration since_epoch,
+            const std::string& sep
+        );
+
+        std::string _format_microsecond_level(
+            absl::Duration since_epoch,
+            const std::string& sep
+        );
+
+        std::string _format_nanosecond_level(
+            absl::Duration since_epoch,
+            const std::string& sep
+        );
+    };
+
+    inline static Time& TIME =
+        Time::get_instance();
+}

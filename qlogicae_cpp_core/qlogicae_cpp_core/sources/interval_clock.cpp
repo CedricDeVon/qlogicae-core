@@ -1,18 +1,18 @@
 #include "pch.hpp"
 
-#include "../includes/interval.hpp"
+#include "../includes/interval_clock.hpp"
 
 namespace QLogicaeCppCore
 {
-    Interval::Interval()
+    IntervalClock::IntervalClock()
     {
         Result<bool> result;
 
         construct(result);
     }
 
-    Interval::Interval(
-        const IntervalConfigurations& initial_configurations
+    IntervalClock::IntervalClock(
+        const IntervalClockConfigurations& initial_configurations
     )
     {
         Result<bool> result;
@@ -23,18 +23,18 @@ namespace QLogicaeCppCore
         );
     }
 
-    Interval::~Interval()
+    IntervalClock::~IntervalClock()
     {
         Result<bool> result;
 
         destruct(result);
     }
 
-    void Interval::construct(
+    void IntervalClock::construct(
         Result<bool>& result
     )
     {
-        IntervalConfigurations initial_configurations;
+        IntervalClockConfigurations initial_configurations;
 
         construct(
             result,
@@ -42,9 +42,9 @@ namespace QLogicaeCppCore
         );
     }
 
-    void Interval::construct(
+    void IntervalClock::construct(
         Result<bool>& result,
-        const IntervalConfigurations& initial_configurations
+        const IntervalClockConfigurations& initial_configurations
     )
     {
         configurations = initial_configurations;
@@ -59,7 +59,7 @@ namespace QLogicaeCppCore
         );
     }
 
-    void Interval::destruct(
+    void IntervalClock::destruct(
         Result<bool>& result
     )
     {
@@ -75,7 +75,7 @@ namespace QLogicaeCppCore
         );
     }
 
-    void Interval::start(
+    void IntervalClock::start(
         Result<bool>& result
     )
     {
@@ -101,7 +101,7 @@ namespace QLogicaeCppCore
         _execution_count.store(0);
 
         _thread = std::thread(
-            &Interval::_run_interval,
+            &IntervalClock::_run_interval,
             this,
             std::ref(result)
         );
@@ -111,7 +111,7 @@ namespace QLogicaeCppCore
         );
     }
 
-    void Interval::stop(
+    void IntervalClock::stop(
         Result<bool>& result
     )
     {
@@ -129,7 +129,7 @@ namespace QLogicaeCppCore
         );
     }
 
-    void Interval::pause(
+    void IntervalClock::pause(
         Result<bool>& result
     )
     {
@@ -140,7 +140,7 @@ namespace QLogicaeCppCore
         );
     }
 
-    void Interval::resume(
+    void IntervalClock::resume(
         Result<bool>& result
     )
     {
@@ -155,7 +155,7 @@ namespace QLogicaeCppCore
         );
     }
 
-    void Interval::cancel(
+    void IntervalClock::cancel(
         Result<bool>& result
     )
     {
@@ -174,7 +174,7 @@ namespace QLogicaeCppCore
         );
     }
 
-    void Interval::restart(
+    void IntervalClock::restart(
         Result<bool>& result
     )
     {
@@ -192,7 +192,7 @@ namespace QLogicaeCppCore
         );
     }
 
-    void Interval::is_paused(
+    void IntervalClock::is_paused(
         Result<bool>& result
     )
     {
@@ -201,7 +201,7 @@ namespace QLogicaeCppCore
         );
     }
 
-    void Interval::is_running(
+    void IntervalClock::is_running(
         Result<bool>& result
     )
     {
@@ -210,7 +210,7 @@ namespace QLogicaeCppCore
         );
     }
 
-    void Interval::is_cancelled(
+    void IntervalClock::is_cancelled(
         Result<bool>& result
     )
     {
@@ -219,7 +219,7 @@ namespace QLogicaeCppCore
         );
     }
 
-    void Interval::get_execution_count(
+    void IntervalClock::get_execution_count(
         Result<size_t>& result
     )
     {
@@ -228,7 +228,7 @@ namespace QLogicaeCppCore
         );
     }
 
-    void Interval::_run_interval(
+    void IntervalClock::_run_interval(
         Result<bool>& result
     )
     {

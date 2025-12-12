@@ -1,40 +1,40 @@
 #include "pch.hpp"
 
-#include "../includes/timeout.hpp"
+#include "../includes/timeout_clock.hpp"
 
 namespace QLogicaeCppCore
 {
-    Timeout::Timeout()
+    TimeoutClock::TimeoutClock()
     {
         Result<bool> result;
         construct(result);
     }
 
-    Timeout::Timeout(
-        const TimeoutConfigurations& initial_configurations
+    TimeoutClock::TimeoutClock(
+        const TimeoutClockConfigurations& initial_configurations
     )
     {
         Result<bool> result;
         construct(result, initial_configurations);
     }
 
-    Timeout::~Timeout()
+    TimeoutClock::~TimeoutClock()
     {
         Result<bool> result;
         destruct(result);
     }
 
-    void Timeout::construct(
+    void TimeoutClock::construct(
         Result<bool>& result
     )
     {
-        TimeoutConfigurations default_config;
+        TimeoutClockConfigurations default_config;
         construct(result, default_config);
     }
 
-    void Timeout::construct(
+    void TimeoutClock::construct(
         Result<bool>& result,
-        const TimeoutConfigurations& initial_configurations
+        const TimeoutClockConfigurations& initial_configurations
     )
     {        
         configurations = initial_configurations;
@@ -47,7 +47,7 @@ namespace QLogicaeCppCore
         result.set_to_good_status_with_value(true);
     }
 
-    void Timeout::destruct(
+    void TimeoutClock::destruct(
         Result<bool>& result
     )
     {
@@ -55,7 +55,7 @@ namespace QLogicaeCppCore
         result.set_to_good_status_with_value(true);
     }
 
-    void Timeout::_start_thread(Result<bool>& result)
+    void TimeoutClock::_start_thread(Result<bool>& result)
     {
         std::unique_lock<std::mutex> lock(_thread_mutex);
 
@@ -93,7 +93,7 @@ namespace QLogicaeCppCore
         result.set_to_good_status_with_value(true);
     }
 
-    void Timeout::cancel(
+    void TimeoutClock::cancel(
         Result<bool>& result
     )
     {        
@@ -111,7 +111,7 @@ namespace QLogicaeCppCore
         result.set_to_good_status_with_value(true);
     }
 
-    void Timeout::restart(
+    void TimeoutClock::restart(
         Result<bool>& result
     )
     {
@@ -125,7 +125,7 @@ namespace QLogicaeCppCore
         result.set_to_good_status_with_value(true);
     }
 
-    void Timeout::is_cancelled(
+    void TimeoutClock::is_cancelled(
         Result<bool>& result
     )
     {

@@ -53,7 +53,7 @@ namespace QLogicaeCppCore
 
         _interval.construct(
             result,
-            IntervalConfigurations
+            IntervalClockConfigurations
             {
                 [self](size_t) -> bool
                 {

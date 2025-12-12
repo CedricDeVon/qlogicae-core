@@ -21,11 +21,13 @@
 
 #include "regular_expression_manager.hpp"
 
-#include "timeout.hpp"
-#include "timeout_configurations.hpp"
+#include "timeout_clock.hpp"
+#include "timeout_clock_configurations.hpp"
 
-#include "interval.hpp"
-#include "interval_configurations.hpp"
+#include "interval_clock.hpp"
+#include "interval_clock_configurations.hpp"
+
+#include "time_delay_clock.hpp"
 
 #include "network_ping_manager.hpp"
 #include "network_ping_manager_response.hpp"

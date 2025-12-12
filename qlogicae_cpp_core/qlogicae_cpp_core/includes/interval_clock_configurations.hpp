@@ -4,7 +4,7 @@
 
 namespace QLogicaeCppCore
 {
-    struct IntervalConfigurations
+    struct IntervalClockConfigurations
     {
         std::function<bool(size_t)> callback = [](size_t current_interval) { return true; };
         
@@ -15,6 +15,6 @@ namespace QLogicaeCppCore
         bool is_executed_immediately = true;
     };
 
-    inline static IntervalConfigurations& INTERVAL_CONFIGURATIONS = 
-        INSTANCE_MANAGER.get_instance<IntervalConfigurations>();
+    inline static IntervalClockConfigurations& INTERVAL_CONFIGURATIONS = 
+        INSTANCE_MANAGER.get_instance<IntervalClockConfigurations>();
 }

@@ -1,10 +1,10 @@
 #include "pch.hpp"
 
-#include "qlogicae_cpp_core/includes/interval.hpp"
+#include "qlogicae_cpp_core/includes/interval_clock.hpp"
 
 namespace QLogicaeCppCoreTest
 {
-    class IntervalTest : public ::testing::TestWithParam<int>
+    class IntervalClockTest : public ::testing::TestWithParam<int>
     {
         static QLogicaeCppCore::Result<bool> make_result_bool()
         {
@@ -19,11 +19,11 @@ namespace QLogicaeCppCoreTest
         }
     };
 
-    TEST_F(IntervalTest, Should_ExecuteRepeatedly_When_Active)
+    TEST_F(IntervalClockTest, Should_ExecuteRepeatedly_When_Active)
     {
         std::atomic<int> execution_count = 0;
 
-        QLogicaeCppCore::Interval interval;
+        QLogicaeCppCore::IntervalClock interval;
         QLogicaeCppCore::Result<bool> r;
 
         interval.construct(r, {
@@ -43,11 +43,11 @@ namespace QLogicaeCppCoreTest
         EXPECT_GE(execution_count.load(), 3);
     }
 
-    TEST_F(IntervalTest, Should_PauseAndResume_When_Requested)
+    TEST_F(IntervalClockTest, Should_PauseAndResume_When_Requested)
     {
         std::atomic<int> execution_count = 0;
 
-        QLogicaeCppCore::Interval interval;
+        QLogicaeCppCore::IntervalClock interval;
         QLogicaeCppCore::Result<bool> r;
 
         interval.construct(r, {
@@ -67,7 +67,7 @@ namespace QLogicaeCppCoreTest
         interval.pause(r);
         int count_when_paused = execution_count.load();
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(150));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
         EXPECT_EQ(execution_count.load(), count_when_paused);
 
         interval.resume(r);
@@ -76,9 +76,9 @@ namespace QLogicaeCppCoreTest
         EXPECT_GT(execution_count.load(), count_when_paused);
     }
 
-    TEST_F(IntervalTest, Should_Stop_When_MaxCountIsReached)
+    TEST_F(IntervalClockTest, Should_Stop_When_MaxCountIsReached)
     {
-        QLogicaeCppCore::Interval interval;
+        QLogicaeCppCore::IntervalClock interval;
         QLogicaeCppCore::Result<bool> r;
 
         interval.construct(r, {
@@ -100,9 +100,9 @@ namespace QLogicaeCppCoreTest
         EXPECT_EQ(count_r.get_value(), 3);
     }
 
-    TEST_F(IntervalTest, Should_CancelExecution_When_Requested)
+    TEST_F(IntervalClockTest, Should_CancelExecution_When_Requested)
     {
-        QLogicaeCppCore::Interval interval;
+        QLogicaeCppCore::IntervalClock interval;
         QLogicaeCppCore::Result<bool> r;
 
         interval.construct(r, {
@@ -124,11 +124,11 @@ namespace QLogicaeCppCoreTest
         EXPECT_TRUE(is_cancelled_r.get_value());
     }
 
-    TEST_F(IntervalTest, Should_TriggerExecution_When_IntervalIsTwoSeconds)
+    TEST_F(IntervalClockTest, Should_TriggerExecution_When_IntervalIsTwoSeconds)
     {
         std::atomic<bool> did_run = false;
 
-        QLogicaeCppCore::Interval interval;
+        QLogicaeCppCore::IntervalClock interval;
         QLogicaeCppCore::Result<bool> r;
 
         interval.construct(r, {
@@ -148,7 +148,7 @@ namespace QLogicaeCppCoreTest
         EXPECT_TRUE(did_run.load());
     }
 
-    TEST_P(IntervalTest, Should_RunMultipleInstances_When_InParallel)
+    TEST_P(IntervalClockTest, Should_RunMultipleInstances_When_InParallel)
     {
         int thread_count = GetParam();
         std::vector<std::jthread> runners;
@@ -158,7 +158,7 @@ namespace QLogicaeCppCoreTest
         {
             runners.emplace_back([&]
                 {
-                    QLogicaeCppCore::Interval interval;
+                    QLogicaeCppCore::IntervalClock interval;
                     QLogicaeCppCore::Result<bool> r;
 
                     interval.construct(r, {
@@ -185,11 +185,11 @@ namespace QLogicaeCppCoreTest
         EXPECT_GE(total_executions.load(), thread_count);
     }
 
-    TEST_F(IntervalTest, Should_ExecuteOnce_When_CallbackReturnsFalseImmediately)
+    TEST_F(IntervalClockTest, Should_ExecuteOnce_When_CallbackReturnsFalseImmediately)
     {
         std::atomic<int> execution_count = 0;
 
-        QLogicaeCppCore::Interval interval;
+        QLogicaeCppCore::IntervalClock interval;
         QLogicaeCppCore::Result<bool> r;
 
         interval.construct(r, {
@@ -209,14 +209,14 @@ namespace QLogicaeCppCoreTest
         EXPECT_EQ(execution_count.load(), 1);
     }
 
-    TEST_F(IntervalTest, Should_ApplyNewCallback_When_ChangedDuringExecution)
+    TEST_F(IntervalClockTest, Should_ApplyNewCallback_When_ChangedDuringExecution)
     {
         std::atomic<int> execution_count = 0;
 
-        QLogicaeCppCore::Interval interval;
+        QLogicaeCppCore::IntervalClock interval;
         QLogicaeCppCore::Result<bool> r;
 
-        auto config = QLogicaeCppCore::IntervalConfigurations{
+        auto config = QLogicaeCppCore::IntervalClockConfigurations{
             [&](size_t)
             {
                 execution_count++;
@@ -243,11 +243,11 @@ namespace QLogicaeCppCoreTest
         EXPECT_GE(execution_count.load(), 10);
     }
 
-    TEST_F(IntervalTest, Should_AccelerateExecution_When_IntervalIsShortened)
+    TEST_F(IntervalClockTest, Should_AccelerateExecution_When_IntervalIsShortened)
     {
         std::atomic<int> execution_count = 0;
 
-        QLogicaeCppCore::Interval interval;
+        QLogicaeCppCore::IntervalClock interval;
         QLogicaeCppCore::Result<bool> r;
 
         interval.construct(r, {
@@ -274,7 +274,7 @@ namespace QLogicaeCppCoreTest
         EXPECT_GE(final_count, 10);
     }
 
-    TEST_P(IntervalTest, Should_RunWithIsolatedCounters_When_Multithreaded)
+    TEST_P(IntervalClockTest, Should_RunWithIsolatedCounters_When_Multithreaded)
     {
         int thread_count = GetParam();
         std::vector<std::jthread> threads;
@@ -286,7 +286,7 @@ namespace QLogicaeCppCoreTest
 
             threads.emplace_back([counter = counters[i]]
                 {
-                    QLogicaeCppCore::Interval interval;
+                    QLogicaeCppCore::IntervalClock interval;
                     QLogicaeCppCore::Result<bool> r;
 
                     interval.construct(r, {
@@ -317,9 +317,9 @@ namespace QLogicaeCppCoreTest
         }
     }
 
-    TEST_F(IntervalTest, Should_ReflectCorrectFlags_When_LifecycleChanges)
+    TEST_F(IntervalClockTest, Should_ReflectCorrectFlags_When_LifecycleChanges)
     {
-        QLogicaeCppCore::Interval interval;
+        QLogicaeCppCore::IntervalClock interval;
         QLogicaeCppCore::Result<bool> r;
 
         interval.construct(r, {
@@ -368,11 +368,11 @@ namespace QLogicaeCppCoreTest
         EXPECT_TRUE(res.get_value());
     }
 
-    TEST_F(IntervalTest, Should_ResetExecutionCount_When_Restarted)
+    TEST_F(IntervalClockTest, Should_ResetExecutionCount_When_Restarted)
     {
         std::atomic<int> execution_count = 0;
 
-        QLogicaeCppCore::Interval interval;
+        QLogicaeCppCore::IntervalClock interval;
         QLogicaeCppCore::Result<bool> r;
 
         interval.construct(r, {
@@ -404,16 +404,16 @@ namespace QLogicaeCppCoreTest
 
     INSTANTIATE_TEST_CASE_P(
         MultithreadedTests,
-        IntervalTest,
+        IntervalClockTest,
         ::testing::Values(2, 4, 8)
     );
 
-    TEST_F(IntervalTest, StartWhenAlreadyRunningReturnsFalse)
+    TEST_F(IntervalClockTest, StartWhenAlreadyRunningReturnsFalse)
     {
         std::atomic<size_t> execution_count = 0;
 
-        QLogicaeCppCore::Interval interval(
-            QLogicaeCppCore::IntervalConfigurations
+        QLogicaeCppCore::IntervalClock interval(
+            QLogicaeCppCore::IntervalClockConfigurations
             {
                 [&](const size_t index)
                 {
@@ -440,15 +440,15 @@ namespace QLogicaeCppCoreTest
         EXPECT_GT(execution_count.load(), 0);
     }
 
-    TEST_F(IntervalTest, ZeroDelayExecutesRapidly)
+    TEST_F(IntervalClockTest, ZeroDelayExecutesRapidly)
     {
         std::atomic<int> execution_count{ 0 };
 
-        QLogicaeCppCore::Interval interval;
+        QLogicaeCppCore::IntervalClock interval;
         QLogicaeCppCore::Result<bool> construct_r;
         interval.construct(
             construct_r,
-            QLogicaeCppCore::IntervalConfigurations{
+            QLogicaeCppCore::IntervalClockConfigurations{
                 [&](size_t)
                 {
                     execution_count++;
@@ -472,12 +472,12 @@ namespace QLogicaeCppCoreTest
         interval.cancel(cancel_r);
     }
 
-    TEST_F(IntervalTest, MaxCountZero_NoExecution)
+    TEST_F(IntervalClockTest, MaxCountZero_NoExecution)
     {
         std::atomic<size_t> execution_count = 0;
 
-        QLogicaeCppCore::Interval interval(
-            QLogicaeCppCore::IntervalConfigurations
+        QLogicaeCppCore::IntervalClock interval(
+            QLogicaeCppCore::IntervalClockConfigurations
             {
                 [&](const size_t index)
                 {
@@ -501,15 +501,15 @@ namespace QLogicaeCppCoreTest
         EXPECT_GT(execution_count.load(), 0);
     }
 
-    TEST_F(IntervalTest, MaxCountOne_SingleExecution)
+    TEST_F(IntervalClockTest, MaxCountOne_SingleExecution)
     {
         std::atomic<int> execution_count{ 0 };
 
-        QLogicaeCppCore::Interval interval;
+        QLogicaeCppCore::IntervalClock interval;
         QLogicaeCppCore::Result<bool> construct_r;
         interval.construct(
             construct_r,
-            QLogicaeCppCore::IntervalConfigurations{
+            QLogicaeCppCore::IntervalClockConfigurations{
                 [&](size_t)
                 {
                     execution_count++;
@@ -533,15 +533,15 @@ namespace QLogicaeCppCoreTest
         interval.cancel(cancel_r);
     }
 
-    TEST_F(IntervalTest, CallbackThrows_StopsSafely)
+    TEST_F(IntervalClockTest, CallbackThrows_StopsSafely)
     {
         std::atomic<int> execution_count{ 0 };
 
-        QLogicaeCppCore::Interval interval;
+        QLogicaeCppCore::IntervalClock interval;
         QLogicaeCppCore::Result<bool> construct_r;
         interval.construct(
             construct_r,
-            QLogicaeCppCore::IntervalConfigurations{
+            QLogicaeCppCore::IntervalClockConfigurations{
                 [&](size_t)
                 {
                     execution_count++;
@@ -574,16 +574,16 @@ namespace QLogicaeCppCoreTest
         interval.cancel(cancel_r);
     }
 
-    TEST_F(IntervalTest, DestructJoinsThread)
+    TEST_F(IntervalClockTest, DestructJoinsThread)
     {
         std::atomic<int> execution_count{ 0 };
 
         {
-            QLogicaeCppCore::Interval interval;
+            QLogicaeCppCore::IntervalClock interval;
             QLogicaeCppCore::Result<bool> construct_r;
             interval.construct(
                 construct_r,
-                QLogicaeCppCore::IntervalConfigurations{
+                QLogicaeCppCore::IntervalClockConfigurations{
                     [&](size_t)
                     {
                         execution_count++;
@@ -610,9 +610,9 @@ namespace QLogicaeCppCoreTest
         EXPECT_GE(execution_count.load(), 1);
     }
 
-    TEST_F(IntervalTest, CancelBeforeStart_SetsCancelled)
+    TEST_F(IntervalClockTest, CancelBeforeStart_SetsCancelled)
     {
-        QLogicaeCppCore::Interval interval;
+        QLogicaeCppCore::IntervalClock interval;
         QLogicaeCppCore::Result<bool> cancel_r;
         interval.cancel(cancel_r);
         EXPECT_TRUE(cancel_r.get_value());
@@ -622,9 +622,9 @@ namespace QLogicaeCppCoreTest
         EXPECT_TRUE(is_cancelled_r.get_value());
     }
 
-    TEST_F(IntervalTest, ResumeAfterCancel_NoEffectAndNotRunning)
+    TEST_F(IntervalClockTest, ResumeAfterCancel_NoEffectAndNotRunning)
     {
-        QLogicaeCppCore::Interval interval;
+        QLogicaeCppCore::IntervalClock interval;
         QLogicaeCppCore::Result<bool> cancel_r;
         interval.cancel(cancel_r);
         EXPECT_TRUE(cancel_r.get_value());
@@ -638,12 +638,12 @@ namespace QLogicaeCppCoreTest
         EXPECT_FALSE(is_running_r.get_value());
     }
 
-    TEST_F(IntervalTest, PauseAfterCancel_ClearsPausedFlag)
+    TEST_F(IntervalClockTest, PauseAfterCancel_ClearsPausedFlag)
     {
         std::atomic<size_t> execution_count = 0;
 
-        QLogicaeCppCore::Interval interval(
-            QLogicaeCppCore::IntervalConfigurations{
+        QLogicaeCppCore::IntervalClock interval(
+            QLogicaeCppCore::IntervalClockConfigurations{
                     [&](size_t)
                     {
                         execution_count++;
@@ -672,12 +672,12 @@ namespace QLogicaeCppCoreTest
         EXPECT_FALSE(is_paused_r.get_value());
     }
 
-    TEST_F(IntervalTest, IsExecutedImmediatelyFalse_DelayedStart)
+    TEST_F(IntervalClockTest, IsExecutedImmediatelyFalse_DelayedStart)
     {
         std::atomic<size_t> execution_count = 0;
 
-        QLogicaeCppCore::Interval interval(
-            QLogicaeCppCore::IntervalConfigurations{
+        QLogicaeCppCore::IntervalClock interval(
+            QLogicaeCppCore::IntervalClockConfigurations{
                     [&](size_t)
                     {
                         execution_count.fetch_add(1);
@@ -701,15 +701,15 @@ namespace QLogicaeCppCoreTest
         EXPECT_GT(execution_count.load(), 0);
         EXPECT_LT(execution_count.load(), 10);
     }
-    TEST_F(IntervalTest, ResultObjectValidation_StartGetCount)
+    TEST_F(IntervalClockTest, ResultObjectValidation_StartGetCount)
     {
         std::atomic<int> execution_count{ 0 };
 
-        QLogicaeCppCore::Interval interval;
+        QLogicaeCppCore::IntervalClock interval;
         QLogicaeCppCore::Result<bool> construct_r;
         interval.construct(
             construct_r,
-            QLogicaeCppCore::IntervalConfigurations{
+            QLogicaeCppCore::IntervalClockConfigurations{
                 [&](size_t)
                 {
                     execution_count++;
@@ -736,9 +736,9 @@ namespace QLogicaeCppCoreTest
         interval.cancel(cancel_r);
     }
 
-    TEST_F(IntervalTest, DefaultConstructor_InitializesCorrectly)
+    TEST_F(IntervalClockTest, DefaultConstructor_InitializesCorrectly)
     {
-        QLogicaeCppCore::Interval interval;
+        QLogicaeCppCore::IntervalClock interval;
 
         QLogicaeCppCore::Result<bool> r;
         interval.is_running(r);
@@ -755,15 +755,15 @@ namespace QLogicaeCppCoreTest
         EXPECT_EQ(count.get_value(), 0);
     }
 
-    TEST_F(IntervalTest, ConstructorWithConfigurations_InitializesCorrectly)
+    TEST_F(IntervalClockTest, ConstructorWithConfigurations_InitializesCorrectly)
     {
-        QLogicaeCppCore::IntervalConfigurations configs;
+        QLogicaeCppCore::IntervalClockConfigurations configs;
         configs.delay_in_milliseconds = std::chrono::milliseconds(10);
         configs.maximum_interval_count = 5;
         configs.is_executed_immediately = false;
         configs.callback = [](size_t) { return true; };
 
-        QLogicaeCppCore::Interval interval(configs);
+        QLogicaeCppCore::IntervalClock interval(configs);
 
         QLogicaeCppCore::Result<bool> r;
         interval.is_running(r);
@@ -780,10 +780,10 @@ namespace QLogicaeCppCoreTest
         EXPECT_EQ(count.get_value(), 0);
     }
 
-    TEST_F(IntervalTest, Should_UpdateCallbackDuringExecution)
+    TEST_F(IntervalClockTest, Should_UpdateCallbackDuringExecution)
     {
         std::atomic<int> execution_count = 0;
-        QLogicaeCppCore::IntervalConfigurations configs;
+        QLogicaeCppCore::IntervalClockConfigurations configs;
         configs.is_executed_immediately = true;
         configs.delay_in_milliseconds = std::chrono::milliseconds(5);
         configs.maximum_interval_count = 0;
@@ -793,7 +793,7 @@ namespace QLogicaeCppCoreTest
                 return true;
             };
 
-        QLogicaeCppCore::Interval interval(configs);
+        QLogicaeCppCore::IntervalClock interval(configs);
 
         QLogicaeCppCore::Result<bool> start_result;
         interval.start(start_result);
@@ -814,10 +814,10 @@ namespace QLogicaeCppCoreTest
         EXPECT_GE(execution_count.load(), 15);
     }
 
-    TEST_F(IntervalTest, Should_UpdateDelayDuringExecution)
+    TEST_F(IntervalClockTest, Should_UpdateDelayDuringExecution)
     {
         std::atomic<int> execution_count = 0;
-        QLogicaeCppCore::IntervalConfigurations configs;
+        QLogicaeCppCore::IntervalClockConfigurations configs;
         configs.is_executed_immediately = true;
         configs.delay_in_milliseconds = std::chrono::milliseconds(10);
         configs.maximum_interval_count = 0;
@@ -827,7 +827,7 @@ namespace QLogicaeCppCoreTest
                 return execution_count < 20;
             };
 
-        QLogicaeCppCore::Interval interval(configs);
+        QLogicaeCppCore::IntervalClock interval(configs);
 
         QLogicaeCppCore::Result<bool> start_result;
         interval.start(start_result);
@@ -844,9 +844,9 @@ namespace QLogicaeCppCoreTest
         EXPECT_GE(execution_count.load(), 10);
     }
 
-    TEST_F(IntervalTest, Should_ReturnResultOnAllMethods)
+    TEST_F(IntervalClockTest, Should_ReturnResultOnAllMethods)
     {
-        QLogicaeCppCore::Interval interval;
+        QLogicaeCppCore::IntervalClock interval;
 
         QLogicaeCppCore::Result<bool> r;
         interval.start(r);
@@ -889,9 +889,9 @@ namespace QLogicaeCppCoreTest
         EXPECT_GE(r10.get_value(), 0);
     }
 
-    TEST_F(IntervalTest, Should_HandleCallbackExceptionSafely)
+    TEST_F(IntervalClockTest, Should_HandleCallbackExceptionSafely)
     {
-        QLogicaeCppCore::IntervalConfigurations configs;
+        QLogicaeCppCore::IntervalClockConfigurations configs;
         configs.delay_in_milliseconds = std::chrono::milliseconds(10);
         configs.callback = [](size_t)
             {
@@ -899,7 +899,7 @@ namespace QLogicaeCppCoreTest
                 return true;
             };
 
-        QLogicaeCppCore::Interval interval(configs);
+        QLogicaeCppCore::IntervalClock interval(configs);
 
         QLogicaeCppCore::Result<bool> start_result;
         try
@@ -919,10 +919,10 @@ namespace QLogicaeCppCoreTest
         EXPECT_TRUE(cancel_result.get_value());
     }
 
-    TEST_F(IntervalTest, Should_HandleMaximumIntervalCountZero)
+    TEST_F(IntervalClockTest, Should_HandleMaximumIntervalCountZero)
     {
         std::atomic<int> execution_count = 0;
-        QLogicaeCppCore::IntervalConfigurations configs;
+        QLogicaeCppCore::IntervalClockConfigurations configs;
         configs.maximum_interval_count = 0;
         configs.delay_in_milliseconds = std::chrono::milliseconds(1);
         configs.is_executed_immediately = true;
@@ -932,7 +932,7 @@ namespace QLogicaeCppCoreTest
                 return execution_count < 5;
             };
 
-        QLogicaeCppCore::Interval interval(configs);
+        QLogicaeCppCore::IntervalClock interval(configs);
         QLogicaeCppCore::Result<bool> start_result;
         interval.start(start_result);
 
@@ -944,10 +944,10 @@ namespace QLogicaeCppCoreTest
         EXPECT_GE(execution_count.load(), 5);
     }
 
-    TEST_F(IntervalTest, Should_StartStopRestartRapidly)
+    TEST_F(IntervalClockTest, Should_StartStopRestartRapidly)
     {
         std::atomic<int> execution_count = 0;
-        QLogicaeCppCore::IntervalConfigurations configs;
+        QLogicaeCppCore::IntervalClockConfigurations configs;
         configs.delay_in_milliseconds = std::chrono::milliseconds(5);
         configs.is_executed_immediately = true;
         configs.callback = [&](size_t)
@@ -956,7 +956,7 @@ namespace QLogicaeCppCoreTest
                 return execution_count < 20;
             };
 
-        QLogicaeCppCore::Interval interval(configs);
+        QLogicaeCppCore::IntervalClock interval(configs);
         QLogicaeCppCore::Result<bool> r1;
         interval.start(r1);
 
@@ -976,10 +976,10 @@ namespace QLogicaeCppCoreTest
         EXPECT_GE(execution_count.load(), 2);
     }
 
-    TEST_F(IntervalTest, Should_HandleSimultaneousPauseResumeCancel)
+    TEST_F(IntervalClockTest, Should_HandleSimultaneousPauseResumeCancel)
     {
         std::atomic<int> execution_count = 0;
-        QLogicaeCppCore::IntervalConfigurations configs;
+        QLogicaeCppCore::IntervalClockConfigurations configs;
         configs.delay_in_milliseconds = std::chrono::milliseconds(5);
         configs.is_executed_immediately = true;
         configs.callback = [&](size_t)
@@ -988,7 +988,7 @@ namespace QLogicaeCppCoreTest
                 return execution_count < 50;
             };
 
-        QLogicaeCppCore::Interval interval(configs);
+        QLogicaeCppCore::IntervalClock interval(configs);
         QLogicaeCppCore::Result<bool> start_result;
         interval.start(start_result);
 
@@ -1019,10 +1019,10 @@ namespace QLogicaeCppCoreTest
         EXPECT_FALSE(final_r.get_value());
     }
 
-    TEST_F(IntervalTest, Should_HandleCallbackExceptions)
+    TEST_F(IntervalClockTest, Should_HandleCallbackExceptions)
     {
         std::atomic<int> execution_count = 0;
-        QLogicaeCppCore::IntervalConfigurations configs;
+        QLogicaeCppCore::IntervalClockConfigurations configs;
         configs.delay_in_milliseconds = std::chrono::milliseconds(5);
         configs.is_executed_immediately = true;
         configs.callback = [&](size_t)
@@ -1033,7 +1033,7 @@ namespace QLogicaeCppCoreTest
                 return execution_count < 5;
             };
 
-        QLogicaeCppCore::Interval interval(configs);
+        QLogicaeCppCore::IntervalClock interval(configs);
         QLogicaeCppCore::Result<bool> start_result;
         EXPECT_NO_THROW(interval.start(start_result));
 
@@ -1045,10 +1045,10 @@ namespace QLogicaeCppCoreTest
         EXPECT_TRUE(cancel_result.get_value());
     }
 
-    TEST_F(IntervalTest, Should_ResetExecutionCountOnRestart)
+    TEST_F(IntervalClockTest, Should_ResetExecutionCountOnRestart)
     {
         std::atomic<int> execution_count = 0;
-        QLogicaeCppCore::IntervalConfigurations configs;
+        QLogicaeCppCore::IntervalClockConfigurations configs;
         configs.delay_in_milliseconds = std::chrono::milliseconds(5);
         configs.is_executed_immediately = true;
         configs.callback = [&](size_t)
@@ -1057,7 +1057,7 @@ namespace QLogicaeCppCoreTest
                 return execution_count < 5;
             };
 
-        QLogicaeCppCore::Interval interval(configs);
+        QLogicaeCppCore::IntervalClock interval(configs);
         QLogicaeCppCore::Result<bool> r1;
         interval.start(r1);
 
@@ -1074,10 +1074,10 @@ namespace QLogicaeCppCoreTest
         EXPECT_GE(r3.get_value(), 1);
     }
 
-    TEST_F(IntervalTest, Should_HandleRapidConfigurationChanges)
+    TEST_F(IntervalClockTest, Should_HandleRapidConfigurationChanges)
     {
         std::atomic<int> execution_count = 0;
-        QLogicaeCppCore::IntervalConfigurations configs;
+        QLogicaeCppCore::IntervalClockConfigurations configs;
         configs.delay_in_milliseconds = std::chrono::milliseconds(10);
         configs.is_executed_immediately = true;
         configs.maximum_interval_count = 0;
@@ -1087,7 +1087,7 @@ namespace QLogicaeCppCoreTest
                 return execution_count < 50;
             };
 
-        QLogicaeCppCore::Interval interval(configs);
+        QLogicaeCppCore::IntervalClock interval(configs);
         QLogicaeCppCore::Result<bool> start_result;
         interval.start(start_result);
 

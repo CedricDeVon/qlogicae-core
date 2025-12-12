@@ -1,35 +1,35 @@
 #pragma once
 
 #include "result.hpp"
-#include "interval_configurations.hpp"
+#include "interval_clock_configurations.hpp"
 
 namespace QLogicaeCppCore
 {
-    class Interval
+    class IntervalClock
     {
     public:
-        Interval();
+        IntervalClock();
 
-        Interval(
-            const IntervalConfigurations& initial_configurations
+        IntervalClock(
+            const IntervalClockConfigurations& initial_configurations
         );
 
-        ~Interval();
+        ~IntervalClock();
 
-        Interval(
-            const Interval& instance
+        IntervalClock(
+            const IntervalClock& instance
         ) = delete;
 
-        Interval(
-            Interval&& instance
+        IntervalClock(
+            IntervalClock&& instance
         ) noexcept = delete;
 
-        Interval& operator = (
-            Interval&& instance
+        IntervalClock& operator = (
+            IntervalClock&& instance
         ) = delete;
 
-        Interval& operator = (
-            const Interval& instance
+        IntervalClock& operator = (
+            const IntervalClock& instance
         ) = delete;
 
         void construct(
@@ -38,7 +38,7 @@ namespace QLogicaeCppCore
 
         void construct(
             Result<bool>& result,
-            const IntervalConfigurations& initial_configurations
+            const IntervalClockConfigurations& initial_configurations
         );
 
         void destruct(
@@ -85,7 +85,7 @@ namespace QLogicaeCppCore
             Result<size_t>& result
         );
 
-        IntervalConfigurations configurations;
+        IntervalClockConfigurations configurations;
 
     protected:
         std::thread _thread;

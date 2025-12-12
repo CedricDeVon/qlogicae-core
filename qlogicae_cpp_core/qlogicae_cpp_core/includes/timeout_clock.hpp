@@ -1,35 +1,35 @@
 #pragma once
 
 #include "result.hpp"
-#include "timeout_configurations.hpp"
+#include "timeout_clock_configurations.hpp"
 
 namespace QLogicaeCppCore
 {    
-    class Timeout
+    class TimeoutClock
     {
     public:
-        ~Timeout();
+        ~TimeoutClock();
         
-        Timeout();
+        TimeoutClock();
         
-        Timeout(
-            const TimeoutConfigurations& initial_configurations
+        TimeoutClock(
+            const TimeoutClockConfigurations& initial_configurations
         );
         
-        Timeout(
-            const Timeout& instance
+        TimeoutClock(
+            const TimeoutClock& instance
         ) = delete;
         
-        Timeout(
-            Timeout&& instance
+        TimeoutClock(
+            TimeoutClock&& instance
         ) noexcept = delete;
         
-        Timeout& operator = (
-            Timeout&& instance
+        TimeoutClock& operator = (
+            TimeoutClock&& instance
         ) = delete;
         
-        Timeout& operator = (
-            const Timeout& instance
+        TimeoutClock& operator = (
+            const TimeoutClock& instance
         ) = delete;
 
         void construct(
@@ -38,7 +38,7 @@ namespace QLogicaeCppCore
 
         void construct(
             Result<bool>& result,
-            const TimeoutConfigurations& initial_configurations
+            const TimeoutClockConfigurations& initial_configurations
         );
 
         void destruct(
@@ -57,7 +57,7 @@ namespace QLogicaeCppCore
             Result<bool>& result
         );
 
-        TimeoutConfigurations configurations;
+        TimeoutClockConfigurations configurations;
 
     protected:
         std::jthread _thread;

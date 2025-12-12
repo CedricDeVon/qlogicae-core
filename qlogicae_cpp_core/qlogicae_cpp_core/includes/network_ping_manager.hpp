@@ -1,7 +1,7 @@
 #pragma once
 
 #include "result.hpp"
-#include "interval.hpp"
+#include "interval_clock.hpp"
 #include "instance_manager.hpp"
 #include "network_ping_manager_response.hpp"
 #include "network_ping_manager_configurations.hpp"
@@ -68,7 +68,7 @@ namespace QLogicaeCppCore
         NetworkPingManagerConfigurations configurations;
 
     protected:
-        Interval _interval;
+        IntervalClock _interval;
 
         std::optional<int64_t> _ping();
     };

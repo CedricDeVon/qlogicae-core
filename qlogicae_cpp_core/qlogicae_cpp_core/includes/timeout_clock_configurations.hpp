@@ -3,8 +3,8 @@
 #include "instance_manager.hpp"
 
 namespace QLogicaeCppCore
-{
-    struct TimeoutConfigurations
+{    
+    struct TimeoutClockConfigurations
     {
         std::function<void()> callback = []() {};
 
@@ -13,6 +13,6 @@ namespace QLogicaeCppCore
         bool is_executed_immediately = true;                 
     };
 
-    inline static TimeoutConfigurations& TIMEOUT_CONFIGURATIONS =
-        INSTANCE_MANAGER.get_instance<TimeoutConfigurations>();
+    inline static TimeoutClockConfigurations& TIMEOUT_CLOCK_CONFIGURATIONS =
+        INSTANCE_MANAGER.get_instance<TimeoutClockConfigurations>();
 }
