@@ -36,27 +36,26 @@ namespace QLogicaeCppCore
         void destruct(
             Result<bool>& result
         );
-       
-    protected:
+
+        std::unordered_map<std::pair<std::shared_ptr<void>, std::string>, std::mutex, PairHashOperator>
+            MUTEX_COLLECTION;
+
+        std::unordered_map<std::pair<std::shared_ptr<void>, std::string>, std::timed_mutex, PairHashOperator>
+            TIMED_MUTEX_COLLECTION;
+
+        std::unordered_map<std::pair<std::shared_ptr<void>, std::string>, std::recursive_mutex, PairHashOperator>
+            RECURSIVE_MUTEX_COLLECTION;
+
+        std::unordered_map<std::pair<std::shared_ptr<void>, std::string>, std::recursive_timed_mutex, PairHashOperator>
+            RECURSIVE_TIMED_MUTEX_COLLECTION;
+
+        std::unordered_map<std::pair<std::shared_ptr<void>, std::string>, std::shared_mutex, PairHashOperator>
+            SHARED_MUTEX_COLLECTION;
+
+        std::unordered_map<std::pair<std::shared_ptr<void>, std::string>, std::recursive_timed_mutex, PairHashOperator>
+            SHARED_TIMED_MUTEX_COLLECTION;
     };
 
     inline static MutexManager& MUTEX_MANAGER =
         InstanceManager::get_instance<MutexManager>();
 }
-
-/*
-        std::unordered_map<std::pair<void*, std::string>, std::mutex, PairHashOperator> _mutex_table;
-
-Lock a mutex for a particular object and name
-auto& mtx = mutex_table[{this, "main"}];
-std::scoped_lock lock(mtx);
-
-Core Mutexes	        mutex, timed_mutex, recursive_mutex, recursive_timed_mutex
-Shared Mutexes	        shared_mutex, shared_timed_mutex
-Lock Wrappers	        lock_guard, unique_lock, shared_lock, scoped_lock
-Lock Utilities	        lock, try_lock
-Condition Variables	    condition_variable, condition_variable_any
-Atomic Synchronization	atomic_flag, all atomic<T>
-Other C++20 Sync Tools	latch, barrier, atomic_wait/notify, jthread
-
-*/

@@ -77,7 +77,9 @@ namespace QLogicaeCppCore
                 }
 
                 if (stop_token.stop_requested())
+                {
                     return;
+                }
 
                 try
                 {
