@@ -196,6 +196,7 @@
     <ClInclude Include="qlogicae_cpp_core\includes\all.hpp" />
     <ClInclude Include="qlogicae_cpp_core\includes\application.hpp" />
     <ClInclude Include="qlogicae_cpp_core\includes\assembly.hpp" />
+    <ClInclude Include="qlogicae_cpp_core\includes\file_system_manager.hpp" />
     <ClInclude Include="qlogicae_cpp_core\includes\function_wrapper.hpp" />
     <ClInclude Include="qlogicae_cpp_core\includes\interval.hpp" />
     <ClInclude Include="qlogicae_cpp_core\includes\interval_configurations.hpp" />
@@ -227,6 +228,7 @@
     <ClCompile Include="qlogicae_cpp_core\sources\application.cpp" />
     <ClCompile Include="qlogicae_cpp_core\sources\assembly.cpp" />
     <ClCompile Include="qlogicae_cpp_core\sources\entity_activation_status.cpp" />
+    <ClCompile Include="qlogicae_cpp_core\sources\file_system_manager.cpp" />
     <ClCompile Include="qlogicae_cpp_core\sources\function_wrapper.cpp" />
     <ClCompile Include="qlogicae_cpp_core\sources\interval.cpp" />
     <ClCompile Include="qlogicae_cpp_core\sources\interval_configurations.cpp" />

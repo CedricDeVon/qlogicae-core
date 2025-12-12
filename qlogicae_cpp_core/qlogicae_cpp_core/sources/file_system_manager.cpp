@@ -3,827 +3,934 @@
 #include "../includes/file_system_manager.hpp"
 
 namespace QLogicaeCppCore
-{
-    FileSystem::FileSystem()
+{    
+    FileSystemManager::FileSystemManager()
     {
+        Result<bool> result;
 
+        construct(result);
     }
 
-    FileSystem::~FileSystem()
+    FileSystemManager::~FileSystemManager()
     {
+        Result<bool> result;
 
+        destruct(result);
     }
 
-    bool FileSystem::setup()
-    {
-        try
-        {
-            Result<void> result;
-
-            setup(result);
-
-            return result.is_status_safe();
-        }
-        catch (const std::exception& exception)
-        {
-            LOGGER.handle_exception_async(
-                "QLogicaeCore::FileSystem::setup()",
-                exception.what()
-            );
-
-            return false;
-        }
-    }
-
-    void FileSystem::setup(
-        Result<void>& result
+    void FileSystemManager::construct(
+        Result<bool>& result
     )
     {
-        result.set_to_good_status_without_value();
+        result.set_to_good_status_with_value(true);
     }
 
-    std::future<bool> FileSystem::setup_async()
-    {
-        std::promise<bool> promise;
-        auto future = promise.get_future();
-
-        boost::asio::post(
-            UTILITIES.BOOST_ASIO_POOL,
-            [this,
-            promise = std::move(promise)]() mutable
-            {
-                promise.set_value(
-                    setup()
-                );
-            }
-        );
-
-        return future;
-    }
-
-    void FileSystem::setup_async(
-        const std::function<void(const bool& result)>& callback
+    void FileSystemManager::destruct(
+        Result<bool>& result
     )
     {
-        boost::asio::post(
-            UTILITIES.BOOST_ASIO_POOL,
-            [this, callback]() mutable
-            {
-                callback(
-                    setup()
-                );
-            }
-        );
+        result.set_to_good_status_with_value(true);
     }
 
-    void FileSystem::setup_async(
-        Result<std::future<void>>& result
-    )
-    {
-        std::promise<void> promise;
-        auto future = promise.get_future();
-
-        boost::asio::post(
-            UTILITIES.BOOST_ASIO_POOL,
-            [this,
-            promise = std::move(promise)]() mutable
-            {
-                Result<void> result;
-
-                setup(result);
-
-                promise.set_value();
-            }
-        );
-
-        result.set_to_good_status_with_value(
-            std::move(future)
-        );
-    }
-
-    void FileSystem::setup_async(
-        const std::function<void(Result<void>& result)>& callback
-    )
-    {
-        boost::asio::post(
-            UTILITIES.BOOST_ASIO_POOL,
-            [this, callback]() mutable
-            {
-                Result<void> result;
-
-                setup(result);
-
-                callback(
-                    result
-                );
-            }
-        );
-    }
-
-    std::string FileSystem::get_executable_dir()
-    {
-        try
-        {
-            wchar_t buffer[MAX_PATH];
-            DWORD length = GetModuleFileNameW(
-                nullptr,
-                buffer,
-                MAX_PATH
-            );
-            if (length == 0 ||
-                length == MAX_PATH
-                )
-            {
-                return {};
-            }
-
-            std::filesystem::path dir =
-                std::filesystem::path(buffer)
-                .parent_path();
-            const std::wstring& wstr =
-                dir.wstring();
-            if (wstr.empty())
-            {
-                return {};
-            }
-
-            int size_needed =
-                WideCharToMultiByte(
-                    CP_UTF8,
-                    0,
-                    wstr.data(),
-                    -1,
-                    nullptr,
-                    0,
-                    nullptr,
-                    nullptr
-                );
-            std::string result(
-                size_needed - 1,
-                0
-            );
-            WideCharToMultiByte(
-                CP_UTF8,
-                0,
-                wstr.data(),
-                -1,
-                result.data(),
-                size_needed,
-                nullptr,
-                nullptr
-            );
-
-            return result;
-        }
-        catch (const std::exception& exception)
-        {
-            LOGGER.handle_exception_async(
-                "QLogicaeCore::FileSystem::get_executable_dir()",
-                exception.what()
-            );
-
-            throw std::runtime_error(
-                std::string() +
-                "QLogicaeCore::FileSystem::get_executable_dir(): " +
-                exception.what()
-            );
-        }
-    }
-
-    std::string FileSystem::get_executed_folder()
-    {
-        try
-        {
-            return std::filesystem::current_path().string();
-        }
-        catch (const std::exception& exception)
-        {
-            LOGGER.handle_exception_async(
-                "QLogicaeCore::FileSystem::get_executed_folder()",
-                exception.what()
-            );
-
-            throw std::runtime_error(
-                std::string() +
-                "QLogicaeCore::FileSystem::get_executed_folder(): " +
-                exception.what()
-            );
-        }
-    }
-
-    std::string FileSystem::get_executable_folder()
-    {
-        try
-        {
-            return get_executable_dir();
-        }
-        catch (const std::exception& exception)
-        {
-            LOGGER.handle_exception_async(
-                "QLogicaeCore::FileSystem::get_executable_folder()",
-                exception.what()
-            );
-
-            throw std::runtime_error(
-                std::string() +
-                "QLogicaeCore::FileSystem::get_executable_folder(): " +
-                exception.what()
-            );
-        }
-    }
-
-    std::string FileSystem::get_roaming_appdata_folder_path()
-    {
-        try
-        {
-            wchar_t* path = nullptr;
-            std::wstring result;
-            if (SUCCEEDED(SHGetKnownFolderPath(
-                FOLDERID_RoamingAppData,
-                0,
-                NULL,
-                &path
-            )
-            ))
-            {
-                result.assign(path);
-                CoTaskMemFree(path);
-            }
-
-            return ENCODER.from_utf16_to_utf8(
-                result
-            );
-        }
-        catch (const std::exception& exception)
-        {
-            LOGGER.handle_exception_async(
-                "QLogicaeCore::FileSystem::get_roaming_appdata_folder_path()",
-                exception.what()
-            );
-
-            throw std::runtime_error(
-                std::string() +
-                "QLogicaeCore::FileSystem::get_roaming_appdata_folder_path(): " +
-                exception.what()
-            );
-        }
-    }
-
-    std::string FileSystem::get_local_appdata_folder_path()
-    {
-        try
-        {
-            wchar_t* path = nullptr;
-            std::wstring result;
-            if (SUCCEEDED(SHGetKnownFolderPath(
-                FOLDERID_LocalAppData,
-                0,
-                NULL,
-                &path))
-                )
-            {
-                result.assign(path);
-                CoTaskMemFree(path);
-            }
-
-            return ENCODER.from_utf16_to_utf8(
-                result
-            );
-        }
-        catch (const std::exception& exception)
-        {
-            LOGGER.handle_exception_async(
-                "QLogicaeCore::FileSystem::get_local_appdata_folder_path()",
-                exception.what()
-            );
-
-            throw std::runtime_error(
-                std::string() +
-                "QLogicaeCore::FileSystem::get_local_appdata_folder_path(): " +
-                exception.what()
-            );
-        }
-    }
-
-    std::string FileSystem::get_programdata_folder_path()
-    {
-        try
-        {
-            wchar_t* path = nullptr;
-            std::wstring result;
-            if (SUCCEEDED(
-                SHGetKnownFolderPath(
-                    FOLDERID_ProgramData,
-                    0,
-                    NULL,
-                    &path)
-            ))
-            {
-                result.assign(path);
-                CoTaskMemFree(path);
-            }
-
-            return ENCODER.from_utf16_to_utf8(result);
-        }
-        catch (const std::exception& exception)
-        {
-            LOGGER.handle_exception_async(
-                "QLogicaeCore::FileSystem::get_programdata_folder_path()",
-                exception.what()
-            );
-
-            throw std::runtime_error(
-                std::string() +
-                "QLogicaeCore::FileSystem::get_programdata_folder_path(): " +
-                exception.what()
-            );
-        }
-    }
-
-    void FileSystem::get_executable_dir(
-        Result<std::string>& result
+    void FileSystemManager::get_executable_folder_path(
+        Result<std::wstring>& result
     )
     {
         wchar_t buffer[MAX_PATH];
-        DWORD length = GetModuleFileNameW(
-            nullptr,
-            buffer,
-            MAX_PATH
-        );
-        if (length == 0 || length == MAX_PATH)
+
+        if (GetModuleFileNameW(NULL, buffer, MAX_PATH) == 0)
         {
-            return result.set_to_bad_status_without_value();
+            result.set_to_bad_status_with_value(L"");
+
+            return;
         }
 
-        std::filesystem::path dir =
-            std::filesystem::path(buffer)
-            .parent_path();
-        const std::wstring& wstr =
-            dir.wstring();
-        if (wstr.empty())
-        {
-            return result.set_to_bad_status_without_value();
-        }
-
-        int size_needed = WideCharToMultiByte(
-            CP_UTF8,
-            0,
-            wstr.data(),
-            -1,
-            nullptr,
-            0,
-            nullptr,
-            nullptr
-        );
-        std::string converted(
-            size_needed - 1,
-            0
-        );
-        WideCharToMultiByte(
-            CP_UTF8,
-            0,
-            wstr.data(),
-            -1,
-            converted.data(),
-            size_needed,
-            nullptr,
-            nullptr
-        );
+        std::wstring path(buffer);
 
         result.set_to_good_status_with_value(
-            converted
+            path.substr(0, path.find_last_of(L"\\/"))
         );
     }
 
-    void FileSystem::get_executable_folder(
-        Result<std::string>& result
+    void FileSystemManager::get_executed_folder_path(
+        Result<std::wstring>& result
     )
     {
-        get_executable_dir(result);
-    }
+        wchar_t buffer[MAX_PATH];
 
-    void FileSystem::get_executed_folder(
-        Result<std::string>& result
-    )
-    {
+        if (!GetCurrentDirectoryW(MAX_PATH, buffer))
+        {
+            result.set_to_bad_status_with_value(L"");
+
+            return;
+        }
+
         result.set_to_good_status_with_value(
-            std::filesystem::current_path().string()
+            std::wstring(buffer)
         );
     }
 
-    void FileSystem::get_roaming_appdata_folder_path(
-        Result<std::string>& result
+    void FileSystemManager::get_program_data_folder_path(
+        Result<std::wstring>& result
     )
     {
         wchar_t* path = nullptr;
-        std::wstring wresult;
-        if (SUCCEEDED(SHGetKnownFolderPath(
-            FOLDERID_RoamingAppData,
-            0,
-            NULL,
-            &path))
-            )
+
+        if (!SUCCEEDED(SHGetKnownFolderPath(
+            FOLDERID_ProgramData, 0, NULL, &path))
+        )
         {
-            wresult.assign(path);
-            CoTaskMemFree(path);
+            result.set_to_bad_status_with_value(L"");
+
+            return;
         }
-
-        ENCODER.from_utf16_to_utf8(result, wresult);
-    }
-
-    void FileSystem::get_local_appdata_folder_path(
-        Result<std::string>& result
-    )
-    {
-        wchar_t* path = nullptr;
-        std::wstring wresult;
-        if (SUCCEEDED(SHGetKnownFolderPath(
-            FOLDERID_LocalAppData,
-            0,
-            NULL,
-            &path))
-            )
-        {
-            wresult.assign(path);
-            CoTaskMemFree(path);
-        }
-
-        ENCODER.from_utf16_to_utf8(result, wresult);
-    }
-
-    void FileSystem::get_programdata_folder_path(
-        Result<std::string>& result
-    )
-    {
-        wchar_t* path = nullptr;
-        std::wstring wresult;
-        if (SUCCEEDED(SHGetKnownFolderPath(
-            FOLDERID_ProgramData,
-            0,
-            NULL,
-            &path))
-            )
-        {
-            wresult.assign(path);
-            CoTaskMemFree(path);
-        }
-
-        ENCODER.from_utf16_to_utf8(result, wresult);
-    }
-
-
-    bool FileSystem::replace_file_if_found(
-        const std::string& folder_path,
-        const std::string& file_path
-    )
-    {
-        if (!std::filesystem::exists(folder_path))
-        {
-            create_folder_path(folder_path);
-        }
-
-        if (std::filesystem::exists(file_path))
-        {
-            std::filesystem::remove(file_path);
-        }
-
-        return true;
-    }
-
-    bool FileSystem::remove_file_or_folder_if_found(
-        const std::string& path
-    )
-    {
-        if (std::filesystem::exists(path))
-        {
-            std::filesystem::remove(path);
-        }
-
-        return true;
-    }
-
-    bool FileSystem::copy_file_or_folder(
-        const std::string& from_path,
-        const std::string& to_path
-    )
-    {
-        std::filesystem::copy_file(
-            from_path,
-            to_path,
-            std::filesystem::copy_options::overwrite_existing
+        
+        result.set_to_good_status_with_value(
+            std::wstring(path)
         );
 
-        return true;
+        CoTaskMemFree(path);
     }
 
-    bool FileSystem::is_file_or_folder_path_found(
-        const std::string& path
+    void FileSystemManager::get_local_app_data_folder_path(
+        Result<std::wstring>& result
     )
     {
-        if (!std::filesystem::exists(path))
+        wchar_t* path = nullptr;
+
+        if (!SUCCEEDED(SHGetKnownFolderPath(
+            FOLDERID_LocalAppData, 0, NULL, &path))
+        )
         {
-            QLogicaeCore::LOGGER.handle_exception_async(
-                "QLogicaeCLI::FileSystem::is_file_or_folder_path_found()",
-                "File or folder path '" + path + "' does not exist"
-            );
+            result.set_to_bad_status_with_value(L"");
 
-            return false;
+            return;            
         }
+        
+        result.set_to_good_status_with_value(
+            std::wstring(path)
+        );
 
-        return true;
+        CoTaskMemFree(path);
     }
 
-    bool FileSystem::create_folder_path(
-        const std::string& path,
-        const bool& is_enabled
+    void FileSystemManager::get_roaming_app_data_folder_path(
+        Result<std::wstring>& result
     )
     {
-        if (!is_enabled)
+        wchar_t* path = nullptr;
+
+        if (!SUCCEEDED(SHGetKnownFolderPath(
+            FOLDERID_RoamingAppData, 0, NULL, &path))
+        )
         {
-            return false;
+            result.set_to_bad_status_with_value(L"");
+
+            return;
+
         }
+        
+        result.set_to_good_status_with_value(
+            std::wstring(path)
+        );
 
-        if (!std::filesystem::exists(path))
-        {
-            std::filesystem::create_directories(path);
-
-            return true;
-        }
-
-        return false;
+        CoTaskMemFree(path);
     }
 
-    bool FileSystem::clear_files(
-        const std::string& root_path
+    void FileSystemManager::get_file_byte_size(
+        Result<std::size_t>& result,
+        const std::wstring_view& from_path
     )
     {
-        try
+        WIN32_FILE_ATTRIBUTE_DATA data;
+        if (!GetFileAttributesExW(
+            from_path.data(), GetFileExInfoStandard, &data)
+        )
         {
-            Result<void> void_result;
+            result.set_to_bad_status_with_value(0);
 
-            clear_files(
-                void_result,
-                root_path
-            );
-
-            return void_result.is_status_safe();
+            return;
         }
-        catch (const std::exception& exception)
+        if (data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
         {
-            LOGGER.handle_exception_async(
-                "QLogicaeCore::FileSystem::clear_files()",
-                exception.what()
-            );
+            result.set_to_bad_status_with_value(0);
 
-            return false;
+            return;
         }
+
+        ULARGE_INTEGER size;
+        size.HighPart = data.nFileSizeHigh;
+        size.LowPart = data.nFileSizeLow;
+        
+        result.set_to_good_status_with_value(
+            size.QuadPart
+        );
     }
 
-    void FileSystem::clear_files(
-        Result<void>& result,
-        const std::string& root_path
+    void FileSystemManager::get_folder_byte_size(
+        Result<std::size_t>& result,
+        const std::wstring_view& from_path,
+        const bool& is_recursive
     )
     {
-        std::string search_path = root_path + "\\*";
-        WIN32_FIND_DATAA fd;
-        HANDLE hFind = FindFirstFileA(search_path.c_str(), &fd);
+        std::size_t total = 0;
+        WIN32_FIND_DATAW data;
+        std::wstring search =
+            std::wstring(from_path) + L"\\*";
+        HANDLE h =
+            FindFirstFileW(search.c_str(), &data);
 
-        if (hFind == INVALID_HANDLE_VALUE) return;
+        if (h == INVALID_HANDLE_VALUE)
+        {
+            result.set_to_bad_status_with_value(0);
 
+            return;
+        }
         do
         {
-            if (!(fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
+            Result<std::size_t> sub;
+            
+            std::wstring name = data.cFileName;
+            if (name == L"." || name == L"..")
             {
-                std::string file_path = root_path + "\\" + fd.cFileName;
-                DeleteFileA(file_path.c_str());
+                continue;
             }
-            else if (strcmp(fd.cFileName, ".") != 0 && strcmp(fd.cFileName, "..") != 0)
+
+            std::wstring full =
+                std::wstring(from_path) + L"\\" + name;
+
+            if (data.dwFileAttributes &
+                    FILE_ATTRIBUTE_DIRECTORY)
             {
-                std::string subdir_path = root_path + "\\" + fd.cFileName;
-                clear_files(result, subdir_path);
+                if (is_recursive)
+                {
+                    get_folder_byte_size(
+                        sub,
+                        full,
+                        true
+                    );
+                    
+                    total += sub.get_value();
+                }
             }
-        } while (FindNextFileA(hFind, &fd) != 0);
+            else
+            {
+                ULARGE_INTEGER s;
+                s.HighPart = data.nFileSizeHigh;
+                s.LowPart = data.nFileSizeLow;
+                total += s.QuadPart;
+            }
 
-        FindClose(hFind);
+        } while (FindNextFileW(h, &data));
 
-        result.set_to_good_status_without_value();
+        FindClose(h);
+        
+        result.set_to_good_status_with_value(total);
     }
 
-
-    std::future<bool> FileSystem::clear_files_async(
-        const std::string& root_path
+    void FileSystemManager::get_absolute_path(
+        Result<std::wstring_view>& result,
+        const std::wstring_view& from_path
     )
     {
-        std::promise<bool> promise;
-        auto future = promise.get_future();
-
-        boost::asio::post(
-            UTILITIES.BOOST_ASIO_POOL,
-            [this, root_path,
-            promise = std::move(promise)]() mutable
-            {
-                promise.set_value(
-                    clear_files(
-                        root_path
-                    )
-                );
-            }
+        static thread_local std::wstring buffer;
+        buffer.assign(MAX_PATH, L'\0');
+        DWORD len = GetFullPathNameW(
+            from_path.data(),
+            MAX_PATH, buffer.data(),
+            nullptr
         );
-
-        return future;
-    }
-
-    void FileSystem::clear_files_async(
-        const std::function<void(const bool& result)>& callback,
-        const std::string& root_path
-    )
-    {
-        boost::asio::post(
-            UTILITIES.BOOST_ASIO_POOL,
-            [this, callback, root_path]() mutable
-            {
-                callback(
-                    clear_files(
-                        root_path
-                    )
-                );
-            }
-        );
-    }
-
-    void FileSystem::clear_files_async(
-        Result<std::future<bool>>& result,
-        const std::string& root_path
-    )
-    {
-        std::promise<bool> promise;
-        auto future = promise.get_future();
-
-        boost::asio::post(
-            UTILITIES.BOOST_ASIO_POOL,
-            [this, root_path,
-            promise = std::move(promise)]() mutable
-            {
-                Result<void> result;
-
-                clear_files(
-                    result,
-                    root_path
-                );
-
-                promise.set_value(
-                    result.is_status_safe()
-                );
-            }
-        );
+        
+        if (len == 0 || len > MAX_PATH)
+        {
+            result.set_to_bad_status_with_value(0);
+        
+            return;
+        }
+        
+        buffer.resize(len);
 
         result.set_to_good_status_with_value(
-            std::move(future)
+            std::wstring_view(buffer)
         );
     }
 
-    void FileSystem::clear_files_async(
-        const std::function<void(Result<void>& result)>& callback,
-        const std::string& root_path
+    void FileSystemManager::get_relative_path(
+        Result<std::wstring_view>& result,
+        const std::wstring_view& from_path,
+        const std::wstring_view& to_path
     )
     {
-        boost::asio::post(
-            UTILITIES.BOOST_ASIO_POOL,
-            [this, callback, root_path]() mutable
-            {
-                Result<void> result;
+        std::filesystem::path p1(from_path);
+        std::filesystem::path p2(to_path);
+        std::error_code error_code_value;
 
-                clear_files(
-                    result,
-                    root_path
-                );
+        auto rel = std::filesystem::relative(
+            p1, p2, error_code_value
+        );
 
-                callback(
-                    result
-                );
-            }
+        if (error_code_value)
+        {
+            result.set_to_bad_status_with_value(0);
+
+            return;
+        }
+
+        static thread_local std::wstring buffer;
+        buffer = rel.wstring();
+
+        result.set_to_good_status_with_value(
+            std::wstring_view(buffer)
         );
     }
 
-    bool FileSystem::terminate()
+    void FileSystemManager::get_file_extension(
+        Result<std::wstring>& result,
+        const std::wstring_view& from_path
+    )
     {
-        try
+        std::filesystem::path file_path(from_path);
+
+        result.set_to_good_status_with_value(
+            file_path.extension().wstring()
+        );
+    }
+
+    void FileSystemManager::get_file_stem(
+        Result<std::wstring>& result,
+        const std::wstring_view& from_path
+    )
+    {
+        std::filesystem::path file_path(from_path);
+
+        result.set_to_good_status_with_value(
+            file_path.stem().wstring()
+        );
+    }
+
+    void FileSystemManager::get_entity_paths(
+        Result<std::vector<std::wstring>>& result,
+        const std::wstring_view& from_path,
+        const bool& is_recursive
+    )
+    {
+        std::vector<std::wstring> data;
+        std::filesystem::directory_options options =
+            std::filesystem::directory_options::skip_permission_denied;
+        
+        if (is_recursive)
         {
-            Result<void> result;
-
-            terminate(result);
-
-            return result.is_status_safe();
+            for (auto& entity : std::filesystem::recursive_directory_iterator(
+                from_path, options)
+            )
+            {
+                data.push_back(entity.path().wstring());
+            }
         }
-        catch (const std::exception& exception)
+        else
         {
-            LOGGER.handle_exception_async(
-                "QLogicaeCore::FileSystem::terminate()",
-                exception.what()
+            for (auto& entity : std::filesystem::directory_iterator(
+                from_path, options)
+            )
+            {
+                data.push_back(entity.path().wstring());
+            }
+        }
+
+        result.set_to_good_status_with_value(
+            data
+        );
+    }
+
+    void FileSystemManager::get_file_paths(
+        Result<std::vector<std::wstring>>& result,
+        const std::wstring_view& from_path,
+        const bool& is_recursive
+    )
+    {
+        std::vector<std::wstring> data;
+        std::filesystem::directory_options options =
+            std::filesystem::directory_options::skip_permission_denied;
+        
+        if (is_recursive)
+        {
+            for (auto& entity : std::filesystem::recursive_directory_iterator(
+                from_path, options)
+            )
+            {
+                if (!entity.is_directory())
+                {
+                    data.push_back(
+                        entity.path().wstring()
+                    );
+                }
+            }
+        }
+        else
+        {
+            for (auto& entity : std::filesystem::directory_iterator(
+                from_path, options)
+            )
+            {
+                if (!entity.is_directory())
+                {
+                    data.push_back(
+                        entity.path().wstring()
+                    );
+                }
+            }
+        }
+
+        result.set_to_good_status_with_value(
+            data
+        );
+    }
+
+    void FileSystemManager::get_folder_paths(
+        Result<std::vector<std::wstring>>& result,
+        const std::wstring_view& from_path,
+        const bool& is_recursive
+    )
+    {
+        std::vector<std::wstring> data;
+        std::filesystem::directory_options options =
+            std::filesystem::directory_options::skip_permission_denied;
+        
+        if (is_recursive)
+        {
+            for (auto& entity : std::filesystem::recursive_directory_iterator(
+                from_path, options)
+            )
+            {
+                if (entity.is_directory())
+                {
+                    data.push_back(entity.path().wstring());
+                }
+            }
+        }
+        else
+        {
+            for (auto& entity : std::filesystem::directory_iterator(
+                from_path, options)
+                )
+            {
+                if (entity.is_directory())
+                {
+                    data.push_back(entity.path().wstring());
+                }
+            }
+        }
+
+        result.set_to_good_status_with_value(
+            data
+        );
+    }
+
+    void FileSystemManager::is_path_found(
+        Result<bool>& result,
+        const std::wstring_view& from_path
+    )
+    {
+        DWORD file_attribute = GetFileAttributesW(
+            from_path.data()
+        );
+
+        if (file_attribute != INVALID_FILE_ATTRIBUTES)
+        {
+            result.set_to_good_status_with_value(true);
+        }
+        else
+        {
+            result.set_to_bad_status_with_value(false);
+        }
+    }
+
+    void FileSystemManager::is_entity(
+        Result<bool>& result,
+        const std::wstring_view& from_path
+    )
+    {
+        DWORD file_attribute = GetFileAttributesW(
+            from_path.data()
+        );
+
+        if (file_attribute != INVALID_FILE_ATTRIBUTES)
+        {
+            result.set_to_good_status_with_value(true);
+        }
+        else
+        {
+            result.set_to_bad_status_with_value(false);
+        }
+    }
+
+    void FileSystemManager::is_file(
+        Result<bool>& result,
+        const std::wstring_view& from_path
+    )
+    {
+        DWORD file_attribute = GetFileAttributesW(
+            from_path.data()
+        );
+
+        if (file_attribute != INVALID_FILE_ATTRIBUTES &&
+            !(file_attribute & FILE_ATTRIBUTE_DIRECTORY)
+            )
+        {
+            result.set_to_good_status_with_value(true);
+        }
+        else
+        {
+            result.set_to_bad_status_with_value(false);
+        }
+    }
+
+    void FileSystemManager::is_folder(
+        Result<bool>& result,
+        const std::wstring_view& from_path
+    )
+    {
+        DWORD file_attribute = GetFileAttributesW(
+            from_path.data()
+        );
+
+        if (file_attribute != INVALID_FILE_ATTRIBUTES &&
+            (file_attribute & FILE_ATTRIBUTE_DIRECTORY)
+            )
+        {
+            result.set_to_good_status_with_value(true);
+        }
+        else
+        {
+            result.set_to_bad_status_with_value(false);
+        }
+    }
+
+    void FileSystemManager::is_entity_user_permission_level_valid(
+        Result<bool>& result,
+        const std::wstring_view& from_path,
+        const std::filesystem::perms& permission_level
+    )
+    {
+        std::error_code error_code_value;
+        std::filesystem::perms p =
+            std::filesystem::status(
+                from_path, error_code_value
+            ).permissions();
+
+        if (error_code_value)
+        {
+            result.set_to_bad_status_with_value(false);
+
+            return;
+        }
+
+        bool valid = (p & permission_level) == permission_level;
+        
+        result.set_to_good_status_with_value(valid);
+    }
+
+    void FileSystemManager::find_files_by_pattern(
+        Result<std::vector<std::wstring>>& result,
+        const std::wstring_view& from_path,
+        const std::wstring_view& pattern,
+        const bool& is_recursive
+    )
+    {
+        std::vector<std::wstring> matches;
+        std::filesystem::directory_options options =
+            std::filesystem::directory_options::skip_permission_denied;
+        
+        if (is_recursive)
+        {
+            for (auto& entry : std::filesystem::recursive_directory_iterator(
+                from_path, options)
+            )
+            {
+                if (!entry.is_directory() &&
+                    entry.path().filename().wstring().find(pattern) !=
+                        std::wstring::npos)
+                {
+                    matches.push_back(entry.path().wstring());
+                }
+            }
+        }
+        else
+        {
+            for (auto& entry : std::filesystem::directory_iterator(
+                from_path, options)
+            )
+            {
+                if (!entry.is_directory() &&
+                    entry.path().filename().wstring().find(pattern) !=
+                        std::wstring::npos)
+                {
+                    matches.push_back(entry.path().wstring());
+                }
+            }
+        }
+
+        result.set_to_good_status_with_value(std::move(matches));
+    }
+
+    void FileSystemManager::set_entity_read_status(
+        Result<bool>& result,
+        const std::wstring_view& from_path,
+        const bool& value
+    )
+    {
+        DWORD file_attribute = GetFileAttributesW(
+            from_path.data()
+        );
+        
+        if (file_attribute == INVALID_FILE_ATTRIBUTES)
+        {
+            result.set_to_bad_status_with_value(false);
+
+            return;
+        }
+
+        if (value)
+        {
+            file_attribute &= ~FILE_ATTRIBUTE_READONLY;
+        }
+        else
+        {
+            file_attribute |= FILE_ATTRIBUTE_READONLY;
+        }
+
+        if (SetFileAttributesW(
+            from_path.data(),
+            file_attribute)
+        )
+        {
+            result.set_to_good_status_with_value(true);
+        }
+        else
+        {
+            result.set_to_bad_status_with_value(false);
+        }
+    }
+
+    void FileSystemManager::set_entity_write_status(
+        Result<bool>& result,
+        const std::wstring_view& from_path,
+        const bool& value
+    )
+    {
+        DWORD file_attribute =
+            GetFileAttributesW(from_path.data());
+        if (file_attribute == INVALID_FILE_ATTRIBUTES)
+        {
+            result.set_to_bad_status_with_value(false);
+
+            return;
+        }
+
+        if (value)
+        {
+            file_attribute &= ~FILE_ATTRIBUTE_READONLY;
+        }
+        else
+        {
+            file_attribute |= FILE_ATTRIBUTE_READONLY;
+        }
+
+        if (SetFileAttributesW(from_path.data(), file_attribute))
+        {
+            result.set_to_good_status_with_value(true);
+        }
+        else
+        {
+            result.set_to_bad_status_with_value(false);
+        }
+    }
+
+    void FileSystemManager::set_entity_visibility(
+        Result<bool>& result,
+        const std::wstring_view& from_path,
+        const bool& value
+    )
+    {
+        DWORD file_attribute =
+            GetFileAttributesW(from_path.data());
+
+        if (file_attribute == INVALID_FILE_ATTRIBUTES)
+        {
+            result.set_to_bad_status_with_value(false);
+
+            return;
+        }
+
+        if (value)
+        {
+            file_attribute &= ~FILE_ATTRIBUTE_HIDDEN;
+        }
+        else
+        {
+            file_attribute |= FILE_ATTRIBUTE_HIDDEN;
+        }
+
+        if (SetFileAttributesW(
+            from_path.data(), file_attribute)
+        )
+        {
+            result.set_to_good_status_with_value(true);
+        }
+        else
+        {
+            result.set_to_bad_status_with_value(false);
+        }
+    }
+
+    void FileSystemManager::create_folder(
+        Result<bool>& result,
+        const std::wstring_view& from_path
+    )
+    {
+        if (CreateDirectoryW(from_path.data(), nullptr) ||
+            GetLastError() == ERROR_ALREADY_EXISTS
+        )
+        {
+            result.set_to_good_status_with_value(true);
+        }
+        else
+        {
+            result.set_to_bad_status_with_value(false);
+        }
+    }
+
+    void FileSystemManager::copy_file(
+        Result<bool>& result,
+        const std::wstring_view& from_path,
+        const std::wstring_view& to_path
+    )
+    {
+        if (CopyFileW(from_path.data(), to_path.data(), FALSE))
+        {
+            result.set_to_good_status_with_value(true);
+        }
+        else
+        {
+            result.set_to_bad_status_with_value(false);
+        }
+    }
+
+    void FileSystemManager::copy_folder(
+        Result<bool>& result,
+        const std::wstring_view& from_path,
+        const std::wstring_view& to_path,
+        const bool& is_recursive
+    )
+    {
+        std::error_code error_code_value;
+        std::filesystem::copy_options options =
+            std::filesystem::copy_options::skip_existing;
+
+        if (is_recursive)
+        {
+            options |= std::filesystem::copy_options::recursive;
+        }
+
+        std::filesystem::copy(
+            from_path,
+            to_path,
+            options,
+            error_code_value
+        );
+
+        if (!error_code_value)
+        {
+            result.set_to_good_status_with_value(true);
+        }
+        else
+        {
+            result.set_to_bad_status_with_value(false);
+        }
+    }
+
+    void FileSystemManager::move_entity(
+        Result<bool>& result,
+        const std::wstring_view& from_path,
+        const std::wstring_view& to_path
+    )
+    {
+        std::error_code error_code_value;
+        std::filesystem::rename(
+            from_path,
+            to_path,
+            error_code_value
+        );
+
+        if (!error_code_value)
+        {
+            result.set_to_good_status_with_value(true);
+        }
+        else
+        {
+            result.set_to_bad_status_with_value(false);
+        }
+    }
+
+    void FileSystemManager::move_file(
+        Result<bool>& result,
+        const std::wstring_view& from_path,
+        const std::wstring_view& to_path
+    )
+    {
+        std::error_code error_code_value;
+        std::filesystem::rename(
+            from_path,
+            to_path,
+            error_code_value
+        );
+
+        if (!error_code_value)
+        {
+            result.set_to_good_status_with_value(true);
+        }
+        else
+        {
+            result.set_to_bad_status_with_value(false);
+        }
+    }
+
+    void FileSystemManager::move_folder(
+        Result<bool>& result,
+        const std::wstring_view& from_path,
+        const std::wstring_view& to_path
+    )
+    {
+        std::error_code error_code_value;
+        std::filesystem::rename(
+            from_path,
+            to_path,
+            error_code_value
+        );
+
+        if (!error_code_value)
+        {
+            result.set_to_good_status_with_value(true);
+        }
+        else
+        {
+            result.set_to_bad_status_with_value(false);
+        }
+    }
+
+    void FileSystemManager::rename_entity(
+        Result<bool>& result,
+        const std::wstring_view& from_path,
+        const std::wstring_view& name
+    )
+    {
+        std::filesystem::path new_path =
+            std::filesystem::path(from_path).parent_path() / name;
+        std::error_code error_code_value;
+        std::filesystem::rename(
+            from_path,
+            new_path,
+            error_code_value
+        );
+
+        if (!error_code_value)
+        {
+            result.set_to_good_status_with_value(true);
+        }
+        else
+        {
+            result.set_to_bad_status_with_value(false);
+        }
+    }
+
+    void FileSystemManager::rename_file(
+        Result<bool>& result,
+        const std::wstring_view& from_path,
+        const std::wstring_view& name
+    )
+    {
+        rename_entity(result, from_path, name);
+    }
+
+    void FileSystemManager::rename_folder(
+        Result<bool>& result,
+        const std::wstring_view& from_path,
+        const std::wstring_view& name
+    )
+    {
+        rename_entity(result, from_path, name);
+    }
+
+    void FileSystemManager::remove_file(
+        Result<bool>& result,
+        const std::wstring_view& from_path
+    )
+    {
+        if (DeleteFileW(from_path.data()))
+        {
+            result.set_to_good_status_with_value(true);
+        }
+        else
+        {
+            result.set_to_bad_status_with_value(false);
+        }
+    }
+
+    void FileSystemManager::remove_folder(
+        Result<bool>& result,
+        const std::wstring_view& from_path
+    )
+    {
+        if (RemoveDirectoryW(from_path.data()))
+        {
+            result.set_to_good_status_with_value(true);
+        }
+        else
+        {
+            result.set_to_bad_status_with_value(false);
+        }
+    }
+
+    void FileSystemManager::remove_folder_sub_files(
+        Result<bool>& result,
+        const std::wstring_view& from_path,
+        const bool& is_recursive
+    )
+    {
+        std::error_code error_code_value;
+        if (is_recursive)
+        {
+            std::filesystem::remove_all(
+                from_path,
+                error_code_value
             );
-
-            return false;
         }
-    }
 
-    void FileSystem::terminate(
-        Result<void>& result
-    )
-    {
-        result.set_to_good_status_without_value();
-    }
-
-    std::future<bool> FileSystem::terminate_async()
-    {
-        std::promise<bool> promise;
-        auto future = promise.get_future();
-
-        boost::asio::post(
-            UTILITIES.BOOST_ASIO_POOL,
-            [this,
-            promise = std::move(promise)]() mutable
+        else
+        {
+            for (auto& entry : std::filesystem::directory_iterator(
+                from_path, error_code_value)
+            )
             {
-                promise.set_value(
-                    terminate()
+                if (entry.is_directory())
+                {
+                    continue;
+                }
+
+                std::filesystem::remove(
+                    entry.path(),
+                    error_code_value
                 );
             }
-        );
+        }
 
-        return future;
-    }
-
-    void FileSystem::terminate_async(
-        const std::function<void(const bool& result)>& callback
-    )
-    {
-        boost::asio::post(
-            UTILITIES.BOOST_ASIO_POOL,
-            [this, callback]() mutable
-            {
-                callback(
-                    terminate()
-                );
-            }
-        );
-    }
-
-    void FileSystem::terminate_async(
-        Result<std::future<void>>& result
-    )
-    {
-        std::promise<void> promise;
-        auto future = promise.get_future();
-
-        boost::asio::post(
-            UTILITIES.BOOST_ASIO_POOL,
-            [this,
-            promise = std::move(promise)]() mutable
-            {
-                Result<void> result;
-
-                terminate(result);
-
-                promise.set_value();
-            }
-        );
-
-        result.set_to_good_status_with_value(
-            std::move(future)
-        );
-    }
-
-    void FileSystem::terminate_async(
-        const std::function<void(Result<void>& result)>& callback
-    )
-    {
-        boost::asio::post(
-            UTILITIES.BOOST_ASIO_POOL,
-            [this, callback]() mutable
-            {
-                Result<void> result;
-
-                terminate(result);
-
-                callback(
-                    result
-                );
-            }
-        );
-    }
-
-    FileSystem& FileSystem::get_instance()
-    {
-        static FileSystem instance;
-
-        return instance;
-    }
-
-    void FileSystem::get_instance(
-        Result<FileSystem*>& results
-    )
-    {                
-        results.set_to_good_status_with_value(
-            &get_instance()
-        );
+        if (!error_code_value)
+        {
+            result.set_to_good_status_with_value(true);
+        }
+        else
+        {
+            result.set_to_bad_status_with_value(false);
+        }
     }
 }

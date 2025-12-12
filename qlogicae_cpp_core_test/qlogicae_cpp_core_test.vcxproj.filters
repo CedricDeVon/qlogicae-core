@@ -18,6 +18,7 @@
     <ClCompile Include="qlogicae_cpp_core_test\sources\interval.cpp" />
     <ClCompile Include="qlogicae_cpp_core_test\sources\network_ping_manager.cpp" />
     <ClCompile Include="qlogicae_cpp_core_test\sources\validation_manager.cpp" />
+    <ClCompile Include="qlogicae_cpp_core_test\sources\file_system_manager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.hpp" />

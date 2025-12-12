@@ -99,6 +99,8 @@
 #include <csetjmp>
 #include <cstring>
 
+#include <codecvt>
+#include <shlobj.h>
 #include <windows.h>
 
 namespace QLogicaeCppCoreSandbox

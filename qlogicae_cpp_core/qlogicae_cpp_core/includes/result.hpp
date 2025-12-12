@@ -35,7 +35,7 @@ namespace QLogicaeCppCore
         );
 
         bool is_status(
-            ResultStatus& status
+            const ResultStatus& status
         );
 
         void is_status(
@@ -328,7 +328,7 @@ namespace QLogicaeCppCore
 
     template <typename ValueType>
     bool Result<ValueType>::is_status(
-        ResultStatus& status
+        const ResultStatus& status
     )
     {
         return _status == status;
