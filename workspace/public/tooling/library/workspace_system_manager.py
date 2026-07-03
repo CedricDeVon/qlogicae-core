@@ -40,7 +40,7 @@ class WorkspaceSystemManager:
                 output_type=TargetCacheValue.FOLDER_PATH,
             )
         )
-        
+
         return True
 
     def shutdown(self) -> bool:

@@ -5,7 +5,7 @@ from library import (
 from library.target_cache_value import TargetCacheValue
 
 
-class WorkspaceMacrosManager:    
+class WorkspaceMacrosManager:
     def setup(self) -> bool:
         value_cache_manager.singleton.set_one_value(
             ["workspace-macros"],

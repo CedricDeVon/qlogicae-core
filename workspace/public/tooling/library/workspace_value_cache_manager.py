@@ -1,4 +1,5 @@
 from library import (
+    time_manager,
     macros_manager,
     value_cache_manager,
 )
@@ -9,11 +10,16 @@ class WorkspaceValueCacheManager:
     @property
     def current_root_full_path(self) -> str:
         return value_cache_manager.singleton.get_one_value(
-            ['current-root-full-path'],
+            ["current-root-full-path"],
             output_type=TargetCacheValue.FOLDER_PATH,
         )
 
-    def setup(self) -> bool:
+    def setup_pre_macros(self) -> bool:
+        value_cache_manager.singleton.set_one_value(
+            ["current-date"],
+            time_manager.singleton.generate_current_iso8601_date(),
+        )
+
         value_cache_manager.singleton.set_one_value(
             ["default-workspace-selections"],
             set(
@@ -80,36 +86,6 @@ class WorkspaceValueCacheManager:
         )
 
         value_cache_manager.singleton.set_one_value(
-            ["clean-exclude-selections"],
-            {
-                macros_manager.singleton.parse_one(
-                    value,
-                    (
-                        value_cache_manager.singleton.get_one_value(
-                            ["workspace-macros"],
-                            output_type=TargetCacheValue.ANY,
-                        )
-                        or {}
-                    ),
-                )
-                for value in (
-                    value_cache_manager.singleton.get_one_value(
-                        [
-                            "workspace/public/configuration/workspace.yaml-raw",
-                            "data",
-                            "script",
-                            "clean",
-                            "exclude",
-                            "targets",
-                        ],
-                        output_type=TargetCacheValue.ANY,
-                    )
-                    or []
-                )
-            },
-        )
-
-        value_cache_manager.singleton.set_one_value(
             ["clean-include-selections"],
             {
                 value
@@ -164,6 +140,67 @@ class WorkspaceValueCacheManager:
                         output_type=TargetCacheValue.ANY,
                     )
                     or {}
+                )
+            },
+        )
+
+        return True
+
+    def setup_post_macros(self) -> bool:
+        value_cache_manager.singleton.set_one_value(
+            ["clean-exclude-selections"],
+            {
+                macros_manager.singleton.parse_one(
+                    value,
+                    (
+                        value_cache_manager.singleton.get_one_value(
+                            ["workspace-macros"],
+                            output_type=TargetCacheValue.ANY,
+                        )
+                        or {}
+                    ),
+                )
+                for value in (
+                    value_cache_manager.singleton.get_one_value(
+                        [
+                            "workspace/public/configuration/workspace.yaml-raw",
+                            "data",
+                            "script",
+                            "clean",
+                            "exclude",
+                            "targets",
+                        ],
+                        output_type=TargetCacheValue.ANY,
+                    )
+                    or []
+                )
+            },
+        )
+
+        value_cache_manager.singleton.set_one_value(
+            ["log-targets"],
+            {
+                macros_manager.singleton.parse_one(
+                    value,
+                    (
+                        value_cache_manager.singleton.get_one_value(
+                            ["workspace-macros"],
+                            output_type=TargetCacheValue.ANY,
+                        )
+                        or {}
+                    ),
+                )
+                for value in (
+                    value_cache_manager.singleton.get_one_value(
+                        [
+                            "workspace/public/configuration/workspace.yaml-raw",
+                            "data",
+                            "log",
+                            "targets",
+                        ],
+                        output_type=TargetCacheValue.ANY,
+                    )
+                    or []
                 )
             },
         )

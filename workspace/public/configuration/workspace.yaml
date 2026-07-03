@@ -175,9 +175,15 @@ data:
           typescript-temporary:
             - "{{ current-root-full-path }}/selection/typescript/output"
 
+  log:
+    is-enabled: true
+
+    targets:
+      - "{{ current-root-full-path }}/workspace/private/temporary/log/{{ current-date }}.log"            
 
   macros:  
     value-cache:
+      - current-date
       - current-root-full-path
       
     file:

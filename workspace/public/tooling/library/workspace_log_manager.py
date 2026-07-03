@@ -8,22 +8,19 @@ from library.target_cache_value import TargetCacheValue
 
 class WorkspaceLogManager:
     def setup(self) -> bool:
-        value_cache_manager.singleton.set_one_value(
-            ["workspace/private/temporary/log/all.log-full-path"],
-            f"{
-                value_cache_manager.singleton.get_one_value(
-                    ['current-root-full-path'],
-                    output_type=TargetCacheValue.DEFINED,
-                )
-            }/workspace/private/temporary/log/all.log"
-        )
-        
-        file_log_manager.singleton.add_file_output(
-            value_cache_manager.singleton.get_one_value(
-                ["workspace/private/temporary/log/all.log-full-path"],
-                output_type=TargetCacheValue.DEFINED,
-            )
-        )
+        if value_cache_manager.singleton.get_one_value(
+            [
+                "workspace/public/configuration/workspace.yaml-raw",
+                "data",
+                "log",
+                "is-enabled",
+            ],
+            output_type=TargetCacheValue.ANY,
+        ):
+            for full_path in value_cache_manager.singleton.get_one_value(
+                ["log-targets"]
+            ):
+                file_log_manager.singleton.add_file_output(full_path)
 
         return True
 
