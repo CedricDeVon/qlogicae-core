@@ -7,6 +7,7 @@ from library import (
     system_manager,
     handler_manager,
     value_cache_manager,
+    value_cache_storage_manager,
     macros_manager,
     filesystem_manager,
 )
@@ -14,6 +15,7 @@ from library import (
 
 def handle_manager_callback():
     value_cache_manager.singleton.display_all_items()
+    # print(f"Memory Usage: {value_cache_storage_manager.singleton.get_memory_usage()}")
 
 
 handler_manager.singleton.handle(handle_manager_callback)

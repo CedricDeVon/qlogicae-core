@@ -15,6 +15,11 @@ data:
           - typescript
           - python
 
+      full-path:
+        root: "{{ root-current-full-path }}"
+        typescript: "{{ root-current-full-path }}/selection/typescript"      
+        python: "{{ root-current-full-path }}/selection/python"
+
 
     script:
       types:
@@ -36,6 +41,12 @@ data:
           type: "collection"
           commands:
             - typescript-toolset-verify    
+
+        typescript-account-login:
+          enter-full-path: "{{ root-current-full-path }}/selection/typescript"
+          type: "individual"
+          commands:
+            - "npm login"
 
         typescript-toolset-verify:
           enter-full-path: "{{ root-current-full-path }}/selection/typescript"
@@ -154,7 +165,7 @@ data:
           - "{{ root-current-full-path }}"
           - "{{ root-current-full-path }}/selection"
           - "{{ root-current-full-path }}/workspace"
-          - "{{ root-current-full-path }}/github"  
+          - "{{ root-current-full-path }}/.github"  
           - "{{ root-current-full-path }}/.temporary"            
 
       include:
@@ -181,14 +192,6 @@ data:
         author-name: "Vaughn Cedric L. Araneta"
         
         author-email: "vaughncedriclipardoaraneta@gmail.com"
-
-
-    full-path:
-      root: "{{ root-current-full-path }}"
-
-      typescript: "{{ root-current-full-path }}/selection/typescript"
-      
-      python: "{{ root-current-full-path }}/selection/python"
 
   root:
 
