@@ -1,201 +1,195 @@
 
 data:
-  all:    
-    selection:
-      target: "typescript"
+  selection:
+    target: "typescript"
 
-      default:
-        targets:
-          - all
-          - root
-          - project
-
-      project:
-        targets:
-          - typescript
-          - python
-
-      full-path:
-        root: "{{ root-current-full-path }}"
-        typescript: "{{ root-current-full-path }}/selection/typescript"      
-        python: "{{ root-current-full-path }}/selection/python"
-
-
-    script:
-      types:
-        - individual
-        - collection
-
+    default:
       targets:
-        all-value-cache-debug:
-          enter-full-path: "{{ root-current-full-path }}/workspace/public/tooling"
-          type: "individual"
-          commands:
-            - "python3 -c \"
-              from library import handler_manager, value_cache_storage_manager;
-              handler_manager.singleton.handle_setup();
-              value_cache_storage_manager.singleton.display_all_items();
-              handler_manager.singleton.handle_shutdown();\""
+        - all
+        - root
+        - project
 
-        all-toolset-verify:
-          type: "collection"
-          commands:
-            - typescript-toolset-verify    
+    project:
+      targets:
+        - typescript
+        - python
 
-        typescript-account-login:
-          enter-full-path: "{{ root-current-full-path }}/selection/typescript"
-          type: "individual"
-          commands:
-            - "npm login"
-
-        typescript-toolset-verify:
-          enter-full-path: "{{ root-current-full-path }}/selection/typescript"
-          type: "individual"
-          commands:
-            - "docker --version"
-            - 'git --version'
-            - 'gh --version'
-            - 'node --version'
-            - 'fnm --version'
-            - 'npm --version'
-            - 'bun --version'
-            - 'bunx corepack --version'
-            - 'bunx pnpm --version'
-            - 'bunx yarn --version'
-
-        all-test-unit:
-          type: "collection"
-          commands:
-            - typescript-test-unit      
-
-        typescript-test-unit:
-          enter-full-path: "{{ root-current-full-path }}/selection/typescript"
-          type: "individual"
-          commands:
-            - "bun run test:unit"
+    full-path:
+      root: "{{ current-root-full-path }}"
+      typescript: "{{ current-root-full-path }}/selection/typescript"      
+      python: "{{ current-root-full-path }}/selection/python"
 
 
-        all-test-benchmark:
-          type: "collection"
-          commands:
-            - typescript-test-benchmark    
+  script:
+    types:
+      - individual
+      - collection
 
-        typescript-test-benchmark:
-          enter-full-path: "{{ root-current-full-path }}/selection/typescript"
-          type: "individual"
-          commands:
-            - "bun run test:benchmark"
+    targets:
+      all-value-cache-debug:
+        enter-full-path: "{{ current-root-full-path }}/workspace/public/tooling"
+        type: "individual"
+        commands:
+          - "python3 -c \"
+            from library import workspace_manager, value_cache_storage_manager;
+            workspace_manager.singleton.setup();
+            value_cache_storage_manager.singleton.display_all_items();
+            workspace_manager.singleton.shutdown();\""
 
+      all-toolset-verify:
+        type: "collection"
+        commands:
+          - typescript-toolset-verify    
 
-        all-codebase-format:
-          type: "collection"
-          commands:
-            - typescript-codebase-format    
+      typescript-account-login:
+        enter-full-path: "{{ current-root-full-path }}/selection/typescript"
+        type: "individual"
+        commands:
+          - "npm login"
 
-        typescript-codebase-format:
-          enter-full-path: "{{ root-current-full-path }}/selection/typescript"
-          type: "individual"
-          commands:
-            - "bun run format"
+      typescript-toolset-verify:
+        enter-full-path: "{{ current-root-full-path }}/selection/typescript"
+        type: "individual"
+        commands:
+          - "docker --version"
+          - 'git --version'
+          - 'gh --version'
+          - 'node --version'
+          - 'fnm --version'
+          - 'npm --version'
+          - 'bun --version'
+          - 'bunx corepack --version'
+          - 'bunx pnpm --version'
+          - 'bunx yarn --version'
 
+      all-test-unit:
+        type: "collection"
+        commands:
+          - typescript-test-unit      
 
-        all-codebase-lint:
-          type: "collection"
-          commands:
-            - typescript-codebase-lint    
-
-        typescript-codebase-lint:
-          enter-full-path: "{{ root-current-full-path }}/selection/typescript"
-          type: "individual"
-          commands:
-            - "bun run lint"
-
-
-        all-project-build:
-          type: "collection"
-          commands:
-            - typescript-project-build    
-
-        typescript-project-build:
-          enter-full-path: "{{ root-current-full-path }}/selection/typescript"
-          type: "individual"
-  # 
-          commands:
-            - "bun run build"
-
-
-        all-project-setup:
-          type: "collection"
-          commands:
-            - typescript-project-setup    
-
-        typescript-project-setup:
-          enter-full-path: "{{ root-current-full-path }}/selection/typescript"
-          type: "individual"
-          commands:
-            - "bun install"
+      typescript-test-unit:
+        enter-full-path: "{{ current-root-full-path }}/selection/typescript"
+        type: "individual"
+        commands:
+          - "bun run test:unit"
 
 
-        all-project-update:
-          type: "collection"
-          commands:
-            - typescript-project-update    
+      all-test-benchmark:
+        type: "collection"
+        commands:
+          - typescript-test-benchmark    
 
-        typescript-project-update:
-          enter-full-path: "{{ root-current-full-path }}/selection/typescript"
-          type: "individual"
-          commands:
-            - "bun update"
+      typescript-test-benchmark:
+        enter-full-path: "{{ current-root-full-path }}/selection/typescript"
+        type: "individual"
+        commands:
+          - "bun run test:benchmark"
 
 
-        all-project-deploy:
-          type: "collection"
-          commands:
-            - typescript-project-deploy    
+      all-codebase-format:
+        type: "collection"
+        commands:
+          - typescript-codebase-format    
 
-        typescript-project-deploy:
-          enter-full-path: "{{ root-current-full-path }}/selection/typescript"
-          type: "individual"
-          commands:
-            - "bun run deploy"
+      typescript-codebase-format:
+        enter-full-path: "{{ current-root-full-path }}/selection/typescript"
+        type: "individual"
+        commands:
+          - "bun run format"
+
+
+      all-codebase-lint:
+        type: "collection"
+        commands:
+          - typescript-codebase-lint    
+
+      typescript-codebase-lint:
+        enter-full-path: "{{ current-root-full-path }}/selection/typescript"
+        type: "individual"
+        commands:
+          - "bun run lint"
+
+
+      all-project-build:
+        type: "collection"
+        commands:
+          - typescript-project-build    
+
+      typescript-project-build:
+        enter-full-path: "{{ current-root-full-path }}/selection/typescript"
+        type: "individual"
+# 
+        commands:
+          - "bun run build"
+
+
+      all-project-setup:
+        type: "collection"
+        commands:
+          - typescript-project-setup    
+
+      typescript-project-setup:
+        enter-full-path: "{{ current-root-full-path }}/selection/typescript"
+        type: "individual"
+        commands:
+          - "bun install"
+
+
+      all-project-update:
+        type: "collection"
+        commands:
+          - typescript-project-update    
+
+      typescript-project-update:
+        enter-full-path: "{{ current-root-full-path }}/selection/typescript"
+        type: "individual"
+        commands:
+          - "bun update"
+
+
+      all-project-deploy:
+        type: "collection"
+        commands:
+          - typescript-project-deploy    
+
+      typescript-project-deploy:
+        enter-full-path: "{{ current-root-full-path }}/selection/typescript"
+        type: "individual"
+        commands:
+          - "bun run deploy"
 
     clean:
       exclude:
         targets:
-          - "{{ root-current-full-path }}"
-          - "{{ root-current-full-path }}/selection"
-          - "{{ root-current-full-path }}/workspace"
-          - "{{ root-current-full-path }}/.github"  
-          - "{{ root-current-full-path }}/.temporary"            
+          - "{{ current-root-full-path }}"
+          - "{{ current-root-full-path }}/selection"
+          - "{{ current-root-full-path }}/workspace"
+          - "{{ current-root-full-path }}/.github"  
+          - "{{ current-root-full-path }}/.temporary"            
 
       include:
         targets:
           root-temporary:
-            - "{{ root-current-full-path }}/workspace/private/temporary/log"
-            - "{{ root-current-full-path }}/workspace/private/temporary/cache"
+            - "{{ current-root-full-path }}/workspace/private/temporary"
 
           typescript-temporary:
-            - "{{ root-current-full-path }}/selection/typescript/output"
+            - "{{ current-root-full-path }}/selection/typescript/output"
 
 
-    macros:  
-      value-cache:
-        - root-current-full-path
-        
-      file:
-        root-project-name: "QLogicae Cor1"
+  macros:  
+    value-cache:
+      - current-root-full-path
+      
+    file:
+      root-project-name: "QLogicae Cor1"
 
-        current-year: "2026"
-        
-        company-name: "QLogicae"
-        
-        author-name: "Vaughn Cedric L. Araneta"
-        
-        author-email: "vaughncedriclipardoaraneta@gmail.com"
-
-  root:
-
-  project:    
+      current-year: "2026"
+      
+      company-name: "QLogicae"
+      
+      author-name: "Vaughn Cedric L. Araneta"
+      
+      author-email: "vaughncedriclipardoaraneta@gmail.com"
 
 metadata:
 
