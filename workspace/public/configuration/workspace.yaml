@@ -1,6 +1,8 @@
 
 data:
   selection:
+    is-enabled: true
+
     target: "typescript"
 
     default:
@@ -21,6 +23,8 @@ data:
 
 
   script:
+    is-enabled: true
+
     types:
       - individual
       - collection
@@ -118,7 +122,7 @@ data:
       typescript-project-build:
         enter-full-path: "{{ current-root-full-path }}/selection/typescript"
         type: "individual"
-# 
+
         commands:
           - "bun run build"
 
@@ -159,6 +163,8 @@ data:
           - "bun run deploy"
 
     clean:
+      is-enabled: true
+
       exclude:
         targets:
           - "{{ current-root-full-path }}"

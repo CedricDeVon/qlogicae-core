@@ -2,12 +2,12 @@ import argparse
 from pathlib import Path
 
 from library import (
-    log_manager,
-    file_io_manager,
-    workspace_manager,
-    value_cache_manager,
     macros_manager,
+    file_io_manager,
+    file_log_manager,
+    workspace_manager,
     filesystem_manager,
+    value_cache_manager,
 )
 from library.target_cache_value import TargetCacheValue
 
@@ -22,10 +22,7 @@ def handle_manager_callback():
         "--target",
         help="workspace target",
         dest="target",
-        default=value_cache_manager.singleton.get_one_value(
-            ["default-workspace-selection"],
-            output_type=TargetCacheValue.DEFINED,
-        ),
+        default="all",
         choices=(
             value_cache_manager.singleton.get_one_value(
                 ["workspace-selections"],
@@ -35,6 +32,22 @@ def handle_manager_callback():
         ),
     )
     cli_arguments = cli_parser.parse_args()
+
+
+    if not value_cache_manager.singleton.get_one_value(
+        [
+            f"workspace/public/configuration/workspace.yaml-raw",
+            "data",
+            "selection",
+            "is-enabled",
+        ],
+        output_type=TargetCacheValue.ANY,
+    ):
+        file_log_manager.singleton.log_warning(
+            "'run.filesystem.setup' - check 'data.selection.is-enabled' property within your 'workspace.yaml' file - disabled"
+        )
+
+        return False
 
     if cli_arguments.target == "all":
         handle_target_root()
@@ -53,12 +66,18 @@ def handle_manager_callback():
         handle_target_project_selection(cli_arguments.target)
 
     else:
-        log_manager.singleton.log_info(
-            f"'{cli_arguments}' is not an existing cli option set"
+        workspace_manager.singleton.handle_cli_argument_set_invalid(
+            cli_arguments
         )
+
+    return True
 
 
 def handle_target_root():
+    file_log_manager.singleton.log_info(
+        "'run.filesystem.setup' - 'root' setup - start"
+    )
+
     parsed_filesystem_path = macros_manager.singleton.parse_one(
         value_cache_manager.singleton.get_one_value(
             [
@@ -132,6 +151,11 @@ def handle_target_root():
         }/workspace/private/temporary/intermediate/filesystem/root",
         parsed_filesystem_path,
     )
+    file_log_manager.singleton.log_info(
+        "'run.filesystem.setup' - 'root' setup - complete"
+    )
+
+    return True
 
 
 def handle_filesystem_parsing(
@@ -199,16 +223,32 @@ def handle_filesystem_parsing(
                     )
                 )
 
+    return True
 
-def handle_target_project():
+
+def handle_target_project():    
+    file_log_manager.singleton.log_info(
+        "'run.filesystem.setup' - 'project' setup - start"
+    )
+
     for project_name in value_cache_manager.singleton.get_one_value(
         ["project-workspace-selections"],
         output_type=TargetCacheValue.DEFINED,
     ):
         handle_target_project_selection(project_name)
 
+    file_log_manager.singleton.log_info(
+        "'run.filesystem.setup' - 'project' setup - complete"
+    )
+
+    return True
+
 
 def handle_target_project_selection(project_name):
+    file_log_manager.singleton.log_info(
+        f"'run.filesystem.setup' - '{project_name}' setup - start"
+    )
+
     parsed_filesystem_path = macros_manager.singleton.parse_one(
         value_cache_manager.singleton.get_one_value(
             [
@@ -296,6 +336,12 @@ def handle_target_project_selection(project_name):
         }/workspace/private/temporary/intermediate/filesystem/{project_name}",
         parsed_filesystem_path,
     )
+
+    file_log_manager.singleton.log_info(
+        f"'run.filesystem.setup' - '{project_name}' setup - complete"
+    )
+
+    return True
 
 
 workspace_manager.singleton.handle(handle_manager_callback)

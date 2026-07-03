@@ -3,7 +3,6 @@ import argparse
 
 from library import (
     system_manager,
-    filesystem_manager,
     workspace_manager,
     macros_manager,
     file_log_manager,
@@ -32,6 +31,22 @@ def handler_manager_callback():
         ),
     )
     cli_arguments = cli_parser.parse_args()
+
+
+    if not value_cache_manager.singleton.get_one_value(
+        [
+            f"workspace/public/configuration/workspace.yaml-raw",
+            "data",
+            "script",
+            "is-enabled",
+        ],
+        output_type=TargetCacheValue.ANY,
+    ):
+        file_log_manager.singleton.log_warning(
+            "'run.script' - check 'data.script.is-enabled' property within your 'workspace.yaml' file - disabled"
+        )
+
+        return False
 
     target_type = value_cache_manager.singleton.get_one_value(
         [
@@ -68,8 +83,14 @@ def handler_manager_callback():
             cli_arguments
         )
 
+    return True
+
 
 def handle_target_option(target_name):
+    file_log_manager.singleton.log_info(
+        f"'run.script' - '{target_name}' execution - start"
+    )
+
     system_manager.singleton.change_cli_filesystem_path(
         macros_manager.singleton.parse_one(
             value_cache_manager.singleton.get_one_value(
@@ -147,6 +168,12 @@ def handle_target_option(target_name):
             ),
         )
     )
+
+    file_log_manager.singleton.log_info(
+        f"'run.script' - '{target_name}' execution - complete"
+    )
+
+    return True
 
 
 workspace_manager.singleton.handle(handler_manager_callback)

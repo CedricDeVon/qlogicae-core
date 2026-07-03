@@ -3,6 +3,7 @@ import argparse
 from library import (
     log_manager,
     macros_manager,
+    file_log_manager,
     workspace_manager,
     filesystem_manager,
     value_cache_manager,
@@ -26,7 +27,7 @@ def handler_manager_callback():
                 output_type=TargetCacheValue.DEFINED,
             )
             or {}
-        ),
+        )
     )
     cli_parser.add_argument(
         "-dt",
@@ -37,6 +38,23 @@ def handler_manager_callback():
         default=False,
     )
     cli_arguments = cli_parser.parse_args()
+
+
+    if not value_cache_manager.singleton.get_one_value(
+        [
+            f"workspace/public/configuration/workspace.yaml-raw",
+            "data",
+            "script",
+            "clean",
+            "is-enabled",
+        ],
+        output_type=TargetCacheValue.ANY,
+    ):
+        file_log_manager.singleton.log_warning(
+            "'run.filesystem.clean' - check 'data.script.clean.is-enabled' property within your 'workspace.yaml' file - disabled"
+        )
+
+        return False
 
     for include_path in (
         value_cache_manager.singleton.get_one_value(
@@ -64,6 +82,10 @@ def handler_manager_callback():
             ),
         )
 
+        file_log_manager.singleton.log_info(
+            f"'run.filesystem.clean' - '{parsed_include_path}' cleaning - start"
+        )
+
         if parsed_include_path in (
             value_cache_manager.singleton.get_one_value(
                 ["clean-exclude-selections"],
@@ -71,8 +93,8 @@ def handler_manager_callback():
             )
             or {}
         ):
-            log_manager.singleton.log_info(
-                f"filesystem '{parsed_include_path}' ignored for cleaning"
+            file_log_manager.singleton.log_warning(
+                f"'run.filesystem.clean' - '{parsed_include_path}' cleaning - ignored"
             )
             continue
 
@@ -81,9 +103,12 @@ def handler_manager_callback():
             continue
 
         filesystem_manager.singleton.clean_filesystem_path(parsed_include_path)
-        log_manager.singleton.log_info(
-            f"filesystem '{parsed_include_path}' cleaned"
-        )
+
+    file_log_manager.singleton.log_info(
+        f"'run.filesystem.clean' - '{parsed_include_path}' cleaning - complete"
+    )
+
+    return True
 
 
 workspace_manager.singleton.handle(handler_manager_callback)
