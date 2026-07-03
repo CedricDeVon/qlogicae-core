@@ -3,16 +3,18 @@ from collections.abc import Mapping
 
 
 class ValueCacheStorageManager:
-    collection: Mapping[str, Any] = {}
+    def __init__(self) -> None:
+        self._collection: Mapping[str, Any] = {}
 
-    def __init__(self):
-        self.collection = {}
+    @property
+    def collection(self) -> Mapping[str, Any]:
+        return self._collection
 
     def is_key_found(self, keys: list[str]) -> bool:
         if not keys:
             return False
 
-        cache = self.collection
+        cache = self._collection
 
         for key in keys:
             if isinstance(cache, dict):
@@ -37,7 +39,7 @@ class ValueCacheStorageManager:
         if not keys:
             return None
 
-        cache = self.collection
+        cache = self._collection
 
         for key in keys:
             if isinstance(cache, dict):
@@ -67,7 +69,7 @@ class ValueCacheStorageManager:
         if not keys:
             raise ValueError("'keys' cannot be empty")
 
-        cache = self.collection
+        cache = self._collection
 
         for key in keys[:-1]:
             if isinstance(cache, dict):
@@ -119,7 +121,7 @@ class ValueCacheStorageManager:
         if not keys:
             raise ValueError("keys cannot be empty")
 
-        cache = self.collection
+        cache = self._collection
 
         for key in keys[:-1]:
             if isinstance(cache, dict):
@@ -163,17 +165,17 @@ class ValueCacheStorageManager:
             raise TypeError("destination is neither a dictionary nor a list")
 
     def clear_all_values(self) -> bool:
-        self.collection.clear()
+        self._collection.clear()
 
         return True
 
     def display_one_item(self, key: str) -> bool:
-        print(f"- {key}: {self.collection[key]}")
+        print(f"- {key}: {self._collection[key]}")
 
         return True
 
     def display_all_items(self) -> bool:
-        for item in self.collection.items():
+        for item in self._collection.items():
             self.display_one_item(item[0])
 
         return True

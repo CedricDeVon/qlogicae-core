@@ -5,7 +5,7 @@ from library.log_options import LogOptions
 
 
 class ConsoleLogManager:
-    def __init__(self):
+    def __init__(self) -> None:
         self.logger = logging.getLogger("console-logger")
 
         self.logger.setLevel(logging.DEBUG)

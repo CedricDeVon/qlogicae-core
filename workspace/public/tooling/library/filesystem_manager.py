@@ -37,19 +37,25 @@ class FileSystem:
         path = Path(value)
 
         if not path.exists():
-            raise Exception(f"Path '{path}' is invalid")
+            return False
+
+        return True
 
     def is_file_path_valid(self, value):
         path = Path(value)
 
         if not path.is_file():
-            raise Exception(f"File '{path}' is invalid")
+            return False
+
+        return True
 
     def is_folder_path_valid(self, value):
         path = Path(value)
 
         if not path.is_dir():
-            raise Exception(f"'{path}' is invalid")
+            return False
+
+        return True
 
     def clean_filesystem_path(self, path):
         directory = Path(path).resolve()

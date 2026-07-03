@@ -19,7 +19,6 @@ class RuntimeBenchmarkManager:
 
     def get_duration_in_nanoseconds(self) -> int:
         return self.stop_time - self.start_time
-        
 
 
 singleton = RuntimeBenchmarkManager()

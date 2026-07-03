@@ -3,14 +3,20 @@ from typing import Any
 
 
 class YamlFileIoManager:
+    def __init__(self) -> None:
+        self._valid_suffixes: set[str] = {".yaml", ".yml"}
+
+    @property
+    def valid_suffixes(self) -> set[str]:
+        return self._valid_suffixes
+
     def is_valid(self, file: Any) -> bool:
         return any(
-            suffix in {".yaml", ".yml"}
-            for suffix in file.suffixes
+            suffix in self._valid_suffixes for suffix in self._valid_suffixes
         )
 
-    def read(self, file: Any) -> int:
-        return yaml.safe_load(current_file) or {}
+    def read_file(self, file: Any) -> Any:
+        return yaml.safe_load(file) or {}
 
 
 singleton = YamlFileIoManager()

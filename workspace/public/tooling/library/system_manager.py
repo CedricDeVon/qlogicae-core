@@ -30,7 +30,7 @@ class SystemManager:
     def execute_command(
         self,
         command: str,
-        return_type: ExecuteCommandReturn = ExecuteCommandReturn.MINIMAL_RETURN,
+        output_type: ExecuteCommandReturn = ExecuteCommandReturn.MINIMAL_RETURN,
     ) -> bool:
         if not command:
             raise ValueError("command cannot be empty")
@@ -41,7 +41,7 @@ class SystemManager:
         elif not isinstance(command, Sequence):
             raise TypeError("command must be a string or a sequence")
 
-        match return_type:
+        match output_type:
             case ExecuteCommandReturn.MINIMAL_RETURN:
                 return subprocess.run(
                     command,

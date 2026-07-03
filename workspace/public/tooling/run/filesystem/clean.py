@@ -3,7 +3,7 @@ import argparse
 
 from library import (
     filesystem_manager,
-    handler_manager,
+    workspace_manager,
     macros_manager,
     log_manager,
     value_cache_manager,
@@ -24,8 +24,8 @@ def handler_manager_callback():
         dest="target",
         choices=(
             value_cache_manager.singleton.get_one_value(
-                ["all-clean-include-targets"],
-                target_cache_value=TargetCacheValue.DEFINED,
+                ["clean-include-selections"],
+                output_type=TargetCacheValue.DEFINED,
             )
             or {}
         ),
@@ -43,15 +43,15 @@ def handler_manager_callback():
     for include_path in (
         value_cache_manager.singleton.get_one_value(
             [
-                f"root-workspace/public/configuration/workspace.yaml-raw",
+                f"workspace/public/configuration/workspace.yaml-raw",
                 "data",
-                "all",
+                "script",
                 "clean",
                 "include",
                 "targets",
                 cli_arguments.target,
             ],
-            target_cache_value=TargetCacheValue.DEFINED,
+            output_type=TargetCacheValue.DEFINED,
         )
         or {}
     ):
@@ -59,8 +59,8 @@ def handler_manager_callback():
             include_path,
             (
                 value_cache_manager.singleton.get_one_value(
-                    ["all-macros"],
-                    target_cache_value=TargetCacheValue.DEFINED,
+                    ["workspace-macros"],
+                    output_type=TargetCacheValue.DEFINED,
                 )
                 or {}
             ),
@@ -68,8 +68,8 @@ def handler_manager_callback():
 
         if parsed_include_path in (
             value_cache_manager.singleton.get_one_value(
-                ["all-clean-exclude-targets"],
-                target_cache_value=TargetCacheValue.DEFINED,
+                ["clean-exclude-selections"],
+                output_type=TargetCacheValue.DEFINED,
             )
             or {}
         ):
@@ -88,4 +88,4 @@ def handler_manager_callback():
         )
 
 
-handler_manager.singleton.handle(handler_manager_callback)
+workspace_manager.singleton.handle(handler_manager_callback)

@@ -4,7 +4,7 @@ import argparse
 from library import (
     system_manager,
     filesystem_manager,
-    handler_manager,
+    workspace_manager,
     macros_manager,
     file_log_manager,
     value_cache_manager,
@@ -25,8 +25,8 @@ def handler_manager_callback():
         dest="target",
         choices=(
             value_cache_manager.singleton.get_one_value(
-                ["all-script-targets"],
-                target_cache_value=TargetCacheValue.DEFINED,
+                ["script-selections"],
+                output_type=TargetCacheValue.DEFINED,
             )
             or {}
         ),
@@ -35,15 +35,14 @@ def handler_manager_callback():
 
     target_type = value_cache_manager.singleton.get_one_value(
         [
-            f"root-workspace/public/configuration/workspace.yaml-raw",
+            "workspace/public/configuration/workspace.yaml-raw",
             "data",
-            "all",
             "script",
             "targets",
             cli_arguments.target,
             "type",
         ],
-        target_cache_value=TargetCacheValue.ANY,
+        output_type=TargetCacheValue.ANY,
     )
 
     if target_type == "individual":
@@ -52,21 +51,22 @@ def handler_manager_callback():
         for collection_script_name in (
             value_cache_manager.singleton.get_one_value(
                 [
-                    f"root-workspace/public/configuration/workspace.yaml-raw",
+                    "workspace/public/configuration/workspace.yaml-raw",
                     "data",
-                    "all",
                     "script",
                     "targets",
                     cli_arguments.target,
                     "commands",
                 ],
-                target_cache_value=TargetCacheValue.ANY,
+                output_type=TargetCacheValue.ANY,
             )
             or []
         ):
             handle_target_option(collection_script_name)
     else:
-        handler_manager.singleton.handle_cli_argument_set_invalid(cli_arguments)
+        workspace_manager.singleton.handle_cli_argument_set_invalid(
+            cli_arguments
+        )
 
 
 def handle_target_option(target_name):
@@ -74,21 +74,20 @@ def handle_target_option(target_name):
         macros_manager.singleton.parse_one(
             value_cache_manager.singleton.get_one_value(
                 [
-                    f"root-workspace/public/configuration/workspace.yaml-raw",
+                    "workspace/public/configuration/workspace.yaml-raw",
                     "data",
-                    "all",
                     "script",
                     "targets",
                     target_name,
                     "enter-full-path",
                 ],
-                target_cache_value=TargetCacheValue.ANY,
+                output_type=TargetCacheValue.ANY,
             )
-            or "{{ root-current-full-path }}",
+            or "{{ current-root-full-path }}",
             (
                 value_cache_manager.singleton.get_one_value(
-                    ["all-macros"],
-                    target_cache_value=TargetCacheValue.DEFINED,
+                    ["workspace-macros"],
+                    output_type=TargetCacheValue.DEFINED,
                 )
                 or {}
             ),
@@ -98,15 +97,14 @@ def handle_target_option(target_name):
     for current_command in (
         value_cache_manager.singleton.get_one_value(
             [
-                f"root-workspace/public/configuration/workspace.yaml-raw",
+                "workspace/public/configuration/workspace.yaml-raw",
                 "data",
-                "all",
                 "script",
                 "targets",
                 target_name,
                 "commands",
             ],
-            target_cache_value=TargetCacheValue.DEFINED,
+            output_type=TargetCacheValue.DEFINED,
         )
         or []
     ):
@@ -116,8 +114,8 @@ def handle_target_option(target_name):
                     current_command,
                     (
                         value_cache_manager.singleton.get_one_value(
-                            ["all-macros"],
-                            target_cache_value=TargetCacheValue.DEFINED,
+                            ["workspace-macros"],
+                            output_type=TargetCacheValue.DEFINED,
                         )
                         or {}
                     ),
@@ -130,21 +128,20 @@ def handle_target_option(target_name):
         macros_manager.singleton.parse_one(
             value_cache_manager.singleton.get_one_value(
                 [
-                    f"root-workspace/public/configuration/workspace.yaml-raw",
+                    "workspace/public/configuration/workspace.yaml-raw",
                     "data",
-                    "all",
                     "script",
                     "targets",
                     target_name,
                     "exit-full-path",
                 ],
-                target_cache_value=TargetCacheValue.ANY,
+                output_type=TargetCacheValue.ANY,
             )
-            or "{{ root-current-full-path }}",
+            or "{{ current-root-full-path }}",
             (
                 value_cache_manager.singleton.get_one_value(
-                    ["all-macros"],
-                    target_cache_value=TargetCacheValue.DEFINED,
+                    ["workspace-macros"],
+                    output_type=TargetCacheValue.DEFINED,
                 )
                 or {}
             ),
@@ -152,4 +149,4 @@ def handle_target_option(target_name):
     )
 
 
-handler_manager.singleton.handle(handler_manager_callback)
+workspace_manager.singleton.handle(handler_manager_callback)

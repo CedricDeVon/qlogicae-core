@@ -12,10 +12,10 @@ class ValueCacheManager:
     def get_one_value(
         self,
         keys: list[str],
-        target_cache_value: TargetCacheValue = TargetCacheValue.DEFINED,
+        output_type: TargetCacheValue = TargetCacheValue.DEFINED,
     ) -> Any:
         value = value_cache_storage_manager.singleton.get_one_value(keys)
-        self.throw_if_value_is_explicitly_invalid(value, target_cache_value)
+        self.throw_if_value_is_explicitly_invalid(value, output_type)
 
         return value
 
@@ -23,9 +23,9 @@ class ValueCacheManager:
         self,
         keys: list[str],
         value: Any,
-        target_cache_value: TargetCacheValue = TargetCacheValue.DEFINED,
+        output_type: TargetCacheValue = TargetCacheValue.DEFINED,
     ) -> bool:
-        self.throw_if_value_is_explicitly_invalid(value, target_cache_value)
+        self.throw_if_value_is_explicitly_invalid(value, output_type)
 
         return value_cache_storage_manager.singleton.set_one_value(keys, value)
 
@@ -43,9 +43,9 @@ class ValueCacheManager:
     def throw_if_value_is_explicitly_invalid(
         self,
         value: Any,
-        target_cache_value: TargetCacheValue = TargetCacheValue.DEFINED,
+        output_type: TargetCacheValue = TargetCacheValue.DEFINED,
     ) -> bool:
-        match target_cache_value:
+        match output_type:
             case TargetCacheValue.FILESYSTEM_PATH:
                 return filesystem_manager.singleton.throw_if_filesystem_path_invalid(
                     value

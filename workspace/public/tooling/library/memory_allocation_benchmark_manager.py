@@ -2,7 +2,7 @@ import tracemalloc
 
 
 class MemoryAllocationBenchmarkManager:
-    def __init__(self):
+    def __init__(self) -> None:
         self.started = False
         self.snapshot = None
 
