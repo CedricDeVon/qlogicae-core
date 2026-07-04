@@ -190,14 +190,13 @@ data:
   macros:  
     value-cache:
       - current-date
+      - current-year
       - current-root-full-path
       
     file:
-      root-project-name: "QLogicae Cor1"
-
-      current-year: "2026"
-      
       company-name: "QLogicae"
+
+      project-name: "Cor"
       
       author-name: "Vaughn Cedric L. Araneta"
       
