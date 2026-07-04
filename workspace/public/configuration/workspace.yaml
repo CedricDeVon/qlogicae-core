@@ -30,12 +30,6 @@ data:
       - collection
 
     targets:
-      demo:
-        type: "collection"
-        commands:
-          - all-value-cache-debug
-          - all-toolset-verify
-
       all-value-cache-debug:
         enter-full-path: "${{ current-root-full-path }}/workspace/public/tooling"
         type: "individual"
