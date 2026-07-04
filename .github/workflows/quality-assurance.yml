@@ -97,7 +97,7 @@ jobs:
 
             - if: ${{ matrix.package_manager == 'poetry' }}
               run: pip install poetry
-                && poetry install
+                && poetry install --no-root
 
             - if: ${{ matrix.package_manager == 'pdm' }}
               run: pip install pdm
