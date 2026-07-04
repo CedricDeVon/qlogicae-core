@@ -69,6 +69,11 @@ jobs:
 
                 package_manager:
                     - pip
+                    - uv
+                    - conda
+                    - poetry
+                    - pdm
+                    - hatch
 
         steps:
             - uses: actions/checkout@v4
