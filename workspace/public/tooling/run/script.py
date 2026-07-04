@@ -47,20 +47,29 @@ def handler_manager_callback():
 
         return False
 
+    handle_targets(
+        cli_arguments.target
+    )
+
+    return True
+
+
+def handle_targets(target_name):
     target_type = value_cache_manager.singleton.get_one_value(
         [
             "workspace/public/configuration/workspace.yaml-raw",
             "data",
             "script",
             "targets",
-            cli_arguments.target,
+            target_name,
             "type",
         ],
         output_type=TargetCacheValue.ANY,
     )
 
     if target_type == "individual":
-        handle_target_option(cli_arguments.target)
+        handle_target_option(target_name)
+
     elif target_type == "collection":
         for collection_script_name in (
             value_cache_manager.singleton.get_one_value(
@@ -69,20 +78,35 @@ def handler_manager_callback():
                     "data",
                     "script",
                     "targets",
-                    cli_arguments.target,
+                    target_name,
                     "commands",
                 ],
                 output_type=TargetCacheValue.ANY,
             )
             or []
         ):
-            handle_target_option(collection_script_name)
+            collection_target_type = value_cache_manager.singleton.get_one_value(
+                [
+                    "workspace/public/configuration/workspace.yaml-raw",
+                    "data",
+                    "script",
+                    "targets",
+                    collection_script_name,
+                    "type",
+                ],
+                output_type=TargetCacheValue.ANY,
+            )
+
+            if collection_target_type == "individual":
+                handle_target_option(collection_script_name)
+
+            elif collection_target_type == "collection":
+                handle_targets(collection_script_name)
     else:
         workspace_manager.singleton.handle_cli_argument_set_invalid(
             cli_arguments
         )
 
-    return True
 
 
 def handle_target_option(target_name):
