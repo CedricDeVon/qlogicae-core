@@ -13,6 +13,10 @@ jobs:
         name: Python | Unit Test
         runs-on: ubuntu-latest
 
+        defaults:
+            run:
+                working-directory: ./selection/python
+
         strategy:
             fail-fast: false
             matrix:
