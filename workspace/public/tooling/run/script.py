@@ -104,7 +104,7 @@ def handle_target_option(target_name):
                 ],
                 output_type=TargetCacheValue.ANY,
             )
-            or "{{ current-root-full-path }}",
+            or "${{ current-root-full-path }}",
             (
                 value_cache_manager.singleton.get_one_value(
                     ["workspace-macros"],
@@ -158,7 +158,7 @@ def handle_target_option(target_name):
                 ],
                 output_type=TargetCacheValue.ANY,
             )
-            or "{{ current-root-full-path }}",
+            or "${{ current-root-full-path }}",
             (
                 value_cache_manager.singleton.get_one_value(
                     ["workspace-macros"],
