@@ -83,18 +83,16 @@ def handle_targets(target_name):
             )
             or []
         ):
-            collection_target_type = (
-                value_cache_manager.singleton.get_one_value(
-                    [
-                        "workspace/public/configuration/workspace.yaml-raw",
-                        "data",
-                        "script",
-                        "targets",
-                        collection_script_name,
-                        "type",
-                    ],
-                    output_type=TargetCacheValue.ANY,
-                )
+            collection_target_type = value_cache_manager.singleton.get_one_value(
+                [
+                    "workspace/public/configuration/workspace.yaml-raw",
+                    "data",
+                    "script",
+                    "targets",
+                    collection_script_name,
+                    "type",
+                ],
+                output_type=TargetCacheValue.ANY,
             )
 
             if collection_target_type == "individual":
@@ -103,9 +101,7 @@ def handle_targets(target_name):
             elif collection_target_type == "collection":
                 handle_targets(collection_script_name)
     else:
-        workspace_manager.singleton.handle_cli_argument_set_invalid(
-            cli_arguments
-        )
+        workspace_manager.singleton.handle_cli_argument_set_invalid(cli_arguments)
 
 
 def handle_target_option(target_name):

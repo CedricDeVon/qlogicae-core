@@ -52,16 +52,10 @@ class ValueCacheManager:
                 )
 
             case TargetCacheValue.FILE_PATH:
-                return filesystem_manager.singleton.throw_if_file_path_invalid(
-                    value
-                )
+                return filesystem_manager.singleton.throw_if_file_path_invalid(value)
 
             case TargetCacheValue.FOLDER_PATH:
-                return (
-                    filesystem_manager.singleton.throw_if_folder_path_invalid(
-                        value
-                    )
-                )
+                return filesystem_manager.singleton.throw_if_folder_path_invalid(value)
 
             case TargetCacheValue.DEFINED:
                 return self.throw_if_undefined(value)

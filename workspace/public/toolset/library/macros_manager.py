@@ -10,9 +10,7 @@ class MacrosManager:
     def resolve_many(self, values: Any) -> Mapping[str, Any]:
         cache = {}
 
-        return {
-            key: self.resolve_one(key, values, cache, set()) for key in values
-        }
+        return {key: self.resolve_one(key, values, cache, set()) for key in values}
 
     def resolve_one(self, key: Any, values: Any, cache: Any, stack: Any) -> str:
         if key in cache:
@@ -58,8 +56,7 @@ class MacrosManager:
 
         if isinstance(value, dict):
             return {
-                key: self.parse_one(child, resolved)
-                for key, child in value.items()
+                key: self.parse_one(child, resolved) for key, child in value.items()
             }
 
         if isinstance(value, list):

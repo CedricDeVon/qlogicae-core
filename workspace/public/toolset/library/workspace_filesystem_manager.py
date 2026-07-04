@@ -75,9 +75,7 @@ class WorkspaceFilesystemManager:
                 )
             }/workspace/public/configuration"
         ):
-            raise Exception(
-                "workspace/public/configuration/workspace.yaml' must exist"
-            )
+            raise Exception("workspace/public/configuration/workspace.yaml' must exist")
 
         if not filesystem_manager.singleton.is_file_path_valid(
             f"{
@@ -87,9 +85,7 @@ class WorkspaceFilesystemManager:
                 )
             }/workspace/private/configuration"
         ):
-            raise Exception(
-                "workspace/public/configuration/workspace.yaml' must exist"
-            )
+            raise Exception("workspace/public/configuration/workspace.yaml' must exist")
 
         return False
 

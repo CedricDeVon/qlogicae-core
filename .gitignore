@@ -15,3 +15,9 @@ dist/
 build/
 reports/
 *reports/
+
+__pycache__/
+
+workspace/private/
+
+

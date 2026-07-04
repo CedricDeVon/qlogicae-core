@@ -33,9 +33,7 @@ class FileLogManager:
         if not options.is_enabled:
             return message
 
-        self.logger.log(
-            options.log_level, message, stacklevel=options.stack_level
-        )
+        self.logger.log(options.log_level, message, stacklevel=options.stack_level)
 
         return message
 
@@ -77,9 +75,7 @@ class FileLogManager:
     def rebuild_listener(self) -> bool:
         self.listener.stop()
 
-        self.listener = QueueListener(
-            self.log_queue, *self.file_handlers.values()
-        )
+        self.listener = QueueListener(self.log_queue, *self.file_handlers.values())
 
         self.listener.start()
 

@@ -65,17 +65,13 @@ def handle_manager_callback():
         handle_target_project_selection(cli_arguments.target)
 
     else:
-        workspace_manager.singleton.handle_cli_argument_set_invalid(
-            cli_arguments
-        )
+        workspace_manager.singleton.handle_cli_argument_set_invalid(cli_arguments)
 
     return True
 
 
 def handle_target_root():
-    file_log_manager.singleton.log_info(
-        "'run.filesystem.setup' - 'root' setup - start"
-    )
+    file_log_manager.singleton.log_info("'run.filesystem.setup' - 'root' setup - start")
 
     parsed_filesystem_path = macros_manager.singleton.parse_one(
         value_cache_manager.singleton.get_one_value(
