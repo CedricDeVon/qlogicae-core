@@ -96,8 +96,10 @@ jobs:
                 auto-activate-base: false
 
             - if: ${{ matrix.package_manager == 'poetry' }}
-              run: pip install poetry
-                && poetry install --no-root
+              run: |
+                pip install poetry
+                poetry install --no-root
+                poetry run python -c "import library"
 
             - if: ${{ matrix.package_manager == 'pdm' }}
               run: pip install pdm
@@ -123,7 +125,7 @@ jobs:
                 pip install output/build/*.whl
                 
             - if: ${{ matrix.package_manager == 'poetry' }}
-              run: poetry add ./output/build/*.whl
+              run: pip install ./output/build/*.whl
 
             - if: ${{ matrix.package_manager == 'pdm' }}
               run: pdm init --non-interactive
