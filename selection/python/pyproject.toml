@@ -3,9 +3,9 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "qlogicae-cor1"
-version = "1.0.2"
-description = "The core library for the QLogicae framework"
+name = "qlogicae-cor"
+version = "1.0.1"
+description = "The core library for QLogicae projects"
 readme = "README.md"
 requires-python = ">=3.14"
 license = "MIT"
@@ -71,15 +71,18 @@ quote-style = "double"
 indent-style = "space"
 
 [tool.hatch.envs.default.scripts]
-lint = "ruff check ."
+lint = "ruff check . --fix"
 format = "ruff format ."
 audit-security = "pip-audit"
+deploy-check = "twine check ./output/build/*"
 clean-build = "rm -rf ./output/build && mkdir -p ./output/build"
 clean-test-unit = "rm -rf ./output/test/unit && mkdir -p ./output/test/unit"
-clean-test-benchmarks = "rm -rf ./output/test/benchmarks && mkdir -p ./output/test/benchmarks"
+clean-test-benchmark = "rm -rf ./output/test/benchmark && mkdir -p ./output/test/benchmark"
 build = "hatch run clean-build && hatch build && mv dist/* ./output/build"
 workflow-test-unit = "hatch run clean-test-unit && pytest -vv --cov=library --cov-branch --cov-report=term-missing --cov-report=html:./output/test/unit/html --cov-report=xml:./output/test/unit/coverage.xml --cov-report=json:./output/test/unit/coverage.json --junitxml=./output/test/unit/junit.xml"
-workflow-test-benchmarks = "clean-test-benchmarks && pytest -vv --benchmark-enable --benchmark-json=./output/test/benchmarks/benchmark.json"
+workflow-test-benchmark = "clean-test-benchmark && pytest -vv --benchmark-enable --benchmark-json=./output/test/benchmark/benchmark.json"
+workflow-deploy-check = "hatch run build && hatch run deploy-check"
+workflow-deploy = "hatch run build && twine upload ./output/build/* --config-file .pypirc --verbose"
 
 [tool.hatch.build]
 include = [
@@ -95,4 +98,6 @@ exclude = [
     ".github/**",
     "test/**",
     "docs/**",
+    "docs/**",
 ]
+

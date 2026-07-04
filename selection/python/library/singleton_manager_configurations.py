@@ -1,0 +1,10 @@
+from library.abstract_manager_configurations import (
+    AbstractManagerConfigurations,
+)
+
+
+class SingletonManagerConfigurations(
+    AbstractManagerConfigurations,
+):
+    def __init__(self) -> None:
+        super().__init__()
