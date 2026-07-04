@@ -9,8 +9,8 @@ defaults:
         shell: bash
 
 jobs:
-    unit-test:
-        name: Unit Tests
+    typescript-unit-test:
+        name: Typescript | Unit Test
         runs-on: ubuntu-latest
 
         defaults:
@@ -27,8 +27,8 @@ jobs:
             - run: bun install --frozen-lockfile
             - run: bun run workflow:test:unit
 
-    benchmark-test:
-        name: Benchmark Tests
+    typescript-benchmark-test:
+        name: Typescript | Benchmark Test
         runs-on: ubuntu-latest
 
         defaults:
@@ -45,8 +45,8 @@ jobs:
             - run: bun install --frozen-lockfile
             - run: bun run workflow:test:benchmark
 
-    install:
-        name: Install via ${{ matrix.package_manager }} on Node ${{ matrix.node_version }}
+    typescript-install:
+        name: Typescript | Install via ${{ matrix.package_manager }} on Node ${{ matrix.node_version }}
         runs-on: ubuntu-latest
 
         strategy:

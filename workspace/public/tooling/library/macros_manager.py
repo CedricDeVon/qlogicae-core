@@ -5,7 +5,7 @@ from collections.abc import Mapping
 
 class MacrosManager:
     def __init__(self) -> None:
-        self.pattern = re.compile(r"\{\{\s*([A-Za-z0-9._-]+)\s*\}\}")
+        self.pattern = re.compile(r"\$\{\{\s*([A-Za-z0-9._-]+)\s*\}\}")
 
     def resolve_many(self, values: Any) -> Mapping[str, Any]:
         cache = {}

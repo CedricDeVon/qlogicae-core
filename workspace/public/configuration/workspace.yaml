@@ -17,9 +17,9 @@ data:
         - python
 
     full-path:
-      root: "{{ current-root-full-path }}"
-      typescript: "{{ current-root-full-path }}/selection/typescript"      
-      python: "{{ current-root-full-path }}/selection/python"
+      root: "${{ current-root-full-path }}"
+      typescript: "${{ current-root-full-path }}/selection/typescript"      
+      python: "${{ current-root-full-path }}/selection/python"
 
 
   script:
@@ -31,7 +31,7 @@ data:
 
     targets:
       all-value-cache-debug:
-        enter-full-path: "{{ current-root-full-path }}/workspace/public/tooling"
+        enter-full-path: "${{ current-root-full-path }}/workspace/public/tooling"
         type: "individual"
         commands:
           - "python3 -c \"
@@ -46,13 +46,13 @@ data:
           - typescript-toolset-verify    
 
       typescript-account-login:
-        enter-full-path: "{{ current-root-full-path }}/selection/typescript"
+        enter-full-path: "${{ current-root-full-path }}/selection/typescript"
         type: "individual"
         commands:
           - "npm login"
 
       typescript-toolset-verify:
-        enter-full-path: "{{ current-root-full-path }}/selection/typescript"
+        enter-full-path: "${{ current-root-full-path }}/selection/typescript"
         type: "individual"
         commands:
           - "docker --version"
@@ -72,7 +72,7 @@ data:
           - typescript-test-unit      
 
       typescript-test-unit:
-        enter-full-path: "{{ current-root-full-path }}/selection/typescript"
+        enter-full-path: "${{ current-root-full-path }}/selection/typescript"
         type: "individual"
         commands:
           - "bun run test:unit"
@@ -84,7 +84,7 @@ data:
           - typescript-test-benchmark    
 
       typescript-test-benchmark:
-        enter-full-path: "{{ current-root-full-path }}/selection/typescript"
+        enter-full-path: "${{ current-root-full-path }}/selection/typescript"
         type: "individual"
         commands:
           - "bun run test:benchmark"
@@ -96,7 +96,7 @@ data:
           - typescript-codebase-format    
 
       typescript-codebase-format:
-        enter-full-path: "{{ current-root-full-path }}/selection/typescript"
+        enter-full-path: "${{ current-root-full-path }}/selection/typescript"
         type: "individual"
         commands:
           - "bun run format"
@@ -108,7 +108,7 @@ data:
           - typescript-codebase-lint    
 
       typescript-codebase-lint:
-        enter-full-path: "{{ current-root-full-path }}/selection/typescript"
+        enter-full-path: "${{ current-root-full-path }}/selection/typescript"
         type: "individual"
         commands:
           - "bun run lint"
@@ -120,7 +120,7 @@ data:
           - typescript-project-build    
 
       typescript-project-build:
-        enter-full-path: "{{ current-root-full-path }}/selection/typescript"
+        enter-full-path: "${{ current-root-full-path }}/selection/typescript"
         type: "individual"
 
         commands:
@@ -133,7 +133,7 @@ data:
           - typescript-project-setup    
 
       typescript-project-setup:
-        enter-full-path: "{{ current-root-full-path }}/selection/typescript"
+        enter-full-path: "${{ current-root-full-path }}/selection/typescript"
         type: "individual"
         commands:
           - "bun install"
@@ -145,7 +145,7 @@ data:
           - typescript-project-update    
 
       typescript-project-update:
-        enter-full-path: "{{ current-root-full-path }}/selection/typescript"
+        enter-full-path: "${{ current-root-full-path }}/selection/typescript"
         type: "individual"
         commands:
           - "bun update"
@@ -157,7 +157,7 @@ data:
           - typescript-project-deploy    
 
       typescript-project-deploy:
-        enter-full-path: "{{ current-root-full-path }}/selection/typescript"
+        enter-full-path: "${{ current-root-full-path }}/selection/typescript"
         type: "individual"
         commands:
           - "bun run deploy"
@@ -167,25 +167,25 @@ data:
 
       exclude:
         targets:
-          - "{{ current-root-full-path }}"
-          - "{{ current-root-full-path }}/selection"
-          - "{{ current-root-full-path }}/workspace"
-          - "{{ current-root-full-path }}/.github"  
-          - "{{ current-root-full-path }}/.temporary"            
+          - "${{ current-root-full-path }}"
+          - "${{ current-root-full-path }}/selection"
+          - "${{ current-root-full-path }}/workspace"
+          - "${{ current-root-full-path }}/.github"  
+          - "${{ current-root-full-path }}/.temporary"            
 
       include:
         targets:
           root-temporary:
-            - "{{ current-root-full-path }}/workspace/private/temporary"
+            - "${{ current-root-full-path }}/workspace/private/temporary"
 
           typescript-temporary:
-            - "{{ current-root-full-path }}/selection/typescript/output"
+            - "${{ current-root-full-path }}/selection/typescript/output"
 
   log:
     is-enabled: true
 
     targets:
-      - "{{ current-root-full-path }}/workspace/private/temporary/log/{{ current-date }}.log"            
+      - "${{ current-root-full-path }}/workspace/private/temporary/log/${{ current-date }}.log"            
 
   macros:  
     value-cache:
