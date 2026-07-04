@@ -15,5 +15,3 @@ dist/
 build/
 reports/
 *reports/
-
-workspace/private/
