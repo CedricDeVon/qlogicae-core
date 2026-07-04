@@ -97,6 +97,7 @@ jobs:
 
             - if: ${{ matrix.package_manager == 'poetry' }}
               run: pip install poetry
+                && poetry install
 
             - if: ${{ matrix.package_manager == 'pdm' }}
               run: pip install pdm
@@ -113,7 +114,7 @@ jobs:
               run: pip install ./output/build/*.whl
 
             - if: ${{ matrix.package_manager == 'uv' }}
-              run: uv pip install ./output/build/*.whl
+              run: uv pip install --system ./output/build/*.whl
 
             - if: ${{ matrix.package-manager == 'conda' }}
               shell: bash -l {0}
@@ -122,8 +123,7 @@ jobs:
                 pip install output/build/*.whl
                 
             - if: ${{ matrix.package_manager == 'poetry' }}
-              run: poetry init --no-interaction
-                && poetry add ./output/build/*.whl
+              run: poetry add ./output/build/*.whl
 
             - if: ${{ matrix.package_manager == 'pdm' }}
               run: pdm init --non-interactive
