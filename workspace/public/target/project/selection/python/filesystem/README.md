@@ -1,13 +1,13 @@
 </br>
 
 <div style="width: 100%; display: flex; justify-content: center;">
-    <image alt="The {{ company-name }} Logo" src="./project/assets/qlogicae1.png" width="256px">
+    <image alt="The ${{ company-name }} Logo" src="./project/asset/qlogicae1.png" width="256px">
 </div>
 
 </br>
 
 <div style="text-align: center;">
-  <h1>{{ company-name }} Cor1</h1>
+  <h1>${{ company-name }} Cor1</h1>
   <p style="font-style: italic;">Python</p>
 <div style="margin: 32px 64px;">
 

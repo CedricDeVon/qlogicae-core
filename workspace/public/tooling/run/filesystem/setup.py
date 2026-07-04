@@ -33,7 +33,6 @@ def handle_manager_callback():
     )
     cli_arguments = cli_parser.parse_args()
 
-
     if not value_cache_manager.singleton.get_one_value(
         [
             f"workspace/public/configuration/workspace.yaml-raw",
@@ -226,7 +225,7 @@ def handle_filesystem_parsing(
     return True
 
 
-def handle_target_project():    
+def handle_target_project():
     file_log_manager.singleton.log_info(
         "'run.filesystem.setup' - 'project' setup - start"
     )

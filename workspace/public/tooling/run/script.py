@@ -32,7 +32,6 @@ def handler_manager_callback():
     )
     cli_arguments = cli_parser.parse_args()
 
-
     if not value_cache_manager.singleton.get_one_value(
         [
             f"workspace/public/configuration/workspace.yaml-raw",
@@ -177,4 +176,3 @@ def handle_target_option(target_name):
 
 
 workspace_manager.singleton.handle(handler_manager_callback)
-

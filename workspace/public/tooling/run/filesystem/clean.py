@@ -27,7 +27,7 @@ def handler_manager_callback():
                 output_type=TargetCacheValue.DEFINED,
             )
             or {}
-        )
+        ),
     )
     cli_parser.add_argument(
         "-dt",
@@ -38,7 +38,6 @@ def handler_manager_callback():
         default=False,
     )
     cli_arguments = cli_parser.parse_args()
-
 
     if not value_cache_manager.singleton.get_one_value(
         [
