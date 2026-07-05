@@ -1,0 +1,12 @@
+[package]
+name = "qlogicae-cor"
+version = "1.0.0"
+edition = "2024"
+description = "The core library for QLogicae projects"
+license = "MIT"
+repository = "https://github.com/CedricDeVon/qlogicae-cor"
+readme = "README.md"
+keywords = ["qlogicae", "framework", "library", "package", "rust"]
+categories = ["development-tools"]
+
+[dependencies]

@@ -3,7 +3,7 @@ data:
   selection:
     is-enabled: true
 
-    target: "typescript"
+    target: "rust"
 
     default:
       targets:
@@ -15,11 +15,16 @@ data:
       targets:
         - typescript
         - python
+        - rust
 
     full-path:
       root: "${{ current-root-full-path }}"
+      
       typescript: "${{ current-root-full-path }}/selection/typescript"      
+      
       python: "${{ current-root-full-path }}/selection/python"
+
+      rust: "${{ current-root-full-path }}/selection/rust"
 
 
   script:
