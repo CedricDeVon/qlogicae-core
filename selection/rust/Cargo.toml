@@ -9,4 +9,7 @@ readme = "README.md"
 keywords = ["qlogicae", "framework", "library", "package", "rust"]
 categories = ["development-tools"]
 
+[lib]
+path = "src/lib.rs"
+
 [dependencies]

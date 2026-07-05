@@ -13,9 +13,9 @@ export class ErrorManagerConfigurations extends AbstractManagerConfigurations {
 
 	public isRuntimeThrowOutputEnabled: boolean;
 
-	public title: string = `Error at 'qlogicae-cor1'`;
+	public title: string = `error at 'qlogicae-cor'`;
 
-	public message: string = 'Something went wrong here';
+	public message: string = 'something went wrong here';
 
 	public titleMessageSeparator = ' - ';
 
