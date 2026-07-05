@@ -26,6 +26,11 @@ class WorkspaceValueCacheManager:
         )
 
         value_cache_manager.singleton.set_one_value(
+            ["scope-types"],
+            { "private", "public" }
+        )
+
+        value_cache_manager.singleton.set_one_value(
             ["default-workspace-selections"],
             set(
                 value_cache_manager.singleton.get_one_value(

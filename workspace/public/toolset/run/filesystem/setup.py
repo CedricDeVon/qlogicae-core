@@ -101,34 +101,40 @@ def handle_target_root():
             )
         }/workspace/private/temporary/intermediate/filesystem/root"
     )
-    filesystem_manager.singleton.copy_filesystem_path(
-        f"{
-            value_cache_manager.singleton.get_one_value(
-                ['current-root-full-path'],
-                output_type=TargetCacheValue.FOLDER_PATH,
-            )
-        }/workspace/public/target/all/filesystem",
-        f"{
-            value_cache_manager.singleton.get_one_value(
-                ['current-root-full-path'],
-                output_type=TargetCacheValue.FOLDER_PATH,
-            )
-        }/workspace/private/temporary/intermediate/filesystem/root",
-    )
-    filesystem_manager.singleton.copy_filesystem_path(
-        f"{
-            value_cache_manager.singleton.get_one_value(
-                ['current-root-full-path'],
-                output_type=TargetCacheValue.FOLDER_PATH,
-            )
-        }/workspace/public/target/root/filesystem",
-        f"{
-            value_cache_manager.singleton.get_one_value(
-                ['current-root-full-path'],
-                output_type=TargetCacheValue.FOLDER_PATH,
-            )
-        }/workspace/private/temporary/intermediate/filesystem/root",
-    )
+
+    for current_scope_name in value_cache_manager.singleton.get_one_value(
+        ['scope-types'],
+        output_type=TargetCacheValue.DEFINED,
+    ):
+        filesystem_manager.singleton.copy_filesystem_path(
+            f"{
+                value_cache_manager.singleton.get_one_value(
+                    ['current-root-full-path'],
+                    output_type=TargetCacheValue.FOLDER_PATH,
+                )
+            }/workspace/{current_scope_name}/target/all/filesystem",
+            f"{
+                value_cache_manager.singleton.get_one_value(
+                    ['current-root-full-path'],
+                    output_type=TargetCacheValue.FOLDER_PATH,
+                )
+            }/workspace/private/temporary/intermediate/filesystem/root",
+        )
+        filesystem_manager.singleton.copy_filesystem_path(
+            f"{
+                value_cache_manager.singleton.get_one_value(
+                    ['current-root-full-path'],
+                    output_type=TargetCacheValue.FOLDER_PATH,
+                )
+            }/workspace/{current_scope_name}/target/root/filesystem",
+            f"{
+                value_cache_manager.singleton.get_one_value(
+                    ['current-root-full-path'],
+                    output_type=TargetCacheValue.FOLDER_PATH,
+                )
+            }/workspace/private/temporary/intermediate/filesystem/root",
+        )
+
     handle_filesystem_parsing(
         f"{
             value_cache_manager.singleton.get_one_value(
@@ -272,48 +278,54 @@ def handle_target_project_selection(project_name):
             )
         }/workspace/private/temporary/intermediate/filesystem/{project_name}"
     )
-    filesystem_manager.singleton.copy_filesystem_path(
-        f"{
-            value_cache_manager.singleton.get_one_value(
-                ['current-root-full-path'],
-                output_type=TargetCacheValue.FOLDER_PATH,
-            )
-        }/workspace/public/target/all/filesystem",
-        f"{
-            value_cache_manager.singleton.get_one_value(
-                ['current-root-full-path'],
-                output_type=TargetCacheValue.FOLDER_PATH,
-            )
-        }/workspace/private/temporary/intermediate/filesystem/{project_name}",
-    )
-    filesystem_manager.singleton.copy_filesystem_path(
-        f"{
-            value_cache_manager.singleton.get_one_value(
-                ['current-root-full-path'],
-                output_type=TargetCacheValue.FOLDER_PATH,
-            )
-        }/workspace/public/target/project/filesystem",
-        f"{
-            value_cache_manager.singleton.get_one_value(
-                ['current-root-full-path'],
-                output_type=TargetCacheValue.FOLDER_PATH,
-            )
-        }/workspace/private/temporary/intermediate/filesystem/{project_name}",
-    )
-    filesystem_manager.singleton.copy_filesystem_path(
-        f"{
-            value_cache_manager.singleton.get_one_value(
-                ['current-root-full-path'],
-                output_type=TargetCacheValue.FOLDER_PATH,
-            )
-        }/workspace/public/target/project/selection/{project_name}/filesystem",
-        f"{
-            value_cache_manager.singleton.get_one_value(
-                ['current-root-full-path'],
-                output_type=TargetCacheValue.FOLDER_PATH,
-            )
-        }/workspace/private/temporary/intermediate/filesystem/{project_name}",
-    )
+
+    for current_scope_name in value_cache_manager.singleton.get_one_value(
+        ['scope-types'],
+        output_type=TargetCacheValue.DEFINED,
+    ):
+        filesystem_manager.singleton.copy_filesystem_path(
+            f"{
+                value_cache_manager.singleton.get_one_value(
+                    ['current-root-full-path'],
+                    output_type=TargetCacheValue.FOLDER_PATH,
+                )
+            }/workspace/{current_scope_name}/target/all/filesystem",
+            f"{
+                value_cache_manager.singleton.get_one_value(
+                    ['current-root-full-path'],
+                    output_type=TargetCacheValue.FOLDER_PATH,
+                )
+            }/workspace/private/temporary/intermediate/filesystem/{project_name}",
+        )
+        filesystem_manager.singleton.copy_filesystem_path(
+            f"{
+                value_cache_manager.singleton.get_one_value(
+                    ['current-root-full-path'],
+                    output_type=TargetCacheValue.FOLDER_PATH,
+                )
+            }/workspace/{current_scope_name}/target/project/filesystem",
+            f"{
+                value_cache_manager.singleton.get_one_value(
+                    ['current-root-full-path'],
+                    output_type=TargetCacheValue.FOLDER_PATH,
+                )
+            }/workspace/private/temporary/intermediate/filesystem/{project_name}",
+        )
+        filesystem_manager.singleton.copy_filesystem_path(
+            f"{
+                value_cache_manager.singleton.get_one_value(
+                    ['current-root-full-path'],
+                    output_type=TargetCacheValue.FOLDER_PATH,
+                )
+            }/workspace/{current_scope_name}/target/project/selection/{project_name}/filesystem",
+            f"{
+                value_cache_manager.singleton.get_one_value(
+                    ['current-root-full-path'],
+                    output_type=TargetCacheValue.FOLDER_PATH,
+                )
+            }/workspace/private/temporary/intermediate/filesystem/{project_name}",
+        )
+
     handle_filesystem_parsing(
         f"{
             value_cache_manager.singleton.get_one_value(
