@@ -38,13 +38,12 @@ mod tests {
     fn setup_replaces_configuration() {
         let mut manager = ErrorManager::default();
 
-        let mut configuration = ErrorManagerConfigurations::default();
-
-        configuration.title = String::from("new title");
-
-        configuration.message = String::from("new message");
-
-        configuration.is_console_output_enabled = false;
+        let configuration = ErrorManagerConfigurations {
+            title: String::from("new title"),
+            message: String::from("new message"),
+            is_console_output_enabled: false,
+            ..Default::default()
+        };
 
         assert!(manager.setup(configuration.clone(),),);
 
@@ -232,9 +231,10 @@ mod tests {
         let mut manager = ErrorManager::default();
 
         for index in 0..100 {
-            let mut configuration = ErrorManagerConfigurations::default();
-
-            configuration.title = format!("title {}", index,);
+            let configuration = ErrorManagerConfigurations {
+                title: format!("title {}", index),
+                ..Default::default()
+            };
 
             assert!(manager.setup(configuration,),);
 
@@ -264,17 +264,18 @@ mod tests {
     fn setup_replaces_previous_configuration() {
         let mut manager = ErrorManager::default();
 
-        let mut first = ErrorManagerConfigurations::default();
-
-        first.title = String::from("first");
+        let first = ErrorManagerConfigurations {
+            title: String::from("first"),
+            ..Default::default()
+        };
 
         assert!(manager.setup(first,),);
 
-        let mut second = ErrorManagerConfigurations::default();
-
-        second.title = String::from("second");
-
-        second.is_console_output_enabled = false;
+        let second = ErrorManagerConfigurations {
+            title: String::from("second"),
+            is_console_output_enabled: false,
+            ..Default::default()
+        };
 
         assert!(manager.setup(second.clone(),),);
 
@@ -432,193 +433,105 @@ mod tests {
     }
 
     #[test]
-    fn runtime_execution_override_enabled_allows_handling()
-    {
-        let mut manager =
-            ErrorManager::default();
+    fn runtime_execution_override_enabled_allows_handling() {
+        let mut manager = ErrorManager::default();
 
-        manager
-            .configurations
-            .base
-            .is_override_enabled = true;
+        manager.configurations.base.is_override_enabled = true;
 
-        manager
-            .configurations
-            .base
-            .is_enabled = true;
+        manager.configurations.base.is_enabled = true;
 
         manager
             .configurations
             .base
             .is_runtime_execution_handling_enabled = false;
 
-        assert!(
-            manager
-                .handle("message")
-                .is_ok(),
-        );
+        assert!(manager.handle("message").is_ok(),);
     }
 
     #[test]
-    fn runtime_execution_override_disabled_prevents_throw()
-    {
-        let mut manager =
-            ErrorManager::default();
+    fn runtime_execution_override_disabled_prevents_throw() {
+        let mut manager = ErrorManager::default();
 
-        manager
-            .configurations
-            .base
-            .is_override_enabled = true;
+        manager.configurations.base.is_override_enabled = true;
 
-        manager
-            .configurations
-            .base
-            .is_enabled = false;
+        manager.configurations.base.is_enabled = false;
 
-        manager
-            .configurations
-            .is_runtime_throw_output_enabled = true;
+        manager.configurations.is_runtime_throw_output_enabled = true;
 
-        assert!(
-            manager
-                .handle("message")
-                .is_ok(),
-        );
+        assert!(manager.handle("message").is_ok(),);
     }
 
     #[test]
-    fn output_override_enables_console_and_throw()
-    {
-        let mut manager =
-            ErrorManager::default();
+    fn output_override_enables_console_and_throw() {
+        let mut manager = ErrorManager::default();
 
-        manager
-            .configurations
-            .is_output_override_enabled = true;
+        manager.configurations.is_output_override_enabled = true;
 
-        manager
-            .configurations
-            .is_output_enabled = true;
+        manager.configurations.is_output_enabled = true;
 
-        manager
-            .configurations
-            .is_console_output_enabled = false;
+        manager.configurations.is_console_output_enabled = false;
 
-        manager
-            .configurations
-            .is_runtime_throw_output_enabled = false;
+        manager.configurations.is_runtime_throw_output_enabled = false;
 
-        let result =
-            manager.handle("message");
+        let result = manager.handle("message");
 
-        assert!(
-            result.is_err(),
-        );
+        assert!(result.is_err(),);
     }
 
     #[test]
-    fn output_override_disables_console_and_throw()
-    {
-        let mut manager =
-            ErrorManager::default();
+    fn output_override_disables_console_and_throw() {
+        let mut manager = ErrorManager::default();
 
-        manager
-            .configurations
-            .is_output_override_enabled = true;
+        manager.configurations.is_output_override_enabled = true;
 
-        manager
-            .configurations
-            .is_output_enabled = false;
+        manager.configurations.is_output_enabled = false;
 
-        manager
-            .configurations
-            .is_console_output_enabled = true;
+        manager.configurations.is_console_output_enabled = true;
 
-        manager
-            .configurations
-            .is_runtime_throw_output_enabled = true;
+        manager.configurations.is_runtime_throw_output_enabled = true;
 
-        assert!(
-            manager
-                .handle("message")
-                .is_ok(),
-        );
+        assert!(manager.handle("message").is_ok(),);
     }
 
     #[test]
-    fn repeated_setup_after_reset_restores_expected_configuration()
-    {
-        let mut manager =
-            ErrorManager::default();
+    fn repeated_setup_after_reset_restores_expected_configuration() {
+        let mut manager = ErrorManager::default();
 
-        let mut configuration =
-            ErrorManagerConfigurations::default();
+        let configuration = ErrorManagerConfigurations {
+            title: String::from("custom"),
+            ..Default::default()
+        };
 
-        configuration.title =
-            String::from("custom");
+        assert!(manager.setup(configuration.clone(),),);
 
-        assert!(
-            manager.setup(
-                configuration.clone(),
-            ),
-        );
-
-        assert!(
-            manager.reset(),
-        );
+        assert!(manager.reset(),);
 
         assert_eq!(
             manager.configurations,
             ErrorManagerConfigurations::default(),
         );
 
-        assert!(
-            manager.setup(
-                configuration.clone(),
-            ),
-        );
+        assert!(manager.setup(configuration.clone(),),);
 
-        assert_eq!(
-            manager.configurations,
-            configuration,
-        );
+        assert_eq!(manager.configurations, configuration,);
     }
 
     #[test]
-    fn clone_after_multiple_mutations_preserves_state()
-    {
-        let mut manager =
-            ErrorManager::default();
+    fn clone_after_multiple_mutations_preserves_state() {
+        let mut manager = ErrorManager::default();
 
-        manager
-            .configurations
-            .title =
-            String::from("title");
+        manager.configurations.title = String::from("title");
 
-        manager
-            .configurations
-            .message =
-            String::from("message");
+        manager.configurations.message = String::from("message");
 
-        manager
-            .configurations
-            .title_message_separator =
-            String::from("::");
+        manager.configurations.title_message_separator = String::from("::");
 
-        manager
-            .configurations
-            .is_console_output_enabled = false;
+        manager.configurations.is_console_output_enabled = false;
 
-        manager
-            .configurations
-            .is_runtime_throw_output_enabled = true;
+        manager.configurations.is_runtime_throw_output_enabled = true;
 
-        let clone =
-            manager.clone();
+        let clone = manager.clone();
 
-        assert_eq!(
-            clone.configurations,
-            manager.configurations,
-        );
+        assert_eq!(clone.configurations, manager.configurations,);
     }
 }

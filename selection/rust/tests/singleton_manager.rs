@@ -132,7 +132,7 @@ mod tests {
         let mut handles = Vec::new();
 
         for _ in 0..32 {
-            handles.push(thread::spawn(|| SingletonManager::get_singleton::<Foo>()));
+            handles.push(thread::spawn(SingletonManager::get_singleton::<Foo>));
         }
 
         let instances: Vec<_> = handles
@@ -242,7 +242,7 @@ mod tests {
         let mut handles = Vec::new();
 
         for _ in 0..128 {
-            handles.push(thread::spawn(|| SingletonManager::get_singleton::<Baz>()));
+            handles.push(thread::spawn(SingletonManager::get_singleton::<Baz>));
         }
 
         let instances: Vec<_> = handles
@@ -292,7 +292,7 @@ mod tests {
 
     #[test]
     fn default_manager_can_be_constructed() {
-        let _ = SingletonManager::default();
+        let _ = SingletonManager;
     }
 
     #[test]
