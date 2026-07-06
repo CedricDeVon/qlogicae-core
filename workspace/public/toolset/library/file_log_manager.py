@@ -33,7 +33,7 @@ class FileLogManager:
         if not options.is_enabled:
             return message
 
-        self.logger.log(options.log_level, message, stacklevel=options.stack_level)
+        self.logger.log(options.log_level, str(message).strip(), stacklevel=options.stack_level)
 
         return message
 

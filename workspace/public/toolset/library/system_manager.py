@@ -4,7 +4,8 @@ import subprocess
 from pathlib import Path
 from collections.abc import Sequence
 
-from library.execute_command_return import ExecuteCommandReturn
+from library import text_manager
+from library.script_command import ScriptCommand
 
 
 class SystemManager:
@@ -31,34 +32,33 @@ class SystemManager:
     def execute_command(
         self,
         command: str,
-        output_type: ExecuteCommandReturn = ExecuteCommandReturn.MINIMAL_RETURN,
+        output_type: ScriptCommand = ScriptCommand.SUBPROCESS,
     ) -> bool:
         if not command:
             raise ValueError("command cannot be empty")
 
-        if isinstance(command, str):
-            command = shlex.split(command)
-
-        elif not isinstance(command, Sequence):
-            raise TypeError("command must be a string or a sequence")
-
         match output_type:
-            case ExecuteCommandReturn.MINIMAL_RETURN:
+            case ScriptCommand.SHELL:
                 return subprocess.run(
                     command,
+                    encoding=text_manager.singleton.encoding,
                     check=True,
                     text=True,
-                    encoding="utf-8",
+                    shell=True,
+                    capture_output=True,
                 )
 
-            case ExecuteCommandReturn.FULL_RETURN:
-                return subprocess.check_output(
-                    command,
+            case ScriptCommand.SUBPROCESS:                
+                return subprocess.run(
+                    shlex.split(command),
+                    encoding=text_manager.singleton.encoding,
+                    check=True,
                     text=True,
-                    encoding="utf-8",
-                ).strip()
+                    capture_output=True,
+                )
 
         return True
 
 
 singleton = SystemManager()
+

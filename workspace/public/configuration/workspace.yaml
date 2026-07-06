@@ -192,11 +192,11 @@ data:
           - run: cargo workflow-deploy
 
 
-      git-fast-commit:
+      git-hotfix:
         enter-full-path: ${{ current-root-full-path }}
         commands:
           - run: git add .
-          - run: git commit -m 'bugfixes'
+          - run: git commit -m 'hotfix'
           - run: git push origin
 
     clean:

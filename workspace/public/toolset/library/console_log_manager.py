@@ -24,6 +24,8 @@ class ConsoleLogManager:
         if not options.is_enabled:
             return
 
+        message = str(message).strip()
+
         if options.is_verbose:
             self.logger.log(
                 options.log_level,

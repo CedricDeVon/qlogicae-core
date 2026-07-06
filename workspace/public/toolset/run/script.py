@@ -5,10 +5,12 @@ from library import (
     workspace_manager,
     macros_manager,
     file_log_manager,
+    console_log_manager,
     value_cache_manager,
 )
+from library.log_options import LogOptions
 from library.target_cache_value import TargetCacheValue
-from library.execute_command_return import ExecuteCommandReturn
+from library.script_command import ScriptCommand
 
 
 def handler_manager_callback():
@@ -105,19 +107,26 @@ def handle_targets(target_name):
             handle_targets(current_item["run"])
 
         else:
-            file_log_manager.singleton.log_info(
-                system_manager.singleton.execute_command(
-                    macros_manager.singleton.parse_one(
-                        current_item["run"],
-                        (
-                            value_cache_manager.singleton.get_one_value(
-                                ["workspace-macros"],
-                                output_type=TargetCacheValue.DEFINED,
-                            )
-                            or {}
-                        ),
+            cli_output = system_manager.singleton.execute_command(
+                macros_manager.singleton.parse_one(
+                    current_item["run"],
+                    (
+                        value_cache_manager.singleton.get_one_value(
+                            ["workspace-macros"],
+                            output_type=TargetCacheValue.DEFINED,
+                        )
+                        or {}
                     ),
-                    ExecuteCommandReturn.MINIMAL_RETURN,
+                ),
+            )
+
+            file_log_manager.singleton.log_info(
+                cli_output
+            )
+            console_log_manager.singleton.log_info(
+                cli_output.stdout or cli_output.stderr,
+                options=LogOptions(
+                    is_verbose=False
                 )
             )
 
