@@ -5,6 +5,30 @@ from library import console_log_manager, file_log_manager
 
 
 class LogManager:
+    def __init__(self) -> None:
+        self._console_options = LogOptions()
+        self._file_options = LogOptions()
+
+    @property
+    def console_options(self) -> LogOptions:
+        return self._console_options
+
+    @console_options.setter
+    def console_options(self, value) -> bool:
+        self._console_options = value
+
+        return True
+
+    @property
+    def file_options(self) -> LogOptions:
+        return self._file_options
+
+    @file_options.setter
+    def file_options(self, value) -> bool:
+        self._file_options = value
+
+        return True
+
     def log(
         self,
         message: str,
@@ -16,8 +40,8 @@ class LogManager:
             LogOptions(
                 is_enabled=console_options.is_enabled,
                 is_verbose=console_options.is_verbose,
-                log_level=console_options.log_level,
-                stack_level=console_options.stack_level + 1,
+                log_level=logging.DEBUG,
+                stack_level=console_options.stack_level,
             ),
         )
 
@@ -27,7 +51,7 @@ class LogManager:
                 is_enabled=file_options.is_enabled,
                 is_verbose=file_options.is_verbose,
                 log_level=file_options.log_level,
-                stack_level=file_options.stack_level + 1,
+                stack_level=file_options.stack_level,
             ),
         )
 

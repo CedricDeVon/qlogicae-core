@@ -7,3 +7,4 @@ class TargetCacheValue(Enum):
     FILE_PATH = 2
     FOLDER_PATH = 3
     DEFINED = 4
+    NONE = 5

@@ -221,11 +221,30 @@ data:
           rust-temporary:
             - name: ${{ current-root-full-path }}/selection/rust/target
 
+  time:
+    zone: utc
+
   log:
     is-enabled: true
 
-    targets:
-      - name: ${{ current-root-full-path }}/workspace/private/temporary/log/${{ current-date }}.log            
+    is-override-enabled: false
+
+    is-verbose: true
+
+    is-override-verbose: false
+
+    file:
+      is-enabled: true
+
+      is-verbose: true
+
+      targets:
+        - name: ${{ current-root-full-path }}/workspace/private/temporary/log/${{ current-date }}.log            
+
+    console:
+      is-enabled: true
+
+      is-verbose: false
 
   macros:  
     value-cache:

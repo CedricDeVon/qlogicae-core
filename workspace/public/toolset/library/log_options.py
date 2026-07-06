@@ -7,4 +7,4 @@ class LogOptions:
     is_enabled: bool = True
     is_verbose: bool = True
     log_level: int = logging.DEBUG
-    stack_level: int = 2
+    stack_level: int = 3

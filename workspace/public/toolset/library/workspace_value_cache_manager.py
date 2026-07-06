@@ -18,12 +18,12 @@ class WorkspaceValueCacheManager:
     def setup_pre_macros(self) -> bool:
         value_cache_manager.singleton.set_one_value(
             ["current-date"],
-            time_manager.singleton.generate_current_iso8601_date(),
+            time_manager.singleton.current_iso8601_date,
         )
 
         value_cache_manager.singleton.set_one_value(
             ["current-year"],
-            time_manager.singleton.generate_current_year(),
+            time_manager.singleton.current_year,
         )
 
         value_cache_manager.singleton.set_one_value(
@@ -186,6 +186,7 @@ class WorkspaceValueCacheManager:
                             "workspace/public/configuration/workspace.yaml-raw",
                             "data",
                             "log",
+                            "file",
                             "targets",
                         ],
                         output_type=TargetCacheValue.ANY,
