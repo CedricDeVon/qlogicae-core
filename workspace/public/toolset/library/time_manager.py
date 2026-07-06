@@ -1,3 +1,4 @@
+import time
 from datetime import date, datetime, UTC
 
 
@@ -25,51 +26,65 @@ class TimeManager:
 
     @property
     def current_microsecond(self) -> int:
-        return self.nanosecond // 1_000
+        return self.current_nanosecond // 1_000
 
     @property
     def current_millisecond(self) -> int:
-        return self.nanosecond // 1_000_000
+        return self.current_nanosecond // 1_000_000
 
     @property
     def current_second(self) -> int:
-        return self.nanosecond // 1_000_000_000
+        return datetime.now(
+            self._current_time_zone        
+        ).second
 
     @property
     def current_minute(self) -> int:
-        return self.second // 60
+        return datetime.now(
+            self._current_time_zone        
+        ).minute
 
     @property
     def current_hour(self) -> int:
-        return self.minute // 60
+        return datetime.now(
+            self._current_time_zone        
+        ).hour
 
     @property
     def current_day(self) -> int:
-        return self.hour // 24
+        return datetime.now(
+            self._current_time_zone        
+        ).day
 
     @property
     def current_week(self) -> int:
-        return self.day // 7
+        return datetime.now().isocalendar().week
 
     @property
     def current_month(self) -> int:
-        return datetime.now(UTC).month
+        return datetime.now(
+            self._current_time_zone
+        
+        ).month
 
     @property
     def current_year(self) -> int:
-        return datetime.now(UTC).year
+        return datetime.now(
+            self._current_time_zone
+        
+        ).year
 
     @property
     def current_decade(self) -> int:
-        return self.year // 10
+        return self.current_year // 10
 
     @property
     def current_century(self) -> int:
-        return (self.year - 1) // 100 + 1
+        return (self.current_year - 1) // 100 + 1
 
     @property
     def current_millenium(self) -> int:
-        return (self.year - 1) // 1000 + 1
+        return (self.current_year - 1) // 1000 + 1
 
 
 singleton = TimeManager()

@@ -7,7 +7,7 @@ from library import console_log_manager, file_log_manager
 class LogManager:
     def __init__(self) -> None:
         self._console_options = LogOptions()
-        self._file_options = LogOptions()
+        self._file_options = LogOptions()        
 
     @property
     def console_options(self) -> LogOptions:
@@ -32,14 +32,14 @@ class LogManager:
     def log(
         self,
         message: str,
-        console_options: LogOptions = LogOptions(is_verbose=False),
-        file_options: LogOptions = LogOptions(),
+        console_options: LogOptions = console_options,
+        file_options: LogOptions = file_options,
     ) -> str:
         console_log_manager.singleton.log(
             message,
             LogOptions(
                 is_enabled=console_options.is_enabled,
-                is_verbose=console_options.is_verbose,
+                is_verbose_enabled=console_options.is_verbose_enabled,
                 log_level=logging.DEBUG,
                 stack_level=console_options.stack_level,
             ),
@@ -49,7 +49,7 @@ class LogManager:
             message,
             LogOptions(
                 is_enabled=file_options.is_enabled,
-                is_verbose=file_options.is_verbose,
+                is_verbose_enabled=file_options.is_verbose_enabled,
                 log_level=file_options.log_level,
                 stack_level=file_options.stack_level,
             ),
@@ -61,7 +61,7 @@ class LogManager:
         self,
         message: str,
         console_options: LogOptions = LogOptions(
-            log_level=logging.DEBUG, is_verbose=False
+            log_level=logging.DEBUG, is_verbose_enabled=False
         ),
         file_options: LogOptions = LogOptions(log_level=logging.DEBUG),
     ) -> str:
@@ -71,7 +71,7 @@ class LogManager:
         self,
         message: str,
         console_options: LogOptions = LogOptions(
-            log_level=logging.INFO, is_verbose=False
+            log_level=logging.INFO, is_verbose_enabled=False
         ),
         file_options: LogOptions = LogOptions(log_level=logging.INFO),
     ) -> str:
@@ -81,7 +81,7 @@ class LogManager:
         self,
         message: str,
         console_options: LogOptions = LogOptions(
-            log_level=logging.WARNING, is_verbose=False
+            log_level=logging.WARNING, is_verbose_enabled=False
         ),
         file_options: LogOptions = LogOptions(log_level=logging.WARNING),
     ) -> str:
@@ -91,7 +91,7 @@ class LogManager:
         self,
         message: str,
         console_options: LogOptions = LogOptions(
-            log_level=logging.ERROR, is_verbose=False
+            log_level=logging.ERROR, is_verbose_enabled=False
         ),
         file_options: LogOptions = LogOptions(log_level=logging.ERROR),
     ) -> str:
@@ -101,7 +101,7 @@ class LogManager:
         self,
         message: str,
         console_options: LogOptions = LogOptions(
-            log_level=logging.CRITICAL, is_verbose=False
+            log_level=logging.CRITICAL, is_verbose_enabled=False
         ),
         file_options: LogOptions = LogOptions(log_level=logging.CRITICAL),
     ) -> str:

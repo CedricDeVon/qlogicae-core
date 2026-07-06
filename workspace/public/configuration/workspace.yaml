@@ -229,14 +229,14 @@ data:
 
     is-override-enabled: false
 
-    is-verbose: true
+    is-verbose-enabled: true
 
-    is-override-verbose: false
+    is-verbose-override-enabled: false
 
     file:
       is-enabled: true
 
-      is-verbose: true
+      is-verbose-enabled: true
 
       targets:
         - name: ${{ current-root-full-path }}/workspace/private/temporary/log/${{ current-date }}.log            
@@ -244,7 +244,7 @@ data:
     console:
       is-enabled: true
 
-      is-verbose: false
+      is-verbose-enabled: false
 
   macros:  
     value-cache:

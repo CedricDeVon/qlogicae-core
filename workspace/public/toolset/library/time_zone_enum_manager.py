@@ -1,3 +1,4 @@
+from datetime import datetime, UTC
 from library.time_zone import TimeZone
 
 
@@ -9,7 +10,7 @@ class TimeZoneEnumManager:
         match value:
             case TimeZone.UTC:
                 return "utc"
-                
+
             case TimeZone.LOCAL:
                 return "local"
 
@@ -26,6 +27,20 @@ class TimeZoneEnumManager:
 
             case "local":
                 return TimeZone.LOCAL
+
+            case _:
+                return TimeZone.NONE
+
+    def convert_from_string_to_timezone(
+        self,
+        value: str,
+    ) -> TimeZone:
+        match value.lower():
+            case "utc":
+                return UTC
+
+            case "local":
+                return datetime.now().astimezone().tzinfo
 
             case _:
                 return TimeZone.NONE

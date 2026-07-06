@@ -18,7 +18,7 @@ class TimestampManager:
                         time_manager.singleton.current_time_zone
                     ):%Y-%m-%dT%H:%M:%S}'
                 f'.{timestamp_nanoseconds % 1_000_000_000:09d}'
-                f'{"Z" if time_manager.singleton.current_time_zone is TimeZone.UTC else ""}'
+                f'{"Z" if time_manager.singleton.current_time_zone is UTC else ""}'
             )
         }"
 

@@ -26,7 +26,7 @@ class ConsoleLogManager:
 
         message = str(message).strip()
 
-        if options.is_verbose:
+        if options.is_verbose_enabled:
             self.logger.log(
                 options.log_level,
                 message,

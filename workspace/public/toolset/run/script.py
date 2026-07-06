@@ -1,10 +1,11 @@
 import argparse
 
 from library import (
+    log_manager,
     system_manager,
-    workspace_manager,
     macros_manager,
     file_log_manager,
+    workspace_manager,
     console_log_manager,
     value_cache_manager,
 )
@@ -121,13 +122,10 @@ def handle_targets(target_name):
             )
 
             file_log_manager.singleton.log_info(
-                cli_output
+                cli_output                
             )
             console_log_manager.singleton.log_info(
-                cli_output.stdout or cli_output.stderr,
-                options=LogOptions(
-                    is_verbose=False
-                )
+                cli_output.stdout or cli_output.stderr
             )
 
     file_log_manager.singleton.log_info(

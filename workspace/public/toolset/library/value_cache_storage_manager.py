@@ -75,11 +75,11 @@ class ValueCacheStorageManager:
             if isinstance(cache, dict):
                 if key not in cache:
                     if not create_missing:
-                        raise KeyError(f"key '{key}' not found")
+                        raise KeyError(f"key path '{keys}' not found")
 
                 elif not isinstance(cache[key], (dict, list)):
                     raise TypeError(
-                        f"key '{key}' does not reference a dictionary or list"
+                        f"key path '{keys}' does not reference a dictionary or list"
                     )
 
                 cache = cache[key]
@@ -122,14 +122,14 @@ class ValueCacheStorageManager:
         for key in keys[:-1]:
             if isinstance(cache, dict):
                 if key not in cache:
-                    raise KeyError(f"key '{key}' not found")
+                    raise KeyError(f"key path '{keys}' not found")
 
             elif isinstance(cache, list):
                 if not isinstance(key, int):
                     raise TypeError(f"expected an index, got {type(key).__name__}")
 
                 if key < 0 or key >= len(cache):
-                    raise IndexError(f"index '{key}' is out of range")
+                    raise IndexError(f"index path '{keys}' is out of range")
 
             else:
                 raise TypeError(f"cannot traverse into '{type(cache).__name__}'")

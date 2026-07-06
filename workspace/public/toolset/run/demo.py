@@ -10,3 +10,4 @@ def handle_manager_callback():
 
 
 workspace_manager.singleton.handle(handle_manager_callback)
+

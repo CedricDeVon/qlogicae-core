@@ -14,31 +14,48 @@ class WorkspaceSystemManager:
             output_type=TargetCacheValue.FOLDER_PATH,
         )
         value_cache_manager.singleton.set_one_value(
-            ["original-console-full-path"],
+            ["original-console-executed-full-path"],
             filesystem_manager.singleton.get_cli_folder(),
             output_type=TargetCacheValue.FOLDER_PATH,
         )
         value_cache_manager.singleton.set_one_value(
-            ["previous-console-full-path"],
+            ["current-console-executed-full-path"],
             value_cache_manager.singleton.get_one_value(
-                ["original-console-full-path"],
+                ["current-root-full-path"],
+                output_type=TargetCacheValue.FOLDER_PATH,
+            ),
+            output_type=TargetCacheValue.FOLDER_PATH,
+        )
+        self.navigate_console_executed_to_root()
+
+        return True
+
+    def navigate_console_executed_to_root(self) -> bool:
+        self.navigate_console_executed(
+            value_cache_manager.singleton.get_one_value(
+                ["current-root-full-path"],
+                output_type=TargetCacheValue.FOLDER_PATH,
+            )
+        )
+
+        return True
+
+    def navigate_console_executed(self, target: str) -> bool:
+        value_cache_manager.singleton.set_one_value(
+            ["previous-console-executed-full-path"],
+            value_cache_manager.singleton.get_one_value(
+                ["current-console-executed-full-path"],
                 output_type=TargetCacheValue.FOLDER_PATH,
             ),
             output_type=TargetCacheValue.FOLDER_PATH,
         )
         value_cache_manager.singleton.set_one_value(
-            ["current-console-full-path"],
-            value_cache_manager.singleton.get_one_value(
-                ["current-root-full-path"],
-                output_type=TargetCacheValue.FOLDER_PATH,
-            ),
+            ["current-console-executed-full-path"],
+            target,
             output_type=TargetCacheValue.FOLDER_PATH,
         )
         system_manager.singleton.change_cli_filesystem_path(
-            value_cache_manager.singleton.get_one_value(
-                ["current-root-full-path"],
-                output_type=TargetCacheValue.FOLDER_PATH,
-            )
+            target
         )
 
         return True

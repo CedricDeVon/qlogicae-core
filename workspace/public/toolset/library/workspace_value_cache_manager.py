@@ -1,29 +1,45 @@
+from datetime import UTC
+
 from library import (
     time_manager,
     macros_manager,
+    timestamp_manager,
     value_cache_manager,
-    workspace_filesystem_manager,
+    time_zone_enum_manager,
 )
 from library.target_cache_value import TargetCacheValue
 
 
 class WorkspaceValueCacheManager:
-    @property
-    def current_root_full_path(self) -> str:
-        return value_cache_manager.singleton.get_one_value(
-            ["current-root-full-path"],
-            output_type=TargetCacheValue.FOLDER_PATH,
+    def setup_pre_macros(self) -> bool:
+        time_manager.singleton.current_time_zone = time_zone_enum_manager.singleton.convert_from_string_to_timezone(
+            value_cache_manager.singleton.get_one_value(
+                [
+                    "workspace/public/configuration/workspace.yaml-raw",
+                    "data",
+                    "time",
+                    "zone",
+                ],
+                output_type=TargetCacheValue.ANY,
+            ) or UTC
         )
 
-    def setup_pre_macros(self) -> bool:
         value_cache_manager.singleton.set_one_value(
             ["current-date"],
-            time_manager.singleton.current_iso8601_date,
+            time_manager.singleton.current_iso8601_date
         )
 
         value_cache_manager.singleton.set_one_value(
             ["current-year"],
-            time_manager.singleton.current_year,
+            time_manager.singleton.current_year
+        )
+
+        return True
+
+    def setup_post_macros(self) -> bool:
+        value_cache_manager.singleton.set_one_value(
+            ["timestamp-execution-start"],
+            timestamp_manager.singleton.current_standard_timestamp
         )
 
         value_cache_manager.singleton.set_one_value(
@@ -81,20 +97,6 @@ class WorkspaceValueCacheManager:
         )
 
         value_cache_manager.singleton.set_one_value(
-            ["default-workspace-selection"],
-            value_cache_manager.singleton.get_one_value(
-                [
-                    "workspace/public/configuration/workspace.yaml-raw",
-                    "data",
-                    "selection",
-                    "default",
-                    "name",
-                ],
-                output_type=TargetCacheValue.ANY,
-            ),
-        )
-
-        value_cache_manager.singleton.set_one_value(
             ["clean-include-selections"],
             {
                 value
@@ -134,9 +136,6 @@ class WorkspaceValueCacheManager:
             },
         )
 
-        return True
-
-    def setup_post_macros(self) -> bool:
         value_cache_manager.singleton.set_one_value(
             ["clean-exclude-selections"],
             {
@@ -168,7 +167,7 @@ class WorkspaceValueCacheManager:
         )
 
         value_cache_manager.singleton.set_one_value(
-            ["log-targets"],
+            ["log-file-targets"],
             {
                 macros_manager.singleton.parse_one(
                     item["name"],
@@ -203,3 +202,4 @@ class WorkspaceValueCacheManager:
 
 
 singleton = WorkspaceValueCacheManager()
+

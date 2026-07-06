@@ -84,3 +84,4 @@ class WorkspaceMacrosManager:
 
 
 singleton = WorkspaceMacrosManager()
+
