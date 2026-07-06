@@ -38,7 +38,6 @@ data:
               workspace_manager.singleton.setup();
               value_cache_storage_manager.singleton.display_all_items();
               workspace_manager.singleton.shutdown();\""
-          - run: ad
 
 
       typescript-account-login:
@@ -191,6 +190,14 @@ data:
         enter-full-path: ${{ current-root-full-path }}/selection/rust
         commands:
           - run: cargo workflow-deploy
+
+
+      git-fast-commit:
+        enter-full-path: ${{ current-root-full-path }}
+        commands:
+          - run: git add .
+          - run: git commit -m 'bugfixes'
+          - run: git push origin
 
     clean:
       is-enabled: true
