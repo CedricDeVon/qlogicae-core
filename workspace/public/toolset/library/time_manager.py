@@ -7,6 +7,6 @@ class TimeManager:
 
     def generate_current_year(self) -> str:
         return datetime.now().year
-
+        
 
 singleton = TimeManager()

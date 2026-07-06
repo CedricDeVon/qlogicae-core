@@ -3,265 +3,243 @@ data:
   selection:
     is-enabled: true
 
-    target: typescript
-
     default:
+      name: typescript
       targets:
-        - all
-        - root
-        - project
+        all:
+          full-path: ${{ current-root-full-path }}
+
+        root:
+          full-path: ${{ current-root-full-path }}
+
+        project:
+          full-path: ${{ current-root-full-path }}
 
     project:
       targets:
-        - typescript
-        - python
-        - rust
+        typescript:
+          full-path: ${{ current-root-full-path }}/selection/typescript
 
-    full-path:
-      root: ${{ current-root-full-path }}
-      
-      typescript: ${{ current-root-full-path }}/selection/typescript      
-      
-      python: ${{ current-root-full-path }}/selection/python
+        python:
+          full-path: ${{ current-root-full-path }}/selection/python
 
-      rust: ${{ current-root-full-path }}/selection/rust
-
+        rust:
+          full-path: ${{ current-root-full-path }}/selection/rust
 
   script:
     is-enabled: true
 
-    types:
-      - individual
-      - collection
-
     targets:
       value-cache-debug:
         enter-full-path: ${{ current-root-full-path }}/workspace/public/toolset
-        type: individual
         commands:
-          - "python3 -c \"
-            from library import workspace_manager, value_cache_storage_manager;
-            workspace_manager.singleton.setup();
-            value_cache_storage_manager.singleton.display_all_items();
-            workspace_manager.singleton.shutdown();\""
-
+          - run: "python3 -c \"
+              from library import workspace_manager, value_cache_storage_manager;
+              workspace_manager.singleton.setup();
+              value_cache_storage_manager.singleton.display_all_items();
+              workspace_manager.singleton.shutdown();\""
+          - run: ad
 
 
       typescript-account-login:
         enter-full-path: ${{ current-root-full-path }}/selection/typescript
-        type: individual
         commands:
-          - npm login
+          - run: npm login
 
       rust-account-login:
         enter-full-path: ${{ current-root-full-path }}/selection/rust
-        type: individual
         commands:
-          - cargo login ${{ rust-cargo-io-api-key }}
+          - run: cargo login ${{ rust-cargo-io-api-key }}
 
 
 
       typescript-toolset-verify:
         enter-full-path: ${{ current-root-full-path }}/selection/typescript
-        type: individual
         commands:
-          - docker --version
-          - git --version
-          - gh --version
-          - node --version
-          - fnm --version
-          - npm --version
-          - bun --version
-          - bunx corepack --version
-          - bunx pnpm --version
-          - bunx yarn --version
+          - run: docker --version
+          - run: git --version
+          - run: gh --version
+          - run: node --version
+          - run: fnm --version
+          - run: npm --version
+          - run: bun --version
+          - run: bunx corepack --version
+          - run: bunx pnpm --version
+          - run: bunx yarn --version
 
       rust-toolset-verify:
         enter-full-path: ${{ current-root-full-path }}/selection/rust
-        type: individual
         commands:
-          - rustc --version
-          - rustup --version
-          - cargo --version
-          - cargo fmt --version
-          - cargo clippy --version
-          - cargo nextest --version
-          - cargo audit --version
-          - rustup target list
+          - run: rustc --version
+          - run: rustup --version
+          - run: cargo --version
+          - run: cargo fmt --version
+          - run: cargo clippy --version
+          - run: cargo nextest --version
+          - run: cargo audit --version
+          - run: rustup target list
 
 
 
       typescript-test-unit:
         enter-full-path: ${{ current-root-full-path }}/selection/typescript
-        type: individual
         commands:
-          - bun run test:unit
+          - run: bun run test:unit
 
       rust-test-unit:
         enter-full-path: ${{ current-root-full-path }}/selection/rust
-        type: individual
         commands:
-          - cargo test-unit
+          - run: cargo test-unit
 
 
 
       typescript-test-benchmark:
         enter-full-path: ${{ current-root-full-path }}/selection/typescript
-        type: individual
         commands:
-          - bun run test:benchmark
+          - run: bun run test:benchmark
 
       rust-test-benchmark:
         enter-full-path: ${{ current-root-full-path }}/selection/rust
-        type: individual
         commands:
-          - echo "rust-test-benchmark"
+          - run: echo "rust-test-benchmark"
 
 
 
       typescript-format:
         enter-full-path: ${{ current-root-full-path }}/selection/typescript
-        type: individual
         commands:
-          - bun run format
+          - run: bun run format
 
       rust-format:
         enter-full-path: ${{ current-root-full-path }}/selection/rust
-        type: individual
         commands:
-          - cargo format-check
-          - cargo format-write
+          - run: cargo format-check
+          - run: cargo format-write
 
 
 
       typescript-lint:
         enter-full-path: ${{ current-root-full-path }}/selection/typescript
-        type: individual
         commands:
-          - bun run lint
+          - run: bun run lint
 
       rust-lint:
         enter-full-path: ${{ current-root-full-path }}/selection/rust
-        type: individual
         commands:
-          - cargo lint
+          - run: cargo lint
 
 
 
       typescript-build:
         enter-full-path: ${{ current-root-full-path }}/selection/typescript
-        type: individual
 
         commands:
-          - bun run build
+          - run: bun run build
 
       rust-build:
         enter-full-path: ${{ current-root-full-path }}/selection/rust
-        type: individual
 
         commands:
-          - cargo build-debug
-          - cargo build-release
+          - run: cargo build-debug
+          - run: cargo build-release
 
 
 
       typescript-setup:
         enter-full-path: ${{ current-root-full-path }}/selection/typescript
-        type: individual
         commands:
-          - bun install
+          - run: bun install
 
       rust-setup:
         enter-full-path: ${{ current-root-full-path }}/selection/rust
-        type: individual
         commands:
-          - echo "rust-setup"
+          - run: echo "rust-setup"
 
 
 
       typescript-update:
         enter-full-path: ${{ current-root-full-path }}/selection/typescript
-        type: individual
         commands:
-          - bun update
+          - run: bun update
 
       rust-update:
         enter-full-path: ${{ current-root-full-path }}/selection/rust
-        type: individual
         commands:
-          - cargo update
+          - run: cargo update
 
 
 
       typescript-deploy-check:
         enter-full-path: ${{ current-root-full-path }}/selection/typescript
-        type: individual
         commands:
-          - bun run deploy:check
+          - run: bun run deploy:check
 
       rust-deploy-check:
         enter-full-path: ${{ current-root-full-path }}/selection/rust
-        type: individual
         commands:
-          - cargo deploy-inspect
-          - cargo deploy-check
+          - run: cargo deploy-inspect
+          - run: cargo deploy-check
 
 
 
       typescript-deploy:
         enter-full-path: ${{ current-root-full-path }}/selection/typescript
-        type: individual
         commands:
-          - bun run workflow:deploy
+          - run: bun run workflow:deploy
 
       rust-deploy:
         enter-full-path: ${{ current-root-full-path }}/selection/rust
-        type: individual
         commands:
-          - cargo workflow-deploy
+          - run: cargo workflow-deploy
 
     clean:
       is-enabled: true
 
       exclude:
         targets:
-          - ${{ current-root-full-path }}
-          - ${{ current-root-full-path }}/selection
-          - ${{ current-root-full-path }}/workspace
-          - ${{ current-root-full-path }}/.github  
-          - ${{ current-root-full-path }}/.temporary            
+          - name: ${{ current-root-full-path }}
+          - name: ${{ current-root-full-path }}/selection
+          - name: ${{ current-root-full-path }}/workspace
+          - name: ${{ current-root-full-path }}/.github  
+          - name: ${{ current-root-full-path }}/.temporary            
 
       include:
         targets:
           root-temporary:
-            - ${{ current-root-full-path }}/workspace/private/temporary
+            - name: ${{ current-root-full-path }}/workspace/private/temporary
 
           typescript-temporary:
-            - ${{ current-root-full-path }}/selection/typescript/output
+            - name: ${{ current-root-full-path }}/selection/typescript/output
 
           rust-temporary:
-            - ${{ current-root-full-path }}/selection/rust/target
+            - name: ${{ current-root-full-path }}/selection/rust/target
 
   log:
     is-enabled: true
 
     targets:
-      - ${{ current-root-full-path }}/workspace/private/temporary/log/${{ current-date }}.log            
+      - name: ${{ current-root-full-path }}/workspace/private/temporary/log/${{ current-date }}.log            
 
   macros:  
     value-cache:
-      - current-date
-      - current-year
-      - current-root-full-path
-      
-    file:
-      company-name: QLogicae
+      targets:
+        - name: current-date
+        - name: current-year
+        - name: current-root-full-path
 
-      project-name: Cor
+    file:
+      targets:
+        - name: company-name
+          value: QLogicae
+
+        - name: project-name
+          value: Cor
       
-      author-name: Vaughn Cedric L. Araneta
+        - name: author-name
+          value: Vaughn Cedric L. Araneta
       
-      author-email: vaughncedriclipardoaraneta@gmail.com
+        - name: author-email
+          value: vaughncedriclipardoaraneta@gmail.com
 
 metadata:
 

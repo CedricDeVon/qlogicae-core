@@ -55,7 +55,7 @@ def handler_manager_callback():
 
         return False
 
-    for include_path in (
+    for current_item in (
         value_cache_manager.singleton.get_one_value(
             [
                 f"workspace/public/configuration/workspace.yaml-raw",
@@ -71,7 +71,7 @@ def handler_manager_callback():
         or {}
     ):
         parsed_include_path = macros_manager.singleton.parse_one(
-            include_path,
+            current_item["name"],
             (
                 value_cache_manager.singleton.get_one_value(
                     ["workspace-macros"],

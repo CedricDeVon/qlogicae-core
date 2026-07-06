@@ -2,6 +2,7 @@ import os
 import shlex
 import subprocess
 from pathlib import Path
+from collections.abc import Sequence
 
 from library.execute_command_return import ExecuteCommandReturn
 

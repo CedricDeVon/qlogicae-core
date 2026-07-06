@@ -2,6 +2,7 @@ from library import (
     time_manager,
     macros_manager,
     value_cache_manager,
+    workspace_filesystem_manager,
 )
 from library.target_cache_value import TargetCacheValue
 
@@ -26,14 +27,10 @@ class WorkspaceValueCacheManager:
         )
 
         value_cache_manager.singleton.set_one_value(
-            ["scope-types"],
-            { "private", "public" }
-        )
-
-        value_cache_manager.singleton.set_one_value(
             ["default-workspace-selections"],
             set(
-                value_cache_manager.singleton.get_one_value(
+                key
+                for key, value in (value_cache_manager.singleton.get_one_value(
                     [
                         "workspace/public/configuration/workspace.yaml-raw",
                         "data",
@@ -43,14 +40,15 @@ class WorkspaceValueCacheManager:
                     ],
                     output_type=TargetCacheValue.ANY,
                 )
-                or []
+                or {}).items()
             ),
         )
 
         value_cache_manager.singleton.set_one_value(
             ["project-workspace-selections"],
             set(
-                value_cache_manager.singleton.get_one_value(
+                key
+                for key, value in (value_cache_manager.singleton.get_one_value(
                     [
                         "workspace/public/configuration/workspace.yaml-raw",
                         "data",
@@ -60,7 +58,7 @@ class WorkspaceValueCacheManager:
                     ],
                     output_type=TargetCacheValue.ANY,
                 )
-                or []
+                or {}).items()
             ),
         )
 
@@ -71,14 +69,14 @@ class WorkspaceValueCacheManager:
                     ["default-workspace-selections"],
                     output_type=TargetCacheValue.ANY,
                 )
-                or []
+                or {}
             )
             | set(
                 value_cache_manager.singleton.get_one_value(
                     ["project-workspace-selections"],
                     output_type=TargetCacheValue.ANY,
                 )
-                or []
+                or {}
             ),
         )
 
@@ -89,7 +87,8 @@ class WorkspaceValueCacheManager:
                     "workspace/public/configuration/workspace.yaml-raw",
                     "data",
                     "selection",
-                    "target",
+                    "default",
+                    "name",
                 ],
                 output_type=TargetCacheValue.ANY,
             ),
@@ -135,25 +134,6 @@ class WorkspaceValueCacheManager:
             },
         )
 
-        value_cache_manager.singleton.set_one_value(
-            ["script-types"],
-            {
-                key
-                for key in (
-                    value_cache_manager.singleton.get_one_value(
-                        [
-                            "workspace/public/configuration/workspace.yaml-raw",
-                            "data",
-                            "script",
-                            "types",
-                        ],
-                        output_type=TargetCacheValue.ANY,
-                    )
-                    or {}
-                )
-            },
-        )
-
         return True
 
     def setup_post_macros(self) -> bool:
@@ -161,7 +141,7 @@ class WorkspaceValueCacheManager:
             ["clean-exclude-selections"],
             {
                 macros_manager.singleton.parse_one(
-                    value,
+                    item["name"],
                     (
                         value_cache_manager.singleton.get_one_value(
                             ["workspace-macros"],
@@ -170,7 +150,7 @@ class WorkspaceValueCacheManager:
                         or {}
                     ),
                 )
-                for value in (
+                for item in (
                     value_cache_manager.singleton.get_one_value(
                         [
                             "workspace/public/configuration/workspace.yaml-raw",
@@ -191,7 +171,7 @@ class WorkspaceValueCacheManager:
             ["log-targets"],
             {
                 macros_manager.singleton.parse_one(
-                    value,
+                    item["name"],
                     (
                         value_cache_manager.singleton.get_one_value(
                             ["workspace-macros"],
@@ -200,7 +180,7 @@ class WorkspaceValueCacheManager:
                         or {}
                     ),
                 )
-                for value in (
+                for item in (
                     value_cache_manager.singleton.get_one_value(
                         [
                             "workspace/public/configuration/workspace.yaml-raw",

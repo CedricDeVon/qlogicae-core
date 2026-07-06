@@ -34,7 +34,7 @@ class WorkspaceManager:
     def shutdown(self) -> bool:
         workspace_log_manager.singleton.shutdown()
         workspace_value_cache_manager.singleton.shutdown()
-        workspace_macros_manager.singleton.setup()
+        workspace_macros_manager.singleton.shutdown()
         workspace_filesystem_manager.singleton.shutdown()
         workspace_system_manager.singleton.shutdown()
 

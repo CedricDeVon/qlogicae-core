@@ -8,6 +8,7 @@ from library import (
     workspace_manager,
     filesystem_manager,
     value_cache_manager,
+    workspace_filesystem_manager,
 )
 from library.target_cache_value import TargetCacheValue
 
@@ -79,8 +80,10 @@ def handle_target_root():
                 "workspace/public/configuration/workspace.yaml-raw",
                 "data",
                 "selection",
-                "full-path",
+                "default",
+                "targets",
                 "root",
+                "full-path",
             ],
             output_type=TargetCacheValue.DEFINED,
         ),
@@ -102,10 +105,7 @@ def handle_target_root():
         }/workspace/private/temporary/intermediate/filesystem/root"
     )
 
-    for current_scope_name in value_cache_manager.singleton.get_one_value(
-        ['scope-types'],
-        output_type=TargetCacheValue.DEFINED,
-    ):
+    for current_scope_name in workspace_filesystem_manager.singleton.scope_selections:
         filesystem_manager.singleton.copy_filesystem_path(
             f"{
                 value_cache_manager.singleton.get_one_value(
@@ -256,8 +256,10 @@ def handle_target_project_selection(project_name):
                 "workspace/public/configuration/workspace.yaml-raw",
                 "data",
                 "selection",
-                "full-path",
+                "project",
+                "targets",
                 project_name,
+                "full-path",
             ],
             output_type=TargetCacheValue.DEFINED,
         ),
@@ -279,10 +281,7 @@ def handle_target_project_selection(project_name):
         }/workspace/private/temporary/intermediate/filesystem/{project_name}"
     )
 
-    for current_scope_name in value_cache_manager.singleton.get_one_value(
-        ['scope-types'],
-        output_type=TargetCacheValue.DEFINED,
-    ):
+    for current_scope_name in workspace_filesystem_manager.singleton.scope_selections:
         filesystem_manager.singleton.copy_filesystem_path(
             f"{
                 value_cache_manager.singleton.get_one_value(
