@@ -239,9 +239,3 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
-
-
-# QLogicae Framework
-workspace/private/
-
-
