@@ -3,9 +3,9 @@ import logging
 from pathlib import Path
 from logging.handlers import QueueHandler, QueueListener
 
-from library import log_options_manager
 from library.log_format import LogFormat
 from library.log_options import LogOptions
+from library import file_io_manager, log_options_manager
 
 
 class FileLogManager:
@@ -46,11 +46,17 @@ class FileLogManager:
         if not options.is_enabled:
             return message
 
-        self.logger.log(
-            options.log_level,
-            str(message).strip(),
-            stacklevel=options.stack_level,
-        )
+        if options.is_verbose_enabled:
+            self.logger.log(
+                options.log_level,
+                str(message).strip(),
+                stacklevel=options.stack_level,
+            )
+
+        else:
+            for current_file_path in self.file_handlers:
+                with open(current_file_path, "a", encoding=file_io_manager.singleton.file_encoding) as file:
+                    file.write(f"{str(message).strip()}\n")
 
         return message
 
@@ -60,7 +66,7 @@ class FileLogManager:
     ) -> str:
         return self.log(
             message,
-            log_options_manager.singleton.generate_defaults(
+            log_options_manager.singleton.generate_modified_defaults(
                 self._options,
                 log_level=logging.DEBUG,
             ),
@@ -72,7 +78,7 @@ class FileLogManager:
     ) -> str:
         return self.log(
             message,
-            log_options_manager.singleton.generate_defaults(
+            log_options_manager.singleton.generate_modified_defaults(
                 self._options,
                 log_level=logging.INFO,
             ),
@@ -84,7 +90,7 @@ class FileLogManager:
     ) -> str:
         return self.log(
             message,
-            log_options_manager.singleton.generate_defaults(
+            log_options_manager.singleton.generate_modified_defaults(
                 self._options,
                 log_level=logging.WARNING,
             ),
@@ -96,7 +102,7 @@ class FileLogManager:
     ) -> str:
         return self.log(
             message,
-            log_options_manager.singleton.generate_defaults(
+            log_options_manager.singleton.generate_modified_defaults(
                 self._options,
                 log_level=logging.ERROR,
             ),
@@ -108,7 +114,7 @@ class FileLogManager:
     ) -> str:
         return self.log(
             message,
-            log_options_manager.singleton.generate_defaults(
+            log_options_manager.singleton.generate_modified_defaults(
                 self._options,
                 log_level=logging.CRITICAL,
             ),
@@ -131,7 +137,7 @@ class FileLogManager:
 
         path.parent.mkdir(parents=True, exist_ok=True)
 
-        handler = logging.FileHandler(path, encoding="utf-8")
+        handler = logging.FileHandler(path, encoding=file_io_manager.singleton.file_encoding)
 
         handler.setFormatter(LogFormat())
 

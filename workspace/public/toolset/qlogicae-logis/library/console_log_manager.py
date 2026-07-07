@@ -56,7 +56,7 @@ class ConsoleLogManager:
     ) -> str:
         return self.log(
             message,
-            log_options_manager.singleton.generate_defaults(
+            log_options_manager.singleton.generate_modified_defaults(
                 self._options,
                 log_level=logging.DEBUG,
             ),
@@ -68,7 +68,7 @@ class ConsoleLogManager:
     ) -> str:
         return self.log(
             message,
-            log_options_manager.singleton.generate_defaults(
+            log_options_manager.singleton.generate_modified_defaults(
                 self._options,
                 log_level=logging.INFO,
             ),
@@ -80,7 +80,7 @@ class ConsoleLogManager:
     ) -> str:
         return self.log(
             message,
-            log_options_manager.singleton.generate_defaults(
+            log_options_manager.singleton.generate_modified_defaults(
                 self._options,
                 log_level=logging.WARNING,
             ),
@@ -92,7 +92,7 @@ class ConsoleLogManager:
     ) -> str:
         return self.log(
             message,
-            log_options_manager.singleton.generate_defaults(
+            log_options_manager.singleton.generate_modified_defaults(
                 self._options,
                 log_level=logging.ERROR,
             ),
@@ -104,7 +104,7 @@ class ConsoleLogManager:
     ) -> str:
         return self.log(
             message,
-            log_options_manager.singleton.generate_defaults(
+            log_options_manager.singleton.generate_modified_defaults(
                 self._options,
                 log_level=logging.CRITICAL,
             ),

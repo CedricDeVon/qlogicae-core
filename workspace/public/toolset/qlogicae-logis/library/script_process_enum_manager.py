@@ -1,6 +1,6 @@
 from typing import Any
 
-from library.script_proccess import ScriptProcess
+from library.script_process import ScriptProcess
 from library.enum_conversion_output import EnumConversionOutput
 
 

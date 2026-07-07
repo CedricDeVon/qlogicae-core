@@ -8,9 +8,10 @@ from library import (
     workspace_manager,
     console_log_manager,
     value_cache_manager,
-    script_command_enum_manager,
+    script_process_manager,
+    script_process_enum_manager,
 )
-from library.script_command import ScriptCommand
+from library.script_process import ScriptProcess
 from library.target_cache_value import TargetCacheValue
 
 
@@ -73,29 +74,28 @@ def handle_targets(target_name):
         )
         or []
     ):
-        system_manager.singleton.change_cli_filesystem_path(
-            macros_manager.singleton.parse_one(
-                value_cache_manager.singleton.get_one_value(
-                    [
-                        "workspace/public/configuration/workspace.yaml-raw",
-                        "data",
-                        "script",
-                        "targets",
-                        target_name,
-                        "enter-full-path",
-                    ],
-                    output_type=TargetCacheValue.ANY,
-                )
-                or "${{ current-root-full-path }}",
-                (
-                    value_cache_manager.singleton.get_one_value(
-                        ["workspace-macros"],
-                        output_type=TargetCacheValue.DEFINED,
-                    )
-                    or {}
-                ),
+        system_manager.singleton.current_executing_console_filesystem_path = macros_manager.singleton.parse_one(
+            value_cache_manager.singleton.get_one_value(
+                [
+                    "workspace/public/configuration/workspace.yaml-raw",
+                    "data",
+                    "script",
+                    "targets",
+                    target_name,
+                    "enter-full-path",
+                ],
+                output_type=TargetCacheValue.ANY,
             )
+            or "${{ current-root-full-path }}",
+            (
+                value_cache_manager.singleton.get_one_value(
+                    ["workspace-macros"],
+                    output_type=TargetCacheValue.DEFINED,
+                )
+                or {}
+            ),
         )
+        
 
         if current_command["run"] in value_cache_manager.singleton.get_one_value(
             [
@@ -106,7 +106,7 @@ def handle_targets(target_name):
             handle_targets(current_command["run"])
 
         else:
-            cli_output = system_manager.singleton.execute_command(
+            cli_output = script_process_manager.singleton.execute_command(
                 macros_manager.singleton.parse_one(
                     current_command["run"],
                     (
@@ -116,14 +116,7 @@ def handle_targets(target_name):
                         )
                         or {}
                     ),
-                ),
-                script_proccess=script_command_enum_manager.singleton.convert_from_string_to_enum(
-                    (
-                        current_command["proccess"]
-                        if "proccess" in current_command
-                        else system_manager.singleton.script_proccess
-                    ).lower()
-                ),
+                )
             )
 
             file_log_manager.singleton.log_info(cli_output)
