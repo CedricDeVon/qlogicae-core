@@ -20,18 +20,21 @@ def handler_manager_callback() -> bool:
 
     file_log_manager.singleton.log_info(f"'run.about' - about execution start")
 
-    log_manager.singleton.log_info(f"{
-        yaml_file_io_manager.singleton.format(
-            (
-                value_cache_manager.singleton.get_one_value(
-                    [
-                        "workspace/public/tooling/qlogicae-logis/project/configuration/about.yaml-raw",
-                        "data"                    
-                    ],
-                    output_type=TargetCacheValue.ANY,
-                ) or {}
-            ),            
-        )}"
+    log_manager.singleton.log_info(
+        f"{
+            yaml_file_io_manager.singleton.format(
+                (
+                    value_cache_manager.singleton.get_one_value(
+                        [
+                            'workspace/public/tooling/qlogicae-logis/project/configuration/about.yaml-raw',
+                            'data',
+                        ],
+                        output_type=TargetCacheValue.ANY,
+                    )
+                    or {}
+                ),
+            )
+        }"
     )
 
     file_log_manager.singleton.log_info(f"'run.about' - about execution complete")

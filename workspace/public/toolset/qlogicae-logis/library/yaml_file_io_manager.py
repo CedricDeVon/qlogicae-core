@@ -17,12 +17,15 @@ class YamlFileIoManager:
         return yaml.safe_load(file) or {}
 
     def format(self, value: str) -> Any:
-        return yaml.dump(
-            value,
-            sort_keys=False,
-            indent=4,
-            default_flow_style=False,
-        ) or ""
+        return (
+            yaml.dump(
+                value,
+                sort_keys=False,
+                indent=4,
+                default_flow_style=False,
+            )
+            or ""
+        )
 
 
 singleton = YamlFileIoManager()

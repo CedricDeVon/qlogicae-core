@@ -14,8 +14,37 @@ from library.target_cache_value import TargetCacheValue
 
 
 def handle_manager_callback():
+    workspace_selections = (
+        value_cache_manager.singleton.get_one_value(
+            ["workspace-selections"],
+            output_type=TargetCacheValue.DEFINED,
+        )
+        or {}
+    )
+
+    is_enabled = (
+        value_cache_manager.singleton.get_one_value(
+            [
+                f"workspace/public/configuration/workspace.yaml-raw",
+                "data",
+                "selection",
+                "is-enabled",
+            ],
+            output_type=TargetCacheValue.ANY,
+        )
+        or False
+    )
+
+    project_workspace_selections = (
+        value_cache_manager.singleton.get_one_value(
+            ["project-workspace-selections"],
+            output_type=TargetCacheValue.DEFINED,
+        )
+        or {}
+    )
+
     cli_parser = argparse.ArgumentParser(
-        description="'filesystem.setup' command",
+        description="'run.filesystem.setup' command",
         epilog="...",
     )
     cli_parser.add_argument(
@@ -24,27 +53,13 @@ def handle_manager_callback():
         help="workspace target",
         dest="target",
         default="all",
-        choices=(
-            value_cache_manager.singleton.get_one_value(
-                ["workspace-selections"],
-                output_type=TargetCacheValue.DEFINED,
-            )
-            or {}
-        ),
+        choices=workspace_selections,
     )
     cli_arguments = cli_parser.parse_args()
 
-    if not value_cache_manager.singleton.get_one_value(
-        [
-            f"workspace/public/configuration/workspace.yaml-raw",
-            "data",
-            "selection",
-            "is-enabled",
-        ],
-        output_type=TargetCacheValue.ANY,
-    ):
+    if not is_enabled:
         file_log_manager.singleton.log_warning(
-            "'run.filesystem.setup' - check 'data.selection.is-enabled' property within your 'workspace.yaml' file - disabled"
+            "'run.filesystem.setup' - setup execution is disabled"
         )
 
         return False
@@ -59,10 +74,7 @@ def handle_manager_callback():
     elif cli_arguments.target == "project":
         handle_target_project()
 
-    elif cli_arguments.target in value_cache_manager.singleton.get_one_value(
-        ["project-workspace-selections"],
-        output_type=TargetCacheValue.DEFINED,
-    ):
+    elif cli_arguments.target in project_workspace_selections:
         handle_target_project_selection(cli_arguments.target)
 
     else:
@@ -72,9 +84,16 @@ def handle_manager_callback():
 
 
 def handle_target_root():
-    file_log_manager.singleton.log_info("'run.filesystem.setup' - 'root' setup - start")
+    file_log_manager.singleton.log_info(
+        "'run.filesystem.setup' - 'root' setup execution start"
+    )
 
-    parsed_filesystem_path = macros_manager.singleton.parse_one(
+    current_root_full_path = value_cache_manager.singleton.get_one_value(
+        ["current-root-full-path"],
+        output_type=TargetCacheValue.FOLDER_PATH,
+    )
+
+    selections_default_targets_root_full_path = (
         value_cache_manager.singleton.get_one_value(
             [
                 "workspace/public/configuration/workspace.yaml-raw",
@@ -86,74 +105,46 @@ def handle_target_root():
                 "full-path",
             ],
             output_type=TargetCacheValue.DEFINED,
-        ),
-        (
-            value_cache_manager.singleton.get_one_value(
-                ["workspace-macros"],
-                output_type=TargetCacheValue.DEFINED,
-            )
-            or {}
-        ),
+        )
+        or []
+    )
+
+    workspace_macros = (
+        value_cache_manager.singleton.get_one_value(
+            ["workspace-macros"],
+            output_type=TargetCacheValue.DEFINED,
+        )
+        or {}
+    )
+
+    parsed_filesystem_path = macros_manager.singleton.parse_one(
+        selections_default_targets_root_full_path,
+        workspace_macros,
     )
 
     filesystem_manager.singleton.clean_filesystem_path(
-        f"{
-            value_cache_manager.singleton.get_one_value(
-                ['current-root-full-path'],
-                output_type=TargetCacheValue.FOLDER_PATH,
-            )
-        }/workspace/private/temporary/intermediate/filesystem/root"
+        f"{current_root_full_path}/workspace/private/temporary/intermediate/filesystem/root"
     )
 
     for current_scope_name in workspace_filesystem_manager.singleton.scope_selections:
         filesystem_manager.singleton.copy_filesystem_path(
-            f"{
-                value_cache_manager.singleton.get_one_value(
-                    ['current-root-full-path'],
-                    output_type=TargetCacheValue.FOLDER_PATH,
-                )
-            }/workspace/{current_scope_name}/target/all/filesystem",
-            f"{
-                value_cache_manager.singleton.get_one_value(
-                    ['current-root-full-path'],
-                    output_type=TargetCacheValue.FOLDER_PATH,
-                )
-            }/workspace/private/temporary/intermediate/filesystem/root",
+            f"{current_root_full_path}/workspace/{current_scope_name}/target/all/filesystem",
+            f"{current_root_full_path}/workspace/private/temporary/intermediate/filesystem/root",
         )
         filesystem_manager.singleton.copy_filesystem_path(
-            f"{
-                value_cache_manager.singleton.get_one_value(
-                    ['current-root-full-path'],
-                    output_type=TargetCacheValue.FOLDER_PATH,
-                )
-            }/workspace/{current_scope_name}/target/root/filesystem",
-            f"{
-                value_cache_manager.singleton.get_one_value(
-                    ['current-root-full-path'],
-                    output_type=TargetCacheValue.FOLDER_PATH,
-                )
-            }/workspace/private/temporary/intermediate/filesystem/root",
+            f"{current_root_full_path}/workspace/{current_scope_name}/target/root/filesystem",
+            f"{current_root_full_path}/workspace/private/temporary/intermediate/filesystem/root",
         )
 
     handle_filesystem_parsing(
-        f"{
-            value_cache_manager.singleton.get_one_value(
-                ['current-root-full-path'],
-                output_type=TargetCacheValue.FOLDER_PATH,
-            )
-        }/workspace/private/temporary/intermediate/filesystem/root"
+        f"{current_root_full_path}/workspace/private/temporary/intermediate/filesystem/root"
     )
     filesystem_manager.singleton.copy_filesystem_path(
-        f"{
-            value_cache_manager.singleton.get_one_value(
-                ['current-root-full-path'],
-                output_type=TargetCacheValue.FOLDER_PATH,
-            )
-        }/workspace/private/temporary/intermediate/filesystem/root",
+        f"{current_root_full_path}/workspace/private/temporary/intermediate/filesystem/root",
         parsed_filesystem_path,
     )
     file_log_manager.singleton.log_info(
-        "'run.filesystem.setup' - 'root' setup - complete"
+        "'run.filesystem.setup' - 'root' setup execution complete"
     )
 
     return True
@@ -162,7 +153,7 @@ def handle_target_root():
 def handle_filesystem_parsing(
     filesystem_path,
 ):
-    macros = (
+    workspace_macros = (
         value_cache_manager.singleton.get_one_value(
             ["workspace-macros"],
             output_type=TargetCacheValue.DEFINED,
@@ -189,7 +180,7 @@ def handle_filesystem_parsing(
 
             parsed_file_data = macros_manager.singleton.parse_one(
                 file_data,
-                macros,
+                workspace_macros,
             )
 
             current_path.write_text(
@@ -199,7 +190,7 @@ def handle_filesystem_parsing(
 
             parsed_name = macros_manager.singleton.parse_one(
                 current_path.name,
-                macros,
+                workspace_macros,
             )
 
             if parsed_name != current_path.name:
@@ -214,7 +205,7 @@ def handle_filesystem_parsing(
 
             parsed_name = macros_manager.singleton.parse_one(
                 current_path.name,
-                macros,
+                workspace_macros,
             )
 
             if parsed_name != current_path.name:
@@ -229,17 +220,22 @@ def handle_filesystem_parsing(
 
 def handle_target_project():
     file_log_manager.singleton.log_info(
-        "'run.filesystem.setup' - 'project' setup - start"
+        "'run.filesystem.setup' - 'project' setup execution start"
     )
 
-    for project_name in value_cache_manager.singleton.get_one_value(
-        ["project-workspace-selections"],
-        output_type=TargetCacheValue.DEFINED,
-    ):
+    project_workspace_selections = (
+        value_cache_manager.singleton.get_one_value(
+            ["project-workspace-selections"],
+            output_type=TargetCacheValue.DEFINED,
+        )
+        or {}
+    )
+
+    for project_name in project_workspace_selections:
         handle_target_project_selection(project_name)
 
     file_log_manager.singleton.log_info(
-        "'run.filesystem.setup' - 'project' setup - complete"
+        "'run.filesystem.setup' - 'project' setup execution complete"
     )
 
     return True
@@ -247,106 +243,70 @@ def handle_target_project():
 
 def handle_target_project_selection(project_name):
     file_log_manager.singleton.log_info(
-        f"'run.filesystem.setup' - '{project_name}' setup - start"
+        f"'run.filesystem.setup' - '{project_name}' setup execution start"
+    )
+
+    current_root_full_path = value_cache_manager.singleton.get_one_value(
+        ["current-root-full-path"],
+        output_type=TargetCacheValue.FOLDER_PATH,
+    )
+
+    selection_project_target_full_paths = value_cache_manager.singleton.get_one_value(
+        [
+            "workspace/public/configuration/workspace.yaml-raw",
+            "data",
+            "selection",
+            "project",
+            "targets",
+            project_name,
+            "full-path",
+        ],
+        output_type=TargetCacheValue.DEFINED,
+    )
+
+    workspace_macros = (
+        value_cache_manager.singleton.get_one_value(
+            ["workspace-macros"],
+            output_type=TargetCacheValue.DEFINED,
+        )
+        or {}
     )
 
     parsed_filesystem_path = macros_manager.singleton.parse_one(
-        value_cache_manager.singleton.get_one_value(
-            [
-                "workspace/public/configuration/workspace.yaml-raw",
-                "data",
-                "selection",
-                "project",
-                "targets",
-                project_name,
-                "full-path",
-            ],
-            output_type=TargetCacheValue.DEFINED,
-        ),
-        (
-            value_cache_manager.singleton.get_one_value(
-                ["workspace-macros"],
-                output_type=TargetCacheValue.DEFINED,
-            )
-            or {}
-        ),
+        selection_project_target_full_paths,
+        workspace_macros,
     )
 
     filesystem_manager.singleton.clean_filesystem_path(
-        f"{
-            value_cache_manager.singleton.get_one_value(
-                ['current-root-full-path'],
-                output_type=TargetCacheValue.FOLDER_PATH,
-            )
-        }/workspace/private/temporary/intermediate/filesystem/{project_name}"
+        f"{current_root_full_path}/workspace/private/temporary/intermediate/filesystem/{project_name}"
     )
 
     for current_scope_name in workspace_filesystem_manager.singleton.scope_selections:
         filesystem_manager.singleton.copy_filesystem_path(
-            f"{
-                value_cache_manager.singleton.get_one_value(
-                    ['current-root-full-path'],
-                    output_type=TargetCacheValue.FOLDER_PATH,
-                )
-            }/workspace/{current_scope_name}/target/all/filesystem",
-            f"{
-                value_cache_manager.singleton.get_one_value(
-                    ['current-root-full-path'],
-                    output_type=TargetCacheValue.FOLDER_PATH,
-                )
-            }/workspace/private/temporary/intermediate/filesystem/{project_name}",
+            f"{current_root_full_path}/workspace/{current_scope_name}/target/all/filesystem",
+            f"{current_root_full_path}/workspace/private/temporary/intermediate/filesystem/{project_name}",
         )
         filesystem_manager.singleton.copy_filesystem_path(
-            f"{
-                value_cache_manager.singleton.get_one_value(
-                    ['current-root-full-path'],
-                    output_type=TargetCacheValue.FOLDER_PATH,
-                )
-            }/workspace/{current_scope_name}/target/project/filesystem",
-            f"{
-                value_cache_manager.singleton.get_one_value(
-                    ['current-root-full-path'],
-                    output_type=TargetCacheValue.FOLDER_PATH,
-                )
-            }/workspace/private/temporary/intermediate/filesystem/{project_name}",
+            f"{current_root_full_path}/workspace/{current_scope_name}/target/project/filesystem",
+            f"{current_root_full_path}/workspace/private/temporary/intermediate/filesystem/{project_name}",
         )
         filesystem_manager.singleton.copy_filesystem_path(
-            f"{
-                value_cache_manager.singleton.get_one_value(
-                    ['current-root-full-path'],
-                    output_type=TargetCacheValue.FOLDER_PATH,
-                )
-            }/workspace/{current_scope_name}/target/project/selection/{
-                project_name
-            }/filesystem",
-            f"{
-                value_cache_manager.singleton.get_one_value(
-                    ['current-root-full-path'],
-                    output_type=TargetCacheValue.FOLDER_PATH,
-                )
-            }/workspace/private/temporary/intermediate/filesystem/{project_name}",
+            f"{current_root_full_path}/workspace/{
+                current_scope_name
+            }/target/project/selection/{project_name}/filesystem",
+            f"{current_root_full_path}/workspace/private/temporary/intermediate/filesystem/{project_name}",
         )
 
     handle_filesystem_parsing(
-        f"{
-            value_cache_manager.singleton.get_one_value(
-                ['current-root-full-path'],
-                output_type=TargetCacheValue.FOLDER_PATH,
-            )
-        }/workspace/private/temporary/intermediate/filesystem/{project_name}"
+        f"{current_root_full_path}/workspace/private/temporary/intermediate/filesystem/{project_name}"
     )
     filesystem_manager.singleton.copy_filesystem_path(
-        f"{
-            value_cache_manager.singleton.get_one_value(
-                ['current-root-full-path'],
-                output_type=TargetCacheValue.FOLDER_PATH,
-            )
-        }/workspace/private/temporary/intermediate/filesystem/{project_name}",
+        f"{current_root_full_path}/workspace/private/temporary/intermediate/filesystem/{project_name}",
         parsed_filesystem_path,
     )
 
     file_log_manager.singleton.log_info(
-        f"'run.filesystem.setup' - '{project_name}' setup - complete"
+        f"'run.filesystem.setup' - '{project_name}' setup execution complete"
     )
 
     return True

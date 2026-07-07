@@ -41,7 +41,6 @@ def handler_manager_callback():
     )
     cli_arguments = cli_parser.parse_args()
 
-
     is_enabled = (
         value_cache_manager.singleton.get_one_value(
             [
@@ -52,7 +51,8 @@ def handler_manager_callback():
                 "is-enabled",
             ],
             output_type=TargetCacheValue.ANY,
-        ) or False        
+        )
+        or False
     )
 
     if not is_enabled:
