@@ -76,20 +76,26 @@ class WorkspaceManager:
         return True
 
     def setup_file_data_extraction(self) -> bool:
-        for current_scope_selection in (
-            workspace_filesystem_manager.singleton.scope_selections or {}
-        ):
-            for current_configuration_file in (
+        current_root_full_path = value_cache_manager.singleton.get_one_value(
+            ["current-root-full-path"],
+            output_type=TargetCacheValue.FOLDER_PATH,
+        )
+        original_executing_console_full_path = (
+            value_cache_manager.singleton.get_one_value(
+                ["original-executing-console-full-path"],
+                output_type=TargetCacheValue.FOLDER_PATH,
+            )
+        )
+        scope_selecions = workspace_filesystem_manager.singleton.scope_selections or {}
+        for current_scope_selection in scope_selecions:
+            target_filesystem_paths = (
                 Path(
-                    f"{
-                        value_cache_manager.singleton.get_one_value(
-                            ['current-root-full-path'],
-                            output_type=TargetCacheValue.FOLDER_PATH,
-                        )
-                    }/workspace/{current_scope_selection}/configuration"
+                    f"{current_root_full_path}/workspace/{current_scope_selection}/configuration"
                 ).iterdir()
                 or {}
-            ):
+            )
+
+            for current_configuration_file in target_filesystem_paths:
                 if not current_configuration_file.is_file():
                     continue
 
@@ -116,19 +122,54 @@ class WorkspaceManager:
                         output_type=TargetCacheValue.FILE_PATH,
                     )
 
+        target_filesystem_paths = (
+            Path(
+                f"{original_executing_console_full_path}/project/configuration"
+            ).iterdir()
+            or {}
+        )
+        for current_configuration_file in target_filesystem_paths:
+            if not current_configuration_file.is_file():
+                continue
+
+            with open(
+                current_configuration_file.resolve(),
+                encoding=file_io_manager.singleton.file_encoding,
+            ) as current_file:
+                raw_data = workspace_filesystem_manager.singleton.read_file(
+                    current_file
+                )
+
+                value_cache_manager.singleton.set_one_value(
+                    [
+                        f"workspace/public/tooling/qlogicae-logis/project/configuration/{current_configuration_file.name}-raw"
+                    ],
+                    (({} if raw_data is None else raw_data) or {}),
+                    output_type=TargetCacheValue.DEFINED,
+                )
+                value_cache_manager.singleton.set_one_value(
+                    [
+                        f"workspace/public/tooling/qlogicae-logis/project/configuration/{current_configuration_file.name}-full-path"
+                    ],
+                    current_configuration_file.resolve(),
+                    output_type=TargetCacheValue.FILE_PATH,
+                )
+
     def setup_macros_targets(self) -> bool:
         time_manager.singleton.current_time_zone = (
             time_zone_enum_manager.singleton.convert_from_string_to_timezone(
-                value_cache_manager.singleton.get_one_value(
-                    [
-                        "workspace/public/configuration/workspace.yaml-raw",
-                        "data",
-                        "time",
-                        "zone",
-                    ],
-                    output_type=TargetCacheValue.ANY,
+                (
+                    value_cache_manager.singleton.get_one_value(
+                        [
+                            "workspace/public/configuration/workspace.yaml-raw",
+                            "data",
+                            "time",
+                            "zone",
+                        ],
+                        output_type=TargetCacheValue.ANY,
+                    )
+                    or "local"
                 )
-                or UTC
             )
         )
 

@@ -55,7 +55,11 @@ class FileLogManager:
 
         else:
             for current_file_path in self.file_handlers:
-                with open(current_file_path, "a", encoding=file_io_manager.singleton.file_encoding) as file:
+                with open(
+                    current_file_path,
+                    "a",
+                    encoding=file_io_manager.singleton.file_encoding,
+                ) as file:
                     file.write(f"{str(message).strip()}\n")
 
         return message
@@ -137,7 +141,9 @@ class FileLogManager:
 
         path.parent.mkdir(parents=True, exist_ok=True)
 
-        handler = logging.FileHandler(path, encoding=file_io_manager.singleton.file_encoding)
+        handler = logging.FileHandler(
+            path, encoding=file_io_manager.singleton.file_encoding
+        )
 
         handler.setFormatter(LogFormat())
 

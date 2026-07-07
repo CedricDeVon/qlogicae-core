@@ -38,7 +38,7 @@ class ScriptProcessEnumManager:
                 return ScriptProcess.SUBPROCESS
 
             case _:
-                return ScriptProcess.NONE
+                return ScriptProcess.SUBPROCESS
 
 
 singleton = ScriptProcessEnumManager()

@@ -27,17 +27,17 @@ data:
           full-path: ${{ current-root-full-path }}/selection/rust
 
   script:
-    is-enabled: true
-    is-override-enabled: false
-    process: subprocess
+    is-enabled: true    
+    # process: shell
+    # is-process-override-enabled: true
 
     targets:
-      demo:
-        enter-full-path: ${{ current-root-full-path }}
-        commands:
-          - run: echo 'Hello' && echo 'Hello'
-            process: shell
-            is-enabled: false
+      # demo:
+      #   enter-full-path: ${{ current-root-full-path }}
+      #   commands:
+      #     - run: echo 'Hello' && echo 'Hello'
+      #       process: shell          
+            # is-enabled: false
 
       value-cache-debug:
         enter-full-path: ${{ current-root-full-path }}/workspace/public/toolset/qlogicae-logis

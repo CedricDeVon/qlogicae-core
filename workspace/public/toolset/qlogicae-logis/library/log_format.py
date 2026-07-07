@@ -8,5 +8,5 @@ class LogFormat(logging.Formatter):
         return (
             f"[ {timestamp_manager.singleton.current_standard_timestamp} ] "
             f"[ {record.levelname} ] "
-            f"{record.getMessage()}"
+            f"\n{record.getMessage()}"
         )

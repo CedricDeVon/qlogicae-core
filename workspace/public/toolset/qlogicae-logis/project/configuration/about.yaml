@@ -3,7 +3,7 @@ data:
     display-name: QLogicae Logis
     workspace-name: qlogicae-logis
     version: 1.1.0
-    repository-link: https://github.com/CedricDeVon/qlogicae-core
+    repository-link: https://github.com/CedricDeVon/qlogicae-logis
 
   company:
     name: QLogicae

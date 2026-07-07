@@ -12,6 +12,14 @@ from library.target_cache_value import TargetCacheValue
 
 
 def handler_manager_callback():
+    target_selections = (
+        value_cache_manager.singleton.get_one_value(
+            ["clean-include-selections"],
+            output_type=TargetCacheValue.DEFINED,
+        )
+        or {}
+    )
+
     cli_parser = argparse.ArgumentParser(
         description="'filesystem.clean' command",
         epilog="...",
@@ -21,13 +29,7 @@ def handler_manager_callback():
         "--target",
         help="combination target",
         dest="target",
-        choices=(
-            value_cache_manager.singleton.get_one_value(
-                ["clean-include-selections"],
-                output_type=TargetCacheValue.DEFINED,
-            )
-            or {}
-        ),
+        choices=target_selections,
     )
     cli_parser.add_argument(
         "-dt",
@@ -39,23 +41,28 @@ def handler_manager_callback():
     )
     cli_arguments = cli_parser.parse_args()
 
-    if not value_cache_manager.singleton.get_one_value(
-        [
-            f"workspace/public/configuration/workspace.yaml-raw",
-            "data",
-            "script",
-            "clean",
-            "is-enabled",
-        ],
-        output_type=TargetCacheValue.ANY,
-    ):
+
+    is_enabled = (
+        value_cache_manager.singleton.get_one_value(
+            [
+                f"workspace/public/configuration/workspace.yaml-raw",
+                "data",
+                "script",
+                "clean",
+                "is-enabled",
+            ],
+            output_type=TargetCacheValue.ANY,
+        ) or False        
+    )
+
+    if not is_enabled:
         file_log_manager.singleton.log_warning(
-            "'run.filesystem.clean' - check 'data.script.clean.is-enabled' property within your 'workspace.yaml' file - disabled"
+            "'run.clean' - cleaning execution is disabled"
         )
 
         return False
 
-    for current_item in (
+    clean_include_targets = (
         value_cache_manager.singleton.get_one_value(
             [
                 f"workspace/public/configuration/workspace.yaml-raw",
@@ -69,31 +76,37 @@ def handler_manager_callback():
             output_type=TargetCacheValue.DEFINED,
         )
         or {}
-    ):
+    )
+
+    workspace_macros = (
+        value_cache_manager.singleton.get_one_value(
+            ["workspace-macros"],
+            output_type=TargetCacheValue.DEFINED,
+        )
+        or {}
+    )
+
+    clean_exclude_selections = (
+        value_cache_manager.singleton.get_one_value(
+            ["clean-exclude-selections"],
+            output_type=TargetCacheValue.DEFINED,
+        )
+        or {}
+    )
+
+    for current_item in clean_include_targets:
         parsed_include_path = macros_manager.singleton.parse_one(
             current_item["name"],
-            (
-                value_cache_manager.singleton.get_one_value(
-                    ["workspace-macros"],
-                    output_type=TargetCacheValue.DEFINED,
-                )
-                or {}
-            ),
+            workspace_macros,
         )
 
         file_log_manager.singleton.log_info(
-            f"'run.filesystem.clean' - '{parsed_include_path}' cleaning - start"
+            f"'run.clean' - '{parsed_include_path}' cleaning execution start"
         )
 
-        if parsed_include_path in (
-            value_cache_manager.singleton.get_one_value(
-                ["clean-exclude-selections"],
-                output_type=TargetCacheValue.DEFINED,
-            )
-            or {}
-        ):
+        if parsed_include_path in clean_exclude_selections:
             file_log_manager.singleton.log_warning(
-                f"'run.filesystem.clean' - '{parsed_include_path}' cleaning - ignored"
+                f"'run.clean' - '{parsed_include_path}' cleaning execution ignored"
             )
             continue
 
@@ -104,7 +117,7 @@ def handler_manager_callback():
         filesystem_manager.singleton.clean_filesystem_path(parsed_include_path)
 
     file_log_manager.singleton.log_info(
-        f"'run.filesystem.clean' - '{parsed_include_path}' cleaning - complete"
+        f"'run.clean' - '{parsed_include_path}' cleaning execution complete"
     )
 
     return True

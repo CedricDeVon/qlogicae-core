@@ -25,11 +25,11 @@ class LogManager:
     def log_debug(self, message: str) -> str:
         return self.log(
             message,
-            log_options_manager.singleton.generate_defaults(
+            log_options_manager.singleton.generate_modified_defaults(
                 console_log_manager.singleton.options,
                 log_level=logging.DEBUG,
             ),
-            log_options_manager.singleton.generate_defaults(
+            log_options_manager.singleton.generate_modified_defaults(
                 file_log_manager.singleton.options,
                 log_level=logging.DEBUG,
             ),
@@ -38,11 +38,11 @@ class LogManager:
     def log_info(self, message: str) -> str:
         return self.log(
             message,
-            log_options_manager.singleton.generate_defaults(
+            log_options_manager.singleton.generate_modified_defaults(
                 console_log_manager.singleton.options,
                 log_level=logging.INFO,
             ),
-            log_options_manager.singleton.generate_defaults(
+            log_options_manager.singleton.generate_modified_defaults(
                 file_log_manager.singleton.options,
                 log_level=logging.INFO,
             ),
@@ -51,11 +51,11 @@ class LogManager:
     def log_warning(self, message: str) -> str:
         return self.log(
             message,
-            log_options_manager.singleton.generate_defaults(
+            log_options_manager.singleton.generate_modified_defaults(
                 console_log_manager.singleton.options,
                 log_level=logging.WARNING,
             ),
-            log_options_manager.singleton.generate_defaults(
+            log_options_manager.singleton.generate_modified_defaults(
                 file_log_manager.singleton.options,
                 log_level=logging.WARNING,
             ),
@@ -64,11 +64,11 @@ class LogManager:
     def log_error(self, message: str) -> str:
         return self.log(
             message,
-            log_options_manager.singleton.generate_defaults(
+            log_options_manager.singleton.generate_modified_defaults(
                 console_log_manager.singleton.options,
                 log_level=logging.ERROR,
             ),
-            log_options_manager.singleton.generate_defaults(
+            log_options_manager.singleton.generate_modified_defaults(
                 file_log_manager.singleton.options,
                 log_level=logging.ERROR,
             ),
@@ -77,11 +77,11 @@ class LogManager:
     def log_critical(self, message: str) -> str:
         return self.log(
             message,
-            log_options_manager.singleton.generate_defaults(
+            log_options_manager.singleton.generate_modified_defaults(
                 console_log_manager.singleton.options,
                 log_level=logging.CRITICAL,
             ),
-            log_options_manager.singleton.generate_defaults(
+            log_options_manager.singleton.generate_modified_defaults(
                 file_log_manager.singleton.options,
                 log_level=logging.CRITICAL,
             ),

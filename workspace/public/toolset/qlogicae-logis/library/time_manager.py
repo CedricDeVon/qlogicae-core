@@ -2,9 +2,16 @@ import time
 from datetime import date, datetime, UTC
 
 
+from library.time_zone import TimeZone
+from library import time_zone_enum_manager
+from library.enum_conversion_output import EnumConversionOutput
+
+
 class TimeManager:
     def __init__(self) -> None:
-        self._current_time_zone = UTC
+        self._current_time_zone = time_zone_enum_manager.singleton.convert_value(
+            "local", EnumConversionOutput.CUSTOM
+        )
 
     @property
     def current_time_zone(self):
