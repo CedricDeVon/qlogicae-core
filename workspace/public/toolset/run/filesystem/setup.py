@@ -66,13 +66,17 @@ def handle_manager_callback():
         handle_target_project_selection(cli_arguments.target)
 
     else:
-        workspace_manager.singleton.handle_cli_argument_set_invalid(cli_arguments)
+        workspace_manager.singleton.handle_cli_argument_set_invalid(
+            cli_arguments
+        )
 
     return True
 
 
 def handle_target_root():
-    file_log_manager.singleton.log_info("'run.filesystem.setup' - 'root' setup - start")
+    file_log_manager.singleton.log_info(
+        "'run.filesystem.setup' - 'root' setup - start"
+    )
 
     parsed_filesystem_path = macros_manager.singleton.parse_one(
         value_cache_manager.singleton.get_one_value(
@@ -105,7 +109,9 @@ def handle_target_root():
         }/workspace/private/temporary/intermediate/filesystem/root"
     )
 
-    for current_scope_name in workspace_filesystem_manager.singleton.scope_selections:
+    for (
+        current_scope_name
+    ) in workspace_filesystem_manager.singleton.scope_selections:
         filesystem_manager.singleton.copy_filesystem_path(
             f"{
                 value_cache_manager.singleton.get_one_value(
@@ -281,7 +287,9 @@ def handle_target_project_selection(project_name):
         }/workspace/private/temporary/intermediate/filesystem/{project_name}"
     )
 
-    for current_scope_name in workspace_filesystem_manager.singleton.scope_selections:
+    for (
+        current_scope_name
+    ) in workspace_filesystem_manager.singleton.scope_selections:
         filesystem_manager.singleton.copy_filesystem_path(
             f"{
                 value_cache_manager.singleton.get_one_value(
@@ -294,7 +302,9 @@ def handle_target_project_selection(project_name):
                     ['current-root-full-path'],
                     output_type=TargetCacheValue.FOLDER_PATH,
                 )
-            }/workspace/private/temporary/intermediate/filesystem/{project_name}",
+            }/workspace/private/temporary/intermediate/filesystem/{
+                project_name
+            }",
         )
         filesystem_manager.singleton.copy_filesystem_path(
             f"{
@@ -308,7 +318,9 @@ def handle_target_project_selection(project_name):
                     ['current-root-full-path'],
                     output_type=TargetCacheValue.FOLDER_PATH,
                 )
-            }/workspace/private/temporary/intermediate/filesystem/{project_name}",
+            }/workspace/private/temporary/intermediate/filesystem/{
+                project_name
+            }",
         )
         filesystem_manager.singleton.copy_filesystem_path(
             f"{
@@ -316,13 +328,17 @@ def handle_target_project_selection(project_name):
                     ['current-root-full-path'],
                     output_type=TargetCacheValue.FOLDER_PATH,
                 )
-            }/workspace/{current_scope_name}/target/project/selection/{project_name}/filesystem",
+            }/workspace/{current_scope_name}/target/project/selection/{
+                project_name
+            }/filesystem",
             f"{
                 value_cache_manager.singleton.get_one_value(
                     ['current-root-full-path'],
                     output_type=TargetCacheValue.FOLDER_PATH,
                 )
-            }/workspace/private/temporary/intermediate/filesystem/{project_name}",
+            }/workspace/private/temporary/intermediate/filesystem/{
+                project_name
+            }",
         )
 
     handle_filesystem_parsing(

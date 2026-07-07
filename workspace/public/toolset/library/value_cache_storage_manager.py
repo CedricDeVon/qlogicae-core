@@ -86,7 +86,9 @@ class ValueCacheStorageManager:
 
             elif isinstance(cache, list):
                 if not isinstance(key, int):
-                    raise TypeError(f"expected an index, got '{type(key).__name__}'")
+                    raise TypeError(
+                        f"expected an index, got '{type(key).__name__}'"
+                    )
 
                 if key < 0 or key >= len(cache):
                     raise IndexError(f"index '{key}' is out of range")
@@ -94,7 +96,9 @@ class ValueCacheStorageManager:
                 cache = cache[key]
 
             else:
-                raise TypeError(f"cannot traverse into '{type(cache).__name__}'")
+                raise TypeError(
+                    f"cannot traverse into '{type(cache).__name__}'"
+                )
 
         last = keys[-1]
 
@@ -126,13 +130,17 @@ class ValueCacheStorageManager:
 
             elif isinstance(cache, list):
                 if not isinstance(key, int):
-                    raise TypeError(f"expected an index, got {type(key).__name__}")
+                    raise TypeError(
+                        f"expected an index, got {type(key).__name__}"
+                    )
 
                 if key < 0 or key >= len(cache):
                     raise IndexError(f"index path '{keys}' is out of range")
 
             else:
-                raise TypeError(f"cannot traverse into '{type(cache).__name__}'")
+                raise TypeError(
+                    f"cannot traverse into '{type(cache).__name__}'"
+                )
 
             cache = cache[key]
 

@@ -1,8 +1,27 @@
+from typing import Any
 from datetime import datetime, UTC
+
 from library.time_zone import TimeZone
+from library.enum_conversion_output import EnumConversionOutput
 
 
 class TimeZoneEnumManager:
+    def convert_value(
+        self, value, conversion_output_type=EnumConversionOutput.STRING
+    ) -> Any:
+        match conversion_output_type:
+            case EnumConversionOutput.STRING:
+                return self.convert_from_enum_to_string(value)
+
+            case EnumConversionOutput.ENUM:
+                return self.convert_from_string_to_enum(value)
+
+            case EnumConversionOutput.CUSTOM:
+                return self.convert_from_string_to_timezone(value)
+
+            case _:
+                return EnumConversionOutput.NONE
+
     def convert_from_enum_to_string(
         self,
         value: TimeZone,

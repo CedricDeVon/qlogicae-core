@@ -5,6 +5,7 @@ from library import (
     workspace_log_manager,
     workspace_system_manager,
     workspace_macros_manager,
+    workspace_script_manager,
     workspace_filesystem_manager,
     workspace_value_cache_manager,
 )
@@ -27,16 +28,16 @@ class WorkspaceManager:
         workspace_value_cache_manager.singleton.setup_pre_macros()
         workspace_macros_manager.singleton.setup()
         workspace_value_cache_manager.singleton.setup_post_macros()
-        workspace_log_manager.singleton.setup()
+        # workspace_log_manager.singleton.setup()
 
         return True
 
     def shutdown(self) -> bool:
-        workspace_log_manager.singleton.shutdown()
-        workspace_value_cache_manager.singleton.shutdown()
-        workspace_macros_manager.singleton.shutdown()
-        workspace_filesystem_manager.singleton.shutdown()
-        workspace_system_manager.singleton.shutdown()
+        # workspace_log_manager.singleton.shutdown()
+        # workspace_value_cache_manager.singleton.shutdown()
+        # workspace_macros_manager.singleton.shutdown()
+        # workspace_filesystem_manager.singleton.shutdown()
+        # workspace_system_manager.singleton.shutdown()
 
         return True
 
@@ -49,4 +50,3 @@ class WorkspaceManager:
 
 
 singleton = WorkspaceManager()
-

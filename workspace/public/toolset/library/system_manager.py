@@ -1,11 +1,5 @@
 import os
-import shlex
-import subprocess
 from pathlib import Path
-from collections.abc import Sequence
-
-from library import text_manager
-from library.script_command import ScriptCommand
 
 
 class SystemManager:
@@ -29,36 +23,5 @@ class SystemManager:
 
         return True
 
-    def execute_command(
-        self,
-        command: str,
-        output_type: ScriptCommand = ScriptCommand.SUBPROCESS,
-    ) -> bool:
-        if not command:
-            raise ValueError("command cannot be empty")
-
-        match output_type:
-            case ScriptCommand.SHELL:
-                return subprocess.run(
-                    command,
-                    encoding=text_manager.singleton.encoding,
-                    check=True,
-                    text=True,
-                    shell=True,
-                    capture_output=True,
-                )
-
-            case ScriptCommand.SUBPROCESS:                
-                return subprocess.run(
-                    shlex.split(command),
-                    encoding=text_manager.singleton.encoding,
-                    check=True,
-                    text=True,
-                    capture_output=True,
-                )
-
-        return True
-
 
 singleton = SystemManager()
-

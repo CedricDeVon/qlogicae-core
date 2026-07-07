@@ -12,12 +12,12 @@ class WorkspaceMacrosManager:
             ["workspace-macros"],
             macros_manager.singleton.resolve_many(
                 {
-                    item["name"]: f"{value_cache_manager.singleton.get_one_value(
-                        [
-                            item["name"]
-                        ],
-                        output_type=TargetCacheValue.ANY,
-                    )}"
+                    item["name"]: f"{
+                        value_cache_manager.singleton.get_one_value(
+                            [item['name']],
+                            output_type=TargetCacheValue.ANY,
+                        )
+                    }"
                     for item in (
                         value_cache_manager.singleton.get_one_value(
                             [
@@ -25,27 +25,28 @@ class WorkspaceMacrosManager:
                                 "data",
                                 "macros",
                                 "value-cache",
-                                "targets"
-                            ],
-                            output_type=TargetCacheValue.ANY,
-                        )
-                        or []
-                    ) + (
-                        value_cache_manager.singleton.get_one_value(
-                            [
-                                "workspace/public/configuration/workspace.yaml-raw",
-                                "data",
-                                "macros",
-                                "value-cache",
-                                "targets"
+                                "targets",
                             ],
                             output_type=TargetCacheValue.ANY,
                         )
                         or []
                     )
-                } |
-                {
-                    item["name"]: f"{item["value"]}"
+                    + (
+                        value_cache_manager.singleton.get_one_value(
+                            [
+                                "workspace/public/configuration/workspace.yaml-raw",
+                                "data",
+                                "macros",
+                                "value-cache",
+                                "targets",
+                            ],
+                            output_type=TargetCacheValue.ANY,
+                        )
+                        or []
+                    )
+                }
+                | {
+                    item["name"]: f"{item['value']}"
                     for item in (
                         value_cache_manager.singleton.get_one_value(
                             [
@@ -53,19 +54,20 @@ class WorkspaceMacrosManager:
                                 "data",
                                 "macros",
                                 "file",
-                                "targets"
+                                "targets",
                             ],
                             output_type=TargetCacheValue.ANY,
                         )
                         or []
-                    ) + (
+                    )
+                    + (
                         value_cache_manager.singleton.get_one_value(
                             [
                                 "workspace/public/configuration/workspace.yaml-raw",
                                 "data",
                                 "macros",
                                 "file",
-                                "targets"
+                                "targets",
                             ],
                             output_type=TargetCacheValue.ANY,
                         )
@@ -84,4 +86,3 @@ class WorkspaceMacrosManager:
 
 
 singleton = WorkspaceMacrosManager()
-

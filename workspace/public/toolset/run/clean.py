@@ -111,4 +111,3 @@ def handler_manager_callback():
 
 
 workspace_manager.singleton.handle(handler_manager_callback)
-

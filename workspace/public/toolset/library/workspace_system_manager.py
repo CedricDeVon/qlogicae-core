@@ -54,9 +54,7 @@ class WorkspaceSystemManager:
             target,
             output_type=TargetCacheValue.FOLDER_PATH,
         )
-        system_manager.singleton.change_cli_filesystem_path(
-            target
-        )
+        system_manager.singleton.change_cli_filesystem_path(target)
 
         return True
 

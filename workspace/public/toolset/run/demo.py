@@ -1,4 +1,3 @@
-
 from library import (
     workspace_manager,
     value_cache_manager,
@@ -10,4 +9,3 @@ def handle_manager_callback():
 
 
 workspace_manager.singleton.handle(handle_manager_callback)
-

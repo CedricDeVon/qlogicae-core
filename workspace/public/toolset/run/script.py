@@ -8,10 +8,10 @@ from library import (
     workspace_manager,
     console_log_manager,
     value_cache_manager,
+    script_command_enum_manager,
 )
-from library.log_options import LogOptions
-from library.target_cache_value import TargetCacheValue
 from library.script_command import ScriptCommand
+from library.target_cache_value import TargetCacheValue
 
 
 def handler_manager_callback():
@@ -59,7 +59,7 @@ def handle_targets(target_name):
         f"'run.script' - '{target_name}' execution - start"
     )
 
-    for current_item in (
+    for current_command in (
         value_cache_manager.singleton.get_one_value(
             [
                 "workspace/public/configuration/workspace.yaml-raw",
@@ -72,7 +72,7 @@ def handle_targets(target_name):
             output_type=TargetCacheValue.ANY,
         )
         or []
-    ):                
+    ):
         system_manager.singleton.change_cli_filesystem_path(
             macros_manager.singleton.parse_one(
                 value_cache_manager.singleton.get_one_value(
@@ -89,9 +89,7 @@ def handle_targets(target_name):
                 or "${{ current-root-full-path }}",
                 (
                     value_cache_manager.singleton.get_one_value(
-                        [
-                            "workspace-macros"
-                        ],
+                        ["workspace-macros"],
                         output_type=TargetCacheValue.DEFINED,
                     )
                     or {}
@@ -99,18 +97,20 @@ def handle_targets(target_name):
             )
         )
 
-        if current_item["run"] in value_cache_manager.singleton.get_one_value(
+        if current_command[
+            "run"
+        ] in value_cache_manager.singleton.get_one_value(
             [
                 "script-selections",
             ],
             output_type=TargetCacheValue.ANY,
         ):
-            handle_targets(current_item["run"])
+            handle_targets(current_command["run"])
 
         else:
             cli_output = system_manager.singleton.execute_command(
                 macros_manager.singleton.parse_one(
-                    current_item["run"],
+                    current_command["run"],
                     (
                         value_cache_manager.singleton.get_one_value(
                             ["workspace-macros"],
@@ -119,11 +119,16 @@ def handle_targets(target_name):
                         or {}
                     ),
                 ),
+                script_proccess=script_command_enum_manager.singleton.convert_from_string_to_enum(
+                    (
+                        current_command["proccess"]
+                        if "proccess" in current_command
+                        else system_manager.singleton.script_proccess
+                    ).lower()
+                ),
             )
 
-            file_log_manager.singleton.log_info(
-                cli_output                
-            )
+            file_log_manager.singleton.log_info(cli_output)
             console_log_manager.singleton.log_info(
                 cli_output.stdout or cli_output.stderr
             )

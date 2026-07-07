@@ -1,5 +1,6 @@
 import logging
 
+from library import log_options_manager
 from library.log_format import LogFormat
 from library.log_options import LogOptions
 
@@ -19,6 +20,18 @@ class ConsoleLogManager:
         handler.setFormatter(LogFormat())
 
         self.logger.addHandler(handler)
+
+        self._options = LogOptions()
+
+    @property
+    def options(self) -> LogOptions:
+        return self._options
+
+    @options.setter
+    def options(self, value) -> bool:
+        self._options = value
+
+        return True
 
     def log(self, message: str, options: LogOptions = LogOptions()) -> str:
         if not options.is_enabled:
@@ -40,37 +53,62 @@ class ConsoleLogManager:
     def log_debug(
         self,
         message: str,
-        options: LogOptions = LogOptions(log_level=logging.DEBUG),
     ) -> str:
-        return self.log(message, options)
+        return self.log(
+            message,
+            log_options_manager.singleton.generate_defaults(
+                self._options,
+                log_level=logging.DEBUG,
+            ),
+        )
 
     def log_info(
         self,
         message: str,
-        options: LogOptions = LogOptions(log_level=logging.INFO),
     ) -> str:
-        return self.log(message, options)
+        return self.log(
+            message,
+            log_options_manager.singleton.generate_defaults(
+                self._options,
+                log_level=logging.INFO,
+            ),
+        )
 
     def log_warning(
         self,
         message: str,
-        options: LogOptions = LogOptions(log_level=logging.WARNING),
     ) -> str:
-        return self.log(message, options)
+        return self.log(
+            message,
+            log_options_manager.singleton.generate_defaults(
+                self._options,
+                log_level=logging.WARNING,
+            ),
+        )
 
     def log_error(
         self,
         message: str,
-        options: LogOptions = LogOptions(log_level=logging.ERROR),
     ) -> str:
-        return self.log(message, options)
+        return self.log(
+            message,
+            log_options_manager.singleton.generate_defaults(
+                self._options,
+                log_level=logging.ERROR,
+            ),
+        )
 
     def log_critical(
         self,
         message: str,
-        options: LogOptions = LogOptions(log_level=logging.CRITICAL),
     ) -> str:
-        return self.log(message, options)
+        return self.log(
+            message,
+            log_options_manager.singleton.generate_defaults(
+                self._options,
+                log_level=logging.CRITICAL,
+            ),
+        )
 
 
 singleton = ConsoleLogManager()

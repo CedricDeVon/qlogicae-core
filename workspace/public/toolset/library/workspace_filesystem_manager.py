@@ -19,17 +19,17 @@ class WorkspaceFilesystemManager:
         return self._scope_selections
 
     def setup(self) -> bool:
-        for current_scope_selection in (
-            self.scope_selections or {}
-        ):
-            for current_configuration_file in (Path(
+        for current_scope_selection in self.scope_selections or {}:
+            for current_configuration_file in (
+                Path(
                     f"{
                         value_cache_manager.singleton.get_one_value(
                             ['current-root-full-path'],
                             output_type=TargetCacheValue.FOLDER_PATH,
-                        ) 
+                        )
                     }/workspace/{current_scope_selection}/configuration"
-                ).iterdir() or {}
+                ).iterdir()
+                or {}
             ):
                 if not current_configuration_file.is_file():
                     continue

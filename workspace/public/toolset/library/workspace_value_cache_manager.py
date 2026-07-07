@@ -12,26 +12,27 @@ from library.target_cache_value import TargetCacheValue
 
 class WorkspaceValueCacheManager:
     def setup_pre_macros(self) -> bool:
-        time_manager.singleton.current_time_zone = time_zone_enum_manager.singleton.convert_from_string_to_timezone(
-            value_cache_manager.singleton.get_one_value(
-                [
-                    "workspace/public/configuration/workspace.yaml-raw",
-                    "data",
-                    "time",
-                    "zone",
-                ],
-                output_type=TargetCacheValue.ANY,
-            ) or UTC
+        time_manager.singleton.current_time_zone = (
+            time_zone_enum_manager.singleton.convert_from_string_to_timezone(
+                value_cache_manager.singleton.get_one_value(
+                    [
+                        "workspace/public/configuration/workspace.yaml-raw",
+                        "data",
+                        "time",
+                        "zone",
+                    ],
+                    output_type=TargetCacheValue.ANY,
+                )
+                or UTC
+            )
         )
 
         value_cache_manager.singleton.set_one_value(
-            ["current-date"],
-            time_manager.singleton.current_iso8601_date
+            ["current-date"], time_manager.singleton.current_iso8601_date
         )
 
         value_cache_manager.singleton.set_one_value(
-            ["current-year"],
-            time_manager.singleton.current_year
+            ["current-year"], time_manager.singleton.current_year
         )
 
         return True
@@ -39,24 +40,26 @@ class WorkspaceValueCacheManager:
     def setup_post_macros(self) -> bool:
         value_cache_manager.singleton.set_one_value(
             ["timestamp-execution-start"],
-            timestamp_manager.singleton.current_standard_timestamp
+            timestamp_manager.singleton.current_standard_timestamp,
         )
 
         value_cache_manager.singleton.set_one_value(
             ["default-workspace-selections"],
             set(
                 key
-                for key, value in (value_cache_manager.singleton.get_one_value(
-                    [
-                        "workspace/public/configuration/workspace.yaml-raw",
-                        "data",
-                        "selection",
-                        "default",
-                        "targets",
-                    ],
-                    output_type=TargetCacheValue.ANY,
-                )
-                or {}).items()
+                for key, value in (
+                    value_cache_manager.singleton.get_one_value(
+                        [
+                            "workspace/public/configuration/workspace.yaml-raw",
+                            "data",
+                            "selection",
+                            "default",
+                            "targets",
+                        ],
+                        output_type=TargetCacheValue.ANY,
+                    )
+                    or {}
+                ).items()
             ),
         )
 
@@ -64,17 +67,19 @@ class WorkspaceValueCacheManager:
             ["project-workspace-selections"],
             set(
                 key
-                for key, value in (value_cache_manager.singleton.get_one_value(
-                    [
-                        "workspace/public/configuration/workspace.yaml-raw",
-                        "data",
-                        "selection",
-                        "project",
-                        "targets",
-                    ],
-                    output_type=TargetCacheValue.ANY,
-                )
-                or {}).items()
+                for key, value in (
+                    value_cache_manager.singleton.get_one_value(
+                        [
+                            "workspace/public/configuration/workspace.yaml-raw",
+                            "data",
+                            "selection",
+                            "project",
+                            "targets",
+                        ],
+                        output_type=TargetCacheValue.ANY,
+                    )
+                    or {}
+                ).items()
             ),
         )
 
@@ -202,4 +207,3 @@ class WorkspaceValueCacheManager:
 
 
 singleton = WorkspaceValueCacheManager()
-

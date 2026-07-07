@@ -34,27 +34,19 @@ class TimeManager:
 
     @property
     def current_second(self) -> int:
-        return datetime.now(
-            self._current_time_zone        
-        ).second
+        return datetime.now(self._current_time_zone).second
 
     @property
     def current_minute(self) -> int:
-        return datetime.now(
-            self._current_time_zone        
-        ).minute
+        return datetime.now(self._current_time_zone).minute
 
     @property
     def current_hour(self) -> int:
-        return datetime.now(
-            self._current_time_zone        
-        ).hour
+        return datetime.now(self._current_time_zone).hour
 
     @property
     def current_day(self) -> int:
-        return datetime.now(
-            self._current_time_zone        
-        ).day
+        return datetime.now(self._current_time_zone).day
 
     @property
     def current_week(self) -> int:
@@ -62,17 +54,11 @@ class TimeManager:
 
     @property
     def current_month(self) -> int:
-        return datetime.now(
-            self._current_time_zone
-        
-        ).month
+        return datetime.now(self._current_time_zone).month
 
     @property
     def current_year(self) -> int:
-        return datetime.now(
-            self._current_time_zone
-        
-        ).year
+        return datetime.now(self._current_time_zone).year
 
     @property
     def current_decade(self) -> int:

@@ -3,6 +3,7 @@ import logging
 from pathlib import Path
 from logging.handlers import QueueHandler, QueueListener
 
+from library import log_options_manager
 from library.log_format import LogFormat
 from library.log_options import LogOptions
 
@@ -29,53 +30,96 @@ class FileLogManager:
 
         self.listener.start()
 
+        self._options = LogOptions()
+
+    @property
+    def options(self) -> LogOptions:
+        return self._options
+
+    @options.setter
+    def options(self, value) -> bool:
+        self._options = value
+
+        return True
+
     def log(self, message: str, options: LogOptions = LogOptions()) -> str:
         if not options.is_enabled:
             return message
 
-        self.logger.log(options.log_level, str(message).strip(), stacklevel=options.stack_level)
+        self.logger.log(
+            options.log_level,
+            str(message).strip(),
+            stacklevel=options.stack_level,
+        )
 
         return message
 
     def log_debug(
         self,
         message: str,
-        options: LogOptions = LogOptions(log_level=logging.DEBUG),
     ) -> str:
-        return self.log(message, options)
+        return self.log(
+            message,
+            log_options_manager.singleton.generate_defaults(
+                self._options,
+                log_level=logging.DEBUG,
+            ),
+        )
 
     def log_info(
         self,
         message: str,
-        options: LogOptions = LogOptions(log_level=logging.INFO),
     ) -> str:
-        return self.log(message, options)
+        return self.log(
+            message,
+            log_options_manager.singleton.generate_defaults(
+                self._options,
+                log_level=logging.INFO,
+            ),
+        )
 
     def log_warning(
         self,
         message: str,
-        options: LogOptions = LogOptions(log_level=logging.WARNING),
     ) -> str:
-        return self.log(message, options)
+        return self.log(
+            message,
+            log_options_manager.singleton.generate_defaults(
+                self._options,
+                log_level=logging.WARNING,
+            ),
+        )
 
     def log_error(
         self,
         message: str,
-        options: LogOptions = LogOptions(log_level=logging.ERROR),
     ) -> str:
-        return self.log(message, options)
+        return self.log(
+            message,
+            log_options_manager.singleton.generate_defaults(
+                self._options,
+                log_level=logging.ERROR,
+            ),
+        )
 
     def log_critical(
         self,
         message: str,
-        options: LogOptions = LogOptions(log_level=logging.CRITICAL),
     ) -> str:
-        return self.log(message, options)
+        return self.log(
+            message,
+            log_options_manager.singleton.generate_defaults(
+                self._options,
+                log_level=logging.CRITICAL,
+            ),
+        )
 
     def rebuild_listener(self) -> bool:
         self.listener.stop()
 
-        self.listener = QueueListener(self.log_queue, *self.file_handlers.values())
+        self.listener = QueueListener(
+            self.log_queue, *self.file_handlers.values()
+        )
 
         self.listener.start()
 
