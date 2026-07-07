@@ -117,9 +117,7 @@ class FileLogManager:
     def rebuild_listener(self) -> bool:
         self.listener.stop()
 
-        self.listener = QueueListener(
-            self.log_queue, *self.file_handlers.values()
-        )
+        self.listener = QueueListener(self.log_queue, *self.file_handlers.values())
 
         self.listener.start()
 

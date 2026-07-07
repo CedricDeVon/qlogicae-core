@@ -3,12 +3,6 @@ from pathlib import Path
 
 
 class FileSystem:
-    def get_root_workspace_folder(self):
-        return Path(__file__).resolve().parent.parent.parent.parent.parent
-
-    def get_cli_folder(self):
-        return Path.cwd()
-
     def throw_if_filesystem_path_invalid(self, value):
         path = Path(value)
 

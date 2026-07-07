@@ -25,11 +25,10 @@
 	"bin": {
 		"qlogicae-cor1": "./library/version.js"
 	},
-	"description": "The core library for the QLogicae framework",
+	"description": "The core library for QLogicae projects",
 	"keywords": [
 		"qlogicae",
 		"cor",
-		"cor1",
 		"framework",
 		"library",
 		"package",

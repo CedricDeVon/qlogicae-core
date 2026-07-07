@@ -3,6 +3,10 @@ from pathlib import Path
 
 
 class SystemManager:
+    @property
+    def console_excuting_filesystem_path(self):
+        return Path.cwd()
+
     def change_cli_filesystem_path(
         self,
         value: str,

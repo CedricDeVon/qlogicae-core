@@ -11,18 +11,14 @@ class ScriptProcessManager:
 
     @property
     def script_proccess_string(self) -> str:
-        return (
-            script_proccess_enum_manager.singleton.convert_from_enum_to_string(
-                self._default_script_proccess
-            )
+        return script_proccess_enum_manager.singleton.convert_from_enum_to_string(
+            self._default_script_proccess
         )
 
     @property
     def script_proccess_enum(self) -> str:
-        return (
-            script_proccess_enum_manager.singleton.convert_from_string_to_enum(
-                self.script_proccess_string
-            )
+        return script_proccess_enum_manager.singleton.convert_from_string_to_enum(
+            self.script_proccess_string
         )
 
     def execute_command(

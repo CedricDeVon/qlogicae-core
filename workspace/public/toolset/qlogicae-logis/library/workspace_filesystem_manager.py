@@ -18,6 +18,10 @@ class WorkspaceFilesystemManager:
     def scope_selections(self) -> set[str]:
         return self._scope_selections
 
+    @property
+    def root_workspace_folder(self):
+        return Path(__file__).resolve().parent.parent.parent.parent.parent.parent
+
     def setup(self) -> bool:
         for current_scope_selection in self.scope_selections or {}:
             for current_configuration_file in (

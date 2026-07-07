@@ -97,9 +97,7 @@ def handle_targets(target_name):
             )
         )
 
-        if current_command[
-            "run"
-        ] in value_cache_manager.singleton.get_one_value(
+        if current_command["run"] in value_cache_manager.singleton.get_one_value(
             [
                 "script-selections",
             ],
