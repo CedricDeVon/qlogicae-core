@@ -44,7 +44,26 @@ class WorkspaceManager:
         self.setup_workspace_selections()
         self.setup_clean_scripts()
         self.setup_script_selections()
+        self.setup_script_commands()
         self.setup_logs()
+
+        return True
+
+    def setup_script_commands(self) -> bool:
+        value_cache_manager.singleton.set_one_value(
+            ["script-command-epilogue"],
+            f"For more information, visit: '{
+                value_cache_manager.singleton.get_one_value(
+                    [
+                        "workspace/public/tooling/qlogicae-logis/project/configuration/about.yaml-raw",
+                        "data",
+                        "repository"
+                    ],
+                    output_type=TargetCacheValue.DEFINED,
+                )
+            }'",
+            output_type=TargetCacheValue.DEFINED,
+        )
 
         return True
 

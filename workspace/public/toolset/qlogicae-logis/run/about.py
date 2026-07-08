@@ -12,9 +12,18 @@ from library.enum_conversion_output import EnumConversionOutput
 
 
 def handler_manager_callback() -> bool:
+    script_command_epilogue = (
+        value_cache_manager.singleton.get_one_value(
+            [
+                "script-command-epilogue",
+            ],
+            output_type=TargetCacheValue.DEFINED,
+        ) or ""   
+    )
+
     cli_parser = argparse.ArgumentParser(
         description="'run.about' command",
-        epilog="...",
+        epilog=script_command_epilogue,
     )
     cli_arguments = cli_parser.parse_args()
 
