@@ -287,57 +287,57 @@ import time
 # if __name__ == "__main__":
 #     main()
 
-import random
+# import random
 
-from pathlib import Path
+# from pathlib import Path
 
-import os
-import psutil
-import pyperf
-
-
-def create_list_1():
-    return [random.random() for _ in range(1_000_000)]
+# import os
+# import psutil
+# import pyperf
 
 
-def create_dict_1():
-    return {
-        i: random.random()
-        for i in range(1_000_000)
-    }
+# def create_list_1():
+#     return [random.random() for _ in range(1_000_000)]
 
 
-def create_list_2():
-    return [random.random() for _ in range(1_000)]
+# def create_dict_1():
+#     return {
+#         i: random.random()
+#         for i in range(1_000_000)
+#     }
 
 
-def create_dict_2():
-    return {
-        i: random.random()
-        for i in range(1_000)
-    }
+# def create_list_2():
+#     return [random.random() for _ in range(1_000)]
 
-def main():
-    numbers1 = create_list_1()
 
-    del numbers1
+# def create_dict_2():
+#     return {
+#         i: random.random()
+#         for i in range(1_000)
+#     }
+
+# def main():
+#     numbers1 = create_list_1()
+
+#     del numbers1
     
-    numbers1 = create_list_1()
-    numbers2 = create_list_1()
+#     numbers1 = create_list_1()
+#     numbers2 = create_list_1()
 
-    del numbers1
+#     del numbers1
 
-    numbers2 = create_list_1()
+#     numbers2 = create_list_1()
 
-    # runner = pyperf.Runner()
-    # runner.bench_func(
-    #     "Write 1 MB",
-    #     create_list_1,
-    # )
+#     # runner = pyperf.Runner()
+#     # runner.bench_func(
+#     #     "Write 1 MB",
+#     #     create_list_1,
+#     # )
     
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
 
 # rm memray.bin && memray run -o memray.bin demo.py && memray table memray.bin
 
