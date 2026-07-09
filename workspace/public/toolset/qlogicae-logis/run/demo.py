@@ -344,3 +344,440 @@ import time
 # memray summary memray1.bin
 # memray table memray1.bin
 # memray stats memray1.bin
+
+
+#!/usr/bin/env python3
+
+# import random
+# import time
+
+# from rich.console import Console
+# from rich.live import Live
+# from rich.progress import (
+#     Progress,
+#     SpinnerColumn,
+#     BarColumn,
+#     TextColumn,
+#     TaskProgressColumn,
+#     TimeElapsedColumn,
+# )
+
+# console = Console()
+
+# items = [
+#     ("📥", "Downloading metadata", "cyan"),
+#     ("📦", "Resolving dependencies", "yellow"),
+#     ("🔍", "Checking package cache", "bright_blue"),
+#     ("⚙", "Preparing build environment", "blue"),
+#     ("🛠", "Compiling C extensions", "magenta"),
+#     ("📦", "Downloading numpy", "cyan"),
+#     ("📦", "Downloading pandas", "cyan"),
+#     ("📦", "Downloading scipy", "cyan"),
+#     ("📦", "Downloading matplotlib", "cyan"),
+#     ("📦", "Downloading rich", "cyan"),
+#     ("🔧", "Installing numpy", "green"),
+#     ("🔧", "Installing pandas", "green"),
+#     ("🔧", "Installing scipy", "green"),
+#     ("🔧", "Installing matplotlib", "green"),
+#     ("🔧", "Installing rich", "green"),
+#     ("📝", "Generating entry points", "bright_magenta"),
+#     ("📄", "Writing configuration files", "bright_white"),
+#     ("🔗", "Linking shared libraries", "bright_yellow"),
+#     ("🧹", "Cleaning temporary files", "bright_black"),
+#     ("🛡", "Running integrity checks", "bright_cyan"),
+#     ("🔒", "Verifying package hashes", "bright_green"),
+#     ("📚", "Updating package database", "bright_blue"),
+#     ("🚀", "Optimizing bytecode", "bright_magenta"),
+#     ("✨", "Finalizing installation", "bright_green"),
+# ]
+
+# progress = Progress(
+#     SpinnerColumn("dots"),
+#     TextColumn("[bold blue]{task.description}"),
+#     BarColumn(bar_width=40, complete_style="green"),
+#     TaskProgressColumn(),
+#     TimeElapsedColumn(),
+# )
+
+# task = progress.add_task("", total=100)
+
+# with Live(
+#     progress,
+#     console=console,
+#     refresh_per_second=60,
+#     transient=True,
+# ):
+
+#     for icon, message, color in items:
+
+#         progress.reset(task)
+#         progress.update(task, description=message)
+
+#         duration = random.uniform(0.3, 0.8)
+
+#         start = time.perf_counter()
+
+#         while True:
+
+#             elapsed = time.perf_counter() - start
+
+#             progress.update(
+#                 task,
+#                 completed=min(elapsed / duration * 100, 100),
+#             )
+
+#             if elapsed >= duration:
+#                 break
+
+#             time.sleep(0.01)
+
+#         console.print(
+#             f"[bold {color}]{icon}[/] "
+#             f"[bold white]{message:<35}[/] "
+#             f"[bold green]✓[/]"
+#         )
+
+# console.print()
+# console.print("[bold bright_green]✔ Successfully installed 5 packages[/]")
+# console.print("[dim]Completed in 8.24 seconds[/]")
+
+
+
+
+# from rich.rule import Rule
+# from rich.console import Console
+# from rich.panel import Panel
+# from pyfiglet import Figlet
+
+# console = Console()
+
+# logo = Figlet(font="slant").renderText("QLogicae Logis")
+
+# console.print(f"[green]{logo}[/]")
+# console.print(Rule("[bold cyan]QLogicae[/]"))
+# console.print(
+#     Panel.fit(
+#         f"[bold cyan]{logo}[/]\n"
+#         "[green]Python Developer Toolkit[/]",
+#         border_style="cyan",
+#     )
+# )
+
+
+#!/usr/bin/env python3
+
+
+
+# from rich import box
+# from rich.console import Console
+# from rich.table import Table
+
+# console = Console()
+
+
+# def sample_rows(table: Table):
+#     table.add_row("numpy", "2.3.1", "✓ Installed", "0.32 s")
+#     table.add_row("pandas", "2.3.0", "✓ Installed", "0.47 s")
+#     table.add_row("scipy", "1.16.0", "⚠ Warning", "1.21 s")
+#     table.add_row("matplotlib", "3.10.3", "✗ Failed", "0.89 s")
+
+
+# def demo_box_styles():
+#     console.rule("[bold cyan]Box Styles")
+
+#     styles = [
+#         ("ASCII", box.ASCII),
+#         ("ASCII2", box.ASCII2),
+#         ("MINIMAL", box.MINIMAL),
+#         ("SIMPLE", box.SIMPLE),
+#         ("SIMPLE_HEAD", box.SIMPLE_HEAD),
+#         ("SQUARE", box.SQUARE),
+#         ("ROUNDED", box.ROUNDED),
+#         ("HEAVY", box.HEAVY),
+#         ("HEAVY_EDGE", box.HEAVY_EDGE),
+#         ("HEAVY_HEAD", box.HEAVY_HEAD),
+#         ("DOUBLE", box.DOUBLE),
+#         ("DOUBLE_EDGE", box.DOUBLE_EDGE),
+#         ("HORIZONTALS", box.HORIZONTALS),
+#         ("MARKDOWN", box.MARKDOWN),
+#     ]
+
+#     for name, border in styles:
+#         table = Table(
+#             title=name,
+#             box=border,
+#             border_style="cyan",
+#             title_style="bold magenta",
+#         )
+
+#         table.add_column("Package")
+#         table.add_column("Version")
+#         table.add_column("Status")
+
+#         table.add_row("rich", "14.0", "Installed")
+#         table.add_row("numpy", "2.3.1", "Pending")
+
+#         console.print(table)
+
+
+# def demo_row_styles():
+#     console.rule("[bold cyan]Row Styles")
+
+#     table = Table(
+#         title="Alternating Row Colors",
+#         box=box.ROUNDED,
+#         row_styles=["", "dim"],
+#     )
+
+#     table.add_column("Package")
+#     table.add_column("Language")
+
+#     table.add_row("Rich", "Python")
+#     table.add_row("Cargo", "Rust")
+#     table.add_row("npm", "JavaScript")
+#     table.add_row("NuGet", "C#")
+
+#     console.print(table)
+
+
+# def demo_colored_rows():
+#     console.rule("[bold cyan]Colored Rows")
+
+#     table = Table(box=box.ROUNDED)
+
+#     table.add_column("Step")
+#     table.add_column("Result")
+
+#     table.add_row("Download", "Success", style="green")
+#     table.add_row("Compile", "Warning", style="yellow")
+#     table.add_row("Install", "Failed", style="red")
+#     table.add_row("Cleanup", "Skipped", style="cyan")
+
+#     console.print(table)
+
+
+# def demo_alignment():
+#     console.rule("[bold cyan]Column Alignment")
+
+#     table = Table(box=box.ROUNDED)
+
+#     table.add_column("Left", justify="left")
+#     table.add_column("Center", justify="center")
+#     table.add_column("Right", justify="right")
+
+#     table.add_row("numpy", "2.3.1", "Installed")
+#     table.add_row("pandas", "2.3.0", "Installed")
+
+#     console.print(table)
+
+
+# def demo_expand():
+#     console.rule("[bold cyan]Expand to Terminal Width")
+
+#     table = Table(
+#         title="Expand=True",
+#         expand=True,
+#         box=box.ROUNDED,
+#     )
+
+#     table.add_column("Package", ratio=3)
+#     table.add_column("Version", ratio=1)
+#     table.add_column("Status", ratio=2)
+
+#     sample_rows(table)
+
+#     console.print(table)
+
+
+# def demo_show_lines():
+#     console.rule("[bold cyan]Show Lines")
+
+#     table = Table(
+#         title="show_lines=True",
+#         show_lines=True,
+#         box=box.ROUNDED,
+#     )
+
+#     table.add_column("Package")
+#     table.add_column("Version")
+#     table.add_column("Status")
+#     table.add_column("Time")
+
+#     sample_rows(table)
+
+#     console.print(table)
+
+
+# def demo_padding():
+#     console.rule("[bold cyan]Custom Padding")
+
+#     table = Table(
+#         title="padding=(0,4)",
+#         padding=(0, 4),
+#         box=box.ROUNDED,
+#     )
+
+#     table.add_column("Package")
+#     table.add_column("Version")
+#     table.add_column("Status")
+#     table.add_column("Time")
+
+#     sample_rows(table)
+
+#     console.print(table)
+
+
+# def demo_leading():
+#     console.rule("[bold cyan]Leading")
+
+#     table = Table(
+#         title="leading=1",
+#         leading=1,
+#         box=box.ROUNDED,
+#     )
+
+#     table.add_column("Package")
+#     table.add_column("Version")
+#     table.add_column("Status")
+#     table.add_column("Time")
+
+#     sample_rows(table)
+
+#     console.print(table)
+
+
+# def demo_footer():
+#     console.rule("[bold cyan]Footer")
+
+#     table = Table(
+#         title="Column Footers",
+#         box=box.ROUNDED,
+#     )
+
+#     table.add_column(
+#         "Package",
+#         footer="[bold]4 Packages[/]",
+#     )
+
+#     table.add_column(
+#         "Time",
+#         justify="right",
+#         footer="[green]2.89 s[/]",
+#     )
+
+#     table.add_row("numpy", "0.32 s")
+#     table.add_row("pandas", "0.47 s")
+#     table.add_row("scipy", "1.21 s")
+#     table.add_row("matplotlib", "0.89 s")
+
+#     console.print(table)
+
+
+# def demo_overflow():
+#     console.rule("[bold cyan]Overflow")
+
+#     table = Table(
+#         title="Ellipsis Overflow",
+#         box=box.ROUNDED,
+#     )
+
+#     table.add_column(
+#         "Description",
+#         overflow="ellipsis",
+#         width=30,
+#     )
+
+#     table.add_row(
+#         "This is a very long package description that should be truncated."
+#     )
+
+#     console.print(table)
+
+
+# def demo_nowrap():
+#     console.rule("[bold cyan]No Wrap")
+
+#     table = Table(
+#         box=box.ROUNDED,
+#     )
+
+#     table.add_column(
+#         "Package",
+#         no_wrap=True,
+#     )
+
+#     table.add_column("Description")
+
+#     table.add_row(
+#         "super-long-package-name-with-many-components",
+#         "Normal wrapped description.",
+#     )
+
+#     console.print(table)
+
+
+# def demo_gridless():
+#     console.rule("[bold cyan]Gridless")
+
+#     table = Table(
+#         title="No Border",
+#         box=None,
+#     )
+
+#     table.add_column("Package")
+#     table.add_column("Version")
+#     table.add_column("Status")
+
+#     sample_rows(table)
+
+#     console.print(table)
+
+
+# def demo_dashboard():
+#     console.rule("[bold cyan]Modern Dashboard Style")
+
+#     table = Table(
+#         title="[bold cyan]Package Installation[/]",
+#         caption="Generated by Rich",
+#         box=box.ROUNDED,
+#         border_style="cyan",
+#         header_style="bold white on blue",
+#         title_style="bold cyan",
+#         caption_style="dim",
+#         row_styles=["", "grey15"],
+#         expand=True,
+#         highlight=True,
+#     )
+
+#     table.add_column("Package", style="cyan", ratio=3)
+#     table.add_column("Version", justify="center", style="yellow")
+#     table.add_column("Status", justify="center")
+#     table.add_column("Elapsed", justify="right", style="magenta")
+
+#     sample_rows(table)
+
+#     console.print(table)
+
+
+# def main():
+#     console.print("\n[bold green]Rich Table Demonstrations[/]\n")
+
+#     demo_box_styles()
+#     demo_row_styles()
+#     demo_colored_rows()
+#     demo_alignment()
+#     demo_expand()
+#     demo_show_lines()
+#     demo_padding()
+#     demo_leading()
+#     demo_footer()
+#     demo_overflow()
+#     demo_nowrap()
+#     demo_gridless()
+#     demo_dashboard()
+
+#     console.rule("[bold green]End of Demonstration")
+
+
+# if __name__ == "__main__":
+#     main()
