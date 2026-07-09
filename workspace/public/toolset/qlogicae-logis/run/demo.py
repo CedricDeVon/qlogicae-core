@@ -414,7 +414,6 @@ import time
 #         progress.update(task, description=message)
 
 #         duration = random.uniform(0.3, 0.8)
-
 #         start = time.perf_counter()
 
 #         while True:
@@ -450,7 +449,6 @@ import time
 # from pyfiglet import Figlet
 
 # console = Console()
-
 # logo = Figlet(font="slant").renderText("QLogicae Logis")
 
 # console.print(f"[green]{logo}[/]")
@@ -781,3 +779,157 @@ import time
 
 # if __name__ == "__main__":
 #     main()
+
+
+
+
+# import time
+
+# from rich.console import Console
+# from rich.live import Live
+# from rich.spinner import SPINNERS, Spinner
+# from rich.table import Table
+
+# console = Console()
+
+
+# def build_table() -> Table:
+#     table = Table(title="Rich Spinner Showcase", expand=True)
+
+#     table.add_column("Spinner", style="bold cyan", width=10)
+#     table.add_column("Preview")
+
+#     for name in sorted(SPINNERS):
+#         table.add_row(
+#             name,
+#             Spinner(name, style="bold bright_green"),
+#         )
+
+#     return table
+
+
+# with Live(
+#     build_table(),
+#     console=console,
+#     refresh_per_second=30,
+# ) as live:
+#     while True:
+#         live.update(build_table())
+#         time.sleep(1 / 30)
+    
+
+
+
+
+
+
+
+
+
+
+
+    # console = Console()
+
+    # items = [
+    #     ("Loading", "white"),
+    # ]
+
+    # progress = Progress(
+    #     SpinnerColumn("dots", style="bold bright_white"),
+    #     TextColumn("[white]{task.description}"),
+    #     BarColumn(bar_width=80, complete_style="white"),
+    #     TextColumn("[white]{task.percentage:>6.2f}%"),
+    #     TimeElapsedColumn(),
+    #     TimeRemainingColumn(),
+    # )
+
+    # task = progress.add_task("", total=100)
+
+    # with Live(
+    #     progress,
+    #     console=console,
+    #     refresh_per_second=60,
+    #     transient=True,
+    # ):
+    #     for message, color in items:
+    #         progress.reset(task)
+    #         progress.update(task, description=message)
+
+    #         duration = 10
+    #         start = time.perf_counter()
+
+    #         while True:
+    #             elapsed = time.perf_counter() - start
+
+    #             progress.update(
+    #                 task,
+    #                 completed=min(elapsed / duration * 100, 100),
+    #                 elapsed=f"{elapsed:.2f}s",
+    #             )
+
+    #             if elapsed >= duration:
+    #                 break
+
+    #             time.sleep(0.1)
+
+    #             console.print(
+    #                 f"[white]✓[/]"
+    #             )
+
+    # console.print("[dim]Completed in 8.24 seconds[/]")
+
+
+
+
+
+    items = [
+        ("Loading | 1", "white"),
+        ("Loading | 2", "white"),
+        ("Loading | 3", "white"),
+        ("Loading | 4", "white"),
+        ("Loading | 5", "white"),
+    ]
+    console = Console()
+    progress = Progress(
+        SpinnerColumn("dots", style="bold bright_white"),
+        TextColumn("[white]{task.description}"),
+        BarColumn(bar_width=80, complete_style="white"),
+        TextColumn("[white]{task.percentage:>6.2f}%"),
+        TimeElapsedColumn(),
+    )
+    task = progress.add_task("", total=100)
+    with Live(
+        progress,
+        console=console,
+        refresh_per_second=60,
+        transient=True,
+    ):
+        start = time.perf_counter()
+        
+        for index, (message, color) in enumerate(items):
+            progress.update(task, description=message)
+
+            progress.update(
+                task,
+                completed=min(index / len(items) * 100, 100),
+                elapsed=f"{(time.perf_counter() - start):.2f}s",
+            )
+            time.sleep(0.5)
+            progress.update(
+                task,
+                completed=min(index / len(items) * 100, 100),
+                elapsed=f"{(time.perf_counter() - start):.2f}s",
+            )
+            time.sleep(0.5)
+            progress.update(
+                task,
+                completed=min(index / len(items) * 100, 100),
+                elapsed=f"{(time.perf_counter() - start):.2f}s",
+            )
+            time.sleep(0.5)
+
+            console.print(
+                f"[white]✓[/]"
+            )
+
+    console.print("[dim]Completed in 8.24 seconds[/]")

@@ -9,12 +9,6 @@ data:
   author-email: vaughncedriclipardoaraneta@gmail.com
   description: The workspace toolset for QLogicae projects
   repository: https://github.com/CedricDeVon/qlogicae-logis
-  keywords:
-    - qlogicae
-    - logis
-    - framework
-    - template
-    - project-management
-    - devops
+  keywords: [qlogicae, logis, framework, template, project-management, devops]
 
 metadata:
