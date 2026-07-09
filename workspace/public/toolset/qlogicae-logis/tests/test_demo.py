@@ -3,7 +3,6 @@
 # DATA = b"x" * (1024 * 1024)  # 1 MB
 
 
-
 # def write_file(path: Path, data: bytes) -> int:
 #     with path.open("wb") as file:
 #         return file.write(data)

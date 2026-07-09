@@ -12,13 +12,9 @@ from library import (
     timestamp_manager,
     console_log_manager,
     value_cache_manager,
-    workspace_log_manager,
     time_zone_enum_manager,
     workspace_system_manager,
-    workspace_macros_manager,
-    workspace_script_manager,
     workspace_filesystem_manager,
-    workspace_value_cache_manager,
 )
 from library.log_options import LogOptions
 from library.target_cache_value import TargetCacheValue
@@ -55,9 +51,10 @@ class WorkspaceManager:
             f"For more information, visit: '{
                 value_cache_manager.singleton.get_one_value(
                     [
-                        "workspace/public/tooling/qlogicae-logis/project/configuration/about.yaml-raw",
-                        "data",
-                        "repository"
+                        'workspace/public/tooling/qlogicae-logis/project/configuration/about.yaml-raw',
+                        'data',
+                        'repository-link',
+                        'value',
                     ],
                     output_type=TargetCacheValue.DEFINED,
                 )

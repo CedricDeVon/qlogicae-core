@@ -49,7 +49,8 @@ def handle_manager_callback():
                 "script-command-epilogue",
             ],
             output_type=TargetCacheValue.DEFINED,
-        ) or ""   
+        )
+        or ""
     )
 
     cli_parser = argparse.ArgumentParser(

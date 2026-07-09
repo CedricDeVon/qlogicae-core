@@ -1,14 +1,39 @@
 data:
-  version: 1.1.0
-  workspace-name: qlogicae-logis
-  display-name: QLogicae Logis
-  company-name: QLogicae
-  project-name: Logis
+  project-version:
+    name: Version
+    value: 1.1.0
+    is-visible: false
 
-  author-full-name: Vaughn Cedric L. Araneta
-  author-email: vaughncedriclipardoaraneta@gmail.com
-  description: The workspace toolset for QLogicae projects
-  repository: https://github.com/CedricDeVon/qlogicae-logis
-  keywords: [qlogicae, logis, framework, template, project-management, devops]
+  project-description: 
+    name: Description
+    value: The project management tool for QLogicae projects
+
+  project-name: 
+    name: Project Name
+    value: Logis
+
+  company-name: 
+    name: Company Name
+    value: QLogicae
+
+  workspace-name: 
+    name: Workspace Name
+    value: qlogicae-logis
+
+  author-name: 
+    name: Author Name
+    value: Vaughn Cedric L. Araneta
+
+  author-email: 
+    name: Author Email
+    value: vaughncedriclipardoaraneta@gmail.com
+
+  repository-link:
+    name: Repository Link
+    value: https://github.com/CedricDeVon/qlogicae-logis
+
+  repository-keywords: 
+    name: Keywords
+    value: [qlogicae, logis, framework, template, project-management, devops]
 
 metadata:

@@ -79,9 +79,6 @@ import time
 #     assert len(result) == len(data)
 
 
-
-
-
 # def test_sort_100(benchmark):
 #     data = [random.randint(0, 1_000_000) for _ in range(100)]
 
@@ -128,8 +125,6 @@ import time
 #     )
 
 #     assert len(result) == len(data)
-
-
 
 
 # def test_list_comprehension(benchmark):
@@ -179,8 +174,6 @@ import time
 # from pympler import asizeof
 
 
-
-
 # items = [True, 1, 1.1, {}, "", "hello"]
 
 # print('Objsize: ')
@@ -195,8 +188,6 @@ import time
 #     print(asizeof.asizeof(item))
 
 
-
-
 # import os
 # import psutil
 
@@ -207,9 +198,6 @@ import time
 # print(f"VMS        : {process.memory_info().vms / 1024 / 1024:.2f} MB")
 # print(f"Threads    : {process.num_threads()}")
 # print(f"Open Files : {len(process.open_files())}")
-
-
-
 
 
 # DATA = b"x" * (1024 * 1024)  # 1 MB
@@ -225,7 +213,6 @@ import time
 
 
 # def benchmark():
-
 
 
 # def system_metrics():
@@ -321,7 +308,7 @@ import time
 #     numbers1 = create_list_1()
 
 #     del numbers1
-    
+
 #     numbers1 = create_list_1()
 #     numbers2 = create_list_1()
 
@@ -334,7 +321,7 @@ import time
 #     #     "Write 1 MB",
 #     #     create_list_1,
 #     # )
-    
+
 
 # if __name__ == "__main__":
 #     main()
@@ -441,8 +428,6 @@ import time
 # console.print("[dim]Completed in 8.24 seconds[/]")
 
 
-
-
 # from rich.rule import Rule
 # from rich.console import Console
 # from rich.panel import Panel
@@ -463,7 +448,6 @@ import time
 
 
 #!/usr/bin/env python3
-
 
 
 # from rich import box
@@ -781,8 +765,6 @@ import time
 #     main()
 
 
-
-
 # import time
 
 # from rich.console import Console
@@ -816,120 +798,107 @@ import time
 #     while True:
 #         live.update(build_table())
 #         time.sleep(1 / 30)
-    
 
 
+# console = Console()
+
+# items = [
+#     ("Loading", "white"),
+# ]
+
+# progress = Progress(
+#     SpinnerColumn("dots", style="bold bright_white"),
+#     TextColumn("[white]{task.description}"),
+#     BarColumn(bar_width=80, complete_style="white"),
+#     TextColumn("[white]{task.percentage:>6.2f}%"),
+#     TimeElapsedColumn(),
+#     TimeRemainingColumn(),
+# )
+
+# task = progress.add_task("", total=100)
+
+# with Live(
+#     progress,
+#     console=console,
+#     refresh_per_second=60,
+#     transient=True,
+# ):
+#     for message, color in items:
+#         progress.reset(task)
+#         progress.update(task, description=message)
+
+#         duration = 10
+#         start = time.perf_counter()
+
+#         while True:
+#             elapsed = time.perf_counter() - start
+
+#             progress.update(
+#                 task,
+#                 completed=min(elapsed / duration * 100, 100),
+#                 elapsed=f"{elapsed:.2f}s",
+#             )
+
+#             if elapsed >= duration:
+#                 break
+
+#             time.sleep(0.1)
+
+#             console.print(
+#                 f"[white]✓[/]"
+#             )
+
+# console.print("[dim]Completed in 8.24 seconds[/]")
 
 
+# items = [
+#     ("Loading | 1", "white"),
+#     ("Loading | 2", "white"),
+#     ("Loading | 3", "white"),
+#     ("Loading | 4", "white"),
+#     ("Loading | 5", "white"),
+# ]
+# console = Console()
+# progress = Progress(
+#     SpinnerColumn("dots", style="bold bright_white"),
+#     TextColumn("[white]{task.description}"),
+#     BarColumn(bar_width=80, complete_style="white"),
+#     TextColumn("[white]{task.percentage:>6.2f}%"),
+#     TimeElapsedColumn(),
+# )
+# task = progress.add_task("", total=100)
+# with Live(
+#     progress,
+#     console=console,
+#     refresh_per_second=60,
+#     transient=True,
+# ):
+#     start = time.perf_counter()
 
+#     for index, (message, color) in enumerate(items):
+#         progress.update(task, description=message)
 
+#         progress.update(
+#             task,
+#             completed=min(index / len(items) * 100, 100),
+#             elapsed=f"{(time.perf_counter() - start):.2f}s",
+#         )
+#         time.sleep(0.5)
+#         progress.update(
+#             task,
+#             completed=min(index / len(items) * 100, 100),
+#             elapsed=f"{(time.perf_counter() - start):.2f}s",
+#         )
+#         time.sleep(0.5)
+#         progress.update(
+#             task,
+#             completed=min(index / len(items) * 100, 100),
+#             elapsed=f"{(time.perf_counter() - start):.2f}s",
+#         )
+#         time.sleep(0.5)
 
+#         console.print(
+#             f"[white]✓[/]"
+#         )
 
-
-
-
-    # console = Console()
-
-    # items = [
-    #     ("Loading", "white"),
-    # ]
-
-    # progress = Progress(
-    #     SpinnerColumn("dots", style="bold bright_white"),
-    #     TextColumn("[white]{task.description}"),
-    #     BarColumn(bar_width=80, complete_style="white"),
-    #     TextColumn("[white]{task.percentage:>6.2f}%"),
-    #     TimeElapsedColumn(),
-    #     TimeRemainingColumn(),
-    # )
-
-    # task = progress.add_task("", total=100)
-
-    # with Live(
-    #     progress,
-    #     console=console,
-    #     refresh_per_second=60,
-    #     transient=True,
-    # ):
-    #     for message, color in items:
-    #         progress.reset(task)
-    #         progress.update(task, description=message)
-
-    #         duration = 10
-    #         start = time.perf_counter()
-
-    #         while True:
-    #             elapsed = time.perf_counter() - start
-
-    #             progress.update(
-    #                 task,
-    #                 completed=min(elapsed / duration * 100, 100),
-    #                 elapsed=f"{elapsed:.2f}s",
-    #             )
-
-    #             if elapsed >= duration:
-    #                 break
-
-    #             time.sleep(0.1)
-
-    #             console.print(
-    #                 f"[white]✓[/]"
-    #             )
-
-    # console.print("[dim]Completed in 8.24 seconds[/]")
-
-
-
-
-
-    items = [
-        ("Loading | 1", "white"),
-        ("Loading | 2", "white"),
-        ("Loading | 3", "white"),
-        ("Loading | 4", "white"),
-        ("Loading | 5", "white"),
-    ]
-    console = Console()
-    progress = Progress(
-        SpinnerColumn("dots", style="bold bright_white"),
-        TextColumn("[white]{task.description}"),
-        BarColumn(bar_width=80, complete_style="white"),
-        TextColumn("[white]{task.percentage:>6.2f}%"),
-        TimeElapsedColumn(),
-    )
-    task = progress.add_task("", total=100)
-    with Live(
-        progress,
-        console=console,
-        refresh_per_second=60,
-        transient=True,
-    ):
-        start = time.perf_counter()
-        
-        for index, (message, color) in enumerate(items):
-            progress.update(task, description=message)
-
-            progress.update(
-                task,
-                completed=min(index / len(items) * 100, 100),
-                elapsed=f"{(time.perf_counter() - start):.2f}s",
-            )
-            time.sleep(0.5)
-            progress.update(
-                task,
-                completed=min(index / len(items) * 100, 100),
-                elapsed=f"{(time.perf_counter() - start):.2f}s",
-            )
-            time.sleep(0.5)
-            progress.update(
-                task,
-                completed=min(index / len(items) * 100, 100),
-                elapsed=f"{(time.perf_counter() - start):.2f}s",
-            )
-            time.sleep(0.5)
-
-            console.print(
-                f"[white]✓[/]"
-            )
-
-    console.print("[dim]Completed in 8.24 seconds[/]")
+# console.print("[dim]Completed in 8.24 seconds[/]")

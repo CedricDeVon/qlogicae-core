@@ -40,11 +40,11 @@ class TimerManager:
         )
 
     def calculate_duration(self, time_unit: TimeUnit = TimeUnit.SECOND) -> float:
-        return self.convert_time_unit(
-            self._stop_timestamp - self._start_timestamp
-        )
+        return self.convert_time_unit(self._stop_timestamp - self._start_timestamp)
 
-    def convert_time_unit(self, value: float, time_unit: TimeUnit = TimeUnit.SECOND) -> float:        
+    def convert_time_unit(
+        self, value: float, time_unit: TimeUnit = TimeUnit.SECOND
+    ) -> float:
         if value < 0:
             raise ValueError("timer has not been stopped or timestamps are invalid.")
 
@@ -74,10 +74,10 @@ class TimerManager:
                 return value / 604800e9
 
             case TimeUnit.MONTH:
-                return value / 2629746e9 
+                return value / 2629746e9
 
             case TimeUnit.YEAR:
-                return value / 31556952e9 
+                return value / 31556952e9
 
             case TimeUnit.DECADE:
                 return value / 315569520e9
@@ -90,5 +90,6 @@ class TimerManager:
 
             case _:
                 return value
-    
+
+
 singleton = TimerManager()

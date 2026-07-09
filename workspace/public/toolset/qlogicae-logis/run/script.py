@@ -15,6 +15,8 @@ from library.target_cache_value import TargetCacheValue
 from library.enum_conversion_output import EnumConversionOutput
 
 
+script_selections = {}
+
 def handler_manager_callback() -> bool:
     script_selections = (
         value_cache_manager.singleton.get_one_value(
@@ -30,7 +32,8 @@ def handler_manager_callback() -> bool:
                 "script-command-epilogue",
             ],
             output_type=TargetCacheValue.DEFINED,
-        ) or ""   
+        )
+        or ""
     )
 
     cli_parser = argparse.ArgumentParser(

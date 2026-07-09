@@ -1,4 +1,3 @@
-
 class BenchmarkManager:
     def measure_runtime(self):
         pass
@@ -8,7 +7,6 @@ class BenchmarkManager:
 
     def snapshot(self):
         pass
-    
 
 
 singleton = BenchmarkManager()

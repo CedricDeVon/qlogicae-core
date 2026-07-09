@@ -2,10 +2,12 @@ import time
 import random
 import argparse
 
-from rich.rule import Rule
-from rich.panel import Panel
-from pyfiglet import Figlet
 from rich.live import Live
+from rich.rule import Rule
+from pyfiglet import Figlet
+from rich.panel import Panel
+from rich.table import Table
+from rich.padding import Padding
 from rich.console import Console
 from rich.progress import (
     Progress,
@@ -14,8 +16,9 @@ from rich.progress import (
     TextColumn,
     TaskProgressColumn,
     TimeElapsedColumn,
-    TimeRemainingColumn
+    TimeRemainingColumn,
 )
+
 from library import (
     log_manager,
     file_log_manager,
@@ -26,9 +29,6 @@ from library import (
 from library.target_cache_value import TargetCacheValue
 from library.enum_conversion_output import EnumConversionOutput
 
-from rich.padding import Padding
-from rich.table import Table
-
 
 def handler_manager_callback() -> bool:
     script_command_epilogue = (
@@ -37,7 +37,8 @@ def handler_manager_callback() -> bool:
                 "script-command-epilogue",
             ],
             output_type=TargetCacheValue.DEFINED,
-        ) or ""   
+        )
+        or ""
     )
 
     cli_parser = argparse.ArgumentParser(
@@ -52,11 +53,12 @@ def handler_manager_callback() -> bool:
     outputs = (
         value_cache_manager.singleton.get_one_value(
             [
-                'workspace/public/tooling/qlogicae-logis/project/configuration/about.yaml-raw',
-                'data',
+                "workspace/public/tooling/qlogicae-logis/project/configuration/about.yaml-raw",
+                "data",
             ],
             output_type=TargetCacheValue.ANY,
-        ) or {}
+        )
+        or {}
     )
     include_outputs = [
         "version",
@@ -65,20 +67,16 @@ def handler_manager_callback() -> bool:
         "author-full-name",
         "author-email",
         "repository",
-        "keywords"
+        "keywords",
     ]
-    
-    outputs = {
-        key: outputs[key]
-        for key in include_outputs
-        if key in outputs
-    }
+
+    outputs = {key: outputs[key] for key in include_outputs if key in outputs}
 
     table = Table(
         show_header=False,
         box=None,
         pad_edge=False,
-        padding=(0, 4, 1, 4), 
+        padding=(0, 4, 1, 4),
     )
 
     table.add_column("Key", style="bold white", no_wrap=True)
@@ -86,7 +84,6 @@ def handler_manager_callback() -> bool:
 
     for index, (key, value) in enumerate(outputs.items()):
         table.add_row(key.replace("-", " ").title(), str(value))
-
 
     console.print(
         Padding(
