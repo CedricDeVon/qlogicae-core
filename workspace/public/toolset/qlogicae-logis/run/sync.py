@@ -54,7 +54,7 @@ def handle_manager_callback():
     )
 
     cli_parser = argparse.ArgumentParser(
-        description="'run.filesystem.setup' command",
+        description="'run.sync' command",
         epilog=script_command_epilogue,
     )
     cli_parser.add_argument(
@@ -69,7 +69,7 @@ def handle_manager_callback():
 
     if not is_enabled:
         file_log_manager.singleton.log_warning(
-            "'run.filesystem.setup' - setup execution is disabled"
+            "'run.sync' - setup execution is disabled"
         )
 
         return False
@@ -95,7 +95,7 @@ def handle_manager_callback():
 
 def handle_target_root():
     file_log_manager.singleton.log_info(
-        "'run.filesystem.setup' - 'root' setup execution start"
+        "'run.sync' - 'root' setup execution start"
     )
 
     current_root_full_path = value_cache_manager.singleton.get_one_value(
@@ -154,7 +154,7 @@ def handle_target_root():
         parsed_filesystem_path,
     )
     file_log_manager.singleton.log_info(
-        "'run.filesystem.setup' - 'root' setup execution complete"
+        "'run.sync' - 'root' setup execution complete"
     )
 
     return True
@@ -230,7 +230,7 @@ def handle_filesystem_parsing(
 
 def handle_target_project():
     file_log_manager.singleton.log_info(
-        "'run.filesystem.setup' - 'project' setup execution start"
+        "'run.sync' - 'project' setup execution start"
     )
 
     project_workspace_selections = (
@@ -245,7 +245,7 @@ def handle_target_project():
         handle_target_project_selection(project_name)
 
     file_log_manager.singleton.log_info(
-        "'run.filesystem.setup' - 'project' setup execution complete"
+        "'run.sync' - 'project' setup execution complete"
     )
 
     return True
@@ -253,7 +253,7 @@ def handle_target_project():
 
 def handle_target_project_selection(project_name):
     file_log_manager.singleton.log_info(
-        f"'run.filesystem.setup' - '{project_name}' setup execution start"
+        f"'run.sync' - '{project_name}' setup execution start"
     )
 
     current_root_full_path = value_cache_manager.singleton.get_one_value(
@@ -316,7 +316,7 @@ def handle_target_project_selection(project_name):
     )
 
     file_log_manager.singleton.log_info(
-        f"'run.filesystem.setup' - '{project_name}' setup execution complete"
+        f"'run.sync' - '{project_name}' setup execution complete"
     )
 
     return True
