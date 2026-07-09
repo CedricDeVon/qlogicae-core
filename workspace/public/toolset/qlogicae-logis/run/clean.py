@@ -12,6 +12,9 @@ from library.target_cache_value import TargetCacheValue
 
 
 def handler_manager_callback():
+    workspace_manager.singleton.handle_workspace_selections_setup()
+    workspace_manager.singleton.handle_clean_scripts_setup()
+
     target_selections = (
         value_cache_manager.singleton.get_one_value(
             ["clean-include-selections"],
@@ -31,7 +34,7 @@ def handler_manager_callback():
     )
 
     cli_parser = argparse.ArgumentParser(
-        description="'filesystem.clean' command",
+        description="'run.clean' command",
         epilog=script_command_epilogue,
     )
     cli_parser.add_argument(

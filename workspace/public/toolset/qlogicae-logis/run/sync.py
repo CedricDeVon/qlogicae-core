@@ -14,6 +14,8 @@ from library.target_cache_value import TargetCacheValue
 
 
 def handle_manager_callback():
+    workspace_manager.singleton.handle_workspace_selections_setup()
+    
     workspace_selections = (
         value_cache_manager.singleton.get_one_value(
             ["workspace-selections"],
@@ -94,9 +96,7 @@ def handle_manager_callback():
 
 
 def handle_target_root():
-    file_log_manager.singleton.log_info(
-        "'run.sync' - 'root' setup execution start"
-    )
+    file_log_manager.singleton.log_info("'run.sync' - 'root' setup execution start")
 
     current_root_full_path = value_cache_manager.singleton.get_one_value(
         ["current-root-full-path"],
@@ -153,9 +153,7 @@ def handle_target_root():
         f"{current_root_full_path}/workspace/private/temporary/intermediate/filesystem/root",
         parsed_filesystem_path,
     )
-    file_log_manager.singleton.log_info(
-        "'run.sync' - 'root' setup execution complete"
-    )
+    file_log_manager.singleton.log_info("'run.sync' - 'root' setup execution complete")
 
     return True
 
@@ -229,9 +227,7 @@ def handle_filesystem_parsing(
 
 
 def handle_target_project():
-    file_log_manager.singleton.log_info(
-        "'run.sync' - 'project' setup execution start"
-    )
+    file_log_manager.singleton.log_info("'run.sync' - 'project' setup execution start")
 
     project_workspace_selections = (
         value_cache_manager.singleton.get_one_value(

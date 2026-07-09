@@ -1,5 +1,5 @@
-from datetime import UTC
 from pathlib import Path
+from datetime import UTC
 from collections.abc import Callable
 
 from library import (
@@ -21,6 +21,17 @@ from library.target_cache_value import TargetCacheValue
 
 
 class WorkspaceManager:
+    def debug_value_cache(self) -> bool:
+        self.setup()
+
+        self.handle_workspace_selections_setup()
+        self.handle_cutsom_script_selections_setup()
+        self.handle_clean_scripts_setup()
+
+        value_cache_manager.singleton.display_all_items()
+
+        return True
+
     def handle(self, callback: Callable[[void], void]) -> bool:
         self.setup()
 
@@ -31,40 +42,39 @@ class WorkspaceManager:
         return True
 
     def setup(self) -> bool:
-        self.setup_timestamp_console_execution_start()
-        self.setup_filesystem_paths()
-        self.setup_executing_console()
-        self.setup_file_data_extraction()
-        self.setup_macros_targets()
-        self.setup_parsing_macros()
-        self.setup_workspace_selections()
-        self.setup_clean_scripts()
-        self.setup_script_selections()
-        self.setup_script_commands()
-        self.setup_logs()
+        self.handle_timestamp_console_execution_start_setup()
+        self.handle_executing_conssole_filesystem_paths_setup()
+        self.handle_workspace_configuration_file_data_extraction_setup()
+        self.handle_value_cache_macros_setup()
+        self.handle_macros_parsing_setup()
+        self.handle_toolset_configuration_file_data_extraction_setup()
+        self.handle_toolset_configuration_data_setup()
+        self.handle_logs_setup()
 
         return True
 
-    def setup_script_commands(self) -> bool:
+    def handle_timestamp_console_execution_start_setup(self) -> bool:
         value_cache_manager.singleton.set_one_value(
-            ["script-command-epilogue"],
-            f"For more information, visit: '{
-                value_cache_manager.singleton.get_one_value(
-                    [
-                        'workspace/public/tooling/qlogicae-logis/project/configuration/about.yaml-raw',
-                        'data',
-                        'repository-link',
-                        'value',
-                    ],
-                    output_type=TargetCacheValue.DEFINED,
-                )
-            }'",
-            output_type=TargetCacheValue.DEFINED,
+            ["timestamp-console-execution-start"],
+            timestamp_manager.singleton.current_standard_timestamp,
         )
 
         return True
 
-    def setup_executing_console(self) -> bool:
+    def handle_timestamp_console_execution_end_setup(self) -> bool:
+        value_cache_manager.singleton.set_one_value(
+            ["timestamp-console-execution-end"],
+            timestamp_manager.singleton.current_standard_timestamp,
+        )
+
+        return True
+
+    def handle_executing_conssole_filesystem_paths_setup(self) -> bool:
+        value_cache_manager.singleton.set_one_value(
+            ["current-root-full-path"],
+            workspace_filesystem_manager.singleton.root_workspace_filesystem_path,
+            output_type=TargetCacheValue.FOLDER_PATH,
+        )
         value_cache_manager.singleton.set_one_value(
             ["original-executing-console-full-path"],
             system_manager.singleton.current_executing_console_filesystem_path,
@@ -82,16 +92,7 @@ class WorkspaceManager:
 
         return True
 
-    def setup_filesystem_paths(self) -> bool:
-        value_cache_manager.singleton.set_one_value(
-            ["current-root-full-path"],
-            workspace_filesystem_manager.singleton.root_workspace_filesystem_path,
-            output_type=TargetCacheValue.FOLDER_PATH,
-        )
-
-        return True
-
-    def setup_file_data_extraction(self) -> bool:
+    def handle_workspace_configuration_file_data_extraction_setup(self) -> bool:
         current_root_full_path = value_cache_manager.singleton.get_one_value(
             ["current-root-full-path"],
             output_type=TargetCacheValue.FOLDER_PATH,
@@ -138,6 +139,14 @@ class WorkspaceManager:
                         output_type=TargetCacheValue.FILE_PATH,
                     )
 
+    def handle_toolset_configuration_file_data_extraction_setup(self) -> bool:
+        original_executing_console_full_path = (
+            value_cache_manager.singleton.get_one_value(
+                ["original-executing-console-full-path"],
+                output_type=TargetCacheValue.FOLDER_PATH,
+            )
+        )
+
         target_filesystem_paths = (
             Path(
                 f"{original_executing_console_full_path}/project/configuration"
@@ -171,22 +180,41 @@ class WorkspaceManager:
                     output_type=TargetCacheValue.FILE_PATH,
                 )
 
-    def setup_macros_targets(self) -> bool:
-        time_manager.singleton.current_time_zone = (
-            time_zone_enum_manager.singleton.convert_from_string_to_timezone(
-                (
-                    value_cache_manager.singleton.get_one_value(
-                        [
-                            "workspace/public/configuration/workspace.yaml-raw",
-                            "data",
-                            "time",
-                            "zone",
-                        ],
-                        output_type=TargetCacheValue.ANY,
-                    )
-                    or "local"
-                )
+    def handle_toolset_configuration_data_setup(self) -> bool:
+        repository_link = value_cache_manager.singleton.get_one_value(
+            [
+                "workspace/public/tooling/qlogicae-logis/project/configuration/about.yaml-raw",
+                "data",
+                "repository-link",
+                "value",
+            ],
+            output_type=TargetCacheValue.DEFINED,
+        )
+
+        value_cache_manager.singleton.set_one_value(
+            ["script-command-epilogue"],
+            f"For more information, visit: '{repository_link}'",
+            output_type=TargetCacheValue.DEFINED,
+        )
+
+        return True
+
+    def handle_value_cache_macros_setup(self) -> bool:
+        time_zone = (
+            value_cache_manager.singleton.get_one_value(
+                [
+                    "workspace/public/configuration/workspace.yaml-raw",
+                    "data",
+                    "time",
+                    "zone",
+                ],
+                output_type=TargetCacheValue.ANY,
             )
+            or "local"
+        )
+
+        time_manager.singleton.current_time_zone = (
+            time_zone_enum_manager.singleton.convert_from_string_to_timezone(time_zone)
         )
 
         value_cache_manager.singleton.set_one_value(
@@ -199,138 +227,111 @@ class WorkspaceManager:
 
         return True
 
-    def setup_timestamp_console_execution_start(self) -> bool:
-        value_cache_manager.singleton.set_one_value(
-            ["timestamp-console-execution-start"],
-            timestamp_manager.singleton.current_standard_timestamp,
+    def handle_workspace_selections_setup(self) -> bool:
+        default_workspace_selections = (
+            value_cache_manager.singleton.get_one_value(
+                [
+                    "workspace/public/configuration/workspace.yaml-raw",
+                    "data",
+                    "selection",
+                    "default",
+                    "targets",
+                ],
+                output_type=TargetCacheValue.ANY,
+            )
+            or {}
+        ).items()
+
+        project_workspace_selections = (
+            value_cache_manager.singleton.get_one_value(
+                [
+                    "workspace/public/configuration/workspace.yaml-raw",
+                    "data",
+                    "selection",
+                    "project",
+                    "targets",
+                ],
+                output_type=TargetCacheValue.ANY,
+            )
+            or {}
+        ).items()
+
+        default_workspace_selection_set = set(
+            key for key, value in default_workspace_selections
+        )
+        project_workspace_selection_set = set(
+            key for key, value in project_workspace_selections
         )
 
-        return True
-
-    def setup_timestamp_console_execution_end(self) -> bool:
         value_cache_manager.singleton.set_one_value(
-            ["timestamp-console-execution-end"],
-            timestamp_manager.singleton.current_standard_timestamp,
-        )
-
-        return True
-
-    def setup_workspace_selections(self) -> bool:
-        value_cache_manager.singleton.set_one_value(
-            ["default-workspace-selections"],
-            set(
-                key
-                for key, value in (
-                    value_cache_manager.singleton.get_one_value(
-                        [
-                            "workspace/public/configuration/workspace.yaml-raw",
-                            "data",
-                            "selection",
-                            "default",
-                            "targets",
-                        ],
-                        output_type=TargetCacheValue.ANY,
-                    )
-                    or {}
-                ).items()
-            ),
+            ["default-workspace-selections"], default_workspace_selection_set
         )
 
         value_cache_manager.singleton.set_one_value(
-            ["project-workspace-selections"],
-            set(
-                key
-                for key, value in (
-                    value_cache_manager.singleton.get_one_value(
-                        [
-                            "workspace/public/configuration/workspace.yaml-raw",
-                            "data",
-                            "selection",
-                            "project",
-                            "targets",
-                        ],
-                        output_type=TargetCacheValue.ANY,
-                    )
-                    or {}
-                ).items()
-            ),
+            ["project-workspace-selections"], project_workspace_selection_set
         )
 
         value_cache_manager.singleton.set_one_value(
             ["workspace-selections"],
-            set(
-                value_cache_manager.singleton.get_one_value(
-                    ["default-workspace-selections"],
-                    output_type=TargetCacheValue.ANY,
-                )
-                or {}
-            )
-            | set(
-                value_cache_manager.singleton.get_one_value(
-                    ["project-workspace-selections"],
-                    output_type=TargetCacheValue.ANY,
-                )
-                or {}
-            ),
+            default_workspace_selection_set | project_workspace_selection_set,
         )
 
         return True
 
-    def setup_clean_scripts(self) -> bool:
+    def handle_clean_scripts_setup(self) -> bool:
+        workspace_macros = (
+            value_cache_manager.singleton.get_one_value(
+                ["workspace-macros"],
+                output_type=TargetCacheValue.ANY,
+            )
+            or {}
+        )
+
+        clean_include_targets = (
+            value_cache_manager.singleton.get_one_value(
+                [
+                    "workspace/public/configuration/workspace.yaml-raw",
+                    "data",
+                    "script",
+                    "clean",
+                    "include",
+                    "targets",
+                ],
+                output_type=TargetCacheValue.ANY,
+            )
+            or {}
+        )
+
+        clean_exclude_targets = (
+            value_cache_manager.singleton.get_one_value(
+                [
+                    "workspace/public/configuration/workspace.yaml-raw",
+                    "data",
+                    "script",
+                    "clean",
+                    "exclude",
+                    "targets",
+                ],
+                output_type=TargetCacheValue.ANY,
+            )
+            or []
+        )
+
         value_cache_manager.singleton.set_one_value(
-            ["clean-include-selections"],
-            {
-                value
-                for value in (
-                    value_cache_manager.singleton.get_one_value(
-                        [
-                            "workspace/public/configuration/workspace.yaml-raw",
-                            "data",
-                            "script",
-                            "clean",
-                            "include",
-                            "targets",
-                        ],
-                        output_type=TargetCacheValue.ANY,
-                    )
-                    or {}
-                )
-            },
+            ["clean-include-selections"], {value for value in clean_include_targets}
         )
 
         value_cache_manager.singleton.set_one_value(
             ["clean-exclude-selections"],
             {
-                macros_manager.singleton.parse_one(
-                    item["name"],
-                    (
-                        value_cache_manager.singleton.get_one_value(
-                            ["workspace-macros"],
-                            output_type=TargetCacheValue.ANY,
-                        )
-                        or {}
-                    ),
-                )
-                for item in (
-                    value_cache_manager.singleton.get_one_value(
-                        [
-                            "workspace/public/configuration/workspace.yaml-raw",
-                            "data",
-                            "script",
-                            "clean",
-                            "exclude",
-                            "targets",
-                        ],
-                        output_type=TargetCacheValue.ANY,
-                    )
-                    or []
-                )
+                macros_manager.singleton.parse_one(item["name"], workspace_macros)
+                for item in clean_exclude_targets
             },
         )
 
         return True
 
-    def setup_script_selections(self) -> bool:
+    def handle_cutsom_script_selections_setup(self) -> bool:
         value_cache_manager.singleton.set_one_value(
             ["script-selections"],
             {
@@ -352,9 +353,61 @@ class WorkspaceManager:
 
         return True
 
-    def setup_parsing_macros(self) -> bool:
-        value_cache_manager.singleton.set_one_value(
-            ["workspace-macros"],
+    def handle_macros_parsing_setup(self) -> bool:
+        private_value_cache_macros = (
+            value_cache_manager.singleton.get_one_value(
+                [
+                    "workspace/private/configuration/workspace.yaml-raw",
+                    "data",
+                    "macros",
+                    "value-cache",
+                    "targets",
+                ],
+                output_type=TargetCacheValue.ANY,
+            )
+            or []
+        )
+        public_value_cache_macros = (
+            value_cache_manager.singleton.get_one_value(
+                [
+                    "workspace/public/configuration/workspace.yaml-raw",
+                    "data",
+                    "macros",
+                    "value-cache",
+                    "targets",
+                ],
+                output_type=TargetCacheValue.ANY,
+            )
+            or []
+        )
+        private_file_macros = (
+            value_cache_manager.singleton.get_one_value(
+                [
+                    "workspace/private/configuration/workspace.yaml-raw",
+                    "data",
+                    "macros",
+                    "file",
+                    "targets",
+                ],
+                output_type=TargetCacheValue.ANY,
+            )
+            or []
+        )
+        public_file_macros = (
+            value_cache_manager.singleton.get_one_value(
+                [
+                    "workspace/public/configuration/workspace.yaml-raw",
+                    "data",
+                    "macros",
+                    "file",
+                    "targets",
+                ],
+                output_type=TargetCacheValue.ANY,
+            )
+            or []
+        )
+
+        resolved_macros = (
             macros_manager.singleton.resolve_many(
                 {
                     item["name"]: f"{
@@ -363,96 +416,55 @@ class WorkspaceManager:
                             output_type=TargetCacheValue.ANY,
                         )
                     }"
-                    for item in (
-                        value_cache_manager.singleton.get_one_value(
-                            [
-                                "workspace/private/configuration/workspace.yaml-raw",
-                                "data",
-                                "macros",
-                                "value-cache",
-                                "targets",
-                            ],
-                            output_type=TargetCacheValue.ANY,
-                        )
-                        or []
-                    )
-                    + (
-                        value_cache_manager.singleton.get_one_value(
-                            [
-                                "workspace/public/configuration/workspace.yaml-raw",
-                                "data",
-                                "macros",
-                                "value-cache",
-                                "targets",
-                            ],
-                            output_type=TargetCacheValue.ANY,
-                        )
-                        or []
-                    )
+                    for item in private_value_cache_macros + public_value_cache_macros
                 }
                 | {
                     item["name"]: f"{item['value']}"
-                    for item in (
-                        value_cache_manager.singleton.get_one_value(
-                            [
-                                "workspace/private/configuration/workspace.yaml-raw",
-                                "data",
-                                "macros",
-                                "file",
-                                "targets",
-                            ],
-                            output_type=TargetCacheValue.ANY,
-                        )
-                        or []
-                    )
-                    + (
-                        value_cache_manager.singleton.get_one_value(
-                            [
-                                "workspace/public/configuration/workspace.yaml-raw",
-                                "data",
-                                "macros",
-                                "file",
-                                "targets",
-                            ],
-                            output_type=TargetCacheValue.ANY,
-                        )
-                        or []
-                    )
+                    for item in private_file_macros + public_file_macros
                 }
             )
-            or {},
+            or {}
+        )
+
+        value_cache_manager.singleton.set_one_value(
+            ["workspace-macros"],
+            resolved_macros,
             output_type=TargetCacheValue.ANY,
         )
 
         return True
 
-    def setup_logs(self) -> bool:
+    def handle_logs_setup(self) -> bool:
+        workspace_macros = (
+            value_cache_manager.singleton.get_one_value(
+                ["workspace-macros"],
+                output_type=TargetCacheValue.ANY,
+            )
+            or {}
+        )
+
+        log_file_targets = (
+            value_cache_manager.singleton.get_one_value(
+                [
+                    "workspace/public/configuration/workspace.yaml-raw",
+                    "data",
+                    "log",
+                    "file",
+                    "targets",
+                ],
+                output_type=TargetCacheValue.ANY,
+            )
+            or []
+        )
+
         value_cache_manager.singleton.set_one_value(
             ["log-file-targets"],
             {
                 macros_manager.singleton.parse_one(
                     item["name"],
-                    (
-                        value_cache_manager.singleton.get_one_value(
-                            ["workspace-macros"],
-                            output_type=TargetCacheValue.ANY,
-                        )
-                        or {}
-                    ),
+                    workspace_macros,
                 )
-                for item in (
-                    value_cache_manager.singleton.get_one_value(
-                        [
-                            "workspace/public/configuration/workspace.yaml-raw",
-                            "data",
-                            "log",
-                            "file",
-                            "targets",
-                        ],
-                        output_type=TargetCacheValue.ANY,
-                    )
-                    or []
-                )
+                for item in log_file_targets
             },
         )
 

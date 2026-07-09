@@ -15,9 +15,9 @@ from library.target_cache_value import TargetCacheValue
 from library.enum_conversion_output import EnumConversionOutput
 
 
-script_selections = {}
-
 def handler_manager_callback() -> bool:
+    workspace_manager.singleton.handle_cutsom_script_selections_setup()
+
     script_selections = (
         value_cache_manager.singleton.get_one_value(
             ["script-selections"],
@@ -220,7 +220,7 @@ def handle_targets(target_name: string) -> bool:
 
             file_log_manager.singleton.log_info(cli_output)
             console_log_manager.singleton.log_info(
-                cli_output.stdout or cli_output.stderr
+                cli_output.stdout or cli_output.stderr or ""
             )
 
     file_log_manager.singleton.log_info(

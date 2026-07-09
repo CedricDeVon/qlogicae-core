@@ -43,10 +43,8 @@ data:
         enter-full-path: ${{ current-root-full-path }}/workspace/public/toolset/qlogicae-logis
         commands:
           - run: "python3 -c \"
-              from library import workspace_manager, value_cache_storage_manager;
-              workspace_manager.singleton.setup();
-              value_cache_storage_manager.singleton.display_all_items();
-              workspace_manager.singleton.shutdown();\""
+              from library import workspace_manager;
+              workspace_manager.singleton.debug_value_cache();\""
 
 
       typescript-account-login:
