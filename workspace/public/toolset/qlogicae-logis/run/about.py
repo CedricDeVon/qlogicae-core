@@ -31,46 +31,39 @@ from library.enum_conversion_output import EnumConversionOutput
 
 
 def handler_manager_callback() -> bool:
-    script_command_epilogue = (
+    workspace_manager.singleton.handle_toolset_configuration_file_data_extraction_setup()
+    workspace_manager.singleton.handle_toolset_configuration_data_setup()
+
+    toolset_about = (
         value_cache_manager.singleton.get_one_value(
             [
-                "script-command-epilogue",
-            ],
-            output_type=TargetCacheValue.DEFINED,
-        )
-        or ""
-    )
-
-    cli_parser = argparse.ArgumentParser(
-        description="'run.about' command",
-        epilog=script_command_epilogue,
-    )
-    cli_arguments = cli_parser.parse_args()
-
-    file_log_manager.singleton.log_info(f"'run.about' - about execution start")
-    logo = Figlet(font="slant").renderText("QLogicae Logis")
-    console = Console()
-    outputs = (
-        value_cache_manager.singleton.get_one_value(
-            [
-                "workspace/public/tooling/qlogicae-logis/project/configuration/about.yaml-raw",
-                "data",
+                "toolset-about",
             ],
             output_type=TargetCacheValue.ANY,
         )
         or {}
     )
-    include_outputs = [
-        "version",
-        "company-name",
-        "project-name",
-        "author-full-name",
-        "author-email",
-        "repository",
-        "keywords",
-    ]
+    toolset_about_table = (
+        value_cache_manager.singleton.get_one_value(
+            [
+                "toolset-about-table",
+            ],
+            output_type=TargetCacheValue.ANY,
+        )
+        or {}
+    )
+    toolset_about_company_name = toolset_about["company-name"]["value"]
+    toolset_about_project_name = toolset_about["project-name"]["value"]
+    toolset_about_brand_name = toolset_about["brand-name"]["value"]
+    toolset_about_project_description = toolset_about["project-description"]["value"]
 
-    outputs = {key: outputs[key] for key in include_outputs if key in outputs}
+    cli_parser = argparse.ArgumentParser(
+        description="'run.about' command",
+    )
+    cli_arguments = cli_parser.parse_args()
+
+    console = Console()
+    logo = Figlet(font="slant").renderText(toolset_about_brand_name)
 
     table = Table(
         show_header=False,
@@ -78,28 +71,29 @@ def handler_manager_callback() -> bool:
         pad_edge=False,
         padding=(0, 4, 1, 4),
     )
-
     table.add_column("Key", style="bold white", no_wrap=True)
     table.add_column("Value", style="white")
+    for key, item in toolset_about_table.items():
+        item_name = item["name"]
+        item_value = str(item["value"])
 
-    for index, (key, value) in enumerate(outputs.items()):
-        table.add_row(key.replace("-", " ").title(), str(value))
+        table.add_row(item_name, item_value)
 
+
+    file_log_manager.singleton.log_info(f"'run.about' - about execution start")
     console.print(
         Padding(
-            f"[white]{logo}[/]\n[white]The project management tool for QLogicae projects[/]",
+            f"[white]{logo}[/]\n[white]{toolset_about_project_description}[/]",
             (2, 4),
         )
     )
     console.print(Rule(style="white"))
-
     console.print(
         Padding(
             table,
             (2, 4),
         )
     )
-
     file_log_manager.singleton.log_info(f"'run.about' - about execution complete")
 
     return True

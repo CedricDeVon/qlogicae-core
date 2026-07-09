@@ -1,12 +1,17 @@
 data:
+  brand-name:
+    name: Brand Name
+    value: QLogicae Logis
+    is-tabular: false
+
   project-version:
     name: Version
     value: 1.1.0
-    is-visible: false
 
   project-description: 
     name: Description
     value: The project management tool for QLogicae projects
+    is-tabular: false
 
   project-name: 
     name: Project Name
@@ -19,6 +24,7 @@ data:
   workspace-name: 
     name: Workspace Name
     value: qlogicae-logis
+    is-tabular: false
 
   author-name: 
     name: Author Name
@@ -34,6 +40,12 @@ data:
 
   repository-keywords: 
     name: Keywords
-    value: [qlogicae, logis, framework, template, project-management, devops]
+    value:
+      - qlogicae
+      - logis
+      - framework
+      - template
+      - project-management
+      - devops
 
 metadata:

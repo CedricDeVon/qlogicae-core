@@ -15,7 +15,7 @@ from library.target_cache_value import TargetCacheValue
 
 def handle_manager_callback():
     workspace_manager.singleton.handle_workspace_selections_setup()
-    
+
     workspace_selections = (
         value_cache_manager.singleton.get_one_value(
             ["workspace-selections"],
@@ -45,19 +45,8 @@ def handle_manager_callback():
         or {}
     )
 
-    script_command_epilogue = (
-        value_cache_manager.singleton.get_one_value(
-            [
-                "script-command-epilogue",
-            ],
-            output_type=TargetCacheValue.DEFINED,
-        )
-        or ""
-    )
-
     cli_parser = argparse.ArgumentParser(
         description="'run.sync' command",
-        epilog=script_command_epilogue,
     )
     cli_parser.add_argument(
         "-t",

@@ -24,6 +24,8 @@ class WorkspaceManager:
     def debug_value_cache(self) -> bool:
         self.setup()
 
+        self.handle_toolset_configuration_file_data_extraction_setup()
+        self.handle_toolset_configuration_data_setup()
         self.handle_workspace_selections_setup()
         self.handle_cutsom_script_selections_setup()
         self.handle_clean_scripts_setup()
@@ -47,8 +49,6 @@ class WorkspaceManager:
         self.handle_workspace_configuration_file_data_extraction_setup()
         self.handle_value_cache_macros_setup()
         self.handle_macros_parsing_setup()
-        self.handle_toolset_configuration_file_data_extraction_setup()
-        self.handle_toolset_configuration_data_setup()
         self.handle_logs_setup()
 
         return True
@@ -181,21 +181,75 @@ class WorkspaceManager:
                 )
 
     def handle_toolset_configuration_data_setup(self) -> bool:
-        repository_link = value_cache_manager.singleton.get_one_value(
-            [
-                "workspace/public/tooling/qlogicae-logis/project/configuration/about.yaml-raw",
-                "data",
-                "repository-link",
-                "value",
-            ],
+        toolset_about_raw_data = (
+            value_cache_manager.singleton.get_one_value(
+                [
+                    "workspace/public/tooling/qlogicae-logis/project/configuration/about.yaml-raw",
+                    "data",
+                ],
+                output_type=TargetCacheValue.DEFINED,
+            )
+            or {}
+        )
+
+        toolset_about = {}
+        toolset_about_table = {}
+        for key, item in toolset_about_raw_data.items():
+            if "name" not in item:
+                continue
+
+            if "value" not in item:
+                toolset_about[key]["value"] = "None"
+
+            else:
+                toolset_about[key] = item
+
+                if "is-tabular" not in item or item["is-tabular"]:
+                    toolset_about_table[key] = item
+
+        if ("repository-keywords" not in toolset_about) or (
+            "value" not in toolset_about["repository-keywords"]
+        ):
+            toolset_about["repository-keywords"] = []
+
+        else:
+            toolset_about["repository-keywords"]["value"] = ", ".join(
+                toolset_about["repository-keywords"]["value"]
+            )
+
+        value_cache_manager.singleton.set_one_value(
+            ["toolset-about"],
+            toolset_about,
+            output_type=TargetCacheValue.DEFINED,
+        )
+        value_cache_manager.singleton.set_one_value(
+            ["toolset-about-table"],
+            toolset_about_table,
             output_type=TargetCacheValue.DEFINED,
         )
 
-        value_cache_manager.singleton.set_one_value(
-            ["script-command-epilogue"],
-            f"For more information, visit: '{repository_link}'",
-            output_type=TargetCacheValue.DEFINED,
-        )
+        # 'is-visible' in item and not item['is-visible']
+
+        # about_repository_keywords = (
+        #     toolset_about['repository-keywords'] if 'repository-keywords' in toolset_about else []
+        # )
+        # value_cache_manager.singleton.set_one_value(
+        #     ["about-repository-keywords"],
+        #     about_repository_keywords,
+        #     output_type=TargetCacheValue.DEFINED,
+        # )
+        # repository_link = (
+        #     toolset_about_raw_data["repository-link"]["value"]
+        #     if "repository-link" in toolset_about_raw_data
+        #     and "value" in about_raw_data["repository-link"] else ""
+        # )
+
+        # value_cache_manager.singleton.set_one_value(
+        #     ["script-command-epilogue"],
+        #     f"For more information, visit: '{repository_link}'"
+        #     if repository_link else '',
+        #     output_type=TargetCacheValue.DEFINED,
+        # )
 
         return True
 

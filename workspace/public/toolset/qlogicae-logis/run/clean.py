@@ -23,19 +23,8 @@ def handler_manager_callback():
         or {}
     )
 
-    script_command_epilogue = (
-        value_cache_manager.singleton.get_one_value(
-            [
-                "script-command-epilogue",
-            ],
-            output_type=TargetCacheValue.DEFINED,
-        )
-        or ""
-    )
-
     cli_parser = argparse.ArgumentParser(
         description="'run.clean' command",
-        epilog=script_command_epilogue,
     )
     cli_parser.add_argument(
         "-t",
