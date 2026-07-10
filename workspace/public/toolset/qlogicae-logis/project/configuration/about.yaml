@@ -5,8 +5,9 @@ data:
     is-tabular: false
 
   project-version:
-    name: Version
+    name: Project Version
     value: 1.1.0
+    is-tabular: true
 
   project-description: 
     name: Description
@@ -16,10 +17,12 @@ data:
   project-name: 
     name: Project Name
     value: Logis
+    is-tabular: true
 
   company-name: 
     name: Company Name
     value: QLogicae
+    is-tabular: true
 
   workspace-name: 
     name: Workspace Name
@@ -29,17 +32,20 @@ data:
   author-name: 
     name: Author Name
     value: Vaughn Cedric L. Araneta
+    is-tabular: true
 
   author-email: 
     name: Author Email
     value: vaughncedriclipardoaraneta@gmail.com
+    is-tabular: true
 
   repository-link:
     name: Repository Link
     value: https://github.com/CedricDeVon/qlogicae-logis
+    is-tabular: true
 
   repository-keywords: 
-    name: Keywords
+    name: Repository Keywords
     value:
       - qlogicae
       - logis
@@ -47,5 +53,6 @@ data:
       - template
       - project-management
       - devops
+    is-tabular: true
 
 metadata:

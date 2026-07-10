@@ -45,7 +45,7 @@ class WorkspaceManager:
 
     def setup(self) -> bool:
         self.handle_timestamp_console_execution_start_setup()
-        self.handle_executing_conssole_filesystem_paths_setup()
+        self.handle_executing_cossole_filesystem_paths_setup()
         self.handle_workspace_configuration_file_data_extraction_setup()
         self.handle_value_cache_macros_setup()
         self.handle_macros_parsing_setup()
@@ -69,7 +69,7 @@ class WorkspaceManager:
 
         return True
 
-    def handle_executing_conssole_filesystem_paths_setup(self) -> bool:
+    def handle_executing_console_filesystem_paths_setup(self) -> bool:
         value_cache_manager.singleton.set_one_value(
             ["current-root-full-path"],
             workspace_filesystem_manager.singleton.root_workspace_filesystem_path,
@@ -199,6 +199,7 @@ class WorkspaceManager:
                 continue
 
             if "value" not in item:
+                toolset_about[key] = item
                 toolset_about[key]["value"] = "None"
 
             else:
@@ -207,15 +208,6 @@ class WorkspaceManager:
                 if "is-tabular" not in item or item["is-tabular"]:
                     toolset_about_table[key] = item
 
-        if ("repository-keywords" not in toolset_about) or (
-            "value" not in toolset_about["repository-keywords"]
-        ):
-            toolset_about["repository-keywords"] = []
-
-        else:
-            toolset_about["repository-keywords"]["value"] = ", ".join(
-                toolset_about["repository-keywords"]["value"]
-            )
 
         value_cache_manager.singleton.set_one_value(
             ["toolset-about"],
@@ -227,29 +219,6 @@ class WorkspaceManager:
             toolset_about_table,
             output_type=TargetCacheValue.DEFINED,
         )
-
-        # 'is-visible' in item and not item['is-visible']
-
-        # about_repository_keywords = (
-        #     toolset_about['repository-keywords'] if 'repository-keywords' in toolset_about else []
-        # )
-        # value_cache_manager.singleton.set_one_value(
-        #     ["about-repository-keywords"],
-        #     about_repository_keywords,
-        #     output_type=TargetCacheValue.DEFINED,
-        # )
-        # repository_link = (
-        #     toolset_about_raw_data["repository-link"]["value"]
-        #     if "repository-link" in toolset_about_raw_data
-        #     and "value" in about_raw_data["repository-link"] else ""
-        # )
-
-        # value_cache_manager.singleton.set_one_value(
-        #     ["script-command-epilogue"],
-        #     f"For more information, visit: '{repository_link}'"
-        #     if repository_link else '',
-        #     output_type=TargetCacheValue.DEFINED,
-        # )
 
         return True
 

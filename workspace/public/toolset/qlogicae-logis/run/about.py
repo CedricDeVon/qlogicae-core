@@ -52,45 +52,103 @@ def handler_manager_callback() -> bool:
         )
         or {}
     )
-    toolset_about_company_name = toolset_about["company-name"]["value"]
-    toolset_about_project_name = toolset_about["project-name"]["value"]
-    toolset_about_brand_name = toolset_about["brand-name"]["value"]
-    toolset_about_project_description = toolset_about["project-description"]["value"]
+    toolset_about_company_name = (
+        toolset_about["company-name"]["value"]
+        if "company-name" in toolset_about and "value" in toolset_about["company-name"]
+        else "QLogicae"
+    )
+    toolset_about_project_name = (
+        toolset_about["project-name"]["value"]
+        if "project-name" in toolset_about and "value" in toolset_about["project-name"]
+        else "Logis"
+    )
+    toolset_about_brand_name = (
+        toolset_about["brand-name"]["value"]
+        if "brand-name" in toolset_about and "value" in toolset_about["brand-name"]
+        else f"{toolset_about_company_name} {toolset_about_project_name}"
+    )
+    toolset_about_project_description = (
+        toolset_about["project-description"]["value"]
+        if "project-description" in toolset_about
+        and "value" in toolset_about["project-description"]
+        else "The project management tool for QLogicae projects"
+    )
+
+
+    cli_console = Console()
+    cli_logo = Figlet(font="slant").renderText(toolset_about_brand_name)
+    cli_table = Table(
+        show_header=False,
+        box=None,
+        pad_edge=False,
+        padding=(0, 4, 1, 4),
+    )
+    cli_table.add_column("Key", style="bold white", no_wrap=True)
+    cli_table.add_column("Value", style="white")
+    for key, item in toolset_about_table.items():
+        item_name = item["name"] if "name" in item else "None"
+        item_value = str(item["value"]) if "value" in item else "None"
+        cli_table.add_row(item_name, item_value)
 
     cli_parser = argparse.ArgumentParser(
         description="'run.about' command",
     )
     cli_arguments = cli_parser.parse_args()
 
-    console = Console()
-    logo = Figlet(font="slant").renderText(toolset_about_brand_name)
 
-    table = Table(
-        show_header=False,
-        box=None,
-        pad_edge=False,
-        padding=(0, 4, 1, 4),
+    cli_progress_items = [
+        ("Loading", "white"),
+    ]
+    cli_progress_bar = Progress(
+        SpinnerColumn("dots", style="bold bright_white"),
+        TextColumn("[white]{task.description}"),
+        BarColumn(bar_width=80, complete_style="white"),
+        TextColumn("[white]{task.percentage:>6.2f}%"),
+        TimeElapsedColumn(),
     )
-    table.add_column("Key", style="bold white", no_wrap=True)
-    table.add_column("Value", style="white")
-    for key, item in toolset_about_table.items():
-        item_name = item["name"]
-        item_value = str(item["value"])
+    cli_progress_bar_task = cli_progress_bar.add_task("", total=100)
+    with Live(
+        cli_progress_bar,
+        console=cli_console,
+        refresh_per_second=60,
+        transient=True,
+    ):
+        start = time.perf_counter()
+        for index, (message, color) in enumerate(cli_progress_items):
+            cli_progress_bar.update(cli_progress_bar_task, description=message)
 
-        table.add_row(item_name, item_value)
+            cli_progress_bar.update(
+                cli_progress_bar_task,
+                completed=min(index / len(cli_progress_items) * 100, 100),
+                elapsed=f"{(time.perf_counter() - start):.2f}s",
+            )
+            time.sleep(0.5)
+            cli_progress_bar.update(
+                cli_progress_bar_task,
+                completed=min(index / len(cli_progress_items) * 100, 100),
+                elapsed=f"{(time.perf_counter() - start):.2f}s",
+            )
+            time.sleep(0.5)
+            cli_progress_bar.update(
+                cli_progress_bar_task,
+                completed=min(index / len(cli_progress_items) * 100, 100),
+                elapsed=f"{(time.perf_counter() - start):.2f}s",
+            )
+            time.sleep(0.5)
+    # cli_console.print(f"[dim]Completed in {} seconds[/]")
 
 
     file_log_manager.singleton.log_info(f"'run.about' - about execution start")
-    console.print(
+    cli_console.print(
         Padding(
-            f"[white]{logo}[/]\n[white]{toolset_about_project_description}[/]",
+            f"[white]{cli_logo}[/]\n[white]{toolset_about_project_description}[/]",
             (2, 4),
         )
     )
-    console.print(Rule(style="white"))
-    console.print(
+    cli_console.print(Rule(style="white"))
+    cli_console.print(
         Padding(
-            table,
+            cli_table,
             (2, 4),
         )
     )
