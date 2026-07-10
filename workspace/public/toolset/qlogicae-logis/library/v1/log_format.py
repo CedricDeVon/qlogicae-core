@@ -1,6 +1,6 @@
 import logging
 
-from library import timestamp_manager
+from library.v1 import timestamp_manager
 
 
 class LogFormat(logging.Formatter):

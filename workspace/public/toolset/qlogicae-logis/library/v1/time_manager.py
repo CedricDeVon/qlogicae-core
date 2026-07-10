@@ -2,8 +2,8 @@ import time
 from datetime import date, datetime
 
 
-from library import time_zone_enum_manager
-from library.enum_conversion_output import EnumConversionOutput
+from library.v1 import time_zone_enum_manager
+from library.v1.enum_conversion_output import EnumConversionOutput
 
 
 class TimeManager:

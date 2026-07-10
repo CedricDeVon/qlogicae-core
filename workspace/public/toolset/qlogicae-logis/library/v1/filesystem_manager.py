@@ -1,10 +1,10 @@
 import shutil
 from pathlib import Path
 
-from library.file_entity_filesystem_tree_setup_options import (
+from library.v1.file_entity_filesystem_tree_setup_options import (
     FileEntityFileSystemTreeSetupOptions,
 )
-from library.folder_entity_filesystem_tree_setup_options import (
+from library.v1.folder_entity_filesystem_tree_setup_options import (
     FolderEntityFileSystemTreeSetupOptions,
 )
 

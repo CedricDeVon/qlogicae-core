@@ -1,7 +1,7 @@
 import json
 from typing import Any
 
-from library import json_manager
+from library.v1 import json_manager
 
 
 class JsonFileIoManager:

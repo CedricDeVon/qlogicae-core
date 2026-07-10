@@ -1,8 +1,8 @@
 from typing import Any
 from collections.abc import Mapping
 
-from library import filesystem_manager, value_cache_storage_manager
-from library.target_cache_value import TargetCacheValue
+from library.v1 import filesystem_manager, value_cache_storage_manager
+from library.v1.target_cache_value import TargetCacheValue
 
 
 class ValueCacheManager:

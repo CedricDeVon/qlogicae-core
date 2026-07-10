@@ -1,7 +1,7 @@
 import logging
 
-from library.log_options import LogOptions
-from library import log_options_manager, console_log_manager, file_log_manager
+from library.v1.log_options import LogOptions
+from library.v1 import log_options_manager, console_log_manager, file_log_manager
 
 
 class LogManager:

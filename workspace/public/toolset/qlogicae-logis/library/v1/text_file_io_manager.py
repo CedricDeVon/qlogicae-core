@@ -1,6 +1,6 @@
 from typing import Any
 
-from library import text_encoding_manager
+from library.v1 import text_encoding_manager
 
 
 class TextFileIoManager:

@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from library import file_io_manager
+from library.v1 import file_io_manager
 
 
 @dataclass(frozen=True, slots=True)

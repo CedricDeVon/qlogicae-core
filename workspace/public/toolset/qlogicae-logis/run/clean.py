@@ -1,6 +1,6 @@
 import argparse
 
-from library import (
+from library.v1 import (
     log_manager,
     macros_manager,
     file_log_manager,
@@ -8,7 +8,7 @@ from library import (
     filesystem_manager,
     value_cache_manager,
 )
-from library.target_cache_value import TargetCacheValue
+from library.v1.target_cache_value import TargetCacheValue
 
 
 def handler_manager_callback():

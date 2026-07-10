@@ -3,9 +3,9 @@ import logging
 from pathlib import Path
 from logging.handlers import QueueHandler, QueueListener
 
-from library.log_format import LogFormat
-from library.log_options import LogOptions
-from library import file_io_manager, log_options_manager
+from library.v1.log_format import LogFormat
+from library.v1.log_options import LogOptions
+from library.v1 import file_io_manager, log_options_manager
 
 
 class FileLogManager:

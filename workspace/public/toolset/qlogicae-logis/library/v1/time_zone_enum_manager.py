@@ -1,8 +1,8 @@
 from typing import Any
 from datetime import datetime, UTC
 
-from library.time_zone import TimeZone
-from library.enum_conversion_output import EnumConversionOutput
+from library.v1.time_zone import TimeZone
+from library.v1.enum_conversion_output import EnumConversionOutput
 
 
 class TimeZoneEnumManager:

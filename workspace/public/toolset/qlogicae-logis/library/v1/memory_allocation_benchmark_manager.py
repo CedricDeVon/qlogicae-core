@@ -1,4 +1,3 @@
-import tracemalloc
 
 
 class MemoryAllocationBenchmarkManager:

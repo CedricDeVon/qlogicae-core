@@ -1,7 +1,7 @@
 import argparse
 from pathlib import Path
 
-from library import (
+from library.v1 import (
     macros_manager,
     file_io_manager,
     file_log_manager,
@@ -10,7 +10,7 @@ from library import (
     value_cache_manager,
     workspace_filesystem_manager,
 )
-from library.target_cache_value import TargetCacheValue
+from library.v1.target_cache_value import TargetCacheValue
 
 
 def handle_manager_callback():

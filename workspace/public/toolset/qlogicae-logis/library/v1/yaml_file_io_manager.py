@@ -1,7 +1,7 @@
 import yaml
 from typing import Any
 
-from library import yaml_manager
+from library.v1 import yaml_manager
 
 
 class YamlFileIoManager:

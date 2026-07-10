@@ -1,8 +1,8 @@
 import logging
 
-from library import log_options_manager
-from library.log_format import LogFormat
-from library.log_options import LogOptions
+from library.v1 import log_options_manager
+from library.v1.log_format import LogFormat
+from library.v1.log_options import LogOptions
 
 
 class ConsoleLogManager:

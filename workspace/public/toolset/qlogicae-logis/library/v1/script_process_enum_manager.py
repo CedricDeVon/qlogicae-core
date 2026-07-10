@@ -1,7 +1,7 @@
 from typing import Any
 
-from library.script_process import ScriptProcess
-from library.enum_conversion_output import EnumConversionOutput
+from library.v1.script_process import ScriptProcess
+from library.v1.enum_conversion_output import EnumConversionOutput
 
 
 class ScriptProcessEnumManager:

@@ -1,6 +1,6 @@
 import argparse
 
-from library import (
+from library.v1 import (
     log_manager,
     system_manager,
     macros_manager,
@@ -11,8 +11,8 @@ from library import (
     script_process_manager,
     script_process_enum_manager,
 )
-from library.target_cache_value import TargetCacheValue
-from library.enum_conversion_output import EnumConversionOutput
+from library.v1.target_cache_value import TargetCacheValue
+from library.v1.enum_conversion_output import EnumConversionOutput
 
 
 def handler_manager_callback() -> bool:

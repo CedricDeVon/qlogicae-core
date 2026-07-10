@@ -1,6 +1,6 @@
 from typing import Any
 
-from library.enum_conversion_output import EnumConversionOutput
+from library.v1.enum_conversion_output import EnumConversionOutput
 
 
 class EnumConversionOutputEnumManager:

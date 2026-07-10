@@ -1,8 +1,8 @@
-from library import (
+from library.v1 import (
     system_manager,
     value_cache_manager,
 )
-from library.target_cache_value import TargetCacheValue
+from library.v1.target_cache_value import TargetCacheValue
 
 
 class WorkspaceSystemManager:

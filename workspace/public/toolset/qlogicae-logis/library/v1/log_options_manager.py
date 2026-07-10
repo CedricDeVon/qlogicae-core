@@ -1,6 +1,6 @@
 import logging
 
-from library.log_options import LogOptions
+from library.v1.log_options import LogOptions
 
 
 class LogOptionsManager:

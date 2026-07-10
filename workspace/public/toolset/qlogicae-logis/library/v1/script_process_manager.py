@@ -1,8 +1,8 @@
 import shlex
 import subprocess
 
-from library import text_encoding_manager
-from library.script_process import ScriptProcess
+from library.v1 import text_encoding_manager
+from library.v1.script_process import ScriptProcess
 
 
 class ScriptProcessManager:

@@ -1,7 +1,7 @@
 from typing import Any
 
-from library.time_unit import TimeUnit
-from library.enum_conversion_output import EnumConversionOutput
+from library.v1.time_unit import TimeUnit
+from library.v1.enum_conversion_output import EnumConversionOutput
 
 
 class TimeUnitEnumManager:

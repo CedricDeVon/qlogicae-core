@@ -1,8 +1,8 @@
 import time
 from datetime import UTC, datetime
 
-from library import time_manager
-from library.time_zone import TimeZone
+from library.v1 import time_manager
+from library.v1.time_zone import TimeZone
 
 
 class TimestampManager:
