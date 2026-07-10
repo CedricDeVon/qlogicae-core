@@ -117,7 +117,7 @@ class FileSystemManager:
             raise Exception(f"filesystem path '{parent_path}' is invalid")
 
         parent_path.mkdir(parents=True, exist_ok=True)
-        for entity in (options.entities or []):
+        for entity in options.entities or []:
             entity_path = parent_path / entity.name
 
             if isinstance(entity, FolderEntityFileSystemTreeSetupOptions):
@@ -125,7 +125,7 @@ class FileSystemManager:
                 self.setup_filesystem_tree(entity_path, entity)
 
             elif isinstance(entity, FileEntityFileSystemTreeSetupOptions):
-                if not entity_path.exists() or entity.is_modifiable:
+                if not entity_path.exists():
                     entity_path.write_text(entity.content, encoding=entity.encoding)
 
 

@@ -53,7 +53,7 @@ class WorkspaceManager:
     def setup(self) -> bool:
         self.handle_timestamp_console_execution_start_setup()
         self.handle_executing_console_filesystem_paths_setup()
-        self.handle_workspace_filesystem_setup()
+        self.handle_root_filesystem_replenishment_setup()
         self.handle_workspace_configuration_file_data_extraction_setup()
         self.handle_value_cache_macros_setup()
         self.handle_macros_parsing_setup()
@@ -61,34 +61,103 @@ class WorkspaceManager:
 
         return True
 
-    def handle_workspace_filesystem_setup(self) -> bool:
+    def handle_root_filesystem_replenishment_setup(self) -> bool:
         current_root_full_path = value_cache_manager.singleton.get_one_value(
             ["current-root-full-path"],
             output_type=TargetCacheValue.FOLDER_PATH,
         )
 
-        filesystem_tree = FolderEntityFileSystemTreeSetupOptions(
+        gitignore_file = FileEntityFileSystemTreeSetupOptions(
+            name=".gitignore", content="*"
+        )
+
+        configuration_workspace_file = FileEntityFileSystemTreeSetupOptions(
+            name="workspace.yaml", content="data:\n\nmetadata:\n"
+        )
+
+        configuration_sub_tree = FolderEntityFileSystemTreeSetupOptions(
+            name="configuration",
+            entities=[configuration_workspace_file],
+        )
+
+        target_selection_filesystem_sub_tree = FolderEntityFileSystemTreeSetupOptions(
+            name="filesystem",
+            entities=[],
+        )
+
+        target_sub_tree = FolderEntityFileSystemTreeSetupOptions(
+            name="target",
             entities=[
                 FolderEntityFileSystemTreeSetupOptions(
-                    name=".a",
+                    name="all",
+                    entities=[target_selection_filesystem_sub_tree],
+                ),
+                FolderEntityFileSystemTreeSetupOptions(
+                    name="project",
                     entities=[
+                        target_selection_filesystem_sub_tree,
                         FolderEntityFileSystemTreeSetupOptions(
-                            name="a.a",
-                            entities=[
-                                FileEntityFileSystemTreeSetupOptions(name="a.a.a.txt")
-                            ],
-                        ),
-                        FileEntityFileSystemTreeSetupOptions(
-                            name="a.b.txt",
-                            # is_modifiable=True
+                            name="selection",
+                            entities=[],
                         ),
                     ],
-                )
+                ),
+                FolderEntityFileSystemTreeSetupOptions(
+                    name="root",
+                    entities=[
+                        target_selection_filesystem_sub_tree,
+                    ],
+                ),
+            ],
+        )
+
+        temporary_sub_tree = FolderEntityFileSystemTreeSetupOptions(
+            name="temporary",
+            entities=[
+                FolderEntityFileSystemTreeSetupOptions(
+                    name="log",
+                    entities=[],
+                ),
+                FolderEntityFileSystemTreeSetupOptions(
+                    name="intermediate",
+                    entities=[],
+                ),
+            ],
+        )
+
+        root_filesystem_tree = FolderEntityFileSystemTreeSetupOptions(
+            entities=[
+                FolderEntityFileSystemTreeSetupOptions(
+                    name="workspace",
+                    entities=[
+                        FolderEntityFileSystemTreeSetupOptions(
+                            name="private",
+                            entities=[
+                                configuration_sub_tree,
+                                target_sub_tree,
+                                temporary_sub_tree,
+                                gitignore_file,
+                            ],
+                        ),
+                        FolderEntityFileSystemTreeSetupOptions(
+                            name="public",
+                            entities=[configuration_sub_tree, target_sub_tree],
+                        )
+                    ],
+                ),
+                FolderEntityFileSystemTreeSetupOptions(
+                    name="project",
+                    entities=[],
+                ),
+                FolderEntityFileSystemTreeSetupOptions(
+                    name="selection",
+                    entities=[],
+                ),
             ]
         )
 
         filesystem_manager.singleton.setup_filesystem_tree(
-            current_root_full_path, filesystem_tree
+            current_root_full_path, root_filesystem_tree
         )
 
     def handle_timestamp_console_execution_start_setup(self) -> bool:
