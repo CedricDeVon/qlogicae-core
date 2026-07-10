@@ -1,5 +1,5 @@
-use qlogicae_cor::singleton_manager::SingletonManager;
-use qlogicae_cor::singleton_manager_configurations::SingletonManagerConfigurations;
+use qlogicae_cor::v1::singleton_manager::SingletonManager;
+use qlogicae_cor::v1::singleton_manager_configurations::SingletonManagerConfigurations;
 
 #[cfg(test)]
 mod tests {

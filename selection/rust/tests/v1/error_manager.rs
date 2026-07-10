@@ -1,5 +1,5 @@
-use qlogicae_cor::error_manager::ErrorManager;
-use qlogicae_cor::error_manager_configurations::ErrorManagerConfigurations;
+use qlogicae_cor::v1::error_manager::ErrorManager;
+use qlogicae_cor::v1::error_manager_configurations::ErrorManagerConfigurations;
 
 #[cfg(test)]
 mod tests {
