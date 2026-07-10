@@ -1,20 +1,16 @@
-import random
-from math import sqrt
-import time
-
-
 # pytest \
-#     -vv \
-#     --benchmark-only \
-#     --benchmark-disable-gc \
-#     --benchmark-verbose \
-#     --benchmark-sort=mean \
-#     --benchmark-columns=min,max,mean,stddev,median,iqr,outliers,rounds,iterations,ops \
-#     --benchmark-json=benchmark.json \
-#     --benchmark-histogram=benchmark \
-#     --benchmark-save=latest \
-#     --benchmark-disable-gc \
-#     demo.py
+# -vv \
+# --benchmark-only \
+# --benchmark-disable-gc \
+# --benchmark-verbose \
+# --benchmark-sort=mean \
+# --benchmark-columns=min,max,mean,stddev,median, \
+# iqr,outliers,rounds,iterations,ops \
+# --benchmark-json=benchmark.json \
+# --benchmark-histogram=benchmark \
+# --benchmark-save=latest \
+# --benchmark-disable-gc \
+# demo.py
 
 
 # def builtin_sort(data: list[int]) -> list[int]:

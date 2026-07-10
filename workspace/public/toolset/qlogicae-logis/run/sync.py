@@ -2,13 +2,13 @@ import argparse
 from pathlib import Path
 
 from library.v1 import (
-    macros_manager,
     file_io_manager,
     file_log_manager,
-    workspace_manager,
     filesystem_manager,
+    macros_manager,
     value_cache_manager,
     workspace_filesystem_manager,
+    workspace_manager,
 )
 from library.v1.target_cache_value import TargetCacheValue
 
@@ -27,7 +27,7 @@ def handle_manager_callback():
     is_enabled = (
         value_cache_manager.singleton.get_one_value(
             [
-                f"workspace/public/configuration/workspace.yaml-raw",
+                "workspace/public/configuration/workspace.yaml-raw",
                 "data",
                 "selection",
                 "is-enabled",

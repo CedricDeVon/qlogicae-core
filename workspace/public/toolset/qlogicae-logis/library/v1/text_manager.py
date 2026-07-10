@@ -14,8 +14,6 @@ class TextManager:
             suffix in self._valid_file_extensions
             for suffix in self._valid_file_extensions
         )
-        
+
 
 singleton = TextManager()
-
-    

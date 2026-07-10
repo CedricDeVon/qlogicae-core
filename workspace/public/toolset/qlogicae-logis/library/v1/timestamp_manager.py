@@ -2,7 +2,7 @@ import time
 from datetime import UTC, datetime
 
 from library.v1 import time_manager
-from library.v1.time_zone import TimeZone
+from library.v1.time_unit import TimeUnit
 
 
 class TimestampManager:

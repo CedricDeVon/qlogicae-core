@@ -1,15 +1,15 @@
 import logging
 
+from library.v1 import console_log_manager, file_log_manager, log_options_manager
 from library.v1.log_options import LogOptions
-from library.v1 import log_options_manager, console_log_manager, file_log_manager
 
 
 class LogManager:
     def log(
         self,
         message: str,
-        console_options: LogOptions = LogOptions(),
-        file_options: LogOptions = LogOptions(),
+        console_options: LogOptions,
+        file_options: LogOptions,
     ) -> str:
         console_log_manager.singleton.log(
             message,

@@ -1,14 +1,13 @@
-import yaml
 from typing import Any
+
+import yaml
 
 from library.v1 import yaml_manager
 
 
 class YamlFileIoManager:
     def read_file(self, file: Any) -> Any:
-        return yaml.safe_load(
-            file
-        ) or {}
+        return yaml.safe_load(file) or {}
 
     def write_file(self, file: Any, data: Any) -> bool:
         yaml.safe_dump(

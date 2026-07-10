@@ -1,11 +1,11 @@
-import queue
 import logging
-from pathlib import Path
+import queue
 from logging.handlers import QueueHandler, QueueListener
+from pathlib import Path
 
+from library.v1 import file_io_manager, log_options_manager
 from library.v1.log_format import LogFormat
 from library.v1.log_options import LogOptions
-from library.v1 import file_io_manager, log_options_manager
 
 
 class FileLogManager:
@@ -42,7 +42,7 @@ class FileLogManager:
 
         return True
 
-    def log(self, message: str, options: LogOptions = LogOptions()) -> str:
+    def log(self, message: str, options: LogOptions) -> str:
         if not options.is_enabled:
             return message
 

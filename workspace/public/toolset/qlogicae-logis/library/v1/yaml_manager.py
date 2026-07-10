@@ -1,4 +1,3 @@
-import yaml
 from typing import Any
 
 
@@ -55,7 +54,7 @@ class YamlManager:
     def indent_count(self, value: int) -> bool:
         if value < 0:
             raise Exception("indent_count must be non-negative.")
-            
+
         self._indent_count = value
 
         return True

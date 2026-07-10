@@ -9,7 +9,7 @@ class JsonTextManager:
         try:
             json.loads(value)
             return True
-            
+
         except json.JSONDecodeError:
             return False
 

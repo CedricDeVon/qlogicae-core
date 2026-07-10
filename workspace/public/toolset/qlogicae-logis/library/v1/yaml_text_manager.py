@@ -1,5 +1,6 @@
-import yaml
 from typing import Any
+
+import yaml
 
 from library.v1 import yaml_manager
 
@@ -7,9 +8,7 @@ from library.v1 import yaml_manager
 class YamlTextManager:
     def is_valid(self, value: str) -> bool:
         try:
-            yaml.safe_load(
-                value
-            )
+            yaml.safe_load(value)
 
             return True
 
@@ -17,9 +16,7 @@ class YamlTextManager:
             return False
 
     def convert_to_object(self, value: str) -> Any:
-        return yaml.safe_load(
-            value
-        )
+        return yaml.safe_load(value)
 
     def convert_to_string(self, value: Any) -> str:
         return yaml.safe_dump(

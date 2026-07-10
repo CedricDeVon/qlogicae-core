@@ -1,12 +1,12 @@
 import argparse
 
 from library.v1 import (
+    file_log_manager,
+    filesystem_manager,
     log_manager,
     macros_manager,
-    file_log_manager,
-    workspace_manager,
-    filesystem_manager,
     value_cache_manager,
+    workspace_manager,
 )
 from library.v1.target_cache_value import TargetCacheValue
 
@@ -46,7 +46,7 @@ def handler_manager_callback():
     is_enabled = (
         value_cache_manager.singleton.get_one_value(
             [
-                f"workspace/public/configuration/workspace.yaml-raw",
+                "workspace/public/configuration/workspace.yaml-raw",
                 "data",
                 "script",
                 "clean",
@@ -67,7 +67,7 @@ def handler_manager_callback():
     clean_include_targets = (
         value_cache_manager.singleton.get_one_value(
             [
-                f"workspace/public/configuration/workspace.yaml-raw",
+                "workspace/public/configuration/workspace.yaml-raw",
                 "data",
                 "script",
                 "clean",

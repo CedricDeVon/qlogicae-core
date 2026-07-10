@@ -1,34 +1,28 @@
-from pathlib import Path
-from datetime import UTC
 from collections.abc import Callable
+from pathlib import Path
+from typing import Any
 
 from library.v1 import (
-    log_manager,
-    time_manager,
-    system_manager,
-    macros_manager,
+    console_log_manager,
     file_io_manager,
     file_log_manager,
     filesystem_manager,
-    timestamp_manager,
-    console_log_manager,
-    value_cache_manager,
+    log_manager,
+    macros_manager,
+    system_manager,
+    time_manager,
     time_zone_enum_manager,
-    workspace_system_manager,
+    timestamp_manager,
+    value_cache_manager,
     workspace_filesystem_manager,
+    workspace_system_manager,
 )
-from library.v1.log_options import LogOptions
-from library.v1.target_cache_value import TargetCacheValue
 from library.v1.filesystem_manager import (
     FileEntityFileSystemTreeSetupOptions,
     FolderEntityFileSystemTreeSetupOptions,
 )
-from library.v1.file_entity_filesystem_tree_setup_options import (
-    FileEntityFileSystemTreeSetupOptions,
-)
-from library.v1.folder_entity_filesystem_tree_setup_options import (
-    FolderEntityFileSystemTreeSetupOptions,
-)
+from library.v1.log_options import LogOptions
+from library.v1.target_cache_value import TargetCacheValue
 
 
 class WorkspaceManager:
@@ -45,7 +39,7 @@ class WorkspaceManager:
 
         return True
 
-    def handle(self, callback: Callable[[void], void]) -> bool:
+    def handle(self, callback: Callable[[None], None]) -> bool:
         self.setup()
 
         callback()
@@ -207,12 +201,6 @@ class WorkspaceManager:
         current_root_full_path = value_cache_manager.singleton.get_one_value(
             ["current-root-full-path"],
             output_type=TargetCacheValue.FOLDER_PATH,
-        )
-        original_executing_console_full_path = (
-            value_cache_manager.singleton.get_one_value(
-                ["original-executing-console-full-path"],
-                output_type=TargetCacheValue.FOLDER_PATH,
-            )
         )
         scope_selecions = workspace_filesystem_manager.singleton.scope_selections or {}
         for current_scope_selection in scope_selecions:

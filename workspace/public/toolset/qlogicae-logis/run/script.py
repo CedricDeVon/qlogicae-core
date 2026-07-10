@@ -1,18 +1,18 @@
 import argparse
 
 from library.v1 import (
-    log_manager,
-    system_manager,
-    macros_manager,
-    file_log_manager,
-    workspace_manager,
     console_log_manager,
-    value_cache_manager,
-    script_process_manager,
+    file_log_manager,
+    log_manager,
+    macros_manager,
     script_process_enum_manager,
+    script_process_manager,
+    system_manager,
+    value_cache_manager,
+    workspace_manager,
 )
-from library.v1.target_cache_value import TargetCacheValue
 from library.v1.enum_conversion_output import EnumConversionOutput
+from library.v1.target_cache_value import TargetCacheValue
 
 
 def handler_manager_callback() -> bool:
@@ -43,7 +43,7 @@ def handler_manager_callback() -> bool:
     return True
 
 
-def handle_targets(target_name: string) -> bool:
+def handle_targets(target_name: str) -> bool:
     file_log_manager.singleton.log_info(
         f"'run.script' - '{target_name}' script execution start"
     )
@@ -51,7 +51,7 @@ def handle_targets(target_name: string) -> bool:
     is_enabled_found = (
         value_cache_manager.singleton.is_key_found(
             [
-                f"workspace/public/configuration/workspace.yaml-raw",
+                "workspace/public/configuration/workspace.yaml-raw",
                 "data",
                 "script",
                 "is-enabled",
@@ -62,7 +62,7 @@ def handle_targets(target_name: string) -> bool:
     is_enabled = (
         value_cache_manager.singleton.get_one_value(
             [
-                f"workspace/public/configuration/workspace.yaml-raw",
+                "workspace/public/configuration/workspace.yaml-raw",
                 "data",
                 "script",
                 "is-enabled",
@@ -81,7 +81,7 @@ def handle_targets(target_name: string) -> bool:
     is_process_override_enabled = (
         value_cache_manager.singleton.get_one_value(
             [
-                f"workspace/public/configuration/workspace.yaml-raw",
+                "workspace/public/configuration/workspace.yaml-raw",
                 "data",
                 "script",
                 "is-process-override-enabled",
@@ -93,7 +93,7 @@ def handle_targets(target_name: string) -> bool:
     default_script_process = (
         value_cache_manager.singleton.get_one_value(
             [
-                f"workspace/public/configuration/workspace.yaml-raw",
+                "workspace/public/configuration/workspace.yaml-raw",
                 "data",
                 "script",
                 "process",
@@ -142,9 +142,10 @@ def handle_targets(target_name: string) -> bool:
     )
 
     for current_script_command in script_commands:
-        if not "run" in current_script_command:
+        if "run" not in current_script_command:
             log_manager.singleton.log_warning(
-                f"'run.script' - a command within the '{target_name}' script does not have a 'run' property"
+                f"'run.script' - a command within the '{target_name}'"
+                "script does not have a 'run' property"
             )
             continue
 

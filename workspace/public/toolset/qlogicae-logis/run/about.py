@@ -1,33 +1,17 @@
-import time
-import random
 import argparse
 
-from rich.live import Live
-from rich.rule import Rule
 from pyfiglet import Figlet
-from rich.panel import Panel
-from rich.table import Table
-from rich.padding import Padding
 from rich.console import Console
-from rich.progress import (
-    Progress,
-    SpinnerColumn,
-    BarColumn,
-    TextColumn,
-    TaskProgressColumn,
-    TimeElapsedColumn,
-    TimeRemainingColumn,
-)
+from rich.padding import Padding
+from rich.rule import Rule
+from rich.table import Table
 
 from library.v1 import (
-    log_manager,
     file_log_manager,
-    workspace_manager,
     value_cache_manager,
-    yaml_file_io_manager,
+    workspace_manager,
 )
 from library.v1.target_cache_value import TargetCacheValue
-from library.v1.enum_conversion_output import EnumConversionOutput
 
 
 def handler_manager_callback() -> bool:
@@ -84,7 +68,7 @@ def handler_manager_callback() -> bool:
     )
     cli_table.add_column("Key", style="bold white", no_wrap=True)
     cli_table.add_column("Value", style="white")
-    for key, item in toolset_about_table.items():
+    for _key, item in toolset_about_table.items():
         item_name = item["name"] if "name" in item else "None"
         item_value = str(item["value"]) if "value" in item else "None"
         cli_table.add_row(item_name, item_value)
@@ -92,7 +76,8 @@ def handler_manager_callback() -> bool:
     cli_parser = argparse.ArgumentParser(
         description="'run.about' command",
     )
-    cli_arguments = cli_parser.parse_args()
+    cli_parser.parse_args()
+    # cli_arguments = cli_parser.parse_args()
 
     # cli_progress_items = [
     #     ("Loading", "white"),
@@ -135,7 +120,7 @@ def handler_manager_callback() -> bool:
     #         time.sleep(0.5)
     # cli_console.print(f"[dim]Completed in {} seconds[/]")
 
-    file_log_manager.singleton.log_info(f"'run.about' - about execution start")
+    file_log_manager.singleton.log_info("'run.about' - about execution start")
     cli_console.print(
         Padding(
             f"[white]{cli_logo}[/]\n[white]{toolset_about_project_description}[/]",
@@ -149,7 +134,7 @@ def handler_manager_callback() -> bool:
             (2, 4),
         )
     )
-    file_log_manager.singleton.log_info(f"'run.about' - about execution complete")
+    file_log_manager.singleton.log_info("'run.about' - about execution complete")
 
     return True
 

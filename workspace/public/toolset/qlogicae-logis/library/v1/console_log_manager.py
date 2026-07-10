@@ -33,7 +33,7 @@ class ConsoleLogManager:
 
         return True
 
-    def log(self, message: str, options: LogOptions = LogOptions()) -> str:
+    def log(self, message: str, options: LogOptions) -> str:
         if not options.is_enabled:
             return
 
