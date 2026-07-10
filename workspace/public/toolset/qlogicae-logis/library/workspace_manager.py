@@ -45,7 +45,7 @@ class WorkspaceManager:
 
     def setup(self) -> bool:
         self.handle_timestamp_console_execution_start_setup()
-        self.handle_executing_cossole_filesystem_paths_setup()
+        self.handle_executing_console_filesystem_paths_setup()
         self.handle_workspace_configuration_file_data_extraction_setup()
         self.handle_value_cache_macros_setup()
         self.handle_macros_parsing_setup()
