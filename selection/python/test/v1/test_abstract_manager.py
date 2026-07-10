@@ -1,15 +1,15 @@
 import pytest
 
-from library.abstract_manager import (
+from library.v1.abstract_manager import (
     AbstractManager,
 )
-from library.abstract_manager_configurations import (
+from library.v1.abstract_manager_configurations import (
     AbstractManagerConfigurations,
 )
-from library.error_manager import (
+from library.v1.error_manager import (
     ErrorManager,
 )
-from library.singleton_manager import (
+from library.v1.singleton_manager import (
     SingletonManager,
 )
 

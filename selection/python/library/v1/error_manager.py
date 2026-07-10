@@ -1,4 +1,4 @@
-from library.error_manager_configurations import (
+from library.v1.error_manager_configurations import (
     ErrorManagerConfigurations,
 )
 

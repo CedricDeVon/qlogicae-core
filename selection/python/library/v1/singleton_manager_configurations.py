@@ -1,4 +1,4 @@
-from library.abstract_manager_configurations import (
+from library.v1.abstract_manager_configurations import (
     AbstractManagerConfigurations,
 )
 

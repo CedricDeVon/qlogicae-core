@@ -1,9 +1,9 @@
 import pytest
 
-from library.singleton_manager import (
+from library.v1.singleton_manager import (
     SingletonManager,
 )
-from library.singleton_manager_configurations import (
+from library.v1.singleton_manager_configurations import (
     SingletonManagerConfigurations,
 )
 

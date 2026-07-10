@@ -1,9 +1,9 @@
 import pytest
 
-from library.error_manager import (
+from library.v1.error_manager import (
     ErrorManager,
 )
-from library.error_manager_configurations import (
+from library.v1.error_manager_configurations import (
     ErrorManagerConfigurations,
 )
 

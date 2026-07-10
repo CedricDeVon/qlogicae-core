@@ -1,7 +1,7 @@
 from collections.abc import Callable
 from typing import Any, TypeVar
 
-from library.singleton_manager_configurations import (
+from library.v1.singleton_manager_configurations import (
     SingletonManagerConfigurations,
 )
 

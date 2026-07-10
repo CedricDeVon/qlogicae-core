@@ -1,20 +1,18 @@
-from typing import Generic, TypeVar
+from typing import TypeVar
 
-from library.abstract_manager_configurations import (
+from library.v1.abstract_manager_configurations import (
     AbstractManagerConfigurations,
 )
-from library.error_manager import ErrorManager
-from library.singleton_manager import SingletonManager
-
+from library.v1.error_manager import ErrorManager
+from library.v1.singleton_manager import SingletonManager
 
 Configurations = TypeVar(
     "Configurations",
     bound=AbstractManagerConfigurations,
 )
 
-class AbstractManager(
-    Generic[Configurations],
-):
+
+class AbstractManager[Configurations: AbstractManagerConfigurations]:
     def __init__(
         self,
         new_configurations: Configurations,
