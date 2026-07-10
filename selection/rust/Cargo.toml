@@ -9,7 +9,7 @@ repository = "https://github.com/CedricDeVon/qlogicae-cor"
 homepage = "https://github.com/CedricDeVon/qlogicae-cor"
 documentation = "https://docs.rs/qlogicae-cor"
 readme = "README.md"
-keywords = ["qlogicae", "cor", "framework", "library", "package", "rust"]
+keywords = ["qlogicae", "cor", "framework", "library", "package"]
 categories = ["development-tools"]
 include = [
     "project/**",
