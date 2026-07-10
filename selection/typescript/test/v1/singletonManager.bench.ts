@@ -1,6 +1,6 @@
 import { bench, describe } from 'vitest';
 
-import { SingletonManager } from '../output/build/library/singletonManager';
+import { SingletonManager } from '../../output/build/library/v1/singletonManager';
 
 class TestClass {
 	public value = Math.random();

@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { SingletonManager } from '../output/build/library/singletonManager';
-import { SingletonManagerConfigurations } from '../output/build/library/singletonManagerConfigurations';
+import { SingletonManager } from '../../output/build/library/v1/singletonManager';
+import { SingletonManagerConfigurations } from '../../output/build/library/v1/singletonManagerConfigurations';
 
 class TestClass {
 	public readonly value = Math.random();

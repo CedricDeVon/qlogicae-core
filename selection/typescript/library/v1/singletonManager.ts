@@ -62,8 +62,7 @@ export class SingletonManager {
 	): Type {
 		try {
 			let instance = this.singletons.get(constructorFunction) as
-				| Type
-				| undefined;
+				Type | undefined;
 
 			if (instance === undefined) {
 				instance = new constructorFunction();
@@ -91,8 +90,7 @@ export class SingletonManager {
 			}
 
 			let instances = this.singletonArrays.get(constructorFunction) as
-				| Type[]
-				| undefined;
+				Type[] | undefined;
 
 			if (instances === undefined) {
 				instances = [];

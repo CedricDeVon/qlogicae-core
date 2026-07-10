@@ -1,7 +1,7 @@
 import { bench, describe } from 'vitest';
 
-import { AbstractManager } from '../output/build/library/abstractManager';
-import { AbstractManagerConfigurations } from '../output/build/library/abstractManagerConfigurations';
+import { AbstractManager } from '../../output/build/library/v1/abstractManager';
+import { AbstractManagerConfigurations } from '../../output/build/library/v1/abstractManagerConfigurations';
 
 class TestConfigurations extends AbstractManagerConfigurations {}
 

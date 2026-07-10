@@ -1,7 +1,7 @@
 import { bench, describe } from 'vitest';
 
-import { ErrorManager } from '../output/build/library/errorManager';
-import { ErrorManagerConfigurations } from '../output/build/library/errorManagerConfigurations';
+import { ErrorManager } from '../../output/build/library/v1/errorManager';
+import { ErrorManagerConfigurations } from '../../output/build/library/v1/errorManagerConfigurations';
 
 describe('ErrorManager Benchmarks', () => {
 	bench('setup - normal', () => {

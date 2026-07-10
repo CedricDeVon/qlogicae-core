@@ -38,8 +38,9 @@ export abstract class AbstractManager<
 				return false;
 			}
 
-			this.configurations = new (this.configurations
-				.constructor as new () => Configurations)();
+			this.configurations = new (
+				this.configurations.constructor as new () => Configurations
+			)();
 
 			return true;
 		} catch (error: unknown) {

@@ -1,6 +1,6 @@
 {
-	"name": "qlogicae-cor1",
-	"version": "1.2.11",
+	"name": "qlogicae-cor",
+	"version": "1.2.12",
 	"author": "Vaughn Cedric L. Araneta",
 	"main": "./index.js",
 	"module": "index.ts",
@@ -23,7 +23,7 @@
 		"yarn": "^1.22.22"
 	},
 	"bin": {
-		"qlogicae-cor1": "./library/version.js"
+		"qlogicae-cor": "./library/version.js"
 	},
 	"description": "The core library for QLogicae projects",
 	"keywords": [
