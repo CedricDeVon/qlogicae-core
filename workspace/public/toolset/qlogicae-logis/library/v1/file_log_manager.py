@@ -55,7 +55,7 @@ class FileLogManager:
 
         else:
             for current_file_path in self.file_handlers:
-                with open(
+                with Path.open(
                     current_file_path,
                     "a",
                     encoding=file_io_manager.singleton.file_encoding,

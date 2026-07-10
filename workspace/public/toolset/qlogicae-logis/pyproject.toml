@@ -1,9 +1,9 @@
 [tool.ruff]
-line-length = 88
 target-version = "py314"
+line-length = 88
 exclude = [
-    ".venv",
     ".git",
+    ".venv",
     "__pycache__",
     ".output",
     "output",
@@ -13,16 +13,88 @@ exclude = [
     "dist",
     ".build",
     "build",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".mypy_cache",
+    ".tox",
+    ".nox",
+    ".idea",
+    ".vscode",
 ]
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "B", "UP"]
-ignore = []
+select = [
+    # pycodestyle
+    "E",
+    "W",
+
+    # Pyflakes
+    "F",
+
+    # isort
+    "I",
+
+    # pyupgrade
+    "UP",
+
+    # flake8-bugbear
+    "B",
+
+    # pathlib
+    "PTH",
+
+    # flake8-comprehensions
+    # "C4",
+
+    # flake8-simplify
+    # "SIM",
+
+    # flake8-return
+    # "RET",
+
+    # flake8-unused-arguments
+    # "ARG",
+
+    # flake8-builtins
+    # "A",
+
+    # flake8-bandit (security)
+    # "S",
+
+    # flake8-logging-format
+    # "G",
+
+    # flake8-pie
+    # "PIE",
+
+    # flake8-quotes
+    # "Q",
+
+    # eradicate (commented-out code)
+    # "ERA",
+
+    # Ruff-specific
+    # "RUF",
+]
+ignore = [
+    # allow assert statements
+    "S101",
+
+    # allow subprocess usage
+    "S603",
+    "S607",
+
+    # allow magic values
+    "PLR2004",
+]
 fixable = ["ALL"]
 unfixable = []
+
 
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"
-
-
+line-ending = "auto"
+docstring-code-format = true
+docstring-code-line-length = "dynamic"
+skip-magic-trailing-comma = false

@@ -215,7 +215,7 @@ class WorkspaceManager:
                 if not current_configuration_file.is_file():
                     continue
 
-                with open(
+                with Path.open(
                     current_configuration_file.resolve(),
                     encoding=file_io_manager.singleton.file_encoding,
                 ) as current_file:
@@ -256,7 +256,7 @@ class WorkspaceManager:
             if not current_configuration_file.is_file():
                 continue
 
-            with open(
+            with Path.open(
                 current_configuration_file.resolve(),
                 encoding=file_io_manager.singleton.file_encoding,
             ) as current_file:
