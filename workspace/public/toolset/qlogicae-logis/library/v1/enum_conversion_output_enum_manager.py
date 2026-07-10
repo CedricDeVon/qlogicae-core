@@ -1,9 +1,18 @@
 from typing import Any
 
+from library.v1.abstract_manager import AbstractManager
 from library.v1.enum_conversion_output import EnumConversionOutput
+from library.v1.enum_conversion_output_enum_manager_configurations import (
+    EnumConversionOutputEnumManagerConfigurations,
+)
 
 
-class EnumConversionOutputEnumManager:
+class EnumConversionOutputEnumManager(
+    AbstractManager[EnumConversionOutputEnumManagerConfigurations]
+):
+    def __init__(self) -> None:
+        super().__init__(EnumConversionOutputEnumManagerConfigurations())
+
     def convert_value(
         self, value, conversion_output_type=EnumConversionOutput.STRING
     ) -> Any:

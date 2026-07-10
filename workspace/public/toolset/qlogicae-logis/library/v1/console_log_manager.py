@@ -1,12 +1,18 @@
 import logging
 
 from library.v1 import log_options_manager
+from library.v1.abstract_manager import AbstractManager
+from library.v1.console_log_manager_configurations import (
+    ConsoleLogManagerConfigurations,
+)
 from library.v1.log_format import LogFormat
 from library.v1.log_options import LogOptions
 
 
-class ConsoleLogManager:
+class ConsoleLogManager(AbstractManager[ConsoleLogManagerConfigurations]):
     def __init__(self) -> None:
+        super().__init__(ConsoleLogManagerConfigurations())
+
         self.logger = logging.getLogger("console-logger")
 
         self.logger.setLevel(logging.DEBUG)

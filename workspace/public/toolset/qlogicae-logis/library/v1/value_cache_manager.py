@@ -1,10 +1,17 @@
 from typing import Any
 
 from library.v1 import filesystem_manager, value_cache_storage_manager
+from library.v1.abstract_manager import AbstractManager
 from library.v1.target_cache_value import TargetCacheValue
+from library.v1.value_cache_manager_configurations import (
+    ValueCacheManagerConfigurations,
+)
 
 
-class ValueCacheManager:
+class ValueCacheManager(AbstractManager[ValueCacheManagerConfigurations]):
+    def __init__(self) -> None:
+        super().__init__(ValueCacheManagerConfigurations())
+
     def is_key_found(self, keys: list[str]) -> bool:
         return value_cache_storage_manager.singleton.is_key_found(keys)
 

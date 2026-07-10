@@ -1,5 +1,13 @@
-class TextEncodingManager:
+from library.v1.abstract_manager import AbstractManager
+from library.v1.text_encoding_manager_configurations import (
+    TextEncodingManagerConfigurations,
+)
+
+
+class TextEncodingManager(AbstractManager[TextEncodingManagerConfigurations]):
     def __init__(self) -> None:
+        super().__init__(TextEncodingManagerConfigurations())
+
         self._encoding: str = "utf-8"
 
     @property

@@ -8,10 +8,18 @@ from library.v1 import (
     yaml_file_io_manager,
     yaml_manager,
 )
+from library.v1.abstract_manager import AbstractManager
+from library.v1.workspace_filesystem_manager_configurations import (
+    WorkspaceFilesystemManagerConfigurations,
+)
 
 
-class WorkspaceFilesystemManager:
+class WorkspaceFilesystemManager(
+    AbstractManager[WorkspaceFilesystemManagerConfigurations]
+):
     def __init__(self) -> None:
+        super().__init__(WorkspaceFilesystemManagerConfigurations())
+
         self._scope_selections: set[str] = {"private", "public"}
 
     @property

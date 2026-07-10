@@ -1,9 +1,16 @@
 import logging
 
+from library.v1.abstract_manager import AbstractManager
 from library.v1.log_options import LogOptions
+from library.v1.log_options_manager_configurations import (
+    LogOptionsManagerConfigurations,
+)
 
 
-class LogOptionsManager:
+class LogOptionsManager(AbstractManager[LogOptionsManagerConfigurations]):
+    def __init__(self) -> None:
+        super().__init__(LogOptionsManagerConfigurations())
+
     def generate_modified_defaults(
         self, default_log_options, log_level=logging.DEBUG
     ) -> LogOptions:

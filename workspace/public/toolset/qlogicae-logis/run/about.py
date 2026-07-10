@@ -127,7 +127,7 @@ def handler_manager_callback() -> bool:
             (2, 4),
         )
     )
-    cli_console.print(Rule(style="white"))
+    cli_console.print(Rule(style="bold green"))
     cli_console.print(
         Padding(
             cli_table,

@@ -1,8 +1,13 @@
 from typing import Any
 
+from library.v1.abstract_manager import AbstractManager
+from library.v1.json_manager_configurations import JsonManagerConfigurations
 
-class JsonManager:
+
+class JsonManager(AbstractManager[JsonManagerConfigurations]):
     def __init__(self) -> None:
+        super().__init__(JsonManagerConfigurations())
+
         self._valid_file_extensions: set[str] = {".json"}
         self._is_ascii_format_enabled: bool = False
         self._indent_count: int = 4

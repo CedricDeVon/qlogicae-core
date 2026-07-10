@@ -2,9 +2,14 @@ import json
 from typing import Any
 
 from library.v1 import json_manager
+from library.v1.abstract_manager import AbstractManager
+from library.v1.json_text_manager_configurations import JsonTextManagerConfigurations
 
 
-class JsonTextManager:
+class JsonTextManager(AbstractManager[JsonTextManagerConfigurations]):
+    def __init__(self) -> None:
+        super().__init__(JsonTextManagerConfigurations())
+
     def is_valid(self, value: str) -> bool:
         try:
             json.loads(value)

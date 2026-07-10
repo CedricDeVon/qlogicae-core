@@ -2,9 +2,16 @@ import json
 from typing import Any
 
 from library.v1 import json_manager
+from library.v1.abstract_manager import AbstractManager
+from library.v1.json_file_io_manager_configurations import (
+    JsonFileIoManagerConfigurations,
+)
 
 
-class JsonFileIoManager:
+class JsonFileIoManager(AbstractManager[JsonFileIoManagerConfigurations]):
+    def __init__(self) -> None:
+        super().__init__(JsonFileIoManagerConfigurations())
+
     def read_file(self, file: Any) -> Any:
         return json.load(file) or {}
 

@@ -1,8 +1,13 @@
 from typing import Any
 
+from library.v1.abstract_manager import AbstractManager
+from library.v1.yaml_manager_configurations import YamlManagerConfigurations
 
-class YamlManager:
+
+class YamlManager(AbstractManager[YamlManagerConfigurations]):
     def __init__(self) -> None:
+        super().__init__(YamlManagerConfigurations())
+
         self._valid_suffixes: set[str] = {".yaml", ".yml"}
         self._is_key_sorting_enabled: bool = False
         self._is_default_flow_state_enabled: bool = False

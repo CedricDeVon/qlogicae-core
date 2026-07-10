@@ -3,9 +3,14 @@ from typing import Any
 import yaml
 
 from library.v1 import yaml_manager
+from library.v1.abstract_manager import AbstractManager
+from library.v1.yaml_text_manager_configurations import YamlTextManagerConfigurations
 
 
-class YamlTextManager:
+class YamlTextManager(AbstractManager[YamlTextManagerConfigurations]):
+    def __init__(self) -> None:
+        super().__init__(YamlTextManagerConfigurations())
+
     def is_valid(self, value: str) -> bool:
         try:
             yaml.safe_load(value)

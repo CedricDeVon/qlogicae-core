@@ -2,11 +2,15 @@ import time
 from datetime import date, datetime
 
 from library.v1 import time_zone_enum_manager
+from library.v1.abstract_manager import AbstractManager
 from library.v1.enum_conversion_output import EnumConversionOutput
+from library.v1.time_manager_configurations import TimeManagerConfigurations
 
 
-class TimeManager:
+class TimeManager(AbstractManager[TimeManagerConfigurations]):
     def __init__(self) -> None:
+        super().__init__(TimeManagerConfigurations())
+
         self._current_time_zone = time_zone_enum_manager.singleton.convert_value(
             "local", EnumConversionOutput.CUSTOM
         )

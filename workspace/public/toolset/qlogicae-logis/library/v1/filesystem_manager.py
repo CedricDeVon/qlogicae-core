@@ -1,15 +1,20 @@
 import shutil
 from pathlib import Path
 
+from library.v1.abstract_manager import AbstractManager
 from library.v1.file_entity_filesystem_tree_setup_options import (
     FileEntityFileSystemTreeSetupOptions,
 )
+from library.v1.filesystem_manager_configurations import FileSystemManagerConfigurations
 from library.v1.folder_entity_filesystem_tree_setup_options import (
     FolderEntityFileSystemTreeSetupOptions,
 )
 
 
-class FileSystemManager:
+class FileSystemManager(AbstractManager[FileSystemManagerConfigurations]):
+    def __init__(self) -> None:
+        super().__init__(FileSystemManagerConfigurations())
+
     def throw_if_filesystem_path_invalid(self, value):
         path = Path(value)
 

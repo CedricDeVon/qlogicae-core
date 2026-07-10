@@ -1,8 +1,14 @@
 import os
 from pathlib import Path
 
+from library.v1.abstract_manager import AbstractManager
+from library.v1.system_manager_configurations import SystemManagerConfigurations
 
-class SystemManager:
+
+class SystemManager(AbstractManager[SystemManagerConfigurations]):
+    def __init__(self) -> None:
+        super().__init__(SystemManagerConfigurations())
+
     @property
     def current_executing_console_filesystem_path(self):
         return Path.cwd()

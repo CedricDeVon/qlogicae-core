@@ -2,9 +2,14 @@ from pathlib import Path
 from typing import Any
 
 from library.v1 import text_encoding_manager
+from library.v1.abstract_manager import AbstractManager
+from library.v1.file_io_manager_configurations import FileIoManagerConfigurations
 
 
-class FileIoManager:
+class FileIoManager(AbstractManager[FileIoManagerConfigurations]):
+    def __init__(self) -> None:
+        super().__init__(FileIoManagerConfigurations())
+
     @property
     def file_encoding(self) -> str:
         return text_encoding_manager.singleton.encoding

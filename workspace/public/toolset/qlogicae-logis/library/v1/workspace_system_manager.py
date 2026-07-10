@@ -2,10 +2,17 @@ from library.v1 import (
     system_manager,
     value_cache_manager,
 )
+from library.v1.abstract_manager import AbstractManager
 from library.v1.target_cache_value import TargetCacheValue
+from library.v1.workspace_system_manager_configurations import (
+    WorkspaceSystemManagerConfigurations,
+)
 
 
-class WorkspaceSystemManager:
+class WorkspaceSystemManager(AbstractManager[WorkspaceSystemManagerConfigurations]):
+    def __init__(self) -> None:
+        super().__init__(WorkspaceSystemManagerConfigurations())
+
     def navigate_to_root(self) -> bool:
         self.navigate(
             value_cache_manager.singleton.get_one_value(

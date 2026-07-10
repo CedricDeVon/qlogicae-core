@@ -1,11 +1,18 @@
 from datetime import UTC, datetime
 from typing import Any
 
+from library.v1.abstract_manager import AbstractManager
 from library.v1.enum_conversion_output import EnumConversionOutput
 from library.v1.time_zone import TimeZone
+from library.v1.time_zone_enum_manager_configurations import (
+    TimeZoneEnumManagerConfigurations,
+)
 
 
-class TimeZoneEnumManager:
+class TimeZoneEnumManager(AbstractManager[TimeZoneEnumManagerConfigurations]):
+    def __init__(self) -> None:
+        super().__init__(TimeZoneEnumManagerConfigurations())
+
     def convert_value(
         self, value, conversion_output_type=EnumConversionOutput.STRING
     ) -> Any:

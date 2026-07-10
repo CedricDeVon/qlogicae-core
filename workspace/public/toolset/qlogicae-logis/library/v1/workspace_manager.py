@@ -17,15 +17,20 @@ from library.v1 import (
     workspace_filesystem_manager,
     workspace_system_manager,
 )
+from library.v1.abstract_manager import AbstractManager
 from library.v1.filesystem_manager import (
     FileEntityFileSystemTreeSetupOptions,
     FolderEntityFileSystemTreeSetupOptions,
 )
 from library.v1.log_options import LogOptions
 from library.v1.target_cache_value import TargetCacheValue
+from library.v1.workspace_manager_configurations import WorkspaceManagerConfigurations
 
 
-class WorkspaceManager:
+class WorkspaceManager(AbstractManager[WorkspaceManagerConfigurations]):
+    def __init__(self) -> None:
+        super().__init__(WorkspaceManagerConfigurations())
+
     def debug_value_cache(self) -> bool:
         self.setup()
 

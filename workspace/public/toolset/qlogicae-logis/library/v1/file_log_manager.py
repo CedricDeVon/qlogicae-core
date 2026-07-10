@@ -4,12 +4,16 @@ from logging.handlers import QueueHandler, QueueListener
 from pathlib import Path
 
 from library.v1 import file_io_manager, log_options_manager
+from library.v1.abstract_manager import AbstractManager
+from library.v1.file_log_manager_configurations import FileLogManagerConfigurations
 from library.v1.log_format import LogFormat
 from library.v1.log_options import LogOptions
 
 
-class FileLogManager:
+class FileLogManager(AbstractManager[FileLogManagerConfigurations]):
     def __init__(self) -> None:
+        super().__init__(FileLogManagerConfigurations())
+
         self.logger = logging.getLogger("file-logger")
 
         self.logger.setLevel(logging.DEBUG)

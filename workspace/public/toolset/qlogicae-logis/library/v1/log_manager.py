@@ -1,10 +1,15 @@
 import logging
 
 from library.v1 import console_log_manager, file_log_manager, log_options_manager
+from library.v1.abstract_manager import AbstractManager
+from library.v1.log_manager_configurations import LogManagerConfigurations
 from library.v1.log_options import LogOptions
 
 
-class LogManager:
+class LogManager(AbstractManager[LogManagerConfigurations]):
+    def __init__(self) -> None:
+        super().__init__(LogManagerConfigurations())
+
     def log(
         self,
         message: str,

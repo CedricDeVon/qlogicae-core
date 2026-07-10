@@ -1,8 +1,13 @@
 from typing import Any
 
+from library.v1.abstract_manager import AbstractManager
+from library.v1.text_manager_configurations import TextManagerConfigurations
 
-class TextManager:
+
+class TextManager(AbstractManager[TextManagerConfigurations]):
     def __init__(self) -> None:
+        super().__init__(TextManagerConfigurations())
+
         self._valid_file_extensions: set[str] = {".txt"}
 
     @property

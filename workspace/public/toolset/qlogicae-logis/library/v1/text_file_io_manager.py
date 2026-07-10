@@ -2,9 +2,16 @@ from pathlib import Path
 from typing import Any
 
 from library.v1 import text_encoding_manager
+from library.v1.abstract_manager import AbstractManager
+from library.v1.text_file_io_manager_configurations import (
+    TextFileIoManagerConfigurations,
+)
 
 
-class TextFileIoManager:
+class TextFileIoManager(AbstractManager[TextFileIoManagerConfigurations]):
+    def __init__(self) -> None:
+        super().__init__(TextFileIoManagerConfigurations())
+
     def read_file(self, file: Any) -> str:
         return file.read() or {}
 

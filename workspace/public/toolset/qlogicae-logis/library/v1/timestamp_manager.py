@@ -2,10 +2,15 @@ import time
 from datetime import UTC, datetime
 
 from library.v1 import time_manager
+from library.v1.abstract_manager import AbstractManager
 from library.v1.time_unit import TimeUnit
+from library.v1.timestamp_manager_configurations import TimestampManagerConfigurations
 
 
-class TimestampManager:
+class TimestampManager(AbstractManager[TimestampManagerConfigurations]):
+    def __init__(self) -> None:
+        super().__init__(TimestampManagerConfigurations())
+
     @property
     def current_standard_timestamp(self) -> str:
         timestamp_nanoseconds = time.time_ns()

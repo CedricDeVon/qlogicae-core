@@ -1,9 +1,16 @@
 from collections.abc import Mapping
 from typing import Any
 
+from library.v1.abstract_manager import AbstractManager
+from library.v1.value_cache_storage_manager_configurations import (
+    ValueCacheStorageManagerConfigurations,
+)
 
-class ValueCacheStorageManager:
+
+class ValueCacheStorageManager(AbstractManager[ValueCacheStorageManagerConfigurations]):
     def __init__(self) -> None:
+        super().__init__(ValueCacheStorageManagerConfigurations())
+
         self._collection: Mapping[str, Any] = {}
 
     @property

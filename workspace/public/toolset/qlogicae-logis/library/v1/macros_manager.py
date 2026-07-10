@@ -2,9 +2,14 @@ import re
 from collections.abc import Mapping
 from typing import Any
 
+from library.v1.abstract_manager import AbstractManager
+from library.v1.macros_manager_configurations import MacrosManagerConfigurations
 
-class MacrosManager:
+
+class MacrosManager(AbstractManager[MacrosManagerConfigurations]):
     def __init__(self) -> None:
+        super().__init__(MacrosManagerConfigurations())
+
         self.pattern = re.compile(r"\$\{\{\s*([A-Za-z0-9._-]+)\s*\}\}")
 
     def resolve_many(self, values: Any) -> Mapping[str, Any]:

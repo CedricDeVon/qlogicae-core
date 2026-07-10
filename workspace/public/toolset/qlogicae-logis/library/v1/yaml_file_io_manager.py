@@ -3,9 +3,16 @@ from typing import Any
 import yaml
 
 from library.v1 import yaml_manager
+from library.v1.abstract_manager import AbstractManager
+from library.v1.yaml_file_io_manager_configurations import (
+    YamlFileIoManagerConfigurations,
+)
 
 
-class YamlFileIoManager:
+class YamlFileIoManager(AbstractManager[YamlFileIoManagerConfigurations]):
+    def __init__(self) -> None:
+        super().__init__(YamlFileIoManagerConfigurations())
+
     def read_file(self, file: Any) -> Any:
         return yaml.safe_load(file) or {}
 
