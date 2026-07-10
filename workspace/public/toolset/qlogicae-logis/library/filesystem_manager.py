@@ -1,13 +1,28 @@
 import shutil
 from pathlib import Path
+from dataclasses import dataclass, field
 
 
-class FileSystem:
+@dataclass(frozen=True, slots=True)
+class FileEntityFileSystemTreeSetupOptions:
+    content: str = "data"
+    name: str = "file"
+    encoding: str = "utf-8"
+    is_modifiable: bool = False
+
+
+@dataclass(frozen=True, slots=True)
+class FolderEntityFileSystemTreeSetupOptions:
+    name: str = "folder"
+    entities: list = field(default_factory=list)
+
+
+class FileSystemManager:
     def throw_if_filesystem_path_invalid(self, value):
         path = Path(value)
 
         if not path.exists():
-            raise Exception(f"Path '{path}' is invalid")
+            raise Exception(f"filesystem path '{path}' is invalid")
 
         return False
 
@@ -15,7 +30,7 @@ class FileSystem:
         path = Path(value)
 
         if not path.is_file():
-            raise Exception(f"File '{path}' is invalid")
+            raise Exception(f"file path '{path}' is invalid")
 
         return False
 
@@ -23,7 +38,7 @@ class FileSystem:
         path = Path(value)
 
         if not path.is_dir():
-            raise Exception(f"'{path}' is invalid")
+            raise Exception(f"folder path '{path}' is invalid")
 
         return False
 
@@ -60,13 +75,13 @@ class FileSystem:
         }
 
         if directory in protected_paths:
-            raise Exception(f"'{path}' is protected")
+            raise Exception(f"folder path '{path}' is protected")
 
         if not directory.exists():
             return True
 
         if not directory.is_dir():
-            raise Exception(f"'{path}' is not a folder")
+            raise Exception(f"file path '{path}' is not a folder")
 
         for item in directory.iterdir():
             if item.is_file() or item.is_symlink():
@@ -93,5 +108,25 @@ class FileSystem:
 
         return True
 
+    def setup_filesystem_tree(
+        self,
+        parent_path: Path,
+        options: FolderEntityFileSystemTreeSetupOptions,
+    ):
+        if not parent_path.exists():
+            raise Exception(f"filesystem path '{parent_path}' is invalid")
 
-singleton = FileSystem()
+        parent_path.mkdir(parents=True, exist_ok=True)
+        for entity in (options.entities or []):
+            entity_path = parent_path / entity.name
+
+            if isinstance(entity, FolderEntityFileSystemTreeSetupOptions):
+                entity_path.mkdir(parents=True, exist_ok=True)
+                self.setup_filesystem_tree(entity_path, entity)
+
+            elif isinstance(entity, FileEntityFileSystemTreeSetupOptions):
+                if not entity_path.exists() or entity.is_modifiable:
+                    entity_path.write_text(entity.content, encoding=entity.encoding)
+
+
+singleton = FileSystemManager()

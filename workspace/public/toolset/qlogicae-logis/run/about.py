@@ -74,7 +74,6 @@ def handler_manager_callback() -> bool:
         else "The project management tool for QLogicae projects"
     )
 
-
     cli_console = Console()
     cli_logo = Figlet(font="slant").renderText(toolset_about_brand_name)
     cli_table = Table(
@@ -95,48 +94,46 @@ def handler_manager_callback() -> bool:
     )
     cli_arguments = cli_parser.parse_args()
 
+    # cli_progress_items = [
+    #     ("Loading", "white"),
+    # ]
+    # cli_progress_bar = Progress(
+    #     SpinnerColumn("dots", style="bold bright_white"),
+    #     TextColumn("[white]{task.description}"),
+    #     BarColumn(bar_width=80, complete_style="white"),
+    #     TextColumn("[white]{task.percentage:>6.2f}%"),
+    #     TimeElapsedColumn(),
+    # )
+    # cli_progress_bar_task = cli_progress_bar.add_task("", total=100)
+    # with Live(
+    #     cli_progress_bar,
+    #     console=cli_console,
+    #     refresh_per_second=60,
+    #     transient=True,
+    # ):
+    #     start = time.perf_counter()
+    #     for index, (message, color) in enumerate(cli_progress_items):
+    #         cli_progress_bar.update(cli_progress_bar_task, description=message)
 
-    cli_progress_items = [
-        ("Loading", "white"),
-    ]
-    cli_progress_bar = Progress(
-        SpinnerColumn("dots", style="bold bright_white"),
-        TextColumn("[white]{task.description}"),
-        BarColumn(bar_width=80, complete_style="white"),
-        TextColumn("[white]{task.percentage:>6.2f}%"),
-        TimeElapsedColumn(),
-    )
-    cli_progress_bar_task = cli_progress_bar.add_task("", total=100)
-    with Live(
-        cli_progress_bar,
-        console=cli_console,
-        refresh_per_second=60,
-        transient=True,
-    ):
-        start = time.perf_counter()
-        for index, (message, color) in enumerate(cli_progress_items):
-            cli_progress_bar.update(cli_progress_bar_task, description=message)
-
-            cli_progress_bar.update(
-                cli_progress_bar_task,
-                completed=min(index / len(cli_progress_items) * 100, 100),
-                elapsed=f"{(time.perf_counter() - start):.2f}s",
-            )
-            time.sleep(0.5)
-            cli_progress_bar.update(
-                cli_progress_bar_task,
-                completed=min(index / len(cli_progress_items) * 100, 100),
-                elapsed=f"{(time.perf_counter() - start):.2f}s",
-            )
-            time.sleep(0.5)
-            cli_progress_bar.update(
-                cli_progress_bar_task,
-                completed=min(index / len(cli_progress_items) * 100, 100),
-                elapsed=f"{(time.perf_counter() - start):.2f}s",
-            )
-            time.sleep(0.5)
+    #         cli_progress_bar.update(
+    #             cli_progress_bar_task,
+    #             completed=min(index / len(cli_progress_items) * 100, 100),
+    #             elapsed=f"{(time.perf_counter() - start):.2f}s",
+    #         )
+    #         time.sleep(0.5)
+    #         cli_progress_bar.update(
+    #             cli_progress_bar_task,
+    #             completed=min(index / len(cli_progress_items) * 100, 100),
+    #             elapsed=f"{(time.perf_counter() - start):.2f}s",
+    #         )
+    #         time.sleep(0.5)
+    #         cli_progress_bar.update(
+    #             cli_progress_bar_task,
+    #             completed=min(index / len(cli_progress_items) * 100, 100),
+    #             elapsed=f"{(time.perf_counter() - start):.2f}s",
+    #         )
+    #         time.sleep(0.5)
     # cli_console.print(f"[dim]Completed in {} seconds[/]")
-
 
     file_log_manager.singleton.log_info(f"'run.about' - about execution start")
     cli_console.print(

@@ -9,6 +9,7 @@ from library import (
     macros_manager,
     file_io_manager,
     file_log_manager,
+    filesystem_manager,
     timestamp_manager,
     console_log_manager,
     value_cache_manager,
@@ -18,6 +19,12 @@ from library import (
 )
 from library.log_options import LogOptions
 from library.target_cache_value import TargetCacheValue
+
+
+from library.filesystem_manager import (
+    FileEntityFileSystemTreeSetupOptions,
+    FolderEntityFileSystemTreeSetupOptions,
+)
 
 
 class WorkspaceManager:
@@ -46,12 +53,43 @@ class WorkspaceManager:
     def setup(self) -> bool:
         self.handle_timestamp_console_execution_start_setup()
         self.handle_executing_console_filesystem_paths_setup()
+        self.handle_workspace_filesystem_setup()
         self.handle_workspace_configuration_file_data_extraction_setup()
         self.handle_value_cache_macros_setup()
         self.handle_macros_parsing_setup()
         self.handle_logs_setup()
 
         return True
+
+    def handle_workspace_filesystem_setup(self) -> bool:
+        current_root_full_path = value_cache_manager.singleton.get_one_value(
+            ["current-root-full-path"],
+            output_type=TargetCacheValue.FOLDER_PATH,
+        )
+
+        filesystem_tree = FolderEntityFileSystemTreeSetupOptions(
+            entities=[
+                FolderEntityFileSystemTreeSetupOptions(
+                    name=".a",
+                    entities=[
+                        FolderEntityFileSystemTreeSetupOptions(
+                            name="a.a",
+                            entities=[
+                                FileEntityFileSystemTreeSetupOptions(name="a.a.a.txt")
+                            ],
+                        ),
+                        FileEntityFileSystemTreeSetupOptions(
+                            name="a.b.txt",
+                            # is_modifiable=True
+                        ),
+                    ],
+                )
+            ]
+        )
+
+        filesystem_manager.singleton.setup_filesystem_tree(
+            current_root_full_path, filesystem_tree
+        )
 
     def handle_timestamp_console_execution_start_setup(self) -> bool:
         value_cache_manager.singleton.set_one_value(
@@ -207,7 +245,6 @@ class WorkspaceManager:
 
                 if "is-tabular" not in item or item["is-tabular"]:
                     toolset_about_table[key] = item
-
 
         value_cache_manager.singleton.set_one_value(
             ["toolset-about"],
