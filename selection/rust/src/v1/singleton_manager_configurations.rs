@@ -1,4 +1,4 @@
-use crate::abstract_manager_configurations::AbstractManagerConfigurations;
+use crate::v1::abstract_manager_configurations::AbstractManagerConfigurations;
 
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct SingletonManagerConfigurations {

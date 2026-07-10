@@ -1,9 +1,9 @@
 use std::fmt::Display;
 use std::ops::{Deref, DerefMut};
 
-use crate::abstract_manager_configurations::AbstractManagerConfigurations;
-use crate::error_manager::ErrorManager;
-use crate::singleton_manager::SingletonManager;
+use crate::v1::abstract_manager_configurations::AbstractManagerConfigurations;
+use crate::v1::error_manager::ErrorManager;
+use crate::v1::singleton_manager::SingletonManager;
 
 #[derive(Debug, Clone)]
 pub struct AbstractManager<T>

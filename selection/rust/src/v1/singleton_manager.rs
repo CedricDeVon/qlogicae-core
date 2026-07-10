@@ -2,7 +2,7 @@ use std::any::{Any, TypeId};
 use std::collections::HashMap;
 use std::sync::{Arc, LazyLock, Mutex};
 
-use crate::singleton_manager_configurations::SingletonManagerConfigurations;
+use crate::v1::singleton_manager_configurations::SingletonManagerConfigurations;
 
 type SharedSingleton = Arc<dyn Any + Send + Sync>;
 

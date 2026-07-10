@@ -1,6 +1,6 @@
 use std::fmt::Display;
 
-use crate::error_manager_configurations::ErrorManagerConfigurations;
+use crate::v1::error_manager_configurations::ErrorManagerConfigurations;
 
 #[derive(Debug, Default, Clone)]
 pub struct ErrorManager {

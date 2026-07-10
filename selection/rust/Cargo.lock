@@ -4,4 +4,4 @@ version = 4
 
 [[package]]
 name = "qlogicae-cor"
-version = "1.0.1"
+version = "1.0.2"
