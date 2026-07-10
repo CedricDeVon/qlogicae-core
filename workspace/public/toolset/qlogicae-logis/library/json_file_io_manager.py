@@ -1,20 +1,22 @@
 import json
 from typing import Any
 
+from library import json_manager
+
 
 class JsonFileIoManager:
-    def __init__(self) -> None:
-        self._valid_suffixes: set[str] = {".json"}
-
-    @property
-    def valid_suffixes(self) -> set[str]:
-        return self._valid_suffixes
-
-    def is_valid(self, file: Any) -> bool:
-        return any(suffix in self._valid_suffixes for suffix in self._valid_suffixes)
-
     def read_file(self, file: Any) -> Any:
         return json.load(file) or {}
+
+    def write_file(self, file: Any, data: Any) -> bool:
+        json.dump(
+            data,
+            file,
+            indent=json_manager.singleton.indent_count,
+            ensure_ascii=json_manager.singleton.is_ascii_format_enabled,
+        )
+
+        return True
 
 
 singleton = JsonFileIoManager()

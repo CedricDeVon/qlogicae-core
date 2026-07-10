@@ -1,6 +1,9 @@
 from pathlib import Path
 
 from library import (
+    yaml_manager,
+    json_manager,
+    text_manager,
     yaml_file_io_manager,
     json_file_io_manager,
     text_file_io_manager,
@@ -20,10 +23,10 @@ class WorkspaceFilesystemManager:
         return Path(__file__).resolve().parent.parent.parent.parent.parent.parent
 
     def read_file(self, file: Any) -> Any:
-        if yaml_file_io_manager.singleton.is_valid(file):
+        if yaml_manager.singleton.is_valid_file_extensions(file):
             return yaml_file_io_manager.singleton.read_file(file)
 
-        elif json_file_io_manager.singleton.is_valid(file):
+        elif json_manager.singleton.is_valid_file_extensions(file):
             return json_file_io_manager.singleton.read_file(file)
 
         else:

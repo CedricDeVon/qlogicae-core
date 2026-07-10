@@ -1,20 +1,12 @@
 import shutil
 from pathlib import Path
-from dataclasses import dataclass, field
 
-
-@dataclass(frozen=True, slots=True)
-class FileEntityFileSystemTreeSetupOptions:
-    content: str = "data"
-    name: str = "file"
-    encoding: str = "utf-8"
-    is_modifiable: bool = False
-
-
-@dataclass(frozen=True, slots=True)
-class FolderEntityFileSystemTreeSetupOptions:
-    name: str = "folder"
-    entities: list = field(default_factory=list)
+from library.file_entity_filesystem_tree_setup_options import (
+    FileEntityFileSystemTreeSetupOptions,
+)
+from library.folder_entity_filesystem_tree_setup_options import (
+    FolderEntityFileSystemTreeSetupOptions,
+)
 
 
 class FileSystemManager:

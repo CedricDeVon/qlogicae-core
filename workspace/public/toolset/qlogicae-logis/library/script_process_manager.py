@@ -1,7 +1,7 @@
 import shlex
 import subprocess
 
-from library import text_manager
+from library import text_encoding_manager
 from library.script_process import ScriptProcess
 
 
@@ -18,7 +18,7 @@ class ScriptProcessManager:
             case ScriptProcess.SHELL:
                 return subprocess.run(
                     command,
-                    encoding=text_manager.singleton.encoding,
+                    encoding=text_encoding_manager.singleton.encoding,
                     text=True,
                     shell=True,
                 )
@@ -26,7 +26,7 @@ class ScriptProcessManager:
             case ScriptProcess.SUBPROCESS:
                 return subprocess.run(
                     shlex.split(command),
-                    encoding=text_manager.singleton.encoding,
+                    encoding=text_encoding_manager.singleton.encoding,
                     text=True,
                 )
 

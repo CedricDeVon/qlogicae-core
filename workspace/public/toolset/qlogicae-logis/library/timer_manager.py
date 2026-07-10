@@ -12,34 +12,34 @@ class TimerManager:
         self._start_timestamp = 0
         self._stop_timestamp = 0
 
-    def start(self) -> bool:
+    def start_time(self) -> bool:
         self._start_timestamp = time_manager.singleton.current_nanosecond
 
         return True
 
-    def stop(self) -> bool:
+    def stop_time(self) -> bool:
         self._stop_timestamp = time_manager.singleton.current_nanosecond
 
         return True
 
-    def clear(self) -> bool:
+    def clear_time(self) -> bool:
         self._start_timestamp = 0
         self._stop_timestamp = 0
 
         return True
 
-    def reset(self) -> bool:
+    def reset_time(self) -> bool:
         self._start_timestamp = time_manager.singleton.current_nanosecond
         self._stop_timestamp = 0
 
         return True
 
-    def calculate_elapsed(self, time_unit: TimeUnit = TimeUnit.SECOND) -> float:
+    def calculate_elapsed_time(self, time_unit: TimeUnit = TimeUnit.SECOND) -> float:
         return self.convert_time_unit(
             time_manager.singleton.current_nanosecond - self._start_timestamp
         )
 
-    def calculate_duration(self, time_unit: TimeUnit = TimeUnit.SECOND) -> float:
+    def calculate_duration_time(self, time_unit: TimeUnit = TimeUnit.SECOND) -> float:
         return self.convert_time_unit(self._stop_timestamp - self._start_timestamp)
 
     def convert_time_unit(

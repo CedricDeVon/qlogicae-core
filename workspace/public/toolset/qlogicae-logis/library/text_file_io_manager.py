@@ -1,19 +1,16 @@
 from typing import Any
 
+from library import text_encoding_manager
+
 
 class TextFileIoManager:
-    def __init__(self) -> None:
-        self._valid_suffixes: set[str] = {".txt"}
-
-    @property
-    def valid_suffixes(self) -> set[str]:
-        return self._valid_suffixes
-
-    def is_valid(self, file: Any) -> bool:
-        return any(suffix in self._valid_suffixes for suffix in self._valid_suffixes)
-
     def read_file(self, file: Any) -> str:
         return file.read() or {}
+
+    def write_file(self, file: Any, data: Any) -> bool:
+        Path(file).write_text(str(data), encoding=text_encoding_manager.singleton.file_encoding)
+
+        return True
 
 
 singleton = TextFileIoManager()

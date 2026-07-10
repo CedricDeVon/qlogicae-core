@@ -17,10 +17,10 @@ class MacrosManager:
             return cache[key]
 
         if key in stack:
-            raise Exception(f"'{key}' is a circular reference")
+            raise Exception(f"key path '{key}' is a circular reference")
 
         if key not in values:
-            raise Exception(f"'{key}' is an unknown macros")
+            raise Exception(f"key path '{key}' is an unknown macros")
 
         stack.add(key)
 

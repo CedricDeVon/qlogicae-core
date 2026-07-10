@@ -111,7 +111,7 @@ class ValueCacheStorageManager:
             cache[last] = value
 
         else:
-            raise TypeError("Destination is neither a dictionary nor a list")
+            raise TypeError("destination is neither a dictionary nor a list")
 
     def remove_one_value(self, keys: list[str]) -> bool:
         if not keys:

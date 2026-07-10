@@ -1,28 +1,35 @@
 import yaml
 from typing import Any
 
+from library import yaml_manager
+
 
 class YamlFileIoManager:
-    def __init__(self) -> None:
-        self._valid_suffixes: set[str] = {".yaml", ".yml"}
-
-    @property
-    def valid_suffixes(self) -> set[str]:
-        return self._valid_suffixes
-
-    def is_valid(self, file: Any) -> bool:
-        return any(suffix in self._valid_suffixes for suffix in self._valid_suffixes)
-
     def read_file(self, file: Any) -> Any:
-        return yaml.safe_load(file) or {}
+        return yaml.safe_load(
+            file
+        ) or {}
 
-    def format(self, value: str) -> Any:
+    def write_file(self, file: Any, data: Any) -> bool:
+        yaml.safe_dump(
+            data,
+            file,
+            sort_keys=yaml_manager.singleton.is_key_sorting_enabled,
+            default_flow_style=yaml_manager.singleton.is_default_flow_state_enabled,
+            allow_unicode=yaml_manager.singleton.is_unicode_enabled,
+            indent=yaml_manager.singleton.indent_count,
+        )
+
+        return True
+
+    def format_to_string(self, value: str) -> Any:
         return (
             yaml.dump(
                 value,
-                sort_keys=False,
-                indent=4,
-                default_flow_style=False,
+                sort_keys=yaml_manager.singleton.is_key_sorting_enabled,
+                default_flow_style=yaml_manager.singleton.is_default_flow_state_enabled,
+                allow_unicode=yaml_manager.singleton.is_unicode_enabled,
+                indent=yaml_manager.singleton.indent_count,
             )
             or ""
         )

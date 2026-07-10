@@ -19,10 +19,14 @@ from library import (
 )
 from library.log_options import LogOptions
 from library.target_cache_value import TargetCacheValue
-
-
 from library.filesystem_manager import (
     FileEntityFileSystemTreeSetupOptions,
+    FolderEntityFileSystemTreeSetupOptions,
+)
+from library.file_entity_filesystem_tree_setup_options import (
+    FileEntityFileSystemTreeSetupOptions,
+)
+from library.folder_entity_filesystem_tree_setup_options import (
     FolderEntityFileSystemTreeSetupOptions,
 )
 
@@ -142,7 +146,7 @@ class WorkspaceManager:
                         FolderEntityFileSystemTreeSetupOptions(
                             name="public",
                             entities=[configuration_sub_tree, target_sub_tree],
-                        )
+                        ),
                     ],
                 ),
                 FolderEntityFileSystemTreeSetupOptions(
