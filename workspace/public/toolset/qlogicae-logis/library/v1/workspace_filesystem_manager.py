@@ -1,6 +1,8 @@
 from pathlib import Path
 from typing import Any
 
+from qlogicae_cor.v1.abstract_manager import AbstractManager
+
 from library.v1 import (
     json_file_io_manager,
     json_manager,
@@ -8,7 +10,6 @@ from library.v1 import (
     yaml_file_io_manager,
     yaml_manager,
 )
-from library.v1.abstract_manager import AbstractManager
 from library.v1.workspace_filesystem_manager_configurations import (
     WorkspaceFilesystemManagerConfigurations,
 )

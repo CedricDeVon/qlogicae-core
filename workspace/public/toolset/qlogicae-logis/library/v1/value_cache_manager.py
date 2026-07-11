@@ -1,7 +1,8 @@
 from typing import Any
 
+from qlogicae_cor.v1.abstract_manager import AbstractManager
+
 from library.v1 import filesystem_manager, value_cache_storage_manager
-from library.v1.abstract_manager import AbstractManager
 from library.v1.target_cache_value import TargetCacheValue
 from library.v1.value_cache_manager_configurations import (
     ValueCacheManagerConfigurations,

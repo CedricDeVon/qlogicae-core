@@ -7,5 +7,3 @@ for module in pkgutil.walk_packages(
     prefix=v1.__name__ + ".",
 ):
     print(module.name)
-
-

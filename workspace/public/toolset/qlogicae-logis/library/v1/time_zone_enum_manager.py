@@ -1,7 +1,8 @@
 from datetime import UTC, datetime
 from typing import Any
 
-from library.v1.abstract_manager import AbstractManager
+from qlogicae_cor.v1.abstract_manager import AbstractManager
+
 from library.v1.enum_conversion_output import EnumConversionOutput
 from library.v1.time_zone import TimeZone
 from library.v1.time_zone_enum_manager_configurations import (

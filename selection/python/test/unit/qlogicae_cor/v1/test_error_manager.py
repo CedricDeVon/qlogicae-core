@@ -1,9 +1,9 @@
 import pytest
 
-from library.qlogicae_cor.v1.error_manager import (
+from qlogicae_cor.v1.error_manager import (
     ErrorManager,
 )
-from library.qlogicae_cor.v1.error_manager_configurations import (
+from qlogicae_cor.v1.error_manager_configurations import (
     ErrorManagerConfigurations,
 )
 

@@ -1,7 +1,8 @@
 from collections.abc import Mapping
 from typing import Any
 
-from library.v1.abstract_manager import AbstractManager
+from qlogicae_cor.v1.abstract_manager import AbstractManager
+
 from library.v1.value_cache_storage_manager_configurations import (
     ValueCacheStorageManagerConfigurations,
 )

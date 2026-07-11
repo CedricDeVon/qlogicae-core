@@ -1,7 +1,7 @@
 from collections.abc import Callable
 from typing import Any, TypeVar, cast
 
-from library.qlogicae_cor.v1.singleton_manager_configurations import (
+from qlogicae_cor.v1.singleton_manager_configurations import (
     SingletonManagerConfigurations,
 )
 

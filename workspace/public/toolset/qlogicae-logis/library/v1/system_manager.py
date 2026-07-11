@@ -1,7 +1,8 @@
 import os
 from pathlib import Path
 
-from library.v1.abstract_manager import AbstractManager
+from qlogicae_cor.v1.abstract_manager import AbstractManager
+
 from library.v1.system_manager_configurations import SystemManagerConfigurations
 
 

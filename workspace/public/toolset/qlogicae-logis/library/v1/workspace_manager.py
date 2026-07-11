@@ -2,6 +2,8 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
+from qlogicae_cor.v1.abstract_manager import AbstractManager
+
 from library.v1 import (
     console_log_manager,
     file_io_manager,
@@ -17,7 +19,6 @@ from library.v1 import (
     workspace_filesystem_manager,
     workspace_system_manager,
 )
-from library.v1.abstract_manager import AbstractManager
 from library.v1.filesystem_manager import (
     FileEntityFileSystemTreeSetupOptions,
     FolderEntityFileSystemTreeSetupOptions,

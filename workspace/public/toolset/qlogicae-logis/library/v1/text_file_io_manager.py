@@ -1,8 +1,9 @@
 from pathlib import Path
 from typing import Any
 
+from qlogicae_cor.v1.abstract_manager import AbstractManager
+
 from library.v1 import text_encoding_manager
-from library.v1.abstract_manager import AbstractManager
 from library.v1.text_file_io_manager_configurations import (
     TextFileIoManagerConfigurations,
 )

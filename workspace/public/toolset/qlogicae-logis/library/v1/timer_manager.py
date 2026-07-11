@@ -1,5 +1,6 @@
+from qlogicae_cor.v1.abstract_manager import AbstractManager
+
 from library.v1 import time_manager
-from library.v1.abstract_manager import AbstractManager
 from library.v1.time_unit import TimeUnit
 from library.v1.timer_manager_configurations import TimerManagerConfigurations
 

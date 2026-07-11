@@ -1,9 +1,9 @@
 from typing import Any
 
 import yaml
+from qlogicae_cor.v1.abstract_manager import AbstractManager
 
 from library.v1 import yaml_manager
-from library.v1.abstract_manager import AbstractManager
 from library.v1.yaml_file_io_manager_configurations import (
     YamlFileIoManagerConfigurations,
 )

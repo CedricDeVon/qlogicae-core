@@ -1,8 +1,9 @@
 import time
 from datetime import date, datetime
 
+from qlogicae_cor.v1.abstract_manager import AbstractManager
+
 from library.v1 import time_zone_enum_manager
-from library.v1.abstract_manager import AbstractManager
 from library.v1.enum_conversion_output import EnumConversionOutput
 from library.v1.time_manager_configurations import TimeManagerConfigurations
 

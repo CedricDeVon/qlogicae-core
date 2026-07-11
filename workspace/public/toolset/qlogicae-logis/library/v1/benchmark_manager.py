@@ -1,4 +1,5 @@
-from library.v1.abstract_manager import AbstractManager
+from qlogicae_cor.v1.abstract_manager import AbstractManager
+
 from library.v1.benchmark_manager_configurations import BenchmarkManagerConfigurations
 
 

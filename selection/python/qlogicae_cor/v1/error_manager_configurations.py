@@ -1,4 +1,4 @@
-from library.v1.abstract_manager_configurations import (
+from qlogicae_cor.v1.abstract_manager_configurations import (
     AbstractManagerConfigurations,
 )
 
@@ -15,7 +15,7 @@ class ErrorManagerConfigurations(
         self._is_asynchronous_output_override_enabled: bool = False
         self._is_console_output_enabled: bool = True
         self._is_runtime_throw_output_enabled: bool = False
-        self._title: str = "error at 'qlogicae-cor'"
+        self._title: str = "error at 'qlogicae-cor1'"
         self._message: str = "something went wrong here"
         self._title_message_separator: str = " - "
 

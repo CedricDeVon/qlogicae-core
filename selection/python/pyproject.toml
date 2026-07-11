@@ -1,6 +1,6 @@
 [project]
 name = "qlogicae-cor"
-version = "1.0.7"
+version = "1.0.8"
 description = "The core library for QLogicae projects"
 readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.12"
@@ -62,11 +62,11 @@ build-backend = "hatchling.build"
 
 
 [tool.setuptools]
-package-dir = {"" = "library"}
+package-dir = {"" = "qlogicae_cor"}
 
 
 [tool.setuptools.packages.find]
-where = ["library"]
+where = ["qlogicae_cor"]
 
 
 [tool.pytest.ini_options]
@@ -77,7 +77,7 @@ addopts = "-ra"
 
 
 [tool.coverage.run]
-source = ["library"]
+source = ["qlogicae_cor"]
 branch = true
 
 
@@ -87,7 +87,7 @@ skip_covered = false
 
 
 [tool.mypy]
-files = ["library"]
+files = ["qlogicae_cor"]
 strict = true
 python_version = "3.12"
 namespace_packages = true
@@ -155,7 +155,7 @@ unfixable = []
 
 [tool.hatch.build]
 include = [
-    "library/**/*.py",
+    "qlogicae_cor/**/*.py",
     "project/**/*",
     "README.md",
     "LICENSE",
@@ -172,7 +172,7 @@ exclude = [
 
 
 [tool.hatch.build.targets.wheel]
-packages = ["library/qlogicae_cor"]
+packages = ["qlogicae_cor"]
 
 
 [tool.hatch.envs.default.scripts]
@@ -219,7 +219,7 @@ workflow-test-unit = """
 OUTPUT_PATH="output/test/unit/$(date -u +%Y%m%dT%H%M%S-%NZ)" &&
 mkdir -p "$OUTPUT_PATH" &&
 pytest -vv \
-  --cov=library \
+  --cov=qlogicae_cor \
   --cov-branch \
   --cov-report=term-missing \
   --cov-report=html:"$OUTPUT_PATH/html" \

@@ -1,6 +1,7 @@
 from typing import Any
 
-from library.v1.abstract_manager import AbstractManager
+from qlogicae_cor.v1.abstract_manager import AbstractManager
+
 from library.v1.enum_conversion_output import EnumConversionOutput
 from library.v1.enum_conversion_output_enum_manager_configurations import (
     EnumConversionOutputEnumManagerConfigurations,

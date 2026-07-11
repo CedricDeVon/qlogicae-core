@@ -1,6 +1,7 @@
 import logging
 
-from library.v1.abstract_manager import AbstractManager
+from qlogicae_cor.v1.abstract_manager import AbstractManager
+
 from library.v1.log_options import LogOptions
 from library.v1.log_options_manager_configurations import (
     LogOptionsManagerConfigurations,

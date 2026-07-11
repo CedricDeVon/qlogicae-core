@@ -1,4 +1,4 @@
-from library.v1.abstract_manager_configurations import (
+from qlogicae_cor.v1.abstract_manager_configurations import (
     AbstractManagerConfigurations,
 )
 

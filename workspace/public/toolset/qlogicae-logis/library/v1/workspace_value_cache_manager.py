@@ -1,4 +1,5 @@
-from library.v1.abstract_manager import AbstractManager
+from qlogicae_cor.v1.abstract_manager import AbstractManager
+
 from library.v1.workspace_value_cache_manager_configurations import (
     WorkspaceValueCacheManagerConfigurations,
 )
