@@ -24,8 +24,6 @@ jobs:
                     - "3.14"
                     - "3.13"
                     - "3.12"
-                    - "3.11"
-                    - "3.10"
 
         steps:
             - uses: actions/checkout@v4
@@ -48,7 +46,40 @@ jobs:
 
             - name: Run unit tests              
               run: hatch run workflow-test-unit
-            
+
+    python-e2e-test:
+      name: Python | Unit & E2E Test
+      runs-on: ubuntu-latest
+
+      defaults:
+          run:
+              working-directory: ./selection/python
+
+      strategy:
+          fail-fast: false
+          matrix:
+              python-version:
+                  - "3.14"
+                  - "3.13"
+                  - "3.12"
+
+      steps:
+          - uses: actions/checkout@v4
+
+          - name: Sleep
+            run: sleep 15
+
+          - name: Setup Python
+            uses: actions/setup-python@v5
+            with:
+                python-version: ${{ matrix.python-version }}
+
+          - name: Install Package
+            run: pip install qlogicae-cor
+
+          - name: Run End-to-End Test
+            run: python test/e2e/usage.py
+
     python-install:
         name: Python | Install via ${{ matrix.package_manager }} on Python ${{ matrix.python-version }}
         runs-on: ubuntu-latest
@@ -64,8 +95,6 @@ jobs:
                     - "3.14"
                     - "3.13"
                     - "3.12"
-                    - "3.11"
-                    - "3.10"
 
                 package_manager:
                     - pip

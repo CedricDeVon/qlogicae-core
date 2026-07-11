@@ -1,50 +1,110 @@
+[project]
+name = "qlogicae-cor"
+version = "1.0.7"
+description = "The core library for QLogicae projects"
+readme = { file = "README.md", content-type = "text/markdown" }
+requires-python = ">=3.12"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [
+    { name = "Vaughn Cedric L. Araneta", email = "vaughncedriclipardoaraneta@gmail.com" }
+]
+maintainers = [
+    { name = "Vaughn Cedric L. Araneta", email = "vaughncedriclipardoaraneta@gmail.com" }
+]
+keywords = [
+    "qlogicae",
+    "core",
+    "dev-tools",
+    "framework",
+    "library",
+    "package",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Typing :: Typed",
+    "Topic :: Software Development",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "pytest-benchmark",
+    "ruff",
+    "mypy",
+    "hatch",
+    "twine",
+    "memray",
+    "scalene",
+    "pympler"
+]
+[project.scripts]
+qlogicae-cor = "qlogicae_cor.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/CedricDeVon/qlogicae-cor"
+Repository = "https://github.com/CedricDeVon/qlogicae-cor"
+Documentation = "https://github.com/CedricDeVon/qlogicae-cor"
+Issues = "https://github.com/CedricDeVon/qlogicae-cor/issues"
+Changelog = "https://github.com/CedricDeVon/qlogicae-cor/releases"
+
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
-[project]
-name = "qlogicae-cor"
-version = "1.0.4"
-description = "The core library for QLogicae projects"
-readme = "README.md"
-requires-python = ">=3.10"
-license = "MIT"
-
-authors = [
-    { name = "Vaughn Cedric L. Araneta", email = "vaughncedriclipardoaraneta@gmail.com" }
-]
-
-classifiers = [
-    "Programming Language :: Python :: 3",
-    "Operating System :: OS Independent"
-]
-
-dependencies = []
 
 [tool.setuptools]
 package-dir = {"" = "library"}
 
+
 [tool.setuptools.packages.find]
 where = ["library"]
 
+
 [tool.pytest.ini_options]
 pythonpath = ["."]
-testpaths = ["test"]
+testpaths = ["./test/unit"]
+python_files = ["test_*.py"]
+addopts = "-ra"
+
+
+[tool.coverage.run]
+source = ["library"]
+branch = true
+
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
+
 
 [tool.mypy]
+files = ["library"]
 strict = true
-warn_return_any = true
-warn_unused_configs = true
-warn_unreachable = true
-warn_no_return = true
-disallow_any_generics = true
-disallow_any_unimported = true
-explicit_package_bases = true
+python_version = "3.12"
 namespace_packages = true
-files = ["library", "test"]
+explicit_package_bases = true
+show_error_codes = true
+pretty = true
+color_output = true
+show_column_numbers = true
+show_error_context = true
+
 
 [tool.ruff]
-target-version = "py314"
+target-version = "py312"
 line-length = 88
 exclude = [
     ".git",
@@ -67,74 +127,6 @@ exclude = [
     ".vscode",
 ]
 
-[tool.ruff.lint]
-select = [
-    # pycodestyle
-    "E",
-    "W",
-
-    # Pyflakes
-    "F",
-
-    # isort
-    "I",
-
-    # pyupgrade
-    "UP",
-
-    # flake8-bugbear
-    "B",
-
-    # pathlib
-    "PTH",
-
-    # flake8-comprehensions
-    # "C4",
-
-    # flake8-simplify
-    # "SIM",
-
-    # flake8-return
-    # "RET",
-
-    # flake8-unused-arguments
-    # "ARG",
-
-    # flake8-builtins
-    # "A",
-
-    # flake8-bandit (security)
-    # "S",
-
-    # flake8-logging-format
-    # "G",
-
-    # flake8-pie
-    # "PIE",
-
-    # flake8-quotes
-    # "Q",
-
-    # eradicate (commented-out code)
-    # "ERA",
-
-    # Ruff-specific
-    # "RUF",
-]
-ignore = [
-    # allow assert statements
-    "S101",
-
-    # allow subprocess usage
-    "S603",
-    "S607",
-
-    # allow magic values
-    "PLR2004",
-]
-fixable = ["ALL"]
-unfixable = []
-
 
 [tool.ruff.format]
 quote-style = "double"
@@ -144,19 +136,26 @@ docstring-code-format = true
 docstring-code-line-length = "dynamic"
 skip-magic-trailing-comma = false
 
-[tool.hatch.envs.default.scripts]
-lint = "ruff check . --fix"
-format = "ruff format ."
-audit-security = "pip-audit"
-deploy-check = "twine check ./output/build/*"
-clean-build = "rm -rf ./output/build && mkdir -p ./output/build"
-clean-test-unit = "rm -rf ./output/test/unit && mkdir -p ./output/test/unit"
-clean-test-benchmark = "rm -rf ./output/test/benchmark && mkdir -p ./output/test/benchmark"
-build = "hatch run clean-build && hatch build && mv dist/* ./output/build"
-workflow-test-unit = "hatch run clean-test-unit && pytest -vv --cov=library --cov-branch --cov-report=term-missing --cov-report=html:./output/test/unit/html --cov-report=xml:./output/test/unit/coverage.xml --cov-report=json:./output/test/unit/coverage.json --junitxml=./output/test/unit/junit.xml"
-workflow-test-benchmark = "clean-test-benchmark && pytest -vv --benchmark-enable --benchmark-json=./output/test/benchmark/benchmark.json"
-workflow-deploy-check = "hatch run build && hatch run deploy-check"
-workflow-deploy = "hatch run build && twine upload ./output/build/* --config-file .pypirc --verbose"
+
+[tool.ruff.lint]
+select = [    
+    "E",
+    "W", # pycodestyle    
+    "F", # Pyflakes    
+    "I", # isort    
+    "UP", # pyupgrade    
+    "B", # flake8-bugbear
+    "PTH", # pathlib
+]
+ignore = [    
+    "S607",    
+    "S101", # allow assert statements    
+    "S603", # allow subprocess usage
+    "PLR2004", # allow magic values
+]
+fixable = ["ALL"]
+unfixable = []
+
 
 [tool.hatch.build]
 include = [
@@ -175,3 +174,60 @@ exclude = [
     "docs/**",
 ]
 
+
+[tool.hatch.build.targets.wheel]
+packages = ["library/qlogicae_cor"]
+
+
+[tool.hatch.envs.default.scripts]
+typecheck ="""
+    mypy
+"""
+lint = """
+    ruff check . --fix
+"""
+format = """
+    ruff format .
+"""
+deploy-check = """
+    twine check ./output/build/*
+"""
+clean-build = """
+    rm -rf ./output/build &&
+    mkdir -p ./output/build
+"""
+clean-test = """
+    rm -rf ./output/test &&
+    mkdir -p ./output/test
+"""
+build = """
+    hatch run clean-build &&
+    hatch build &&
+    mv dist/* ./output/build
+"""
+workflow-deploy-check = """
+    hatch run build &&
+    hatch run typecheck &&
+    hatch run lint &&
+    hatch run format &&
+    hatch run deploy-check
+"""
+workflow-deploy = """
+    hatch run build &&
+    hatch run typecheck &&
+    hatch run lint &&
+    hatch run format &&
+    twine upload ./output/build/* --config-file .pypirc --verbose
+"""
+workflow-test-unit = """
+OUTPUT_PATH="output/test/unit/$(date -u +%Y%m%dT%H%M%S-%NZ)" &&
+mkdir -p "$OUTPUT_PATH" &&
+pytest -vv \
+  --cov=library \
+  --cov-branch \
+  --cov-report=term-missing \
+  --cov-report=html:"$OUTPUT_PATH/html" \
+  --cov-report=xml:"$OUTPUT_PATH/coverage.xml" \
+  --cov-report=json:"$OUTPUT_PATH/coverage.json" \
+  --junitxml="$OUTPUT_PATH/junit.xml"
+"""

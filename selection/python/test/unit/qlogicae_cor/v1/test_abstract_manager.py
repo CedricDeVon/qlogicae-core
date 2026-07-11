@@ -1,15 +1,15 @@
 import pytest
 
-from library.v1.abstract_manager import (
+from library.qlogicae_cor.v1.abstract_manager import (
     AbstractManager,
 )
-from library.v1.abstract_manager_configurations import (
+from library.qlogicae_cor.v1.abstract_manager_configurations import (
     AbstractManagerConfigurations,
 )
-from library.v1.error_manager import (
+from library.qlogicae_cor.v1.error_manager import (
     ErrorManager,
 )
-from library.v1.singleton_manager import (
+from library.qlogicae_cor.v1.singleton_manager import (
     SingletonManager,
 )
 
@@ -49,14 +49,14 @@ class DummyManager(
 
 
 @pytest.fixture(autouse=True)
-def reset_singleton():
+def reset_singleton() -> None:
     SingletonManager.reset()
     yield
     SingletonManager.reset()
 
 
 @pytest.fixture
-def manager():
+def manager() -> None:
     return DummyManager(
         DummyConfigurations(),
     )
@@ -75,7 +75,7 @@ def test_constructor():
 
 def test_setup_success(
     manager: DummyManager,
-):
+) -> None:
     configuration = DummyConfigurations()
 
     assert (
@@ -90,7 +90,7 @@ def test_setup_success(
 
 def test_setup_none_returns_false(
     manager: DummyManager,
-):
+) -> None:
     assert (
         manager.setup(
             None,
@@ -101,7 +101,7 @@ def test_setup_none_returns_false(
 
 def test_setup_disabled(
     manager: DummyManager,
-):
+) -> None:
     manager.configurations = DisabledConfigurations()
 
     configuration = DummyConfigurations()
@@ -117,7 +117,7 @@ def test_setup_disabled(
 def test_setup_exception(
     manager: DummyManager,
     monkeypatch: pytest.MonkeyPatch,
-):
+) -> None:
     manager.configurations = ExceptionConfigurations()
 
     called = False
@@ -150,7 +150,7 @@ def test_setup_exception(
 
 def test_reset_success(
     manager: DummyManager,
-):
+) -> None:
     original = manager.configurations
 
     assert manager.reset() is True
@@ -165,7 +165,7 @@ def test_reset_success(
 
 def test_reset_disabled(
     manager: DummyManager,
-):
+) -> None:
     manager.configurations = DisabledConfigurations()
 
     assert manager.reset() is False
@@ -174,7 +174,7 @@ def test_reset_disabled(
 def test_reset_exception(
     manager: DummyManager,
     monkeypatch: pytest.MonkeyPatch,
-):
+) -> None:
     manager.configurations = ExceptionConfigurations()
 
     called = False
@@ -200,7 +200,7 @@ def test_reset_exception(
     assert called
 
 
-def test_handle_error_outputs_exception():
+def test_handle_error_outputs_exception() -> None:
     manager = DummyManager(
         DummyConfigurations(),
     )
@@ -220,7 +220,7 @@ def test_handle_error_outputs_exception():
     )
 
 
-def test_handle_error_outputs_message():
+def test_handle_error_outputs_message() -> None:
     manager = DummyManager(
         DummyConfigurations(),
     )
@@ -233,7 +233,7 @@ def test_handle_error_outputs_message():
     )
 
 
-def test_handle_error_outputs_title_message():
+def test_handle_error_outputs_title_message() -> None:
     manager = DummyManager(
         DummyConfigurations(),
     )
@@ -249,7 +249,7 @@ def test_handle_error_outputs_title_message():
 
 def test_multiple_setups(
     manager: DummyManager,
-):
+) -> None:
     configuration1 = DummyConfigurations()
 
     configuration2 = DummyConfigurations()
@@ -273,7 +273,7 @@ def test_multiple_setups(
 
 def test_multiple_resets(
     manager: DummyManager,
-):
+) -> None:
     assert manager.reset() is True
 
     assert manager.reset() is True
@@ -281,7 +281,7 @@ def test_multiple_resets(
 
 def test_setup_after_reset(
     manager: DummyManager,
-):
+) -> None:
     manager.reset()
 
     configuration = DummyConfigurations()
@@ -298,7 +298,7 @@ def test_setup_after_reset(
 
 def test_setup_preserves_configuration_on_failure(
     manager: DummyManager,
-):
+) -> None:
     configuration = manager.configurations
 
     assert (
@@ -311,7 +311,7 @@ def test_setup_preserves_configuration_on_failure(
     assert manager.configurations is configuration
 
 
-def test_configuration_defaults():
+def test_configuration_defaults() -> None:
     configuration = DummyConfigurations()
 
     assert configuration.is_override_enabled is False
@@ -325,7 +325,7 @@ def test_configuration_defaults():
     assert configuration.is_error_handling_enabled is True
 
 
-def test_is_override_enabled_property():
+def test_is_override_enabled_property() -> None:
     configuration = DummyConfigurations()
 
     configuration.is_override_enabled = True
@@ -333,7 +333,7 @@ def test_is_override_enabled_property():
     assert configuration.is_override_enabled is True
 
 
-def test_is_enabled_property():
+def test_is_enabled_property() -> None:
     configuration = DummyConfigurations()
 
     configuration.is_enabled = False
@@ -341,7 +341,7 @@ def test_is_enabled_property():
     assert configuration.is_enabled is False
 
 
-def test_runtime_execution_property():
+def test_runtime_execution_property() -> None:
     configuration = DummyConfigurations()
 
     configuration.is_runtime_execution_handling_enabled = False
@@ -349,7 +349,7 @@ def test_runtime_execution_property():
     assert configuration.is_runtime_execution_handling_enabled is False
 
 
-def test_edge_case_property():
+def test_edge_case_property() -> None:
     configuration = DummyConfigurations()
 
     configuration.is_edge_case_handling_enabled = False
@@ -357,7 +357,7 @@ def test_edge_case_property():
     assert configuration.is_edge_case_handling_enabled is False
 
 
-def test_error_handling_property():
+def test_error_handling_property() -> None:
     configuration = DummyConfigurations()
 
     configuration.is_error_handling_enabled = False
@@ -365,7 +365,7 @@ def test_error_handling_property():
     assert configuration.is_error_handling_enabled is False
 
 
-def test_disabled_for_handling_runtime_disabled():
+def test_disabled_for_handling_runtime_disabled() -> None:
     configuration = DummyConfigurations()
 
     configuration.is_runtime_execution_handling_enabled = False
@@ -373,7 +373,7 @@ def test_disabled_for_handling_runtime_disabled():
     assert configuration.is_disabled_for_handling() is True
 
 
-def test_disabled_for_handling_edge_case():
+def test_disabled_for_handling_edge_case() -> None:
     configuration = DummyConfigurations()
 
     assert (
@@ -384,7 +384,7 @@ def test_disabled_for_handling_edge_case():
     )
 
 
-def test_disabled_for_handling_false():
+def test_disabled_for_handling_false() -> None:
     configuration = DummyConfigurations()
 
     assert (
@@ -395,7 +395,7 @@ def test_disabled_for_handling_false():
     )
 
 
-def test_runtime_execution_override_enabled():
+def test_runtime_execution_override_enabled() -> None:
     configuration = DummyConfigurations()
 
     configuration.is_override_enabled = True
@@ -405,7 +405,7 @@ def test_runtime_execution_override_enabled():
     assert configuration.is_enabled_for_runtime_execution_handling() is False
 
 
-def test_edge_case_override_enabled():
+def test_edge_case_override_enabled() -> None:
     configuration = DummyConfigurations()
 
     configuration.is_override_enabled = True
@@ -415,7 +415,7 @@ def test_edge_case_override_enabled():
     assert configuration.is_enabled_for_edge_case_handling() is False
 
 
-def test_error_handling_override_enabled():
+def test_error_handling_override_enabled() -> None:
     configuration = DummyConfigurations()
 
     configuration.is_override_enabled = True
@@ -425,7 +425,7 @@ def test_error_handling_override_enabled():
     assert configuration.is_enabled_for_error_handling() is False
 
 
-def test_runtime_execution_without_override():
+def test_runtime_execution_without_override() -> None:
     configuration = DummyConfigurations()
 
     configuration.is_override_enabled = False
@@ -434,7 +434,7 @@ def test_runtime_execution_without_override():
     assert configuration.is_enabled_for_runtime_execution_handling() is False
 
 
-def test_edge_case_without_override():
+def test_edge_case_without_override() -> None:
     configuration = DummyConfigurations()
 
     configuration.is_override_enabled = False
@@ -443,7 +443,7 @@ def test_edge_case_without_override():
     assert configuration.is_enabled_for_edge_case_handling() is False
 
 
-def test_error_handling_without_override():
+def test_error_handling_without_override() -> None:
     configuration = DummyConfigurations()
 
     configuration.is_override_enabled = False
@@ -455,7 +455,7 @@ def test_error_handling_without_override():
 def test_setup_exception_preserves_configuration(
     manager: DummyManager,
     monkeypatch: pytest.MonkeyPatch,
-):
+) -> None:
     original = DummyConfigurations()
 
     manager.configurations = original
@@ -463,7 +463,7 @@ def test_setup_exception_preserves_configuration(
     def raise_exception(
         *_,
         **__,
-    ):
+    ) -> None:
         raise RuntimeError()
 
     monkeypatch.setattr(
@@ -491,7 +491,7 @@ def test_setup_exception_preserves_configuration(
 def test_reset_exception_preserves_configuration(
     manager: DummyManager,
     monkeypatch: pytest.MonkeyPatch,
-):
+) -> None:
     original = DummyConfigurations()
 
     manager.configurations = original
@@ -519,7 +519,7 @@ def test_reset_exception_preserves_configuration(
     assert manager.configurations is original
 
 
-def test_disabled_for_handling_edge_case_disabled():
+def test_disabled_for_handling_edge_case_disabled() -> None:
     configuration = DummyConfigurations()
 
     configuration.is_edge_case_handling_enabled = False
@@ -532,7 +532,7 @@ def test_disabled_for_handling_edge_case_disabled():
     )
 
 
-def test_runtime_execution_override_enabled_true():
+def test_runtime_execution_override_enabled_true() -> None:
     configuration = DummyConfigurations()
 
     configuration.is_override_enabled = True
@@ -542,7 +542,7 @@ def test_runtime_execution_override_enabled_true():
     assert configuration.is_enabled_for_runtime_execution_handling() is True
 
 
-def test_edge_case_override_enabled_true():
+def test_edge_case_override_enabled_true() -> None:
     configuration = DummyConfigurations()
 
     configuration.is_override_enabled = True
@@ -552,7 +552,7 @@ def test_edge_case_override_enabled_true():
     assert configuration.is_enabled_for_edge_case_handling() is True
 
 
-def test_error_handling_override_enabled_true():
+def test_error_handling_override_enabled_true() -> None:
     configuration = DummyConfigurations()
 
     configuration.is_override_enabled = True
@@ -565,13 +565,13 @@ def test_error_handling_override_enabled_true():
 def test_handle_error_outputs_delegates_exception(
     manager: DummyManager,
     monkeypatch: pytest.MonkeyPatch,
-):
+) -> None:
     received = None
 
     def handle(
         error,
         message=None,
-    ):
+    ) -> None:
         nonlocal received
 
         received = (
@@ -610,13 +610,13 @@ def test_handle_error_outputs_delegates_exception(
 def test_handle_error_outputs_delegates_message(
     manager: DummyManager,
     monkeypatch: pytest.MonkeyPatch,
-):
+) -> None:
     received = None
 
     def handle(
         error,
         message=None,
-    ):
+    ) -> None:
         nonlocal received
 
         received = (
@@ -652,13 +652,13 @@ def test_handle_error_outputs_delegates_message(
 def test_handle_error_outputs_delegates_title_message(
     manager: DummyManager,
     monkeypatch: pytest.MonkeyPatch,
-):
+) -> None:
     received = None
 
     def handle(
         error,
         message=None,
-    ):
+    ) -> bool:
         nonlocal received
 
         received = (
@@ -695,7 +695,7 @@ def test_handle_error_outputs_delegates_title_message(
 def test_handle_error_outputs_requests_singleton(
     manager: DummyManager,
     monkeypatch: pytest.MonkeyPatch,
-):
+) -> None:
     called = False
 
     class FakeErrorManager:
@@ -703,12 +703,12 @@ def test_handle_error_outputs_requests_singleton(
             self,
             error,
             message=None,
-        ):
+        ) -> bool:
             return True
 
     def get_singleton(
         constructor,
-    ):
+    ) -> None:
         nonlocal called
 
         called = True

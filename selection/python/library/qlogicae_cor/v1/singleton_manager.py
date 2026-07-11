@@ -1,7 +1,7 @@
 from collections.abc import Callable
-from typing import Any, TypeVar
+from typing import Any, TypeVar, cast
 
-from library.v1.singleton_manager_configurations import (
+from library.qlogicae_cor.v1.singleton_manager_configurations import (
     SingletonManagerConfigurations,
 )
 
@@ -99,7 +99,7 @@ class SingletonManager:
 
                 self._singleton_arrays[constructor] = instances
 
-            return instances[abs(index) % instance_count]
+            return cast(Type, instances[abs(index) % instance_count])
 
         except Exception as exception:
             raise RuntimeError(

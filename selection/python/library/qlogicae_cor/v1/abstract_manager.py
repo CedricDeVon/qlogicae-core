@@ -1,10 +1,10 @@
 from typing import TypeVar
 
-from library.v1.abstract_manager_configurations import (
+from library.qlogicae_cor.v1.abstract_manager_configurations import (
     AbstractManagerConfigurations,
 )
-from library.v1.error_manager import ErrorManager
-from library.v1.singleton_manager import SingletonManager
+from library.qlogicae_cor.v1.error_manager import ErrorManager
+from library.qlogicae_cor.v1.singleton_manager import SingletonManager
 
 Configurations = TypeVar(
     "Configurations",
