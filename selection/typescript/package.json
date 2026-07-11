@@ -28,14 +28,7 @@
 	"description": "The core library for QLogicae projects",
 	"keywords": [
 		"qlogicae",
-		"cor",
-		"framework",
-		"library",
-		"package",
-		"typescript",
-		"javascript",
-		"ts",
-		"js"
+		"cor"
 	],
 	"license": "MIT",
 	"private": false,

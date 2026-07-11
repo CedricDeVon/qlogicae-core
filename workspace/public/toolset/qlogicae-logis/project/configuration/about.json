@@ -56,7 +56,7 @@
 
         "repository-keywords": {
             "name": "Repository Keywords",
-            "value": ["qlogicae", "logis", "framework", "template", "project-management", "devops"],
+            "value": ["qlogicae", "logis"],
             "is-tabular": true
         }
     },

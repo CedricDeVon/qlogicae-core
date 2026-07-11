@@ -14,11 +14,7 @@ maintainers = [
 ]
 keywords = [
     "qlogicae",
-    "core",
-    "dev-tools",
-    "framework",
-    "library",
-    "package",
+    "core"
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
