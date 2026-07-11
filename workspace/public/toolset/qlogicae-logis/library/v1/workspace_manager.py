@@ -288,7 +288,7 @@ class WorkspaceManager(AbstractManager[WorkspaceManagerConfigurations]):
         toolset_about_raw_data = (
             value_cache_manager.singleton.get_one_value(
                 [
-                    "workspace/public/tooling/qlogicae-logis/project/configuration/about.yaml-raw",
+                    "workspace/public/tooling/qlogicae-logis/project/configuration/about.json-raw",
                     "data",
                 ],
                 output_type=TargetCacheValue.DEFINED,
