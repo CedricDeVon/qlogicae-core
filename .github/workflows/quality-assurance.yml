@@ -48,7 +48,7 @@ jobs:
               run: hatch run workflow-test-unit
 
     python-e2e-test:
-      name: Python | Unit & E2E Test
+      name: Python | End-To-End Test
       runs-on: ubuntu-latest
 
       defaults:
@@ -66,16 +66,25 @@ jobs:
       steps:
           - uses: actions/checkout@v4
 
-          - name: Sleep
-            run: sleep 15
+          - name: PyPi Wait
+            run: sleep 30
 
           - name: Setup Python
             uses: actions/setup-python@v5
             with:
                 python-version: ${{ matrix.python-version }}
 
+          - name: Setup Virtual Environment
+            run: python3 -m venv .venv
+
+          - name: Activate Virtual Environment
+            run: source .venv/bin/activate
+
           - name: Install Package
             run: pip install qlogicae-cor
+
+          - name: Run Package Existence Validation
+            run: qlogicae-cor
 
           - name: Run End-to-End Test
             run: python test/e2e/usage.py
