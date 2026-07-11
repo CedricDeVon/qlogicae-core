@@ -1,1 +1,1 @@
-export * from './library/v1';
+export * from './v1';

@@ -8,6 +8,10 @@ export default defineConfig({
 			clean: true,
 			provider: 'v8',
 			reporter: ['clover', 'html', 'json', 'lcov', 'text']
+		},
+		sequence: {
+			shuffle: true,
+			seed: Date.now()
 		}
 	}
 });

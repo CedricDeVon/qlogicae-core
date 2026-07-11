@@ -1,6 +1,6 @@
 {
 	"name": "qlogicae-cor",
-	"version": "1.2.12",
+	"version": "1.2.13",
 	"author": "Vaughn Cedric L. Araneta",
 	"main": "./index.js",
 	"module": "index.ts",
@@ -23,7 +23,7 @@
 		"yarn": "^1.22.22"
 	},
 	"bin": {
-		"qlogicae-cor": "./library/version.js"
+		"qlogicae-cor": "./cli.js"
 	},
 	"description": "The core library for QLogicae projects",
 	"keywords": [
@@ -34,9 +34,8 @@
 	"private": false,
 	"scripts": {
 		"login": "npm login",
-		"clean:all": "bun run clean:build && bun run clean:reports",
+		"clean:all": "bun run clean:build",
 		"clean:build": "bunx rimraf ./output/build",
-		"clean:reports": "bunx rimraf ./output/report",
 		"format": "bunx prettier --config './.prettierrc' --write .",
 		"format:check": "bunx prettier --config './.prettierrc' --check .",
 		"lint": "bunx eslint --config './eslint.config.js' .",
@@ -50,7 +49,7 @@
 		"test:benchmark": "bunx vitest bench --watch=false --config './vitest.bench.config.ts' --coverage",
 		"deploy:tag": "git tag \"typescript-v$(node -p \"require('./package.json').version\")\"",
 		"deploy:push": "git push origin && git push origin \"typescript-v$(node -p \"require('./package.json').version\")\"",
-		"deploy:check": "bun run build && npm pack ./output/build --dry-run",
+		"deploy:check": "bun run build && bun run format && bun run lint && npm pack ./output/build --dry-run",
 		"deploy:publish": "bun publish --cwd ./output/build && bun run deploy:push",
 		"deploy:commit": "git add . && git commit -m 'deployment attempt' || true",
 		"workflow:develop": "bun run build",

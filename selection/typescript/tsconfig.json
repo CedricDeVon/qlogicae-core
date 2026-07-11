@@ -33,6 +33,6 @@
 		"noUnusedParameters": false,
 		"noPropertyAccessFromIndexSignature": false
 	},
-	"include": ["./library", "index.ts"],
+	"include": ["./v1", "index.ts", "cli.ts"],
 	"exclude": ["./test"]
 }

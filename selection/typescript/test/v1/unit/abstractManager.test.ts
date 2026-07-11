@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { ErrorManager } from '../../output/build/library/v1/errorManager';
-import { AbstractManager } from '../../output/build/library/v1/abstractManager';
-import { SingletonManager } from '../../output/build/library/v1/singletonManager';
-import { AbstractManagerConfigurations } from '../../output/build/library/v1/abstractManagerConfigurations';
+import { ErrorManager } from '../../../output/build/v1/errorManager';
+import { AbstractManager } from '../../../output/build/v1/abstractManager';
+import { SingletonManager } from '../../../output/build/v1/singletonManager';
+import { AbstractManagerConfigurations } from '../../../output/build/v1/abstractManagerConfigurations';
 
 class TestConfigurations extends AbstractManagerConfigurations {}
 

@@ -1,7 +1,7 @@
 import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
 
-import { ErrorManager } from '../../output/build/library/v1/errorManager';
-import { ErrorManagerConfigurations } from '../../output/build/library/v1/errorManagerConfigurations';
+import { ErrorManager } from '../../../output/build/v1/errorManager';
+import { ErrorManagerConfigurations } from '../../../output/build/v1/errorManagerConfigurations';
 
 class ThrowingSetupErrorManager extends ErrorManager {
 	public override setup(_configuration: ErrorManagerConfigurations): boolean {
