@@ -1,6 +1,6 @@
 {
 	"name": "qlogicae-cor",
-	"version": "1.2.14",
+	"version": "1.2.15",
 	"author": "Vaughn Cedric L. Araneta",
 	"main": "./index.js",
 	"module": "index.ts",
@@ -21,6 +21,10 @@
 		"typescript-eslint": "^8.62.1",
 		"vitest": "^4.1.9",
 		"yarn": "^1.22.22"
+	},
+	"exports": {
+		".": "./index.js",
+		"./v1": "./v1/index.js"
 	},
 	"bin": {
 		"qlogicae-cor": "./cli.js"
