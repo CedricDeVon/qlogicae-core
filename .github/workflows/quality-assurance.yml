@@ -50,12 +50,12 @@ jobs:
               run: hatch run workflow-test-unit
 
     python-e2e-test:
-      name: Python | End-To-End Test
+      name: Python | V1 | End-To-End Test
       runs-on: ubuntu-latest
 
       defaults:
           run:
-              working-directory: ./selection/python
+              working-directory: ./selection/python/test/e2e/qlogicae_cor/v1
 
       strategy:
           fail-fast: false
@@ -89,7 +89,7 @@ jobs:
             run: qlogicae-cor
 
           - name: Run End-to-End Test
-            run: python test/e2e/usage.py
+            run: python usage.py
 
     python-install:
         name: Python | Install via ${{ matrix.package_manager }} on Python ${{ matrix.python-version }}
@@ -213,7 +213,7 @@ jobs:
           run: bun run workflow:test:unit
 
     typescript-e2e-test:
-      name: Typescript | E2E (${{ matrix.package_manager }}${{ matrix.node_version && format(' / Node {0}', matrix.node_version) || '' }})
+      name: Typescript | V1 | E2E (${{ matrix.package_manager }}${{ matrix.node_version && format(' / Node {0}', matrix.node_version) || '' }})
       runs-on: ubuntu-latest
 
       strategy:
