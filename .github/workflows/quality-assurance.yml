@@ -211,7 +211,7 @@ jobs:
           run: bun install --frozen-lockfile
 
         - if: startsWith(matrix.runtime, 'node')
-          run: npm ci
+          run: npm install
 
         - if: matrix.runtime == 'bun'
           run: bun run workflow:test:unit
@@ -284,17 +284,17 @@ jobs:
         - if: matrix.package_manager == 'npm'
           run: |
             npx qlogicae-cor
-            node usage.js
+            node usage.ts
 
         - if: matrix.package_manager == 'pnpm'
           run: |
             pnpm exec qlogicae-cor
-            node usage.js
+            node usage.ts
 
         - if: matrix.package_manager == 'yarn'
           run: |
             yarn qlogicae-cor
-            node usage.js
+            node usage.ts
 
         - if: matrix.package_manager == 'bun'
           run: |
