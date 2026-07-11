@@ -137,7 +137,7 @@ jobs:
               run: |
                 pip install poetry
                 poetry install --no-root
-                poetry run python -c "import library"
+                poetry run python -c "import qlogicae_cor"
 
             - if: ${{ matrix.package_manager == 'pdm' }}
               run: pip install pdm
@@ -176,7 +176,7 @@ jobs:
                 pip install ./output/build/*.whl
 
             - name: Verify installation
-              run: python -c "import library"
+              run: python -c "import qlogicae_cor"
 
     typescript-unit-test:
         name: Typescript | Unit Test
