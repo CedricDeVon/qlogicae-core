@@ -13,6 +13,6 @@ export default mergeConfig(baseConfig, {
 		coverage: {
 			reportsDirectory: `./output/test/benchmark/${iso}-${ns}Z`
 		},
-		include: ['./test/v1/benchmark/**/*.bench.ts']
+		include: ['./test/benchmark/v1/**/*.bench.ts']
 	}
 });
