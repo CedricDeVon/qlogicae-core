@@ -43,7 +43,7 @@ data:
         enter-full-path: ${{ current-root-full-path }}/workspace/public/toolset/qlogicae-logis
         commands:
           - run: "python3 -c \"
-              from library.v1 import workspace_manager;
+              from qlogicae_logis.v1 import workspace_manager;
               workspace_manager.singleton.debug_value_cache();\""
 
 

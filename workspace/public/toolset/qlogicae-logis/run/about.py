@@ -6,12 +6,12 @@ from rich.padding import Padding
 from rich.rule import Rule
 from rich.table import Table
 
-from library.v1 import (
+from qlogicae_logis.v1 import (
     file_log_manager,
     value_cache_manager,
     workspace_manager,
 )
-from library.v1.target_cache_value import TargetCacheValue
+from qlogicae_logis.v1.target_cache_value import TargetCacheValue
 
 
 def handler_manager_callback() -> bool:

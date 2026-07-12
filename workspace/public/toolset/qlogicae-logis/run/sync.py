@@ -1,7 +1,7 @@
 import argparse
 from pathlib import Path
 
-from library.v1 import (
+from qlogicae_logis.v1 import (
     file_io_manager,
     file_log_manager,
     filesystem_manager,
@@ -10,7 +10,7 @@ from library.v1 import (
     workspace_filesystem_manager,
     workspace_manager,
 )
-from library.v1.target_cache_value import TargetCacheValue
+from qlogicae_logis.v1.target_cache_value import TargetCacheValue
 
 
 def handle_manager_callback():
