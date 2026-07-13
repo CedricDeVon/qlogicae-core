@@ -1,0 +1,42 @@
+# Package Managers
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+bun.lock
+bun.lockb
+
+# Miscellaneous
+/static/
+
+# Folders
+.build
+.builds
+build
+builds
+
+.coverage
+.coverages
+coverage
+coverages
+
+.output
+.outputs
+output
+outputs
+
+.dist
+.dists
+dist
+dists
+
+node_modules
+
+.report
+.reports
+report
+reports
+
+.temp
+.temporary
+temp
+temporary
