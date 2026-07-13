@@ -15,7 +15,7 @@ jobs:
 
         defaults:
             run:
-                working-directory: ./selection/python
+                working-directory: ./python
 
         strategy:
             fail-fast: false
@@ -55,7 +55,7 @@ jobs:
 
       defaults:
           run:
-              working-directory: ./selection/python/test/e2e/qlogicae_cor/v1
+              working-directory: ./python/test/e2e/qlogicae_cor/v1
 
       strategy:
           fail-fast: false
@@ -97,7 +97,7 @@ jobs:
 
         defaults:
             run:
-                working-directory: ./selection/python
+                working-directory: ./python
 
         strategy:
             fail-fast: false
@@ -194,7 +194,7 @@ jobs:
 
       defaults:
         run:
-          working-directory: ./selection/typescript
+          working-directory: ./typescript
 
       steps:
         - uses: actions/checkout@v4
@@ -228,7 +228,7 @@ jobs:
 
       defaults:
         run:
-          working-directory: ./selection/typescript/test/e2e/v1
+          working-directory: ./typescript/test/e2e/v1
 
       steps:
         - uses: actions/checkout@v4
