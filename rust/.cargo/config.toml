@@ -1,0 +1,13 @@
+[alias]
+format-write = "fmt --all --verbose"
+format-check = "fmt --all --check --verbose"
+lint = "clippy --workspace --all-targets --all-features --verbose -- -D warnings"
+build-debug = 'build --locked --workspace --all-targets --all-features --verbose'
+build-release = 'build --locked --workspace --all-targets --all-features --release --verbose'
+test-unit = "nextest run --workspace --all-targets --release --verbose"
+check-all = "check --locked --all-targets --all-features --release --verbose"
+clean-all = "clean --locked --verbose"
+document = "doc --locked --all-features --no-deps --release --verbose"
+deploy-inspect = "package --list --allow-dirty"
+deploy-check = "publish --dry-run --allow-dirty"
+workflow-deploy = "publish --allow-dirty"

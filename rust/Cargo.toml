@@ -1,0 +1,26 @@
+[package]
+name = "qlogicae-cor"
+version = "1.0.3"
+edition = "2024"
+authors = ["Vaughn Cedric L. Araneta"]
+description = "The core library for QLogicae projects"
+license = "MIT"
+repository = "https://github.com/CedricDeVon/qlogicae-cor"
+homepage = "https://github.com/CedricDeVon/qlogicae-cor"
+documentation = "https://github.com/CedricDeVon/qlogicae-cor"
+readme = "README.md"
+keywords = ["qlogicae", "cor"]
+categories = ["development-tools"]
+include = [
+    "project/**",
+    "src/**",
+    "Cargo.toml",
+    "Cargo.lock",
+    "README.md",
+    "LICENSE",
+]
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
