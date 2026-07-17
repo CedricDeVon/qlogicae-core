@@ -1,6 +1,6 @@
 [package]
 name = "qlogicae-cor"
-version = "1.0.3"
+version = "1.0.4"
 edition = "2024"
 authors = ["Vaughn Cedric L. Araneta"]
 description = "The core library for QLogicae projects"
