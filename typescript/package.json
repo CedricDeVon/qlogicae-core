@@ -30,10 +30,7 @@
 		"qlogicae-cor": "./cli.js"
 	},
 	"description": "The core library for QLogicae projects",
-	"keywords": [
-		"qlogicae",
-		"cor"
-	],
+	"keywords": ["qlogicae", "cor"],
 	"license": "MIT",
 	"private": false,
 	"scripts": {

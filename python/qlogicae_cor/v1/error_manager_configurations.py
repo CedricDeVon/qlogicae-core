@@ -6,6 +6,18 @@ from qlogicae_cor.v1.abstract_manager_configurations import (
 class ErrorManagerConfigurations(
     AbstractManagerConfigurations,
 ):
+    __slots__ = (
+        "_is_output_enabled",
+        "_is_output_override_enabled",
+        "_is_asynchronous_output_enabled",
+        "_is_asynchronous_output_override_enabled",
+        "_is_console_output_enabled",
+        "_is_runtime_throw_output_enabled",
+        "_title",
+        "_message",
+        "_title_message_separator",
+    )
+
     def __init__(self) -> None:
         super().__init__()
 

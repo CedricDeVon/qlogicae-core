@@ -1,4 +1,12 @@
 class AbstractManagerConfigurations:
+    __slots__ = (
+        "_is_override_enabled",
+        "_is_enabled",
+        "_is_runtime_execution_handling_enabled",
+        "_is_edge_case_handling_enabled",
+        "_is_error_handling_enabled",
+    )
+
     def __init__(self) -> None:
         self._is_override_enabled: bool = False
         self._is_enabled: bool = True

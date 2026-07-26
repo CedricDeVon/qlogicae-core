@@ -1,6 +1,6 @@
 [project]
 name = "qlogicae-cor"
-version = "1.0.10"
+version = "1.1.0"
 description = "The core library for QLogicae projects"
 readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.12"
@@ -155,6 +155,7 @@ unfixable = []
 [tool.hatch.build]
 include = [
     "qlogicae_cor/**/*.py",
+    "qlogicae_cor/py.typed",
     "project/**/*",
     "README.md",
     "LICENSE",
@@ -175,54 +176,46 @@ packages = ["qlogicae_cor"]
 
 
 [tool.hatch.envs.default.scripts]
-typecheck ="""
+test-lint = """
+    ruff check qlogicae_cor
+"""
+test-type-check = """
     mypy
 """
-lint = """
-    ruff check . --fix
+test-unit = """
+    pytest -vv \
+        --cov \
+        --cov-branch \
+        --cov-report=term-missing \
+        --cov-report=html:\"output/test/unit/html\" \
+        --cov-report=xml:\"output/test/unit/coverage.xml\" \
+        --cov-report=json:\"output/test/unit/coverage.json\" \
+        --junitxml=\"output/test/unit/junit.xml\" \
 """
-format = """
-    ruff format .
+test-pip-deployment = """
+    twine check output/build/release/dist/*
 """
-deploy-check = """
-    twine check ./output/build/*
+deploy = """
+    twine upload output/build/release/dist/* --config-file .pypirc
 """
-clean-build = """
-    rm -rf ./output/build &&
-    mkdir -p ./output/build
+
+
+
+github-workflow-setup = """
+    mkdir -p output/build/release &&
+    mkdir -p output/test/unit &&
+    mkdir -p output/test/benchmark
 """
-clean-test = """
-    rm -rf ./output/test &&
-    mkdir -p ./output/test
+github-workflow-test-type-check = """
+    hatch run github-workflow-setup &&
+    hatch run test-type-check
 """
-build = """
-    hatch run clean-build &&
-    hatch build &&
-    mv dist/* ./output/build
+github-workflow-test-lint = """
+    hatch run github-workflow-setup &&
+    hatch run test-lint
 """
-workflow-deploy-check = """
-    hatch run build &&
-    hatch run typecheck &&
-    hatch run lint &&
-    hatch run format &&
-    hatch run deploy-check
+github-workflow-test-unit = """
+    hatch run github-workflow-setup &&
+    hatch run test-unit
 """
-workflow-deploy = """
-    hatch run build &&
-    hatch run typecheck &&
-    hatch run lint &&
-    hatch run format &&
-    twine upload ./output/build/* --config-file .pypirc --verbose
-"""
-workflow-test-unit = """
-OUTPUT_PATH="output/test/unit/$(date -u +%Y%m%dT%H%M%S-%NZ)" &&
-mkdir -p "$OUTPUT_PATH" &&
-pytest -vv \
-  --cov=qlogicae_cor \
-  --cov-branch \
-  --cov-report=term-missing \
-  --cov-report=html:"$OUTPUT_PATH/html" \
-  --cov-report=xml:"$OUTPUT_PATH/coverage.xml" \
-  --cov-report=json:"$OUTPUT_PATH/coverage.json" \
-  --junitxml="$OUTPUT_PATH/junit.xml"
-"""
+

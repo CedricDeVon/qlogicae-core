@@ -13,6 +13,8 @@ Configurations = TypeVar(
 
 
 class AbstractManager[Configurations: AbstractManagerConfigurations]:
+    __slots__ = "configurations"
+
     def __init__(
         self,
         new_configurations: Configurations,
