@@ -1,6 +1,6 @@
 [project]
 name = "qlogicae-cor"
-version = "1.1.2"
+version = "1.2.0"
 description = "The core library for QLogicae projects"
 readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.12"
@@ -29,7 +29,13 @@ classifiers = [
     "Topic :: Software Development :: Libraries",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
-dependencies = []
+dependencies = [
+    "pydantic>=2.13,<3",
+    "PyYAML>=6.0,<7",
+    "textual>=8,<9",
+    "tomli_w>=1.2.0,<2",
+    "tomlkit>=0.15.0,<1"
+]
 
 [project.optional-dependencies]
 dev = [
@@ -45,7 +51,7 @@ dev = [
     "pympler"
 ]
 [project.scripts]
-qlogicae-cor = "qlogicae_cor.cli:main"
+qlogicae-cor = "qlogicae_cor.v1.console.app:main"
 
 [project.urls]
 Homepage = "https://github.com/CedricDeVon/qlogicae-cor"
@@ -177,7 +183,7 @@ packages = ["qlogicae_cor"]
 
 [tool.hatch.envs.default.scripts]
 test-lint = """
-    ruff check qlogicae_cor
+    ruff check qlogicae_cor --fix
 """
 test-type-check = """
     mypy

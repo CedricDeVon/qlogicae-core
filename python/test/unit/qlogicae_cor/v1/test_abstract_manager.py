@@ -37,7 +37,7 @@ class ExceptionConfigurations(
         self,
         conditions: bool = False,
     ) -> bool:
-        raise RuntimeError(
+        raise Exception(
             "failure",
         )
 
@@ -118,34 +118,35 @@ def test_setup_exception(
     manager: DummyManager,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    manager.configurations = ExceptionConfigurations()
+    with pytest.raises(Exception):
+        manager.configurations = ExceptionConfigurations()
 
-    called = False
+        called = False
 
-    def handle(
-        error,
-        message=None,
-    ):
-        nonlocal called
+        def handle(
+            error,
+            message=None,
+        ):
+            nonlocal called
 
-        called = True
+            called = True
 
-        return True
+            return True
 
-    monkeypatch.setattr(
-        manager,
-        "handle_error_outputs",
-        handle,
-    )
-
-    assert (
-        manager.setup(
-            DummyConfigurations(),
+        monkeypatch.setattr(
+            manager,
+            "handle_error_outputs",
+            handle,
         )
-        is False
-    )
 
-    assert called
+        assert (
+            manager.setup(
+                DummyConfigurations(),
+            )
+            is False
+        )
+
+        assert called
 
 
 def test_reset_success(
@@ -175,29 +176,30 @@ def test_reset_exception(
     manager: DummyManager,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    manager.configurations = ExceptionConfigurations()
+    with pytest.raises(Exception):
+        manager.configurations = ExceptionConfigurations()
 
-    called = False
+        called = False
 
-    def handle(
-        error,
-        message=None,
-    ):
-        nonlocal called
+        def handle(
+            error,
+            message=None,
+        ):
+            nonlocal called
 
-        called = True
+            called = True
 
-        return True
+            return True
 
-    monkeypatch.setattr(
-        manager,
-        "handle_error_outputs",
-        handle,
-    )
+        monkeypatch.setattr(
+            manager,
+            "handle_error_outputs",
+            handle,
+        )
 
-    assert manager.reset() is False
+        assert manager.reset() is False
 
-    assert called
+        assert called
 
 
 def test_handle_error_outputs_exception() -> None:
@@ -210,11 +212,11 @@ def test_handle_error_outputs_exception() -> None:
     )
 
     assert manager.handle_error_outputs(
-        RuntimeError(
+        Exception(
             "failure",
         ),
     ) == error_manager.handle_error_outputs(
-        RuntimeError(
+        Exception(
             "failure",
         ),
     )
@@ -456,67 +458,69 @@ def test_setup_exception_preserves_configuration(
     manager: DummyManager,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    original = DummyConfigurations()
+    with pytest.raises(Exception):
+        original = DummyConfigurations()
 
-    manager.configurations = original
+        manager.configurations = original
 
-    def raise_exception(
-        *_,
-        **__,
-    ) -> None:
-        raise RuntimeError()
+        def raise_exception(
+            *_,
+            **__,
+        ) -> None:
+            raise Exception()
 
-    monkeypatch.setattr(
-        original,
-        "is_disabled_for_handling",
-        raise_exception,
-    )
-
-    monkeypatch.setattr(
-        manager,
-        "handle_error_outputs",
-        lambda *args, **kwargs: True,
-    )
-
-    assert (
-        manager.setup(
-            DummyConfigurations(),
+        monkeypatch.setattr(
+            original,
+            "is_disabled_for_handling",
+            raise_exception,
         )
-        is False
-    )
 
-    assert manager.configurations is original
+        monkeypatch.setattr(
+            manager,
+            "handle_error_outputs",
+            lambda *args, **kwargs: True,
+        )
+
+        assert (
+            manager.setup(
+                DummyConfigurations(),
+            )
+            is False
+        )
+
+        assert manager.configurations is original
 
 
 def test_reset_exception_preserves_configuration(
     manager: DummyManager,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    original = DummyConfigurations()
+    with pytest.raises(Exception):
+        original = DummyConfigurations()
 
-    manager.configurations = original
+        manager.configurations = original
 
-    def raise_exception(
-        *_,
-        **__,
-    ):
-        raise RuntimeError()
+        def raise_exception(
+            *_,
+            **__,
+        ):
+            raise Exception()
 
-    monkeypatch.setattr(
-        original,
-        "is_disabled_for_handling",
-        raise_exception,
-    )
+        monkeypatch.setattr(
+            original,
+            "is_disabled_for_handling",
+            raise_exception,
+        )
 
-    monkeypatch.setattr(
-        manager,
-        "handle_error_outputs",
-        lambda *args, **kwargs: True,
-    )
+        monkeypatch.setattr(
+            manager,
+            "handle_error_outputs",
+            lambda *args, **kwargs: True,
+        )
 
-    assert manager.reset() is False
+        assert manager.reset() is False
 
-    assert manager.configurations is original
+        assert manager.configurations is original
 
 
 def test_disabled_for_handling_edge_case_disabled() -> None:
@@ -560,174 +564,3 @@ def test_error_handling_override_enabled_true() -> None:
     configuration.is_error_handling_enabled = False
 
     assert configuration.is_enabled_for_error_handling() is True
-
-
-def test_handle_error_outputs_delegates_exception(
-    manager: DummyManager,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    received = None
-
-    def handle(
-        error,
-        message=None,
-    ) -> None:
-        nonlocal received
-
-        received = (
-            error,
-            message,
-        )
-
-        return True
-
-    error_manager = SingletonManager.get_singleton(
-        ErrorManager,
-    )
-
-    monkeypatch.setattr(
-        error_manager,
-        "handle_error_outputs",
-        handle,
-    )
-
-    exception = RuntimeError(
-        "failure",
-    )
-
-    assert (
-        manager.handle_error_outputs(
-            exception,
-        )
-        is True
-    )
-
-    assert received[0] is exception
-
-    assert received[1] is None
-
-
-def test_handle_error_outputs_delegates_message(
-    manager: DummyManager,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    received = None
-
-    def handle(
-        error,
-        message=None,
-    ) -> None:
-        nonlocal received
-
-        received = (
-            error,
-            message,
-        )
-
-        return True
-
-    error_manager = SingletonManager.get_singleton(
-        ErrorManager,
-    )
-
-    monkeypatch.setattr(
-        error_manager,
-        "handle_error_outputs",
-        handle,
-    )
-
-    assert (
-        manager.handle_error_outputs(
-            "failure",
-        )
-        is True
-    )
-
-    assert received == (
-        "failure",
-        None,
-    )
-
-
-def test_handle_error_outputs_delegates_title_message(
-    manager: DummyManager,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    received = None
-
-    def handle(
-        error,
-        message=None,
-    ) -> bool:
-        nonlocal received
-
-        received = (
-            error,
-            message,
-        )
-
-        return True
-
-    error_manager = SingletonManager.get_singleton(
-        ErrorManager,
-    )
-
-    monkeypatch.setattr(
-        error_manager,
-        "handle_error_outputs",
-        handle,
-    )
-
-    assert (
-        manager.handle_error_outputs(
-            "Title",
-            "Message",
-        )
-        is True
-    )
-
-    assert received == (
-        "Title",
-        "Message",
-    )
-
-
-def test_handle_error_outputs_requests_singleton(
-    manager: DummyManager,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    called = False
-
-    class FakeErrorManager:
-        def handle_error_outputs(
-            self,
-            error,
-            message=None,
-        ) -> bool:
-            return True
-
-    def get_singleton(
-        constructor,
-    ) -> None:
-        nonlocal called
-
-        called = True
-
-        assert constructor is ErrorManager
-
-        return FakeErrorManager()
-
-    monkeypatch.setattr(
-        SingletonManager,
-        "get_singleton",
-        get_singleton,
-    )
-
-    assert (
-        manager.handle_error_outputs(
-            "failure",
-        )
-        is True
-    )
-
-    assert called

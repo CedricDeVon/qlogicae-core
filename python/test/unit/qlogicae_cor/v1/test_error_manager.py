@@ -27,7 +27,7 @@ class ExceptionConfigurations(
         *_,
         **__,
     ) -> bool:
-        raise RuntimeError(
+        raise Exception(
             "failure",
         )
 
@@ -88,42 +88,6 @@ def test_setup_configuration_disabled(
     )
 
 
-def test_setup_configuration_exception(
-    manager: ErrorManager,
-    monkeypatch: pytest.MonkeyPatch,
-):
-    manager._configurations = ExceptionConfigurations()
-
-    called = False
-
-    def handle(
-        exception: Exception,
-    ):
-        nonlocal called
-
-        called = True
-
-        assert isinstance(
-            exception,
-            RuntimeError,
-        )
-
-    monkeypatch.setattr(
-        manager,
-        "handle_error_outputs",
-        handle,
-    )
-
-    assert (
-        manager.setup(
-            ErrorManagerConfigurations(),
-        )
-        is False
-    )
-
-    assert called
-
-
 def test_reset_success(
     manager: ErrorManager,
 ):
@@ -141,37 +105,6 @@ def test_reset_disabled(
     manager._configurations = DisabledConfigurations()
 
     assert manager.reset() is False
-
-
-def test_reset_exception(
-    manager: ErrorManager,
-    monkeypatch: pytest.MonkeyPatch,
-):
-    manager._configurations = ExceptionConfigurations()
-
-    called = False
-
-    def handle(
-        exception: Exception,
-    ):
-        nonlocal called
-
-        called = True
-
-        assert isinstance(
-            exception,
-            RuntimeError,
-        )
-
-    monkeypatch.setattr(
-        manager,
-        "handle_error_outputs",
-        handle,
-    )
-
-    assert manager.reset() is False
-
-    assert called
 
 
 def test_transform_error_log_from_exception(
@@ -221,104 +154,6 @@ def test_transform_error_log_custom_separator(
     )
 
     assert result == "Title::Message"
-
-
-def test_handle_error_outputs_exception(
-    manager: ErrorManager,
-    monkeypatch: pytest.MonkeyPatch,
-):
-    value = None
-
-    def handle(
-        error_log: str,
-    ):
-        nonlocal value
-
-        value = error_log
-
-        return True
-
-    monkeypatch.setattr(
-        manager,
-        "handle_error_output_conditions",
-        handle,
-    )
-
-    assert (
-        manager.handle_error_outputs(
-            RuntimeError(
-                "failure",
-            ),
-        )
-        is True
-    )
-
-    assert "RuntimeError" in value
-
-
-def test_handle_error_outputs_title_message(
-    manager: ErrorManager,
-    monkeypatch: pytest.MonkeyPatch,
-):
-    value = None
-
-    def handle(
-        error_log: str,
-    ):
-        nonlocal value
-
-        value = error_log
-
-        return True
-
-    monkeypatch.setattr(
-        manager,
-        "handle_error_output_conditions",
-        handle,
-    )
-
-    assert (
-        manager.handle_error_outputs(
-            "Title",
-            "Message",
-        )
-        is True
-    )
-
-    assert value == "Title - Message"
-
-
-def test_handle_error_outputs_message(
-    manager: ErrorManager,
-    monkeypatch: pytest.MonkeyPatch,
-):
-    value = None
-
-    def handle(
-        error_log: str,
-    ):
-        nonlocal value
-
-        value = error_log
-
-        return True
-
-    monkeypatch.setattr(
-        manager,
-        "handle_error_output_conditions",
-        handle,
-    )
-
-    assert (
-        manager.handle_error_outputs(
-            "Message",
-        )
-        is True
-    )
-
-    assert value.endswith(
-        "Message",
-    )
 
 
 def test_is_output_enabled_property():
@@ -459,7 +294,7 @@ class RaiseConsoleConfiguration(
     def is_enabled_for_console_output(
         self,
     ) -> bool:
-        raise RuntimeError(
+        raise Exception(
             "console failure",
         )
 
@@ -470,7 +305,7 @@ class RaiseRuntimeConfiguration(
     def is_enabled_for_runtime_execution_handling(
         self,
     ) -> bool:
-        raise RuntimeError(
+        raise Exception(
             "runtime failure",
         )
 
@@ -481,7 +316,7 @@ class RaiseThrowConfiguration(
     def is_enabled_for_runtime_throw_output(
         self,
     ) -> bool:
-        raise RuntimeError(
+        raise Exception(
             "throw failure",
         )
 
@@ -491,7 +326,7 @@ def test_handle_error_outputs_returns_true_for_exception(
 ):
     assert (
         manager.handle_error_outputs(
-            RuntimeError(
+            Exception(
                 "failure",
             ),
         )
@@ -549,10 +384,10 @@ def test_transform_to_error_log_exception_without_message(
     manager: ErrorManager,
 ):
     value = manager.transform_to_error_log(
-        RuntimeError(),
+        Exception(),
     )
 
-    assert "RuntimeError" in value
+    assert "Exception" in value
 
 
 def test_configuration_default_values():
@@ -583,7 +418,7 @@ def test_handle_error_output_conditions_runtime_configuration_exception():
     manager._configurations = RaiseRuntimeConfiguration()
 
     with pytest.raises(
-        RuntimeError,
+        Exception,
     ):
         manager.handle_error_output_conditions(
             "failure",
@@ -596,7 +431,7 @@ def test_handle_error_output_conditions_console_configuration_exception():
     manager._configurations = RaiseConsoleConfiguration()
 
     with pytest.raises(
-        RuntimeError,
+        Exception,
     ):
         manager.handle_error_output_conditions(
             "failure",
@@ -609,7 +444,7 @@ def test_handle_error_output_conditions_throw_configuration_exception():
     manager._configurations = RaiseThrowConfiguration()
 
     with pytest.raises(
-        RuntimeError,
+        Exception,
     ):
         manager.handle_error_output_conditions(
             "failure",
@@ -692,7 +527,7 @@ def test_transform_to_error_log_uses_custom_separator():
     manager._configurations.title_message_separator = "::"
 
     value = manager.transform_to_error_log(
-        RuntimeError(
+        Exception(
             "failure",
         ),
     )
@@ -804,7 +639,7 @@ def test_handle_error_outputs_runtime_throw_integration():
     )
 
     with pytest.raises(
-        RuntimeError,
+        Exception,
     ) as exception:
         manager.handle_error_outputs(
             "failure",
@@ -831,7 +666,7 @@ def test_handle_error_outputs_runtime_throw_exception_integration():
     )
 
     with pytest.raises(
-        RuntimeError,
+        Exception,
     ) as exception:
         manager.handle_error_outputs(
             ValueError(

@@ -9,7 +9,7 @@ Type = TypeVar("Type")
 
 
 class SingletonManager:
-    configurations: SingletonManagerConfigurations = SingletonManagerConfigurations()
+    _configurations: SingletonManagerConfigurations = SingletonManagerConfigurations()
 
     _singletons: dict[
         Callable[[], Any],
@@ -21,63 +21,46 @@ class SingletonManager:
         list[Any],
     ] = {}
 
-    def __init__(self) -> None:
-        pass
-
     @classmethod
     def setup(
         self,
         new_configurations: SingletonManagerConfigurations,
     ) -> bool:
-        try:
-            if self.configurations.is_disabled_for_handling(
-                new_configurations is None,
-            ):
-                return False
-
-            self.configurations = new_configurations
-
-            return True
-
-        except Exception:
+        if self._configurations.is_disabled_for_handling(
+            new_configurations is None,
+        ):
             return False
+
+        self._configurations = new_configurations
+
+        return True
 
     @classmethod
     def reset(
         self,
     ) -> bool:
-        try:
-            if self.configurations.is_disabled_for_handling():
-                return False
-
-            self.configurations = SingletonManagerConfigurations()
-
-            self._singletons.clear()
-            self._singleton_arrays.clear()
-
-            return True
-
-        except Exception:
+        if self._configurations.is_disabled_for_handling():
             return False
+
+        self._configurations = SingletonManagerConfigurations()
+
+        self._singletons.clear()
+        self._singleton_arrays.clear()
+
+        return True
 
     @classmethod
     def get_singleton(
         self,
         constructor: Callable[[], Type],
     ) -> Type:
-        try:
-            instance = self._singletons.get(constructor)
+        instance = self._singletons.get(constructor)
 
-            if instance is None:
-                instance = constructor()
-                self._singletons[constructor] = instance
+        if instance is None:
+            instance = constructor()
+            self._singletons[constructor] = instance
 
-            return instance
-
-        except Exception as exception:
-            raise RuntimeError(
-                "error at 'qlogicae-cor' - something went wrong here"
-            ) from exception
+        return instance
 
     @classmethod
     def get_singleton_from_pool(
@@ -86,22 +69,17 @@ class SingletonManager:
         instance_count: int,
         index: int,
     ) -> Type:
-        try:
-            if instance_count <= 0:
-                raise ValueError("error at 'qlogicae-cor' - something went wrong here")
+        if instance_count <= 0:
+            raise ValueError("error at 'qlogicae-cor' - something went wrong here")
 
-            instances = self._singleton_arrays.get(
-                constructor,
-            )
+        instances = self._singleton_arrays.get(
+            constructor,
+        )
 
-            if instances is None:
-                instances = [constructor() for _ in range(instance_count)]
+        if instances is None:
+            instances = [constructor() for _ in range(instance_count)]
 
-                self._singleton_arrays[constructor] = instances
+            self._singleton_arrays[constructor] = instances
 
-            return cast(Type, instances[abs(index) % instance_count])
+        return cast(Type, instances[abs(index) % instance_count])
 
-        except Exception as exception:
-            raise RuntimeError(
-                "error at 'qlogicae-cor' - something went wrong here"
-            ) from exception

@@ -4,43 +4,43 @@ from qlogicae_cor.v1.error_manager_configurations import (
 
 
 class ErrorManager:
+    __slots__ = (
+        "_configurations"
+    )
+
     def __init__(self) -> None:
-        self._configurations = ErrorManagerConfigurations()
+        self._configurations: ErrorManagerConfigurations = ErrorManagerConfigurations()
+
+    @property
+    def configurations(self) -> ErrorManagerConfigurations:
+        return self._configurations
+
+    @configurations.setter
+    def configurations(self, value: ErrorManagerConfigurations) -> None:
+        self._configurations = value
 
     def setup(
         self,
         new_configurations: ErrorManagerConfigurations,
     ) -> bool:
-        try:
-            if self._configurations.is_disabled_for_handling(
-                new_configurations is None,
-            ):
-                return False
-
-            self._configurations = new_configurations
-
-            return True
-
-        except Exception as exception:
-            self.handle_error_outputs(exception)
-
+        if self._configurations.is_disabled_for_handling(
+            new_configurations is None,
+        ):
             return False
+
+        self._configurations = new_configurations
+
+        return True
 
     def reset(
         self,
     ) -> bool:
-        try:
-            if self._configurations.is_disabled_for_handling():
-                return False
-
-            self._configurations = ErrorManagerConfigurations()
-
-            return True
-
-        except Exception as exception:
-            self.handle_error_outputs(exception)
-
+        if self._configurations.is_disabled_for_handling():
             return False
+
+        self._configurations = ErrorManagerConfigurations()
+
+        return True
 
     def transform_to_error_log(
         self,

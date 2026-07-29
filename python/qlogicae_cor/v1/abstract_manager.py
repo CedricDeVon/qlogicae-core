@@ -13,50 +13,46 @@ Configurations = TypeVar(
 
 
 class AbstractManager[Configurations: AbstractManagerConfigurations]:
-    __slots__ = "configurations"
+    __slots__ = "_configurations"
 
     def __init__(
         self,
         new_configurations: Configurations,
     ) -> None:
-        self.configurations = new_configurations
+        self._configurations: Configurations = new_configurations
+
+    @property
+    def configurations(self) -> Configurations:
+        return self._configurations
+
+    @configurations.setter
+    def configurations(self, value: Configurations) -> None:
+        self._configurations = value
 
     def setup(
         self,
         new_configurations: Configurations,
     ) -> bool:
-        try:
-            if self.configurations.is_disabled_for_handling(
-                new_configurations is None,
-            ):
-                return False
-
-            self.configurations = new_configurations
-
-            return True
-
-        except Exception as exception:
-            self.handle_error_outputs(exception)
-
+        if self._configurations.is_disabled_for_handling(
+            new_configurations is None,
+        ):
             return False
+
+        self._configurations = new_configurations
+
+        return True
 
     def reset(
         self,
     ) -> bool:
-        try:
-            if self.configurations.is_disabled_for_handling():
-                return False
-
-            self.configurations = type(
-                self.configurations,
-            )()
-
-            return True
-
-        except Exception as exception:
-            self.handle_error_outputs(exception)
-
+        if self._configurations.is_disabled_for_handling():
             return False
+
+        self._configurations = type(
+            self._configurations,
+        )()
+
+        return True
 
     def handle_error_outputs(
         self,

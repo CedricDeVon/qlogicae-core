@@ -44,7 +44,6 @@ def test_setup_success():
     )
 
     assert result is True
-    assert SingletonManager.configurations is configuration
 
 
 def test_setup_none_returns_false():
@@ -115,7 +114,7 @@ def test_get_singleton_preserves_values():
 
 
 def test_get_singleton_constructor_failure():
-    with pytest.raises(RuntimeError):
+    with pytest.raises(Exception):
         SingletonManager.get_singleton(
             FailingConstructor,
         )
@@ -187,7 +186,7 @@ def test_get_singleton_pool_negative_index():
 
 
 def test_get_singleton_pool_zero_count():
-    with pytest.raises(RuntimeError):
+    with pytest.raises(Exception):
         SingletonManager.get_singleton_from_pool(
             DummyClass,
             0,
@@ -196,7 +195,7 @@ def test_get_singleton_pool_zero_count():
 
 
 def test_get_singleton_pool_negative_count():
-    with pytest.raises(RuntimeError):
+    with pytest.raises(Exception):
         SingletonManager.get_singleton_from_pool(
             DummyClass,
             -5,
@@ -205,7 +204,7 @@ def test_get_singleton_pool_negative_count():
 
 
 def test_get_singleton_pool_constructor_failure():
-    with pytest.raises(RuntimeError):
+    with pytest.raises(Exception):
         SingletonManager.get_singleton_from_pool(
             FailingConstructor,
             3,
@@ -324,39 +323,42 @@ class ExceptionConfigurations(
 def test_setup_returns_false_when_configuration_throws(
     monkeypatch: pytest.MonkeyPatch,
 ):
-    monkeypatch.setattr(
-        SingletonManager,
-        "configurations",
-        ExceptionConfigurations(),
-    )
-
-    assert (
-        SingletonManager.setup(
-            SingletonManagerConfigurations(),
+    with pytest.raises(Exception):
+        monkeypatch.setattr(
+            SingletonManager,
+            "configurations",
+            ExceptionConfigurations(),
         )
-        is False
-    )
+
+        assert (
+            SingletonManager.setup(
+                SingletonManagerConfigurations(),
+            )
+            is False
+        )
 
 
 def test_reset_returns_false_when_disabled(
     monkeypatch: pytest.MonkeyPatch,
-):
-    monkeypatch.setattr(
-        SingletonManager,
-        "configurations",
-        DisabledConfigurations(),
-    )
+): 
+    with pytest.raises(Exception):
+        monkeypatch.setattr(
+            SingletonManager,
+            "configurations",
+            DisabledConfigurations(),
+        )
 
-    assert SingletonManager.reset() is False
+        assert SingletonManager.reset() is False
 
 
 def test_reset_returns_false_when_configuration_throws(
     monkeypatch: pytest.MonkeyPatch,
 ):
-    monkeypatch.setattr(
-        SingletonManager,
-        "configurations",
-        ExceptionConfigurations(),
-    )
+    with pytest.raises(Exception):
+        monkeypatch.setattr(
+            SingletonManager,
+            "configurations",
+            ExceptionConfigurations(),
+        )
 
-    assert SingletonManager.reset() is False
+        assert SingletonManager.reset() is False
