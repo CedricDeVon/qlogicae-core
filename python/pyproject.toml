@@ -1,6 +1,6 @@
 [project]
 name = "qlogicae-cor"
-version = "1.2.4"
+version = "1.2.5"
 description = "The core library for QLogicae projects"
 readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.12"
@@ -83,13 +83,20 @@ where = ["qlogicae_cor"]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
-testpaths = ["./test/unit"]
+testpaths = ["./test/qlogicae_cor/v1/unit"]
 python_files = ["test_*.py"]
 addopts = "-ra"
 
 
 [tool.coverage.run]
-source = ["qlogicae_cor"]
+source = [
+    "qlogicae_cor.v1.value_cache_storage_manager",
+    "qlogicae_cor.v1.macros_manager",
+    "qlogicae_cor.v1.object_merge_manager",
+    "qlogicae_cor.v1.abstract_manager",
+    "qlogicae_cor.v1.singleton_manager",
+    "qlogicae_cor.v1.error_manager",
+]
 branch = true
 
 

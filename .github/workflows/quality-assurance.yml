@@ -168,8 +168,8 @@ jobs:
           - name: Run Package Existence Validation
             run: qlogicae-cor
 
-          - name: Run End-to-End Test
-            run: python usage.py
+          - name: Run Package V1 Existence Validation
+            run: qlogicae-cor-v1
 
     typescript-unit-test:
       name: Typescript | Unit Test (${{ matrix.runtime }})

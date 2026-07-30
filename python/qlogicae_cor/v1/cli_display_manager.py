@@ -18,6 +18,9 @@ from qlogicae_cor.v1.singleton_manager import (
 
 
 class CliDisplayManager(AbstractManager[CliDisplayManagerConfigurations]):
+    def __init__(self) -> None:
+        super().__init__(CliDisplayManagerConfigurations())
+
     def render_directly(
         self,
         data: dict[str, Any] | None = None

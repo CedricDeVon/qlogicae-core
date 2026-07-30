@@ -15,7 +15,7 @@ class ObjectMergeManager(AbstractManager[ObjectMergeManagerConfigurations]):
     def __init__(self) -> None:
         super().__init__(ObjectMergeManagerConfigurations())
 
-    def deep_merging(
+    def deep_merge(
         self,
         left: Any,
         right: Any,
@@ -31,7 +31,7 @@ class ObjectMergeManager(AbstractManager[ObjectMergeManagerConfigurations]):
 
             for key, value in right.items():
                 if key in result:
-                    result[key] = self.deep_merging(
+                    result[key] = self.deep_merge(
                         result[key],
                         value,
                     )
