@@ -1,6 +1,6 @@
 [project]
 name = "qlogicae-cor"
-version = "1.2.0"
+version = "1.2.1"
 description = "The core library for QLogicae projects"
 readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.12"
@@ -12,8 +12,9 @@ authors = [
 maintainers = [
     { name = "Vaughn Cedric L. Araneta", email = "vaughncedriclipardoaraneta@gmail.com" }
 ]
-
-keywords = ["qlogicae", "cor"]
+keywords = [
+    "qlogicae", "cor"
+]
 
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -31,8 +32,12 @@ classifiers = [
 ]
 dependencies = [
     "pydantic>=2.13,<3",
+    "pyfiglet>=1.0.4,<2",
     "PyYAML>=6.0,<7",
+    "qlogicae-cor>=1.0.8,<2",
+    "rich>=15,<16",
     "textual>=8,<9",
+    "typer>=0.26,<1",
     "tomli_w>=1.2.0,<2",
     "tomlkit>=0.15.0,<1"
 ]
@@ -50,8 +55,10 @@ dev = [
     "scalene",
     "pympler"
 ]
+
 [project.scripts]
 qlogicae-cor = "qlogicae_cor.v1.console.app:main"
+qlogicae-cor-v1 = "qlogicae_cor.v1.console.app:main"
 
 [project.urls]
 Homepage = "https://github.com/CedricDeVon/qlogicae-cor"
@@ -175,6 +182,9 @@ exclude = [
     "docs/**",
     "docs/**",
 ]
+
+[tool.hatch.build.targets.wheel.force-include]
+"qlogicae_cor/py.typed" = "qlogicae_cor/py.typed"
 
 
 [tool.hatch.build.targets.wheel]
