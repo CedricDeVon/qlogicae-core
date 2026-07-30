@@ -135,7 +135,7 @@ jobs:
 
       defaults:
           run:
-              working-directory: ./python/test/e2e/qlogicae_cor/v1
+              working-directory: ./python/test/qlogicae_cor/v1/e2e
 
       strategy:
           fail-fast: false
