@@ -1,0 +1,376 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="debug|Win32">
+      <Configuration>debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="development|Win32">
+      <Configuration>development</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="development|x64">
+      <Configuration>development</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="deployment|Win32">
+      <Configuration>deployment</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="deployment|x64">
+      <Configuration>deployment</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="debug|x64">
+      <Configuration>debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{7bf44066-e303-4596-8606-23311468a536}</ProjectGuid>
+    <RootNamespace>qlogicae_cor1_layer_1</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>qlogicae_cor1_layer_1</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='deployment|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='development|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='deployment|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='development|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.props" />
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='deployment|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='development|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='deployment|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='development|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug|x64'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='deployment|x64'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='development|x64'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug|Win32'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='deployment|Win32'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='development|Win32'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_LIB;_WIN32_WINNT=0x0A00;QLOGICAE_COR1__BASE__HPP_CPP__Full__IS_COMPILATION_ENABLED=0;QLOGICAE_COR1__BASE__HPP_CPP__FullOverride__IS_COMPILATION_ENABLED=0;QLOGICAE_COR1__BASE__HPP_CPP__CurlVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__FastIoVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__FollyVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__SodiumVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__Pcre2VcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__EfswVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__CppCodecVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__AbslVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__BoostVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__RapidCsvVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__XlntVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__LibOqsVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__JwtCppVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__OnnxRuntimeVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__RocksDbVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__NanobenchVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__Sqlite3VcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__TomlPlusPlusVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__PugixmlVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__Argon2VcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__RapidJsonVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__YamlCppVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__StdImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__AbstractConfigurations__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__SingletonManagerConfigurations__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__SingletonManager__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__ErrorManagerConfigurations__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__ErrorManager__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__AbstractClass__IS_COMPILATION_ENABLED=1</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.hpp</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <UseUnicodeForAssemblerListing>true</UseUnicodeForAssemblerListing>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <StringPooling>false</StringPooling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <EnableParallelCodeGeneration>false</EnableParallelCodeGeneration>
+      <FloatingPointModel>Default</FloatingPointModel>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>
+      </SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\vcpkg\installed\x86-windows-static\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='deployment|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_LIB;_WIN32_WINNT=0x0A00;QLOGICAE_COR1__BASE__HPP_CPP__Full__IS_COMPILATION_ENABLED=0;QLOGICAE_COR1__BASE__HPP_CPP__FullOverride__IS_COMPILATION_ENABLED=0;QLOGICAE_COR1__BASE__HPP_CPP__CurlVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__FastIoVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__FollyVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__SodiumVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__Pcre2VcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__EfswVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__CppCodecVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__AbslVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__BoostVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__RapidCsvVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__XlntVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__LibOqsVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__JwtCppVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__OnnxRuntimeVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__RocksDbVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__NanobenchVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__Sqlite3VcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__TomlPlusPlusVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__PugixmlVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__Argon2VcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__RapidJsonVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__YamlCppVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__StdImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__AbstractConfigurations__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__SingletonManagerConfigurations__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__SingletonManager__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__ErrorManagerConfigurations__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__ErrorManager__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__AbstractClass__IS_COMPILATION_ENABLED=1</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.hpp</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <UseUnicodeForAssemblerListing>true</UseUnicodeForAssemblerListing>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <StringPooling>true</StringPooling>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions102</EnableEnhancedInstructionSet>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>
+      </SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\vcpkg\installed\x86-windows-static\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='development|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_LIB;_WIN32_WINNT=0x0A00;QLOGICAE_COR1__BASE__HPP_CPP__Full__IS_COMPILATION_ENABLED=0;QLOGICAE_COR1__BASE__HPP_CPP__FullOverride__IS_COMPILATION_ENABLED=0;QLOGICAE_COR1__BASE__HPP_CPP__CurlVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__FastIoVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__FollyVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__SodiumVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__Pcre2VcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__EfswVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__CppCodecVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__AbslVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__BoostVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__RapidCsvVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__XlntVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__LibOqsVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__JwtCppVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__OnnxRuntimeVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__RocksDbVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__NanobenchVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__Sqlite3VcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__TomlPlusPlusVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__PugixmlVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__Argon2VcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__RapidJsonVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__YamlCppVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__StdImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__AbstractConfigurations__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__SingletonManagerConfigurations__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__SingletonManager__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__ErrorManagerConfigurations__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__ErrorManager__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__AbstractClass__IS_COMPILATION_ENABLED=1</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.hpp</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <UseUnicodeForAssemblerListing>true</UseUnicodeForAssemblerListing>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <StringPooling>true</StringPooling>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions102</EnableEnhancedInstructionSet>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>
+      </SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\vcpkg\installed\x86-windows-static\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_LIB;_WIN32_WINNT=0x0A00;QLOGICAE_COR1__BASE__HPP_CPP__Full__IS_COMPILATION_ENABLED=0;QLOGICAE_COR1__BASE__HPP_CPP__FullOverride__IS_COMPILATION_ENABLED=0;QLOGICAE_COR1__BASE__HPP_CPP__CurlVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__FastIoVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__FollyVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__SodiumVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__Pcre2VcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__EfswVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__CppCodecVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__AbslVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__BoostVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__RapidCsvVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__XlntVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__LibOqsVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__JwtCppVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__OnnxRuntimeVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__RocksDbVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__NanobenchVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__Sqlite3VcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__TomlPlusPlusVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__PugixmlVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__Argon2VcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__RapidJsonVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__YamlCppVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__StdImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__AbstractConfigurations__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__SingletonManagerConfigurations__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__SingletonManager__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__ErrorManagerConfigurations__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__ErrorManager__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__AbstractClass__IS_COMPILATION_ENABLED=1</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.hpp</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <OmitFramePointers>false</OmitFramePointers>
+      <StringPooling>false</StringPooling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <UseUnicodeForAssemblerListing>true</UseUnicodeForAssemblerListing>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Default</FloatingPointModel>
+      <EnableParallelCodeGeneration>false</EnableParallelCodeGeneration>
+      <Optimization>Disabled</Optimization>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+    </ClCompile>
+    <Link>
+      <SubSystem>
+      </SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <LinkTimeCodeGeneration>false</LinkTimeCodeGeneration>
+      <AdditionalOptions>/INCLUDE:mi_redirect %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalLibraryDirectories>C:\vcpkg\installed\x64-windows-static\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='deployment|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_LIB;_WIN32_WINNT=0x0A00;QLOGICAE_COR1__BASE__HPP_CPP__Full__IS_COMPILATION_ENABLED=0;QLOGICAE_COR1__BASE__HPP_CPP__FullOverride__IS_COMPILATION_ENABLED=0;QLOGICAE_COR1__BASE__HPP_CPP__CurlVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__FastIoVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__FollyVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__SodiumVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__Pcre2VcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__EfswVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__CppCodecVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__AbslVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__BoostVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__RapidCsvVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__XlntVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__LibOqsVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__JwtCppVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__OnnxRuntimeVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__RocksDbVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__NanobenchVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__Sqlite3VcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__TomlPlusPlusVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__PugixmlVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__Argon2VcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__RapidJsonVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__YamlCppVcpkgImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__StdImports__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__AbstractConfigurations__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__SingletonManagerConfigurations__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__SingletonManager__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__ErrorManagerConfigurations__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__ErrorManager__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__AbstractClass__IS_COMPILATION_ENABLED=1</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.hpp</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <StringPooling>true</StringPooling>
+      <UseUnicodeForAssemblerListing>true</UseUnicodeForAssemblerListing>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions102</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+    </ClCompile>
+    <Link>
+      <SubSystem>
+      </SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <AdditionalOptions>/INCLUDE:mi_redirect %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalLibraryDirectories>C:\vcpkg\installed\x64-windows-static\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='development|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_LIB;_WIN32_WINNT=0x0A00;QLOGICAE_COR1__BASE__HPP_CPP__Full__IS_COMPILATION_ENABLED=1;QLOGICAE_COR1__BASE__HPP_CPP__FullOverride__IS_COMPILATION_ENABLED=1</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.hpp</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <StringPooling>true</StringPooling>
+      <UseUnicodeForAssemblerListing>true</UseUnicodeForAssemblerListing>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions102</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+    </ClCompile>
+    <Link>
+      <SubSystem>
+      </SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <AdditionalOptions>/INCLUDE:mi_redirect %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalLibraryDirectories>C:\vcpkg\installed\x64-windows-static\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.hpp" />
+    <ClInclude Include="qlogicae\cor1\includes\abstract_class.hpp" />
+    <ClInclude Include="qlogicae\cor1\includes\abstract_configurations.hpp" />
+    <ClInclude Include="qlogicae\cor1\includes\abstract_enum.hpp" />
+    <ClInclude Include="qlogicae\cor1\includes\error_manager.hpp" />
+    <ClInclude Include="qlogicae\cor1\includes\error_manager_configurations.hpp" />
+    <ClInclude Include="qlogicae\cor1\includes\singleton_manager.hpp" />
+    <ClInclude Include="qlogicae\cor1\includes\singleton_manager_configurations.hpp" />
+    <ClInclude Include="qlogicae\cor1\layer_1\macros\setup.hpp" />
+    <ClInclude Include="qlogicae\cor1\macros\checks.hpp" />
+    <ClInclude Include="qlogicae\cor1\macros\definitions.hpp" />
+    <ClInclude Include="qlogicae\cor1\macros\layer_1.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='deployment|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='development|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='deployment|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='development|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='debug|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="qlogicae\cor1\sources\abstract_class.cpp" />
+    <ClCompile Include="qlogicae\cor1\sources\abstract_configurations.cpp" />
+    <ClCompile Include="qlogicae\cor1\sources\abstract_enum.cpp" />
+    <ClCompile Include="qlogicae\cor1\sources\error_manager.cpp" />
+    <ClCompile Include="qlogicae\cor1\sources\error_manager_configurations.cpp" />
+    <ClCompile Include="qlogicae\cor1\sources\singleton_manager.cpp" />
+    <ClCompile Include="qlogicae\cor1\sources\singleton_manager_configurations.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets" />
+  </ImportGroup>
+</Project>

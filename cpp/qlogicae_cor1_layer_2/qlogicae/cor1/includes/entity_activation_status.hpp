@@ -1,0 +1,25 @@
+#pragma once
+
+#if QLOGICAE_COR1__BASE__HPP_CPP__IS_COMPILATION_CONDITIONS_ENABLED_TEMPLATE( \
+		EntityActivationStatus \
+	)
+
+namespace
+	QLOGICAE_COR1__BASE__HPP_CPP__COR_NAMESPACE_NAME
+{
+	enum class
+		EntityActivationStatus :
+			QLOGICAE_COR1__BASE__HPP_CPP__ABSTRACT_ENUM_INHERITED_TYPE
+	{
+		ACTIVE,
+
+		INACTIVE,
+
+		PENDING,
+
+		QLOGICAE_COR1__BASE__HPP_CPP__ENUM_CONSTANTS
+	};
+}
+
+#endif
+

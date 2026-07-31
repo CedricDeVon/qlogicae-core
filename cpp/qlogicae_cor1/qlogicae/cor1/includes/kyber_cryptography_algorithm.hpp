@@ -1,0 +1,25 @@
+#pragma once
+
+#if QLOGICAE_COR1__BASE__HPP_CPP__IS_COMPILATION_CONDITIONS_ENABLED_TEMPLATE( \
+		KyberCryptographyAlgorithm \
+	)
+
+namespace
+	QLOGICAE_COR1__BASE__HPP_CPP__COR_NAMESPACE_NAME
+{
+    enum class
+		KyberCryptographyAlgorithm :
+			QLOGICAE_COR1__BASE__HPP_CPP__ABSTRACT_ENUM_INHERITED_TYPE
+    {
+		KYBER_512,
+
+		KYBER_768,
+
+		KYBER_1024,
+
+		QLOGICAE_COR1__BASE__HPP_CPP__ENUM_CONSTANTS
+    };
+}
+
+#endif
+

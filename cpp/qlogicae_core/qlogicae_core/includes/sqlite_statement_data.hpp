@@ -1,0 +1,21 @@
+#pragma once
+
+#include <sqlite3.h>
+
+namespace QLogicaeCore
+{
+    struct SQLiteStatementData
+    {
+    public:
+        explicit SQLiteStatementData(
+            sqlite3_stmt* raw_statement
+        );
+        
+        ~SQLiteStatementData();
+
+        sqlite3_stmt* get() noexcept;
+
+    protected:
+        sqlite3_stmt* statement_handle;
+    };
+}

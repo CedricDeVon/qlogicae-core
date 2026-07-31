@@ -1,0 +1,25 @@
+#pragma once
+
+#if QLOGICAE_COR1__BASE__HPP_CPP__IS_COMPILATION_CONDITIONS_ENABLED_TEMPLATE( \
+		TextEncoding \
+	)
+
+namespace
+	QLOGICAE_COR1__BASE__HPP_CPP__COR_NAMESPACE_NAME
+{
+    enum class
+		TextEncoding :
+			QLOGICAE_COR1__BASE__HPP_CPP__ABSTRACT_ENUM_INHERITED_TYPE
+    {
+		BASE16,
+
+		BASE32,
+
+        BASE64,
+
+		QLOGICAE_COR1__BASE__HPP_CPP__ENUM_CONSTANTS
+    };
+}
+
+#endif
+

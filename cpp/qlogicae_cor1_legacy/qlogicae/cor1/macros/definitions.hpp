@@ -1,0 +1,302 @@
+#pragma once
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__EMPTY_MACROS
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__ENUM_CONSTANTS \
+	NONE \
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__COR_NAMESPACE_NAME \
+	qlogicae::cor1 \
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__COR_TESTS_NAMESPACE_NAME \
+	QLOGICAE_COR1__BASE__HPP_CPP__COR_NAMESPACE_NAME::tests \
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__COR_SANDBOX_NAMESPACE_NAME \
+	QLOGICAE_COR1__BASE__HPP_CPP__COR_NAMESPACE_NAME::sandbox \
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__COR_BENCHMARKS_NAMESPACE_NAME \
+	QLOGICAE_COR1__BASE__HPP_CPP__COR_NAMESPACE_NAME::benchmarks \
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__MUTEX_LAYER_1 \
+	1 \
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__MUTEX_LAYER_2 \
+	2 \
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__MUTEX_LAYER_3 \
+	3 \
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__MUTEX_LAYER_4 \
+	4 \
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__EMPTY_EDGE_CASES \
+	false \
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__IMPLICIT_RETURN_VALUE \
+	{}; \
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__VOID_RETURN_VALUE \
+	QLOGICAE_COR1__BASE__HPP_CPP__EMPTY_MACROS \
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__EMPTY_NAMESPACE_CODE \
+	QLOGICAE_COR1__BASE__HPP_CPP__EMPTY_MACROS \
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__TRY_CATCH_EXCEPTION_NAME \
+	exception \
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__EMPTY_TRY_CODE \
+	QLOGICAE_COR1__BASE__HPP_CPP__EMPTY_MACROS \
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__EMPTY_CATCH_CODE \
+	QLOGICAE_COR1__BASE__HPP_CPP__EMPTY_MACROS \
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__TRY_CATCH_EXCEPTION_PARAMETER \
+	const std::exception& QLOGICAE_COR1__BASE__HPP_CPP__TRY_CATCH_EXCEPTION_NAME \
+
+
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__ABSTRACT_ENUM_NAME \
+	AbstractEnum \
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__ABSTRACT_ENUM_INHERITED_TYPE \
+	uint8_t \
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__ABSTRACT_CLASS_NAME \
+	AbstractClass \
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__ABSTRACT_CONFIGURATIONS_NAME \
+	AbstractConfigurations \
+
+
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__CONCATENATE_IMPLEMENTATION(value_1, value_2) \
+	value_1##value_2 \
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__CONCATENATE(value_1, value_2) \
+	QLOGICAE_COR1__BASE__HPP_CPP__CONCATENATE_IMPLEMENTATION(value_1, value_2) \
+
+
+
+#define QLOGICAE_COR1__BASE__HPP__MUTEX_LAYER_TEMPLATE(mutex_layer_number) \
+	QLOGICAE_COR1__BASE__HPP_CPP__CONCATENATE(feature_handling_mutex_, mutex_layer_number); \
+
+#define QLOGICAE_COR1__INSTANCE__HPP__MUTEX_LAYER_TEMPLATE(mutex_layer_number) \
+    boost::mutex \
+		QLOGICAE_COR1__BASE__HPP__MUTEX_LAYER_TEMPLATE(mutex_layer_number); \
+
+#define QLOGICAE_COR1__STATIC__HPP__MUTEX_LAYER_TEMPLATE(mutex_layer_number) \
+    static boost::mutex \
+		QLOGICAE_COR1__BASE__HPP__MUTEX_LAYER_TEMPLATE(mutex_layer_number); \
+
+
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__EDGE_CASE_GUARD_TEMPLATE(return_value, ...) \
+    if ( \
+		configurations \
+			.is_runtime_execution_disabled_for_feature_handling() || \
+        ( \
+			configurations \
+				.is_edge_case_enabled_for_feature_handling() && \
+			(__VA_ARGS__) \
+		) \
+	) \
+    { \
+        return return_value; \
+    } \
+
+#define QLOGICAE_COR1__VOID__HPP_CPP__EDGE_CASE_GUARD_TEMPLATE(...) \
+    QLOGICAE_COR1__BASE__HPP_CPP__EDGE_CASE_GUARD_TEMPLATE \
+	( \
+		QLOGICAE_COR1__BASE__HPP_CPP__VOID_RETURN_VALUE, \
+		__VA_ARGS__ \
+	); \
+
+#define QLOGICAE_COR1__IMPLICIT__HPP_CPP__EDGE_CASE_GUARD_TEMPLATE(...) \
+    QLOGICAE_COR1__BASE__HPP_CPP__EDGE_CASE_GUARD_TEMPLATE \
+	( \
+		QLOGICAE_COR1__BASE__HPP_CPP__IMPLICIT_RETURN_VALUE, \
+		__VA_ARGS__ \
+	); \
+
+#define QLOGICAE_COR1__EXPLICIT__HPP_CPP__EDGE_CASE_GUARD_TEMPLATE(return_value, ...) \
+    QLOGICAE_COR1__BASE__HPP_CPP__EDGE_CASE_GUARD_TEMPLATE \
+	( \
+		return_value, \
+		__VA_ARGS__ \
+	); \
+
+
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__THREAD_SAFETY_GUARD_TEMPLATE(mutex_layer_number) \
+    boost::unique_lock<boost::mutex> \
+		mutex_lock; \
+\
+    if ( \
+		configurations \
+			.is_thread_safety_enabled_for_feature_handling() \
+	) \
+    { \
+        mutex_lock = \
+			boost::unique_lock<boost::mutex>( \
+				QLOGICAE_COR1__BASE__HPP_CPP__CONCATENATE(feature_handling_mutex_, mutex_layer_number) \
+			); \
+    } \
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__MUTEX_LAYER_1_TEMPLATE() \
+    QLOGICAE_COR1__BASE__HPP_CPP__THREAD_SAFETY_GUARD_TEMPLATE \
+	( \
+		QLOGICAE_COR1__BASE__HPP_CPP__MUTEX_LAYER_1 \
+	); \
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__MUTEX_LAYER_2_TEMPLATE() \
+    QLOGICAE_COR1__BASE__HPP_CPP__THREAD_SAFETY_GUARD_TEMPLATE \
+	( \
+		QLOGICAE_COR1__BASE__HPP_CPP__MUTEX_LAYER_2 \
+	); \
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__MUTEX_LAYER_3_TEMPLATE() \
+    QLOGICAE_COR1__BASE__HPP_CPP__THREAD_SAFETY_GUARD_TEMPLATE \
+	( \
+		QLOGICAE_COR1__BASE__HPP_CPP__MUTEX_LAYER_3 \
+	); \
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__MUTEX_LAYER_4_TEMPLATE() \
+    QLOGICAE_COR1__BASE__HPP_CPP__THREAD_SAFETY_GUARD_TEMPLATE \
+	( \
+		QLOGICAE_COR1__BASE__HPP_CPP__MUTEX_LAYER_4 \
+	); \
+
+
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__CATCH_CODE_TEMPLATE(...) \
+    handle_error_outputs<void>( \
+		QLOGICAE_COR1__BASE__HPP_CPP__TRY_CATCH_EXCEPTION_NAME \
+	); \
+\
+	return \
+		__VA_ARGS__; \
+
+#define QLOGICAE_COR1__VOID__HPP_CPP__CATCH_CODE_TEMPLATE() \
+    QLOGICAE_COR1__BASE__HPP_CPP__CATCH_CODE_TEMPLATE \
+	( \
+		QLOGICAE_COR1__BASE__HPP_CPP__VOID_RETURN_VALUE \
+	); \
+
+#define QLOGICAE_COR1__IMPLICIT__HPP_CPP__CATCH_CODE_TEMPLATE() \
+    QLOGICAE_COR1__BASE__HPP_CPP__CATCH_CODE_TEMPLATE \
+	( \
+		QLOGICAE_COR1__BASE__HPP_CPP__IMPLICIT_RETURN_VALUE \
+	); \
+
+#define QLOGICAE_COR1__EXPLICIT__HPP_CPP__CATCH_CODE_TEMPLATE(...) \
+    QLOGICAE_COR1__BASE__HPP_CPP__CATCH_CODE_TEMPLATE \
+	( \
+		__VA_ARGS__ \
+	); \
+
+
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__PRE_EXECUTION_GUARD_TEMPLATE(return_value, mutex_layer_number, ...) \
+    QLOGICAE_COR1__BASE__HPP_CPP__EDGE_CASE_GUARD_TEMPLATE \
+	( \
+		return_value, \
+		__VA_ARGS__ \
+	); \
+	QLOGICAE_COR1__BASE__HPP_CPP__THREAD_SAFETY_GUARD_TEMPLATE \
+	( \
+		mutex_layer_number \
+	); \
+
+#define QLOGICAE_COR1__VOID__HPP_CPP__PRE_EXECUTION_GUARD_TEMPLATE(mutex_layer_number, ...) \
+    QLOGICAE_COR1__BASE__HPP_CPP__PRE_EXECUTION_GUARD_TEMPLATE \
+	( \
+		QLOGICAE_COR1__BASE__HPP_CPP__VOID_RETURN_VALUE, \
+		mutex_layer_number, \
+		__VA_ARGS__ \
+	); \
+
+#define QLOGICAE_COR1__IMPLICIT__HPP_CPP__PRE_EXECUTION_GUARD_TEMPLATE(mutex_layer_number, ...) \
+    QLOGICAE_COR1__BASE__HPP_CPP__PRE_EXECUTION_GUARD_TEMPLATE \
+	( \
+		QLOGICAE_COR1__BASE__HPP_CPP__IMPLICIT_RETURN_VALUE, \
+		mutex_layer_number, \
+		__VA_ARGS__ \
+	); \
+
+#define QLOGICAE_COR1__EXPLICIT__HPP_CPP__PRE_EXECUTION_GUARD_TEMPLATE(return_value, mutex_layer_number, ...) \
+    QLOGICAE_COR1__BASE__HPP_CPP__PRE_EXECUTION_GUARD_TEMPLATE \
+	( \
+		return_value, \
+		mutex_layer_number, \
+		__VA_ARGS__ \
+	); \
+
+
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__GET_SINGLETON_TEMPLATE \
+    SingletonManager \
+		::get_singleton \
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__RESET_TO_DEFAULT_CONFIGURATIONS_TEMPLATE(type_name) \
+    type_name \
+		::default_configurations = \
+			new_configurations; \
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__RESET_TO_INITIAL_CONFIGURATIONS_TEMPLATE(type_name) \
+	type_name \
+		::default_configurations = \
+			type_name:: \
+				initial_configurations; \
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__FIRST_ENUM_TO_STRING_STATEMENT_TEMPLATE(enum_name, enum_constant) \
+	case (enum_name::enum_constant): return #enum_constant; \
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__MIDDLE_ENUM_TO_STRING_STATEMENT_TEMPLATE(enum_name, enum_constant) \
+	case (enum_name::enum_constant): return #enum_constant; \
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__FINAL_ENUM_TO_STRING_STATEMENT_TEMPLATE(enum_name, enum_constant) \
+	case (enum_name::enum_constant): return #enum_constant; \
+	default: return #enum_constant; \
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__FIRST_STRING_TO_ENUM_STATEMENT_TEMPLATE(enum_name, enum_constant) \
+	if (value == #enum_constant) return enum_name::enum_constant; \
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__MIDDLE_STRING_TO_ENUM_STATEMENT_TEMPLATE(enum_name, enum_constant) \
+	else if (value == #enum_constant) return enum_name::enum_constant; \
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__FINAL_STRING_TO_ENUM_STATEMENT_TEMPLATE(enum_name, enum_constant) \
+	else return enum_name::enum_constant; \
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__ENUM_TO_STRING_SWITCH_CASE_STATEMENT_TEMPLATE(enum_constants) \
+	switch (value) \
+	{ \
+		enum_constants \
+		( \
+			QLOGICAE_COR1__BASE__HPP_CPP__FIRST_ENUM_TO_STRING_STATEMENT_TEMPLATE, \
+			QLOGICAE_COR1__BASE__HPP_CPP__MIDDLE_ENUM_TO_STRING_STATEMENT_TEMPLATE, \
+			QLOGICAE_COR1__BASE__HPP_CPP__FINAL_ENUM_TO_STRING_STATEMENT_TEMPLATE \
+		) \
+	} \
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__STRING_TO_ENUM_SWITCH_CASE_STATEMENT_TEMPLATE(enum_constants) \
+	enum_constants \
+	( \
+		QLOGICAE_COR1__BASE__HPP_CPP__FIRST_STRING_TO_ENUM_STATEMENT_TEMPLATE, \
+		QLOGICAE_COR1__BASE__HPP_CPP__MIDDLE_STRING_TO_ENUM_STATEMENT_TEMPLATE, \
+		QLOGICAE_COR1__BASE__HPP_CPP__FINAL_STRING_TO_ENUM_STATEMENT_TEMPLATE \
+	)
+
+
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__IS_COMPILATION_ENABLED_TEMPLATE(name) \
+    QLOGICAE_COR1__BASE__HPP_CPP__##name##__IS_COMPILATION_ENABLED \
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__IS_COMPILATION_CONDITIONS_ENABLED_TEMPLATE(name) \
+    (QLOGICAE_COR1__BASE__HPP_CPP__IS_COMPILATION_ENABLED_TEMPLATE(FullOverride)) ? \
+		QLOGICAE_COR1__BASE__HPP_CPP__IS_COMPILATION_ENABLED_TEMPLATE(Full) : \
+		QLOGICAE_COR1__BASE__HPP_CPP__IS_COMPILATION_ENABLED_TEMPLATE(name)
+
+#define QLOGICAE_COR1__BASE__HPP_CPP__COMPILATION_CONDITIONS_TEMPLATE(...) \
+    (QLOGICAE_COR1__BASE__HPP_CPP__IS_COMPILATION_ENABLED_TEMPLATE(FullOverride)) ? \
+		QLOGICAE_COR1__BASE__HPP_CPP__IS_COMPILATION_ENABLED_TEMPLATE(Full) : \
+		(__VA_ARGS__)

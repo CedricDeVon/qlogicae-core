@@ -1,0 +1,75 @@
+#pragma once
+
+#include "result.hpp"
+
+namespace QLogicaeCore
+{
+    class AbstractFileIO
+    {
+    public:
+        AbstractFileIO() = default;
+
+        virtual ~AbstractFileIO() = default;
+
+        AbstractFileIO(
+            const std::string& file_path
+        );
+
+        AbstractFileIO(
+            const AbstractFileIO& instance
+        ) = delete;
+
+        AbstractFileIO(
+            AbstractFileIO&& instance
+        ) noexcept = default;
+
+        AbstractFileIO& operator = (
+            const AbstractFileIO& instance
+        ) = delete;
+
+        AbstractFileIO& operator = (
+            AbstractFileIO&& instance
+        ) noexcept = default;
+
+        AbstractFileIO(
+            const std::string& name,
+            const std::string& file_path
+        );
+        
+        std::string get_name();
+
+        std::string get_file_path();
+
+        std::size_t get_line_count();
+
+        void set_file_path(
+            const std::string& file_path
+        );
+        
+        void get_name(
+            Result<std::string>& result
+        );
+
+        void get_file_path(
+            Result<std::string>& result
+        );
+
+        void get_line_count(
+            Result<std::size_t>& result
+        );
+
+        void set_file_path(
+            Result<void>& result,
+            const std::string& file_path
+        );
+
+    protected:
+        std::string _file_path;
+
+        std::string _name;
+
+        mutable std::mutex _mutex;
+    };
+}
+
+
