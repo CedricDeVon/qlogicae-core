@@ -20,10 +20,10 @@ def _handle_dynamic_imports() -> None:
 
     _yaml = yaml
     _singleton_manager = (
-        qlogicae_cor.v1.singleton_manager
+        qlogicae_cor.v1.singleton_manager.SingletonManager
     )
     _yaml_manager = (
-        qlogicae_cor.v1.yaml_manager
+        qlogicae_cor.v1.yaml_manager.YamlManager
     )
 
     _handle_dynamic_imports = lambda: None
@@ -52,8 +52,8 @@ class YamlTextManager:
         value: Any,
     ) -> str:
         manager = (
-            _singleton_manager.SingletonManager.get_singleton(
-                _yaml_manager.YamlManager,
+            _singleton_manager.get_singleton(
+                _yaml_manager,
             )
         )
 

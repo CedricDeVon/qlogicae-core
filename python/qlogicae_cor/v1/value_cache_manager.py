@@ -23,16 +23,16 @@ def _handle_dynamic_imports() -> None:
     import qlogicae_cor.v1.value_cache_storage_manager
 
     _filesystem_manager = (
-        qlogicae_cor.v1.filesystem_manager
+        qlogicae_cor.v1.filesystem_manager.FilesystemManager
     )
     _singleton_manager = (
-        qlogicae_cor.v1.singleton_manager
+        qlogicae_cor.v1.singleton_manager.SingletonManager
     )
     _target_cache_value = (
-        qlogicae_cor.v1.target_cache_value
+        qlogicae_cor.v1.target_cache_value.TargetCacheValue
     )
     _value_cache_storage_manager = (
-        qlogicae_cor.v1.value_cache_storage_manager
+        qlogicae_cor.v1.value_cache_storage_manager.ValueCacheStorageManager
     )
 
     _handle_dynamic_imports = lambda: None
@@ -46,8 +46,8 @@ class ValueCacheManager:
         self,
         keys: list[str],
     ) -> bool:
-        result: bool = _singleton_manager.SingletonManager.get_singleton(
-            _value_cache_storage_manager.ValueCacheStorageManager,
+        result: bool = _singleton_manager.get_singleton(
+            _value_cache_storage_manager,
         ).is_key_found(keys)
 
         return result
@@ -58,10 +58,10 @@ class ValueCacheManager:
         output_type: TargetCacheValue | None = None,
     ) -> object:
         if output_type is None:
-            output_type = _target_cache_value.TargetCacheValue.DEFINED
+            output_type = _target_cache_value.DEFINED
 
-        value = _singleton_manager.SingletonManager.get_singleton(
-            _value_cache_storage_manager.ValueCacheStorageManager,
+        value = _singleton_manager.get_singleton(
+            _value_cache_storage_manager,
         ).get_one_value(keys)
 
         self.throw_if_value_is_explicitly_invalid(
@@ -78,15 +78,15 @@ class ValueCacheManager:
         output_type: TargetCacheValue | None = None,
     ) -> bool:
         if output_type is None:
-            output_type = _target_cache_value.TargetCacheValue.DEFINED
+            output_type = _target_cache_value.DEFINED
 
         self.throw_if_value_is_explicitly_invalid(
             value,
             output_type,
         )
 
-        result: bool = _singleton_manager.SingletonManager.get_singleton(
-            _value_cache_storage_manager.ValueCacheStorageManager,
+        result: bool = _singleton_manager.get_singleton(
+            _value_cache_storage_manager,
         ).set_one_value(
             keys,
             value,
@@ -100,22 +100,22 @@ class ValueCacheManager:
     ) -> bool:
         self.throw_if_key_not_found(keys)
 
-        result: bool = _singleton_manager.SingletonManager.get_singleton(
-            _value_cache_storage_manager.ValueCacheStorageManager,
+        result: bool = _singleton_manager.get_singleton(
+            _value_cache_storage_manager,
         ).remove_one_value(keys)
 
         return result
 
     def clear_all_values(self) -> bool:
-        result: bool = _singleton_manager.SingletonManager.get_singleton(
-            _value_cache_storage_manager.ValueCacheStorageManager,
+        result: bool = _singleton_manager.get_singleton(
+            _value_cache_storage_manager,
         ).clear_all_values()
 
         return result
 
     def display_all_items(self) -> bool:
-        result: bool = _singleton_manager.SingletonManager.get_singleton(
-            _value_cache_storage_manager.ValueCacheStorageManager,
+        result: bool = _singleton_manager.get_singleton(
+            _value_cache_storage_manager,
         ).display_all_items()
 
         return result
@@ -126,37 +126,37 @@ class ValueCacheManager:
         output_type: TargetCacheValue | None = None,
     ) -> bool:
         if output_type is None:
-            output_type = _target_cache_value.TargetCacheValue.DEFINED
+            output_type = _target_cache_value.DEFINED
 
         filesystem_manager = (
-            _singleton_manager.SingletonManager.get_singleton(
-                _filesystem_manager.FilesystemManager,
+            _singleton_manager.get_singleton(
+                _filesystem_manager,
             )
         )
 
         match output_type:
-            case _target_cache_value.TargetCacheValue.FILESYSTEM_PATH:
+            case _target_cache_value.FILESYSTEM_PATH:
                 filesystem_manager.throw_if_filesystem_path_invalid(
                     value,
                 )
 
                 return True
 
-            case _target_cache_value.TargetCacheValue.FILE_PATH:
+            case _target_cache_value.FILE_PATH:
                 filesystem_manager.throw_if_file_path_invalid(
                     value,
                 )
 
                 return True
 
-            case _target_cache_value.TargetCacheValue.FOLDER_PATH:
+            case _target_cache_value.FOLDER_PATH:
                 filesystem_manager.throw_if_folder_path_invalid(
                     value,
                 )
 
                 return True
 
-            case _target_cache_value.TargetCacheValue.DEFINED:
+            case _target_cache_value.DEFINED:
                 self.throw_if_undefined(value)
 
                 return True
@@ -168,8 +168,8 @@ class ValueCacheManager:
         self,
         keys: list[str],
     ) -> bool:
-        if not _singleton_manager.SingletonManager.get_singleton(
-            _value_cache_storage_manager.ValueCacheStorageManager,
+        if not _singleton_manager.get_singleton(
+            _value_cache_storage_manager,
         ).is_key_found(keys):
             raise KeyError(
                 f"key path '{keys}' does not exist",

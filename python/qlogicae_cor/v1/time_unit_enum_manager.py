@@ -20,10 +20,10 @@ def _handle_dynamic_imports() -> None:
     import qlogicae_cor.v1.time_unit
 
     _enum_conversion_value = (
-        qlogicae_cor.v1.enum_conversion_value
+        qlogicae_cor.v1.enum_conversion_value.EnumConversionValue
     )
     _time_unit = (
-        qlogicae_cor.v1.time_unit
+        qlogicae_cor.v1.time_unit.TimeUnit
     )
 
     _handle_dynamic_imports = lambda: None
@@ -42,93 +42,93 @@ class TimeUnitEnumManager:
             output_type = _enum_conversion_value.STRING
 
         match output_type:
-            case _enum_conversion_value.EnumConversionValue.STRING:
+            case _enum_conversion_value.STRING:
                 match input_type:
-                    case _time_unit.TimeUnit.NANOSECOND:
+                    case _time_unit.NANOSECOND:
                         return "nanosecond"
 
-                    case _time_unit.TimeUnit.MICROSECOND:
+                    case _time_unit.MICROSECOND:
                         return "microsecond"
 
-                    case _time_unit.TimeUnit.MILLISECOND:
+                    case _time_unit.MILLISECOND:
                         return "millisecond"
 
-                    case _time_unit.TimeUnit.SECOND:
+                    case _time_unit.SECOND:
                         return "second"
 
-                    case _time_unit.TimeUnit.MINUTE:
+                    case _time_unit.MINUTE:
                         return "minute"
 
-                    case _time_unit.TimeUnit.HOUR:
+                    case _time_unit.HOUR:
                         return "hour"
 
-                    case _time_unit.TimeUnit.DAY:
+                    case _time_unit.DAY:
                         return "day"
 
-                    case _time_unit.TimeUnit.WEEK:
+                    case _time_unit.WEEK:
                         return "week"
 
-                    case _time_unit.TimeUnit.MONTH:
+                    case _time_unit.MONTH:
                         return "month"
 
-                    case _time_unit.TimeUnit.YEAR:
+                    case _time_unit.YEAR:
                         return "year"
 
-                    case _time_unit.TimeUnit.DECADE:
+                    case _time_unit.DECADE:
                         return "decade"
 
-                    case _time_unit.TimeUnit.CENTURY:
+                    case _time_unit.CENTURY:
                         return "century"
 
-                    case _time_unit.TimeUnit.MILLENNIUM:
+                    case _time_unit.MILLENNIUM:
                         return "millennium"
 
                     case _:
                         return "none"
 
-            case _enum_conversion_value.EnumConversionValue.ENUM:
+            case _enum_conversion_value.ENUM:
                 match str(input_type).lower():
                     case "nanosecond" | "ns":
-                        return _time_unit.TimeUnit.NANOSECOND
+                        return _time_unit.NANOSECOND
 
                     case "microsecond" | "us":
-                        return _time_unit.TimeUnit.MICROSECOND
+                        return _time_unit.MICROSECOND
 
                     case "millisecond" | "ms":
-                        return _time_unit.TimeUnit.MILLISECOND
+                        return _time_unit.MILLISECOND
 
                     case "second" | "sec":
-                        return _time_unit.TimeUnit.SECOND
+                        return _time_unit.SECOND
 
                     case "minute" | "min":
-                        return _time_unit.TimeUnit.MINUTE
+                        return _time_unit.MINUTE
 
                     case "hour" | "hr":
-                        return _time_unit.TimeUnit.HOUR
+                        return _time_unit.HOUR
 
                     case "day" | "d":
-                        return _time_unit.TimeUnit.DAY
+                        return _time_unit.DAY
 
                     case "week" | "wk":
-                        return _time_unit.TimeUnit.WEEK
+                        return _time_unit.WEEK
 
                     case "month" | "mon":
-                        return _time_unit.TimeUnit.MONTH
+                        return _time_unit.MONTH
 
                     case "year" | "yr":
-                        return _time_unit.TimeUnit.YEAR
+                        return _time_unit.YEAR
 
                     case "decade" | "deca":
-                        return _time_unit.TimeUnit.DECADE
+                        return _time_unit.DECADE
 
                     case "century" | "cen":
-                        return _time_unit.TimeUnit.CENTURY
+                        return _time_unit.CENTURY
 
                     case "millennium" | "mil":
-                        return _time_unit.TimeUnit.MILLENNIUM
+                        return _time_unit.MILLENNIUM
 
                     case _:
-                        return _time_unit.TimeUnit.NONE
+                        return _time_unit.NONE
 
             case _:
-                return _enum_conversion_value.EnumConversionValue.NONE
+                return _enum_conversion_value.NONE

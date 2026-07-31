@@ -21,13 +21,13 @@ def _handle_dynamic_imports() -> None:
     import qlogicae_cor.v1.time_zone_enum_manager
 
     _enum_conversion_value = (
-        qlogicae_cor.v1.enum_conversion_value
+        qlogicae_cor.v1.enum_conversion_value.EnumConversionValue
     )
     _singleton_manager = (
-        qlogicae_cor.v1.singleton_manager
+        qlogicae_cor.v1.singleton_manager.SingletonManager
     )
     _time_zone_enum_manager = (
-        qlogicae_cor.v1.time_zone_enum_manager
+        qlogicae_cor.v1.time_zone_enum_manager.TimeZoneEnumManager
     )
 
     _handle_dynamic_imports = lambda: None
@@ -68,11 +68,11 @@ class TimeZoneManager:
     @property
     def selected_time_zone(self) -> tzinfo:
         value: tzinfo = (
-            _singleton_manager.SingletonManager.get_singleton(
-                _time_zone_enum_manager.TimeZoneEnumManager,
+            _singleton_manager.get_singleton(
+                _time_zone_enum_manager,
             ).convert_value(
                 self._selected_time_zone_type,
-                _enum_conversion_value.EnumConversionValue.CUSTOM,
+                _enum_conversion_value.CUSTOM,
             )
         )
 

@@ -37,16 +37,16 @@ def _handle_dynamic_imports() -> None:
     _UTC = UTC
     _datetime = datetime
     _singleton_manager = (
-        qlogicae_cor.v1.singleton_manager
+        qlogicae_cor.v1.singleton_manager.SingletonManager
     )
     _time_unit = (
-        qlogicae_cor.v1.time_unit
+        qlogicae_cor.v1.time_unit.TimeUnit
     )
     _time_zone_manager = (
-        qlogicae_cor.v1.time_zone_manager
+        qlogicae_cor.v1.time_zone_manager.TimeZoneManager
     )
     _timestamp = (
-        qlogicae_cor.v1.timestamp
+        qlogicae_cor.v1.timestamp.Timestamp
     )
 
     _handle_dynamic_imports = lambda: None
@@ -71,29 +71,29 @@ class TimestampManager:
 
         current = _datetime.fromtimestamp(
             timestamp_nanoseconds / 1_000_000_000,
-            _singleton_manager.SingletonManager.get_singleton(
-                _time_zone_manager.TimeZoneManager,
+            _singleton_manager.get_singleton(
+                _time_zone_manager,
             ).selected_time_zone,
         )
 
         match time_unit:
             case (
-                _time_unit.TimeUnit.NONE
-                | _time_unit.TimeUnit.SECOND
+                _time_unit.NONE
+                | _time_unit.SECOND
             ):
                 fraction = ""
 
-            case _time_unit.TimeUnit.MILLISECOND:
+            case _time_unit.MILLISECOND:
                 fraction = (
                     f".{timestamp_nanoseconds // 1_000_000 % 1_000:03d}"
                 )
 
-            case _time_unit.TimeUnit.MICROSECOND:
+            case _time_unit.MICROSECOND:
                 fraction = (
                     f".{timestamp_nanoseconds // 1_000 % 1_000_000:06d}"
                 )
 
-            case _time_unit.TimeUnit.NANOSECOND:
+            case _time_unit.NANOSECOND:
                 fraction = (
                     f".{timestamp_nanoseconds % 1_000_000_000:09d}"
                 )
@@ -112,10 +112,10 @@ class TimestampManager:
                 )
 
         match timestamp:
-            case _timestamp.Timestamp.ISO_DATE_STRING:
+            case _timestamp.ISO_DATE_STRING:
                 prefix = current.strftime("%Y-%m-%dT%H:%M:%S")
 
-            case _timestamp.Timestamp.ISO_FILESYSTEM_STRING:
+            case _timestamp.ISO_FILESYSTEM_STRING:
                 prefix = current.strftime("%Y-%m-%dT%H-%M-%S")
                 suffix = suffix.replace(":", "-")
 

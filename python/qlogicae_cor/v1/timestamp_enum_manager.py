@@ -21,10 +21,10 @@ def _handle_dynamic_imports() -> None:
     import qlogicae_cor.v1.timestamp
 
     _enum_conversion_value = (
-        qlogicae_cor.v1.enum_conversion_value
+        qlogicae_cor.v1.enum_conversion_value.EnumConversionValue
     )
     _timestamp = (
-        qlogicae_cor.v1.timestamp
+        qlogicae_cor.v1.timestamp.Timestamp
     )
 
     _handle_dynamic_imports = lambda: None
@@ -43,27 +43,27 @@ class TimestampEnumManager:
             output_type = _enum_conversion_value.STRING
 
         match output_type:
-            case _enum_conversion_value.EnumConversionValue.STRING:
+            case _enum_conversion_value.STRING:
                 match input_type:
-                    case _timestamp.Timestamp.ISO_DATE_STRING:
+                    case _timestamp.ISO_DATE_STRING:
                         return "iso_date_string"
 
-                    case _timestamp.Timestamp.ISO_FILESYSTEM_STRING:
+                    case _timestamp.ISO_FILESYSTEM_STRING:
                         return "iso_filesystem_string"
 
                     case _:
                         return "iso_date_string"
 
-            case _enum_conversion_value.EnumConversionValue.ENUM:
+            case _enum_conversion_value.ENUM:
                 match input_type.lower():
                     case "local":
-                        return _timestamp.Timestamp.ISO_DATE_STRING
+                        return _timestamp.ISO_DATE_STRING
 
                     case "iso_filesystem_string":
-                        return _timestamp.Timestamp.ISO_FILESYSTEM_STRING
+                        return _timestamp.ISO_FILESYSTEM_STRING
 
                     case _:
-                        return _timestamp.Timestamp.NONE
+                        return _timestamp.NONE
 
             case _:
-                return _enum_conversion_value.EnumConversionValue.NONE
+                return _enum_conversion_value.NONE

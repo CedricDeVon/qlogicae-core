@@ -26,10 +26,10 @@ def _handle_dynamic_imports() -> None:
     _datetime = datetime
     _UTC = UTC
     _enum_conversion_value = (
-        qlogicae_cor.v1.enum_conversion_value
+        qlogicae_cor.v1.enum_conversion_value.EnumConversionValue
     )
     _time_zone = (
-        qlogicae_cor.v1.time_zone
+        qlogicae_cor.v1.time_zone.TimeZone
     )
 
     _handle_dynamic_imports = lambda: None
@@ -48,35 +48,35 @@ class TimeZoneEnumManager:
             output_type = _enum_conversion_value.STRING
 
         match output_type:
-            case _enum_conversion_value.EnumConversionValue.STRING:
+            case _enum_conversion_value.STRING:
                 match input_type:
-                    case _time_zone.TimeZone.LOCAL:
+                    case _time_zone.LOCAL:
                         return "local"
 
-                    case _time_zone.TimeZone.UTC:
+                    case _time_zone.UTC:
                         return "utc"
 
-                    case _time_zone.TimeZone.CUSTOM:
+                    case _time_zone.CUSTOM:
                         return "custom"
 
                     case _:
                         return "local"
 
-            case _enum_conversion_value.EnumConversionValue.ENUM:
+            case _enum_conversion_value.ENUM:
                 match str(input_type).lower():
                     case "local":
-                        return _time_zone.TimeZone.LOCAL
+                        return _time_zone.LOCAL
 
                     case "utc":
-                        return _time_zone.TimeZone.UTC
+                        return _time_zone.UTC
 
                     case "custom":
-                        return _time_zone.TimeZone.CUSTOM
+                        return _time_zone.CUSTOM
 
                     case _:
-                        return _time_zone.TimeZone.LOCAL
+                        return _time_zone.LOCAL
 
-            case _enum_conversion_value.EnumConversionValue.CUSTOM:
+            case _enum_conversion_value.CUSTOM:
                 match str(input_type).lower():
                     case "local":
                         return _datetime.now().astimezone().tzinfo
@@ -91,4 +91,4 @@ class TimeZoneEnumManager:
                         return _datetime.now().astimezone().tzinfo
 
             case _:
-                return _enum_conversion_value.EnumConversionValue.NONE
+                return _enum_conversion_value.NONE

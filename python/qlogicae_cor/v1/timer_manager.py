@@ -21,13 +21,13 @@ def _handle_dynamic_imports() -> None:
     import qlogicae_cor.v1.time_unit
 
     _singleton_manager = (
-        qlogicae_cor.v1.singleton_manager
+        qlogicae_cor.v1.singleton_manager.SingletonManager
     )
     _time_manager = (
-        qlogicae_cor.v1.time_manager
+        qlogicae_cor.v1.time_manager.TimeManager
     )
     _time_unit = (
-        qlogicae_cor.v1.time_unit
+        qlogicae_cor.v1.time_unit.TimeUnit
     )
 
     _handle_dynamic_imports = lambda: None
@@ -55,8 +55,8 @@ class TimerManager:
 
     def start_time(self) -> bool:
         self._start_timestamp = (
-            _singleton_manager.SingletonManager.get_singleton(
-                _time_manager.TimeManager,
+            _singleton_manager.get_singleton(
+                _time_manager,
             ).current_nanosecond
         )
 
@@ -64,8 +64,8 @@ class TimerManager:
 
     def stop_time(self) -> bool:
         self._stop_timestamp = (
-            _singleton_manager.SingletonManager.get_singleton(
-                _time_manager.TimeManager,
+            _singleton_manager.get_singleton(
+                _time_manager,
             ).current_nanosecond
         )
 
@@ -79,8 +79,8 @@ class TimerManager:
 
     def reset_time(self) -> bool:
         self._start_timestamp = (
-            _singleton_manager.SingletonManager.get_singleton(
-                _time_manager.TimeManager,
+            _singleton_manager.get_singleton(
+                _time_manager,
             ).current_nanosecond
         )
         self._stop_timestamp = 0
@@ -94,8 +94,8 @@ class TimerManager:
         if time_unit is None:
             time_unit = _time_unit.SECOND
 
-        manager = _singleton_manager.SingletonManager.get_singleton(
-            _time_manager.TimeManager,
+        manager = _singleton_manager.get_singleton(
+            _time_manager,
         )
 
         value: float = manager.convert_time_unit(
@@ -112,8 +112,8 @@ class TimerManager:
         if time_unit is None:
             time_unit = _time_unit.SECOND
 
-        manager = _singleton_manager.SingletonManager.get_singleton(
-            _time_manager.TimeManager,
+        manager = _singleton_manager.get_singleton(
+            _time_manager,
         )
 
         value: float = manager.convert_time_unit(

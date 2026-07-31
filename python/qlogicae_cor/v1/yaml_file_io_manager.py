@@ -28,13 +28,13 @@ def _handle_dynamic_imports() -> None:
     _Path = Path
     _yaml = yaml
     _singleton_manager = (
-        qlogicae_cor.v1.singleton_manager
+        qlogicae_cor.v1.singleton_manager.SingletonManager
     )
     _text_encoding_manager = (
-        qlogicae_cor.v1.text_encoding_manager
+        qlogicae_cor.v1.text_encoding_manager.TextEncodingManager
     )
     _yaml_manager = (
-        qlogicae_cor.v1.yaml_manager
+        qlogicae_cor.v1.yaml_manager.YamlManager
     )
 
     _handle_dynamic_imports = lambda: None
@@ -52,8 +52,8 @@ class YamlFileIoManager:
 
         with path.open(
             mode="r",
-            encoding=_singleton_manager.SingletonManager.get_singleton(
-                _text_encoding_manager.TextEncodingManager,
+            encoding=_singleton_manager.get_singleton(
+                _text_encoding_manager,
             ).selected_encoding,
         ) as file:
             return _yaml.safe_load(file) or {}
@@ -70,14 +70,14 @@ class YamlFileIoManager:
             exist_ok=True,
         )
 
-        manager = _singleton_manager.SingletonManager.get_singleton(
+        manager = _singleton_manager.get_singleton(
             _yaml_manager.YamlManager,
         )
 
         with path.open(
             mode="w",
-            encoding=_singleton_manager.SingletonManager.get_singleton(
-                _text_encoding_manager.TextEncodingManager,
+            encoding=_singleton_manager.get_singleton(
+                _text_encoding_manager,
             ).selected_encoding,
         ) as file:
             _yaml.safe_dump(
@@ -95,7 +95,7 @@ class YamlFileIoManager:
         self,
         value: str,
     ) -> object:
-        manager = _singleton_manager.SingletonManager.get_singleton(
+        manager = _singleton_manager.get_singleton(
             _yaml_manager.YamlManager,
         )
 
