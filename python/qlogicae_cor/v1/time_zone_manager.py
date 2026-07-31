@@ -1,35 +1,51 @@
-from typing import Any
+from __future__ import annotations
 
-from qlogicae_cor.v1.abstract_manager import (
-    AbstractManager,
-)
-from qlogicae_cor.v1.enum_conversion_value import (
-    EnumConversionValue,
-)
-from qlogicae_cor.v1.singleton_manager import (
-    SingletonManager,
-)
-from qlogicae_cor.v1.time_zone_enum_manager import (
-    TimeZoneEnumManager,
-)
-from qlogicae_cor.v1.time_zone_manager_configurations import (
-    TimeZoneManagerConfigurations,
-)
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from datetime import tzinfo
+
+_enum_conversion_value: Any = None
+_singleton_manager: Any = None
+_time_zone_enum_manager: Any = None
 
 
-class TimeZoneManager(AbstractManager[TimeZoneManagerConfigurations]):
+def _handle_dynamic_imports() -> None:
+    global _handle_dynamic_imports
+    global _enum_conversion_value
+    global _singleton_manager
+    global _time_zone_enum_manager
+
+    import qlogicae_cor.v1.enum_conversion_value
+    import qlogicae_cor.v1.singleton_manager
+    import qlogicae_cor.v1.time_zone_enum_manager
+
+    _enum_conversion_value = (
+        qlogicae_cor.v1.enum_conversion_value
+    )
+    _singleton_manager = (
+        qlogicae_cor.v1.singleton_manager
+    )
+    _time_zone_enum_manager = (
+        qlogicae_cor.v1.time_zone_enum_manager
+    )
+
+    _handle_dynamic_imports = lambda: None
+
+
+class TimeZoneManager:
     __slots__ = (
         "_selected_time_zone_type",
-        "_valid_time_zone_types"
+        "_valid_time_zone_types",
     )
 
     def __init__(self) -> None:
-        super().__init__(TimeZoneManagerConfigurations())
+        _handle_dynamic_imports()
 
         self._selected_time_zone_type: str = "local"
         self._valid_time_zone_types: set[str] = {
             "local",
-            "utc"
+            "utc",
         }
 
     @property
@@ -37,20 +53,27 @@ class TimeZoneManager(AbstractManager[TimeZoneManagerConfigurations]):
         return self._selected_time_zone_type
 
     @selected_time_zone_type.setter
-    def selected_time_zone_type(self, value: str) -> None:
+    def selected_time_zone_type(
+        self,
+        value: str,
+    ) -> None:
         if value not in self._valid_time_zone_types:
             raise ValueError(
                 "time zones must include the followwing: "
-                f"{self._valid_time_zone_types}"
+                f"{self._valid_time_zone_types}",
             )
 
         self._selected_time_zone_type = value
 
     @property
-    def selected_time_zone(self) -> Any:
-        return SingletonManager.get_singleton(
-                TimeZoneEnumManager
+    def selected_time_zone(self) -> tzinfo:
+        value: tzinfo = (
+            _singleton_manager.SingletonManager.get_singleton(
+                _time_zone_enum_manager.TimeZoneEnumManager,
             ).convert_value(
                 self._selected_time_zone_type,
-                EnumConversionValue.CUSTOM,
+                _enum_conversion_value.EnumConversionValue.CUSTOM,
             )
+        )
+
+        return value

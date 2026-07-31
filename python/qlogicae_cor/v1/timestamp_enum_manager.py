@@ -1,50 +1,69 @@
-from typing import Any
+from __future__ import annotations
 
-from qlogicae_cor.v1.abstract_manager import (
-    AbstractManager,
-)
-from qlogicae_cor.v1.enum_conversion_value import (
-    EnumConversionValue,
-)
-from qlogicae_cor.v1.timestamp import Timestamp
-from qlogicae_cor.v1.timestamp_enum_manager_configurations import (
-    TimestampEnumManagerConfigurations,
-)
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from qlogicae_cor.v1.enum_conversion_value import (
+        EnumConversionValue,
+    )
+
+_enum_conversion_value: Any = None
+_timestamp: Any = None
 
 
-class TimestampEnumManager(AbstractManager[TimestampEnumManagerConfigurations]):
+def _handle_dynamic_imports() -> None:
+    global _handle_dynamic_imports
+    global _enum_conversion_value
+    global _timestamp
+
+
+    import qlogicae_cor.v1.enum_conversion_value
+    import qlogicae_cor.v1.timestamp
+
+    _enum_conversion_value = (
+        qlogicae_cor.v1.enum_conversion_value
+    )
+    _timestamp = (
+        qlogicae_cor.v1.timestamp
+    )
+
+    _handle_dynamic_imports = lambda: None
+
+
+class TimestampEnumManager:
     def __init__(self) -> None:
-        super().__init__(TimestampEnumManagerConfigurations())
+        _handle_dynamic_imports()
 
     def convert_value(
         self,
         input_type: Any,
-        output_type: EnumConversionValue = (
-            EnumConversionValue.STRING
-        ),
-    ) -> Any:
+        output_type: EnumConversionValue | None = None,
+    ) -> object:
+        if output_type is None:
+            output_type = _enum_conversion_value.STRING
+
         match output_type:
-            case EnumConversionValue.STRING:
+            case _enum_conversion_value.EnumConversionValue.STRING:
                 match input_type:
-                    case Timestamp.ISO_DATE_STRING:
+                    case _timestamp.Timestamp.ISO_DATE_STRING:
                         return "iso_date_string"
 
-                    case Timestamp.ISO_FILESYSTEM_STRING:
+                    case _timestamp.Timestamp.ISO_FILESYSTEM_STRING:
                         return "iso_filesystem_string"
 
                     case _:
                         return "iso_date_string"
 
-            case EnumConversionValue.ENUM:
+            case _enum_conversion_value.EnumConversionValue.ENUM:
                 match input_type.lower():
                     case "local":
-                        return Timestamp.ISO_DATE_STRING
+                        return _timestamp.Timestamp.ISO_DATE_STRING
 
                     case "iso_filesystem_string":
-                        return Timestamp.ISO_FILESYSTEM_STRING
+                        return _timestamp.Timestamp.ISO_FILESYSTEM_STRING
 
                     case _:
-                        return Timestamp.NONE
+                        return _timestamp.Timestamp.NONE
 
             case _:
-                return EnumConversionValue.NONE
+                return _enum_conversion_value.EnumConversionValue.NONE

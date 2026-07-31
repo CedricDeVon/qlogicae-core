@@ -1,94 +1,124 @@
+from __future__ import annotations
+
 from typing import Any
 
-from qlogicae_cor.v1.abstract_manager import (
-    AbstractManager,
-)
-from qlogicae_cor.v1.data_file_io_manager_configurations import (
-    DataFileIoManagerConfigurations,
-)
-from qlogicae_cor.v1.file_io_manager import (
-    FileIoManager,
-)
-from qlogicae_cor.v1.json_file_io_manager import (
-    JsonFileIoManager,
-)
-from qlogicae_cor.v1.json_manager import (
-    JsonManager,
-)
-from qlogicae_cor.v1.singleton_manager import (
-    SingletonManager,
-)
-from qlogicae_cor.v1.toml_file_io_manager import (
-    TomlFileIoManager,
-)
-from qlogicae_cor.v1.toml_manager import (
-    TomlManager,
-)
-from qlogicae_cor.v1.yaml_file_io_manager import (
-    YamlFileIoManager,
-)
-from qlogicae_cor.v1.yaml_manager import (
-    YamlManager,
-)
+_singleton_manager: Any = None
+_file_io_manager: Any = None
+_json_file_io_manager: Any = None
+_json_manager: Any = None
+_toml_file_io_manager: Any = None
+_toml_manager: Any = None
+_yaml_file_io_manager: Any = None
+_yaml_manager: Any = None
 
 
-class DataFileIoManager(AbstractManager[DataFileIoManagerConfigurations]):
+def _handle_dynamic_imports() -> None:
+    global _handle_dynamic_imports
+    global _singleton_manager
+    global _file_io_manager
+    global _json_file_io_manager
+    global _json_manager
+    global _toml_file_io_manager
+    global _toml_manager
+    global _yaml_file_io_manager
+    global _yaml_manager
+
+    import qlogicae_cor.v1.file_io_manager
+    import qlogicae_cor.v1.json_file_io_manager
+    import qlogicae_cor.v1.json_manager
+    import qlogicae_cor.v1.singleton_manager
+    import qlogicae_cor.v1.toml_file_io_manager
+    import qlogicae_cor.v1.toml_manager
+    import qlogicae_cor.v1.yaml_file_io_manager
+    import qlogicae_cor.v1.yaml_manager
+
+    _singleton_manager = (
+        qlogicae_cor.v1.singleton_manager.SingletonManager
+    )
+    _file_io_manager = (
+        qlogicae_cor.v1.file_io_manager.FileIoManager
+    )
+    _json_file_io_manager = (
+        qlogicae_cor.v1.json_file_io_manager.JsonFileIoManager
+    )
+    _json_manager = (
+        qlogicae_cor.v1.json_manager.JsonManager
+    )
+    _toml_file_io_manager = (
+        qlogicae_cor.v1.toml_file_io_manager.TomlFileIoManager
+    )
+    _toml_manager = (
+        qlogicae_cor.v1.toml_manager.TomlManager
+    )
+    _yaml_file_io_manager = (
+        qlogicae_cor.v1.yaml_file_io_manager.YamlFileIoManager
+    )
+    _yaml_manager = (
+        qlogicae_cor.v1.yaml_manager.YamlManager
+    )
+
+    _handle_dynamic_imports = lambda: None
+
+
+class DataFileIoManager:
     def __init__(self) -> None:
-        super().__init__(DataFileIoManagerConfigurations())
+        _handle_dynamic_imports()
 
-    def e(self, file_path: str) -> Any:
-        if SingletonManager.get_singleton(
-            YamlManager
+    def read_file(
+        self,
+        file_path: str,
+    ) -> Any:
+        if _singleton_manager.get_singleton(
+            _yaml_manager,
         ).is_valid(file_path):
-            return SingletonManager.get_singleton(
-                YamlFileIoManager
+            return _singleton_manager.get_singleton(
+                _yaml_file_io_manager,
             ).read_file(file_path)
 
-        elif SingletonManager.get_singleton(
-            JsonManager
+        elif _singleton_manager.get_singleton(
+            _json_manager,
         ).is_valid(file_path):
-            return SingletonManager.get_singleton(
-                JsonFileIoManager
+            return _singleton_manager.get_singleton(
+                _json_file_io_manager,
             ).read_file(file_path)
 
-        elif SingletonManager.get_singleton(
-            TomlManager
+        elif _singleton_manager.get_singleton(
+            _toml_manager,
         ).is_valid(file_path):
-            return SingletonManager.get_singleton(
-                TomlFileIoManager
+            return _singleton_manager.get_singleton(
+                _toml_file_io_manager,
             ).read_file(file_path)
 
-        else:
-            return SingletonManager.get_singleton(
-                FileIoManager
-            ).read_file(file_path)
+        return _singleton_manager.get_singleton(
+            _file_io_manager,
+        ).read_file(file_path)
 
-
-    def write_file(self, file_path: str, data: Any) -> Any:
-        if SingletonManager.get_singleton(
-            YamlManager
+    def write_file(
+        self,
+        file_path: str,
+        data: Any,
+    ) -> Any:
+        if _singleton_manager.get_singleton(
+            _yaml_manager,
         ).is_valid(file_path):
-            return SingletonManager.get_singleton(
-                YamlFileIoManager
+            return _singleton_manager.get_singleton(
+                _yaml_file_io_manager,
             ).write_file(file_path, data)
 
-        elif SingletonManager.get_singleton(
-            JsonManager
+        elif _singleton_manager.get_singleton(
+            _json_manager,
         ).is_valid(file_path):
-            return SingletonManager.get_singleton(
-                JsonFileIoManager
+            return _singleton_manager.get_singleton(
+                _json_file_io_manager,
             ).write_file(file_path, data)
 
-        elif SingletonManager.get_singleton(
-            TomlManager
+        elif _singleton_manager.get_singleton(
+            _toml_manager,
         ).is_valid(file_path):
-            return SingletonManager.get_singleton(
-                TomlFileIoManager
+            return _singleton_manager.get_singleton(
+                _toml_file_io_manager,
             ).write_file(file_path, data)
 
-        else:
-            return SingletonManager.get_singleton(
-                FileIoManager
-            ).write_file(file_path, data)
-
-
+        return _singleton_manager.get_singleton(
+            _file_io_manager,
+        ).write_file(file_path, data)

@@ -1,33 +1,38 @@
 from __future__ import annotations
 
-from copy import deepcopy
 from typing import Any
 
-from qlogicae_cor.v1.abstract_manager import (
-    AbstractManager,
-)
-from qlogicae_cor.v1.object_merge_manager_configurations import (
-    ObjectMergeManagerConfigurations,
-)
+_deepcopy: Any = None
 
 
-class ObjectMergeManager(AbstractManager[ObjectMergeManagerConfigurations]):
+def _handle_dynamic_imports() -> None:
+    global _handle_dynamic_imports
+    global _deepcopy
+
+    from copy import deepcopy
+
+    _deepcopy = deepcopy
+
+    _handle_dynamic_imports = lambda: None
+
+
+class ObjectMergeManager:
     def __init__(self) -> None:
-        super().__init__(ObjectMergeManagerConfigurations())
+        _handle_dynamic_imports()
 
     def deep_merge(
         self,
-        left: Any,
-        right: Any,
-    ) -> Any:
+        left: object,
+        right: object,
+    ) -> object:
         if left is None:
-            return deepcopy(right)
+            return _deepcopy(right)
 
         if right is None:
-            return deepcopy(left)
+            return _deepcopy(left)
 
         if isinstance(left, dict) and isinstance(right, dict):
-            result = deepcopy(left)
+            result = _deepcopy(left)
 
             for key, value in right.items():
                 if key in result:
@@ -36,28 +41,28 @@ class ObjectMergeManager(AbstractManager[ObjectMergeManagerConfigurations]):
                         value,
                     )
                 else:
-                    result[key] = deepcopy(value)
+                    result[key] = _deepcopy(value)
 
             return result
 
         if isinstance(left, list) and isinstance(right, list):
-            return deepcopy(left) + deepcopy(right)
+            return _deepcopy(left) + _deepcopy(right)
 
-        return deepcopy(right)
+        return _deepcopy(right)
 
     def deep_merge_fragments(
         self,
-        left: Any,
-        right: Any,
-    ) -> Any:
+        left: object,
+        right: object,
+    ) -> object:
         if left is None:
-            return deepcopy(right)
+            return _deepcopy(right)
 
         if right is None:
-            return deepcopy(left)
+            return _deepcopy(left)
 
         if isinstance(left, dict) and isinstance(right, dict):
-            result = deepcopy(left)
+            result = _deepcopy(left)
 
             for key, value in right.items():
                 if key in result:
@@ -66,11 +71,11 @@ class ObjectMergeManager(AbstractManager[ObjectMergeManagerConfigurations]):
                         value,
                     )
                 else:
-                    result[key] = deepcopy(value)
+                    result[key] = _deepcopy(value)
 
             return result
 
         if isinstance(left, list) and isinstance(right, list):
-            return deepcopy(right)
+            return _deepcopy(right)
 
-        return deepcopy(right)
+        return _deepcopy(right)

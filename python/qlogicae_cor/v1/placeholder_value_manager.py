@@ -1,12 +1,5 @@
-from qlogicae_cor.v1.abstract_manager import (
-    AbstractManager,
-)
-from qlogicae_cor.v1.placeholder_value_manager_configurations import (
-    PlaceholderValueManagerConfigurations,
-)
 
-
-class PlaceholderValueManager(AbstractManager[PlaceholderValueManagerConfigurations]):
+class PlaceholderValueManager:
     __slots__ = (
         "_none",
         "_not_a_number",
@@ -15,8 +8,6 @@ class PlaceholderValueManager(AbstractManager[PlaceholderValueManagerConfigurati
     )
 
     def __init__(self) -> None:
-        super().__init__(PlaceholderValueManagerConfigurations())
-
         self._none: str = "none"
         self._not_a_number: str = "nan"
         self._redacted: str = "redacted"

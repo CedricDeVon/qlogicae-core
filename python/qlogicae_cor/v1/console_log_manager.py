@@ -1,53 +1,95 @@
-import logging
+from __future__ import annotations
 
-from qlogicae_logis.v1.console_log_manager_configurations import (
-    ConsoleLogManagerConfigurations,
-)
-from qlogicae_logis.v1.log_format import LogFormat
-from qlogicae_logis.v1.log_options import (
-    LogOptions,
-)
-from qlogicae_logis.v1.log_options_manager import LogOptionsManager
+from typing import TYPE_CHECKING, Any
 
-from qlogicae_cor.v1.abstract_manager import (
-    AbstractManager,
-)
-from qlogicae_cor.v1.singleton_manager import (
-    SingletonManager,
-)
+if TYPE_CHECKING:
+    from qlogicae_logis.v1.log_options import LogOptions
+
+_logging: Any = None
+_log_format: Any = None
+_log_options: Any = None
+_log_options_manager: Any = None
+_singleton_manager: Any = None
 
 
-class ConsoleLogManager(AbstractManager[ConsoleLogManagerConfigurations]):
-    __slots__ = ("_logger", "_options")
+def _handle_dynamic_imports() -> None:
+    global _handle_dynamic_imports
+    global _logging
+    global _log_format
+    global _log_options
+    global _log_options_manager
+    global _singleton_manager
+
+    import logging
+
+    import qlogicae_logis.v1.log_format
+    import qlogicae_logis.v1.log_options
+    import qlogicae_logis.v1.log_options_manager
+
+    import qlogicae_cor.v1.singleton_manager
+
+    _logging = logging
+    _log_format = qlogicae_logis.v1.log_format.LogFormat
+    _log_options = qlogicae_logis.v1.log_options.LogOptions
+    _log_options_manager = (
+        qlogicae_logis.v1.log_options_manager.LogOptionsManager
+    )
+    _singleton_manager = (
+        qlogicae_cor.v1.singleton_manager.SingletonManager
+    )
+
+    _handle_dynamic_imports = lambda: None
+
+
+class ConsoleLogManager:
+    __slots__ = (
+        "_logger",
+        "_options",
+    )
 
     def __init__(self) -> None:
-        super().__init__(ConsoleLogManagerConfigurations())
+        _handle_dynamic_imports()
 
-        self._logger = logging.getLogger("console-logger")
+        self._logger = _logging.getLogger(
+            "console-logger",
+        )
 
-        self._logger.setLevel(logging.DEBUG)
+        self._logger.setLevel(
+            _logging.DEBUG,
+        )
 
         self._logger.propagate = False
 
         self._logger.handlers.clear()
 
-        handler = logging.StreamHandler()
+        handler = _logging.StreamHandler()
 
-        handler.setFormatter(LogFormat())
+        handler.setFormatter(
+            _log_format(),
+        )
 
-        self._logger.addHandler(handler)
+        self._logger.addHandler(
+            handler,
+        )
 
-        self._options: LogOptions = LogOptions()
+        self._options: LogOptions = _log_options()
 
     @property
     def options(self) -> LogOptions:
         return self._options
 
     @options.setter
-    def options(self, value: LogOptions) -> None:
+    def options(
+        self,
+        value: LogOptions,
+    ) -> None:
         self._options = value
 
-    def log(self, message: str, options: LogOptions) -> str:
+    def log(
+        self,
+        message: str,
+        options: LogOptions,
+    ) -> str:
         if not options.is_enabled:
             return ""
 
@@ -70,11 +112,11 @@ class ConsoleLogManager(AbstractManager[ConsoleLogManagerConfigurations]):
     ) -> str:
         return self.log(
             message,
-            SingletonManager.get_singleton(
-                LogOptionsManager,
+            _singleton_manager.get_singleton(
+                _log_options_manager,
             ).generate_modified_defaults(
                 self._options,
-                log_level=logging.DEBUG,
+                log_level=_logging.DEBUG,
             ),
         )
 
@@ -84,11 +126,11 @@ class ConsoleLogManager(AbstractManager[ConsoleLogManagerConfigurations]):
     ) -> str:
         return self.log(
             message,
-            SingletonManager.get_singleton(
-                LogOptionsManager,
+            _singleton_manager.get_singleton(
+                _log_options_manager,
             ).generate_modified_defaults(
                 self._options,
-                log_level=logging.INFO,
+                log_level=_logging.INFO,
             ),
         )
 
@@ -98,11 +140,11 @@ class ConsoleLogManager(AbstractManager[ConsoleLogManagerConfigurations]):
     ) -> str:
         return self.log(
             message,
-            SingletonManager.get_singleton(
-                LogOptionsManager,
+            _singleton_manager.get_singleton(
+                _log_options_manager,
             ).generate_modified_defaults(
                 self._options,
-                log_level=logging.WARNING,
+                log_level=_logging.WARNING,
             ),
         )
 
@@ -112,11 +154,11 @@ class ConsoleLogManager(AbstractManager[ConsoleLogManagerConfigurations]):
     ) -> str:
         return self.log(
             message,
-            SingletonManager.get_singleton(
-                LogOptionsManager,
+            _singleton_manager.get_singleton(
+                _log_options_manager,
             ).generate_modified_defaults(
                 self._options,
-                log_level=logging.ERROR,
+                log_level=_logging.ERROR,
             ),
         )
 
@@ -126,11 +168,10 @@ class ConsoleLogManager(AbstractManager[ConsoleLogManagerConfigurations]):
     ) -> str:
         return self.log(
             message,
-            SingletonManager.get_singleton(
-                LogOptionsManager,
+            _singleton_manager.get_singleton(
+                _log_options_manager,
             ).generate_modified_defaults(
                 self._options,
-                log_level=logging.CRITICAL,
+                log_level=_logging.CRITICAL,
             ),
         )
-

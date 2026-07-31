@@ -1,71 +1,94 @@
-from datetime import UTC, datetime
-from typing import Any
+from __future__ import annotations
 
-from qlogicae_cor.v1.abstract_manager import (
-    AbstractManager,
-)
-from qlogicae_cor.v1.enum_conversion_value import (
-    EnumConversionValue,
-)
-from qlogicae_cor.v1.time_zone import TimeZone
-from qlogicae_cor.v1.time_zone_enum_manager_configurations import (
-    TimeZoneEnumManagerConfigurations,
-)
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from qlogicae_cor.v1.enum_conversion_value import EnumConversionValue
+
+_datetime: Any = None
+_UTC: Any = None
+_enum_conversion_value: Any = None
+_time_zone: Any = None
 
 
-class TimeZoneEnumManager(AbstractManager[TimeZoneEnumManagerConfigurations]):
+def _handle_dynamic_imports() -> None:
+    global _handle_dynamic_imports
+    global _datetime
+    global _UTC
+    global _enum_conversion_value
+    global _time_zone
+
+    from datetime import UTC, datetime
+
+    import qlogicae_cor.v1.enum_conversion_value
+    import qlogicae_cor.v1.time_zone
+
+    _datetime = datetime
+    _UTC = UTC
+    _enum_conversion_value = (
+        qlogicae_cor.v1.enum_conversion_value
+    )
+    _time_zone = (
+        qlogicae_cor.v1.time_zone
+    )
+
+    _handle_dynamic_imports = lambda: None
+
+
+class TimeZoneEnumManager:
     def __init__(self) -> None:
-        super().__init__(TimeZoneEnumManagerConfigurations())
+        _handle_dynamic_imports()
 
     def convert_value(
         self,
-        input_type: Any,
-        output_type: EnumConversionValue = (
-            EnumConversionValue.STRING
-        ),
-    ) -> Any:
+        input_type: object,
+        output_type: EnumConversionValue | None = None,
+    ) -> object:
+        if output_type is None:
+            output_type = _enum_conversion_value.STRING
+
         match output_type:
-            case EnumConversionValue.STRING:
+            case _enum_conversion_value.EnumConversionValue.STRING:
                 match input_type:
-                    case TimeZone.LOCAL:
+                    case _time_zone.TimeZone.LOCAL:
                         return "local"
 
-                    case TimeZone.UTC:
+                    case _time_zone.TimeZone.UTC:
                         return "utc"
 
-                    case TimeZone.CUSTOM:
+                    case _time_zone.TimeZone.CUSTOM:
                         return "custom"
 
                     case _:
                         return "local"
 
-            case EnumConversionValue.ENUM:
-                match input_type.lower():
+            case _enum_conversion_value.EnumConversionValue.ENUM:
+                match str(input_type).lower():
                     case "local":
-                        return TimeZone.LOCAL
+                        return _time_zone.TimeZone.LOCAL
 
                     case "utc":
-                        return TimeZone.UTC
+                        return _time_zone.TimeZone.UTC
 
                     case "custom":
-                        return TimeZone.CUSTOM
+                        return _time_zone.TimeZone.CUSTOM
 
                     case _:
-                        return TimeZone.LOCAL
+                        return _time_zone.TimeZone.LOCAL
 
-            case EnumConversionValue.CUSTOM:
-                match input_type.lower():
+            case _enum_conversion_value.EnumConversionValue.CUSTOM:
+                match str(input_type).lower():
                     case "local":
-                        return datetime.now().astimezone().tzinfo
+                        return _datetime.now().astimezone().tzinfo
 
                     case "utc":
-                        return UTC
+                        return _UTC
 
                     case "custom":
-                        return datetime.now().astimezone().tzinfo
+                        return _datetime.now().astimezone().tzinfo
 
                     case _:
-                        return datetime.now().astimezone().tzinfo
+                        return _datetime.now().astimezone().tzinfo
 
             case _:
-                return EnumConversionValue.NONE
+                return _enum_conversion_value.EnumConversionValue.NONE

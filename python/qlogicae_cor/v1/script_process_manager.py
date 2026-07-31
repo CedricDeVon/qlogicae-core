@@ -1,42 +1,75 @@
-import shlex
-import subprocess
-from subprocess import CompletedProcess
+from __future__ import annotations
 
-from qlogicae_cor.v1.abstract_manager import (
-    AbstractManager,
-)
-from qlogicae_cor.v1.script_process import (
-    ScriptProcess,
-)
-from qlogicae_cor.v1.script_process_manager_configurations import (
-    ScriptProcessManagerConfigurations,
-)
-from qlogicae_cor.v1.singleton_manager import (
-    SingletonManager,
-)
-from qlogicae_cor.v1.text_encoding_manager import (
-    TextEncodingManager,
-)
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from subprocess import CompletedProcess
+
+    from qlogicae_cor.v1.script_process import (
+        ScriptProcess,
+    )
+
+_shlex: Any = None
+_subprocess: Any = None
+_singleton_manager: Any = None
+_text_encoding_manager: Any = None
+_script_process: Any = None
 
 
-class ScriptProcessManager(AbstractManager[ScriptProcessManagerConfigurations]):
+def _handle_dynamic_imports() -> None:
+    global _handle_dynamic_imports
+    global _shlex
+    global _subprocess
+    global _singleton_manager
+    global _text_encoding_manager
+    global _script_process
+
+    import shlex
+    import subprocess
+
+    import qlogicae_cor.v1.script_process
+    import qlogicae_cor.v1.singleton_manager
+    import qlogicae_cor.v1.text_encoding_manager
+
+    _shlex = shlex
+    _subprocess = subprocess
+    _singleton_manager = (
+        qlogicae_cor.v1.singleton_manager.SingletonManager
+    )
+    _text_encoding_manager = (
+        qlogicae_cor.v1.text_encoding_manager.TextEncodingManager
+    )
+    _script_process = (
+        qlogicae_cor.v1.script_process.ScriptProcess
+    )
+
+    _handle_dynamic_imports = lambda: None
+
+
+class ScriptProcessManager:
     __slots__ = (
         "_selected_script_process",
         "_valid_script_processes",
     )
 
     def __init__(self) -> None:
-        super().__init__(ScriptProcessManagerConfigurations())
+        _handle_dynamic_imports()
 
         self._selected_script_process: str = "shell"
-        self._valid_script_processes: set[str] = { "shell", "subprocess" }
+        self._valid_script_processes: set[str] = {
+            "shell",
+            "subprocess",
+        }
 
     @property
     def selected_script_process(self) -> str:
         return self._selected_script_process
 
     @selected_script_process.setter
-    def selected_script_process(self, value: str) -> None:
+    def selected_script_process(
+        self,
+        value: str,
+    ) -> None:
         if value not in self._valid_script_processes:
             return
 
@@ -46,34 +79,48 @@ class ScriptProcessManager(AbstractManager[ScriptProcessManagerConfigurations]):
     def valid_script_processes(self) -> set[str]:
         return self._valid_script_processes
 
-
     def execute_command(
         self,
         command: str,
-        script_process_type: ScriptProcess = ScriptProcess.SUBPROCESS,
+        script_process_type: ScriptProcess | None = None,
     ) -> CompletedProcess[str]:
+        if script_process_type is None:
+            script_process_type = _script_process.SUBPROCESS
+
         if not command:
-            raise ValueError("commands cannot be empty")
+            raise ValueError(
+                "commands cannot be empty",
+            )
+
+        encoding = (
+            _singleton_manager
+            .get_singleton(
+                _text_encoding_manager,
+            )
+            .selected_encoding
+        )
+
+        value: CompletedProcess[str]
 
         match script_process_type:
-            case ScriptProcess.SHELL:
-                return subprocess.run(
+            case _script_process.SHELL:
+                value = _subprocess.run(
                     command,
-                    encoding=SingletonManager.get_singleton(
-                        TextEncodingManager
-                    ).selected_encoding,
+                    encoding=encoding,
                     text=True,
                     shell=True,
                 )
 
-            case ScriptProcess.SUBPROCESS:
-                return subprocess.run(
-                    shlex.split(command),
-                    encoding=SingletonManager.get_singleton(
-                        TextEncodingManager
-                    ).selected_encoding,
+            case _script_process.SUBPROCESS:
+                value = _subprocess.run(
+                    _shlex.split(command),
+                    encoding=encoding,
                     text=True,
                 )
 
             case _:
-                raise ValueError("unsupported script process value")
+                raise ValueError(
+                    "unsupported script process value",
+                )
+
+        return value

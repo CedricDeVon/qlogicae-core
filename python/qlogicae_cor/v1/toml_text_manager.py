@@ -1,37 +1,50 @@
-import tomllib
+from __future__ import annotations
+
 from typing import Any
 
-import tomli_w
-
-from qlogicae_cor.v1.abstract_manager import (
-    AbstractManager,
-)
-from qlogicae_cor.v1.toml_text_manager_configurations import (
-    TomlTextManagerConfigurations,
-)
+_tomllib: Any = None
+_tomli_w: Any = None
 
 
-class TomlTextManager(AbstractManager[TomlTextManagerConfigurations]):
+def _handle_dynamic_imports() -> None:
+    global _handle_dynamic_imports
+    global _tomllib
+    global _tomli_w
+
+    import tomllib
+
+    import tomli_w
+
+    _tomllib = tomllib
+    _tomli_w = tomli_w
+
+    _handle_dynamic_imports = lambda: None
+
+
+class TomlTextManager:
     def __init__(self) -> None:
-        super().__init__(TomlTextManagerConfigurations())
+        _handle_dynamic_imports()
 
     def is_valid(
         self,
         value: str,
     ) -> bool:
-        tomllib.loads(value)
+        _tomllib.loads(value)
 
         return True
 
     def convert_to_object(
         self,
         value: str,
-    ) -> Any:
-        return tomllib.loads(value)
+    ) -> object:
+        result: object = _tomllib.loads(value)
+
+        return result
 
     def convert_to_string(
         self,
         value: Any,
     ) -> str:
-        return tomli_w.dumps(value)
+        result: str = _tomli_w.dumps(value)
 
+        return result

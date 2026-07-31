@@ -1,21 +1,26 @@
-import json
+from __future__ import annotations
+
 from typing import Any
 
-from qlogicae_cor.v1.abstract_manager import (
-    AbstractManager,
-)
-from qlogicae_cor.v1.value_cache_storage_manager_configurations import (
-    ValueCacheStorageManagerConfigurations,
-)
+_json: Any = None
+
+def _handle_dynamic_imports() -> None:
+    global _handle_dynamic_imports
+    global _json
+
+    import json
+
+    _json = json
+    _handle_dynamic_imports = lambda: None
 
 
-class ValueCacheStorageManager(AbstractManager[ValueCacheStorageManagerConfigurations]):
+class ValueCacheStorageManager:
     __slots__ = (
         "_collection",
     )
 
     def __init__(self) -> None:
-        super().__init__(ValueCacheStorageManagerConfigurations())
+        _handle_dynamic_imports()
 
         self._collection: dict[str, Any] = {}
 
@@ -187,7 +192,7 @@ class ValueCacheStorageManager(AbstractManager[ValueCacheStorageManagerConfigura
 
     def display_all_items(self) -> bool:
         print(
-            json.dumps(
+            _json.dumps(
                 self._collection,
                 indent=2,
                 sort_keys=False,

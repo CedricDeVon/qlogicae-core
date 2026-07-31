@@ -1,44 +1,52 @@
-from pathlib import Path
-from zipfile import (
-    ZIP_BZIP2,
-    ZIP_DEFLATED,
-    ZIP_LZMA,
-    ZIP_STORED,
-    ZipFile,
-)
+from __future__ import annotations
 
-from qlogicae_cor.v1.abstract_manager import (
-    AbstractManager,
-)
-from qlogicae_cor.v1.filesystem_compression_manager_configurations import (
-    FilesystemCompressionManagerConfigurations,
-)
+from typing import Any
+
+_zipfile: Any = None
+_Path: Any = None
 
 
-class FilesystemCompressionManager(
-    AbstractManager[FilesystemCompressionManagerConfigurations]
-):
+def _handle_dynamic_imports() -> None:
+    global _handle_dynamic_imports
+    global _zipfile
+    global _Path
+
+    import zipfile
+    from pathlib import Path
+
+    _zipfile = zipfile
+    _Path = Path
+
+    _handle_dynamic_imports = lambda: None
+
+
+class FilesystemCompressionManager:
     def __init__(self) -> None:
-        super().__init__(FilesystemCompressionManagerConfigurations())
+        _handle_dynamic_imports()
 
-    def get_zip_format_compression(self, value: str) -> int:
+    def get_zip_format_compression(
+        self,
+        value: str,
+    ) -> int:
+        result: int
+
         match value.lower():
             case "store" | "stored" | "none":
-                return ZIP_STORED
+                result = _zipfile.ZIP_STORED
 
             case "deflate" | "deflated":
-                return ZIP_DEFLATED
+                result = _zipfile.ZIP_DEFLATED
 
             case "bz2" | "bzip2":
-                return ZIP_BZIP2
+                result = _zipfile.ZIP_BZIP2
 
             case "lzma" | "xz":
-                return ZIP_LZMA
+                result = _zipfile.ZIP_LZMA
 
             case _:
-                return ZIP_DEFLATED
+                result = _zipfile.ZIP_DEFLATED
 
-        return True
+        return result
 
     def zip_extract(
         self,
@@ -46,29 +54,41 @@ class FilesystemCompressionManager(
         destination_path: str,
         overwrite: bool = False,
     ) -> bool:
-        fs_archive_path = Path(archive_path)
-        fs_destination_path = Path(destination_path).resolve()
+        fs_archive_path = _Path(archive_path)
+        fs_destination_path = _Path(
+            destination_path,
+        ).resolve()
 
         fs_destination_path.mkdir(
             parents=True,
             exist_ok=True,
         )
 
-        with ZipFile(fs_archive_path, "r") as archive:
+        with _zipfile.ZipFile(
+            fs_archive_path,
+            "r",
+        ) as archive:
             for member in archive.infolist():
-                target = (fs_destination_path / member.filename).resolve()
+                target = (
+                    fs_destination_path
+                    / member.filename
+                ).resolve()
 
                 if (
                     fs_destination_path not in target.parents
                     and target != fs_destination_path
                 ):
                     raise ValueError(
-                        f"unsafe archive filesystem path '{member.filename}'"
+                        f"unsafe archive filesystem path "
+                        f"'{member.filename}'"
                     )
 
                 if not overwrite and target.exists():
                     continue
 
-                archive.extract(member, fs_destination_path)
+                archive.extract(
+                    member,
+                    fs_destination_path,
+                )
 
         return True

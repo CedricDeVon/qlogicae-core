@@ -1,55 +1,99 @@
-import time
-from datetime import UTC, datetime
+from __future__ import annotations
 
-from qlogicae_cor.v1.abstract_manager import (
-    AbstractManager,
-)
-from qlogicae_cor.v1.singleton_manager import (
-    SingletonManager,
-)
-from qlogicae_cor.v1.time_unit import TimeUnit
-from qlogicae_cor.v1.time_zone_manager import (
-    TimeZoneManager,
-)
-from qlogicae_cor.v1.timestamp import Timestamp
-from qlogicae_cor.v1.timestamp_manager_configurations import (
-    TimestampManagerConfigurations,
-)
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from qlogicae_cor.v1.time_unit import TimeUnit
+    from qlogicae_cor.v1.timestamp import Timestamp
+
+_time: Any = None
+_UTC: Any = None
+_datetime: Any = None
+_singleton_manager: Any = None
+_time_unit: Any = None
+_time_zone_manager: Any = None
+_timestamp: Any = None
 
 
-class TimestampManager(AbstractManager[TimestampManagerConfigurations]):
+def _handle_dynamic_imports() -> None:
+    global _handle_dynamic_imports
+    global _time
+    global _UTC
+    global _datetime
+    global _singleton_manager
+    global _time_unit
+    global _time_zone_manager
+    global _timestamp
+
+    import time
+    from datetime import UTC, datetime
+
+    import qlogicae_cor.v1.singleton_manager
+    import qlogicae_cor.v1.time_unit
+    import qlogicae_cor.v1.time_zone_manager
+    import qlogicae_cor.v1.timestamp
+
+    _time = time
+    _UTC = UTC
+    _datetime = datetime
+    _singleton_manager = (
+        qlogicae_cor.v1.singleton_manager
+    )
+    _time_unit = (
+        qlogicae_cor.v1.time_unit
+    )
+    _time_zone_manager = (
+        qlogicae_cor.v1.time_zone_manager
+    )
+    _timestamp = (
+        qlogicae_cor.v1.timestamp
+    )
+
+    _handle_dynamic_imports = lambda: None
+
+
+class TimestampManager:
     def __init__(self) -> None:
-        super().__init__(TimestampManagerConfigurations())
+        _handle_dynamic_imports()
 
     def generate_current_timestamp(
         self,
-        timestamp: Timestamp = Timestamp.ISO_DATE_STRING,
-        time_unit: TimeUnit = TimeUnit.NANOSECOND,
+        timestamp: Timestamp | None = None,
+        time_unit: TimeUnit | None = None,
     ) -> str:
-        timestamp_nanoseconds = time.time_ns()
+        if timestamp is None:
+            timestamp = _timestamp.ISO_DATE_STRING
 
-        current = datetime.fromtimestamp(
+        if time_unit is None:
+            time_unit = _time_unit.NANOSECOND
+
+        timestamp_nanoseconds = _time.time_ns()
+
+        current = _datetime.fromtimestamp(
             timestamp_nanoseconds / 1_000_000_000,
-            SingletonManager.get_singleton(
-                TimeZoneManager,
+            _singleton_manager.SingletonManager.get_singleton(
+                _time_zone_manager.TimeZoneManager,
             ).selected_time_zone,
         )
 
         match time_unit:
-            case TimeUnit.NONE | TimeUnit.SECOND:
+            case (
+                _time_unit.TimeUnit.NONE
+                | _time_unit.TimeUnit.SECOND
+            ):
                 fraction = ""
 
-            case TimeUnit.MILLISECOND:
+            case _time_unit.TimeUnit.MILLISECOND:
                 fraction = (
                     f".{timestamp_nanoseconds // 1_000_000 % 1_000:03d}"
                 )
 
-            case TimeUnit.MICROSECOND:
+            case _time_unit.TimeUnit.MICROSECOND:
                 fraction = (
                     f".{timestamp_nanoseconds // 1_000 % 1_000_000:06d}"
                 )
 
-            case TimeUnit.NANOSECOND:
+            case _time_unit.TimeUnit.NANOSECOND:
                 fraction = (
                     f".{timestamp_nanoseconds % 1_000_000_000:09d}"
                 )
@@ -57,7 +101,7 @@ class TimestampManager(AbstractManager[TimestampManagerConfigurations]):
             case _:
                 fraction = ""
 
-        if current.tzinfo is UTC:
+        if current.tzinfo is _UTC:
             suffix = "Z"
         else:
             suffix = current.strftime("%z")
@@ -68,10 +112,10 @@ class TimestampManager(AbstractManager[TimestampManagerConfigurations]):
                 )
 
         match timestamp:
-            case Timestamp.ISO_DATE_STRING:
+            case _timestamp.Timestamp.ISO_DATE_STRING:
                 prefix = current.strftime("%Y-%m-%dT%H:%M:%S")
 
-            case Timestamp.ISO_FILESYSTEM_STRING:
+            case _timestamp.Timestamp.ISO_FILESYSTEM_STRING:
                 prefix = current.strftime("%Y-%m-%dT%H-%M-%S")
                 suffix = suffix.replace(":", "-")
 
@@ -85,4 +129,3 @@ class TimestampManager(AbstractManager[TimestampManagerConfigurations]):
                 suffix,
             )
         )
-

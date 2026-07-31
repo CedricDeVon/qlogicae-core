@@ -1,99 +1,147 @@
-import time
-from typing import Any
+from __future__ import annotations
 
-from rich.live import Live
+from typing import Any, cast
 
-from qlogicae_cor.v1.abstract_manager import (
-    AbstractManager,
-)
-from qlogicae_cor.v1.cli_component_manager import (
-    CliComponentManager,
-)
-from qlogicae_cor.v1.cli_display_manager_configurations import (
-    CliDisplayManagerConfigurations,
-)
-from qlogicae_cor.v1.singleton_manager import (
-    SingletonManager,
-)
+_time: Any = None
+_live: Any = None
+_cli_component_manager: Any = None
+_singleton_manager: Any = None
 
 
-class CliDisplayManager(AbstractManager[CliDisplayManagerConfigurations]):
+def _handle_dynamic_imports() -> None:
+    global _handle_dynamic_imports
+    global _time
+    global _live
+    global _cli_component_manager
+    global _singleton_manager
+
+    import time
+
+    from rich.live import Live
+
+    import qlogicae_cor.v1.cli_component_manager
+    import qlogicae_cor.v1.singleton_manager
+
+    _time = time
+    _live = Live
+    _cli_component_manager = (
+        qlogicae_cor.v1.cli_component_manager.CliComponentManager
+    )
+    _singleton_manager = (
+        qlogicae_cor.v1.singleton_manager.SingletonManager
+    )
+
+    _handle_dynamic_imports = lambda: None
+
+
+class CliDisplayManager:
     def __init__(self) -> None:
-        super().__init__(CliDisplayManagerConfigurations())
+        _handle_dynamic_imports()
 
     def render_directly(
         self,
-        data: dict[str, Any] | None = None
+        data: dict[str, object] | None = None,
     ) -> bool:
         if not data:
             return False
 
-        progress_items = (data["items"] if "items" in data else []) or []
+        progress_items = cast(
+            list[dict[str, object]],
+            data.get("items", []),
+        )
 
         for task in progress_items:
-            task_callback = (
-                task["callback"] if task and "callback" in task else None
+            task_callback = task.get("callback")
+            task_arguments = cast(
+                dict[str, object],
+                task.get("arguments", {}),
             )
-            task_arguments = (
-                task["arguments"] if task and "arguments" in task else {}
+            task_delay = cast(
+                dict[str, object],
+                task.get("delay", {}),
             )
-            task_delay = (task["delay"] if task and "delay" in task else {}) or {}
-            task_delay_in_seconds = (
-                task_delay["value"] if task_delay and "value" in task_delay else 0
-            ) or 0
+            task_delay_in_seconds = cast(
+                float,
+                task_delay.get("value", 0),
+            )
 
             if task_delay_in_seconds:
-                time.sleep(task_delay_in_seconds)
+                _time.sleep(task_delay_in_seconds)
 
-            if task_callback:
+            if callable(task_callback):
                 task_callback(**task_arguments)
 
         return True
 
     def render_progress_bar(
         self,
-        data: dict[str, Any] | None = None
+        data: dict[str, object] | None = None,
     ) -> bool:
         if not data:
             return False
 
-        progress_bar = SingletonManager.get_singleton(
-            CliComponentManager
-        ).progress_bar
-        progress_bar_task = progress_bar.add_task("", total=100)
+        progress_bar = (
+            _singleton_manager.get_singleton(
+                _cli_component_manager,
+            ).progress_bar
+        )
 
-        progress_items = (data["items"] if "items" in data else []) or []
-        progress_refresh = (data["refresh"] if "refresh" in data else {}) or {}
-        progress_refresh_value = (
-            progress_refresh["value"] if "value" in progress_refresh else 60
+        progress_bar_task = progress_bar.add_task(
+            "",
+            total=100,
         )
-        progress_transient = (data["transient"] if "transient" in data else {}) or {}
-        progress_transient_value = (
-            progress_transient["value"] if "value" in progress_transient else True
+
+        progress_items = cast(
+            list[dict[str, object]],
+            data.get("items", []),
         )
-        with Live(
+        progress_refresh = cast(
+            dict[str, object],
+            data.get("refresh", {}),
+        )
+        progress_refresh_value = cast(
+            int,
+            progress_refresh.get("value", 60),
+        )
+        progress_transient = cast(
+            dict[str, object],
+            data.get("transient", {}),
+        )
+        progress_transient_value = cast(
+            bool,
+            progress_transient.get("value", True),
+        )
+
+        live: _live = _live(
             progress_bar,
-            console=SingletonManager.get_singleton(
-                CliComponentManager
+            console=_singleton_manager.get_singleton(
+                _cli_component_manager,
             ).console,
             refresh_per_second=progress_refresh_value,
             transient=progress_transient_value,
-        ):
-            time_start = time.perf_counter()
+        )
+
+        with live:
+            time_start = _time.perf_counter()
+
             for index, task in enumerate(progress_items):
-                task_message = (
-                    task["message"] if task and "message" in task else "Loading"
-                ) or "Loading"
-                task_callback = (
-                    task["callback"] if task and "callback" in task else None
+                task_message = cast(
+                    str,
+                    task.get("message", "Loading"),
                 )
-                task_arguments = (
-                    task["arguments"] if task and "arguments" in task else {}
-                ) or {}
-                task_delay = (task["delay"] if task and "delay" in task else {}) or {}
-                task_delay_in_seconds = (
-                    task_delay["value"] if task_delay and "value" in task_delay else 0
-                ) or 0
+                task_callback = task.get("callback")
+                task_arguments = cast(
+                    dict[str, object],
+                    task.get("arguments", {}),
+                )
+                task_delay = cast(
+                    dict[str, object],
+                    task.get("delay", {}),
+                )
+                task_delay_in_seconds = cast(
+                    float,
+                    task_delay.get("value", 0),
+                )
 
                 progress_bar.update(
                     progress_bar_task,
@@ -101,35 +149,39 @@ class CliDisplayManager(AbstractManager[CliDisplayManagerConfigurations]):
                 )
 
                 if task_delay_in_seconds:
-                    time.sleep(task_delay_in_seconds)
+                    _time.sleep(task_delay_in_seconds)
 
-                if task_callback:
+                if callable(task_callback):
                     task_callback(**task_arguments)
 
                 progress_bar.update(
                     progress_bar_task,
                     completed=min(
-                        index / len(progress_items) * 100,
+                        (index + 1)
+                        / len(progress_items)
+                        * 100,
                         100,
                     ),
-                    elapsed=f"{(time.perf_counter() - time_start):.2f}s",
+                    elapsed=(
+                        f"{_time.perf_counter() - time_start:.2f}s"
+                    ),
                 )
 
         return True
 
     def render_one_component(
         self,
-        text: str = ""
+        text: str = "",
     ) -> bool:
-        SingletonManager.get_singleton(
-            CliComponentManager
+        _singleton_manager.get_singleton(
+            _cli_component_manager,
         ).console.print(text)
 
         return True
 
     def render_many_components(
         self,
-        items: list[Any] | None = None
+        items: list[object] | None = None,
     ) -> bool:
         if not items:
             return False
@@ -138,6 +190,8 @@ class CliDisplayManager(AbstractManager[CliDisplayManagerConfigurations]):
             if not item:
                 return False
 
-            self.render_one_component(item)
+            self.render_one_component(
+                str(item),
+            )
 
         return True

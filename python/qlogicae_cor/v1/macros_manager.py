@@ -1,60 +1,75 @@
-import re
-from collections.abc import Mapping
-from pathlib import Path
+from __future__ import annotations
+
 from typing import Any
 
-from qlogicae_cor.v1.abstract_manager import (
-    AbstractManager,
-)
-from qlogicae_cor.v1.macros_manager_configurations import (
-    MacrosManagerConfigurations,
-)
-from qlogicae_cor.v1.singleton_manager import (
-    SingletonManager,
-)
-from qlogicae_cor.v1.text_encoding_manager import (
-    TextEncodingManager,
-)
+_re: Any = None
+_Path: Any = None
+_Mapping: Any = None
+_singleton_manager: Any = None
+_text_encoding_manager: Any = None
 
 
-class MacrosManager(AbstractManager[MacrosManagerConfigurations]):
+def _handle_dynamic_imports() -> None:
+    global _handle_dynamic_imports
+    global _re
+    global _Path
+    global _Mapping
+    global _singleton_manager
+    global _text_encoding_manager
+
+    import re
+    from collections.abc import Mapping
+    from pathlib import Path
+
+    import qlogicae_cor.v1.singleton_manager
+    import qlogicae_cor.v1.text_encoding_manager
+
+    _re = re
+    _Path = Path
+    _Mapping = Mapping
+    _singleton_manager = qlogicae_cor.v1.singleton_manager.SingletonManager
+    _text_encoding_manager = qlogicae_cor.v1.text_encoding_manager.TextEncodingManager
+
+    _handle_dynamic_imports = lambda: None
+
+
+class MacrosManager:
     __slots__ = (
         "_selected_identifier_pattern",
         "_selected_macros_pattern",
     )
 
     def __init__(self) -> None:
-        super().__init__(MacrosManagerConfigurations())
+        _handle_dynamic_imports()
 
-        self._selected_identifier_pattern: re.Pattern[str] = (
-            re.compile(r"^[A-Za-z0-9._-]+$")
+        self._selected_identifier_pattern: _re.Pattern[str] = (
+            _re.compile(r"^[A-Za-z0-9._-]+$")
         )
-        self._selected_macros_pattern: re.Pattern[str] = (
-            re.compile(r"\$\{\{\s*([A-Za-z0-9._-]+)\s*\}\}")
+        self._selected_macros_pattern: _re.Pattern[str] = (
+            _re.compile(r"\$\{\{\s*([A-Za-z0-9._-]+)\s*\}\}")
         )
 
     @property
-    def selected_identifier_pattern(self) -> re.Pattern[str]:
+    def selected_identifier_pattern(self) -> _re.Pattern[str]:
         return self._selected_identifier_pattern
 
     @selected_identifier_pattern.setter
     def selected_identifier_pattern(self, value: str) -> None:
-        self._selected_identifier_pattern = (
-            re.compile(value)
-        )
+        self._selected_identifier_pattern = _re.compile(value)
 
     @property
-    def selected_macros_pattern(self) -> re.Pattern[str]:
+    def selected_macros_pattern(self) -> _re.Pattern[str]:
         return self._selected_macros_pattern
 
     @selected_macros_pattern.setter
     def selected_macros_pattern(self, value: str) -> None:
-        self._selected_macros_pattern = (
-            re.compile(value)
-        )
+        self._selected_macros_pattern = _re.compile(value)
 
-    def resolve_many(self, values: Any) -> Mapping[str, Any]:
-        if not isinstance(values, Mapping):
+    def resolve_many(
+        self,
+        values: object,
+    ) -> _Mapping[str, object]:
+        if not isinstance(values, _Mapping):
             raise TypeError("'values' must be a mapping")
 
         for key in values:
@@ -64,7 +79,7 @@ class MacrosManager(AbstractManager[MacrosManagerConfigurations]):
             if not self._selected_identifier_pattern.fullmatch(key):
                 raise ValueError(f"invalid macro name: '{key}'")
 
-        cache: dict[str, Any] = {}
+        cache: dict[str, object] = {}
 
         for root in values:
             if root in cache:
@@ -82,7 +97,9 @@ class MacrosManager(AbstractManager[MacrosManagerConfigurations]):
                     continue
 
                 if key not in values:
-                    raise ValueError(f"key path '{key}' is an unknown macros")
+                    raise ValueError(
+                        f"key path '{key}' is an unknown macros",
+                    )
 
                 value = values[key]
 
@@ -105,7 +122,7 @@ class MacrosManager(AbstractManager[MacrosManagerConfigurations]):
 
                     if dependency in visiting:
                         raise ValueError(
-                            f"key path '{dependency}' is a circular reference"
+                            f"key path '{dependency}' is a circular reference",
                         )
 
                     unresolved.append(dependency)
@@ -115,12 +132,15 @@ class MacrosManager(AbstractManager[MacrosManagerConfigurations]):
                     continue
 
                 def replace(
-                    match: re.Match[str],
+                    match: _re.Match[str],
                 ) -> str:
                     dependency = match.group(1)
                     return str(cache[dependency])
 
-                cache[key] = self._selected_macros_pattern.sub(replace, value)
+                cache[key] = self._selected_macros_pattern.sub(
+                    replace,
+                    value,
+                )
 
                 stack.pop()
                 visiting.remove(key)
@@ -129,15 +149,15 @@ class MacrosManager(AbstractManager[MacrosManagerConfigurations]):
 
     def resolve_one(
         self,
-        key: Any,
-        values: Any,
-        cache: dict[Any, Any],
-        stack: set[Any],
-    ) -> Any:
+        key: object,
+        values: object,
+        cache: dict[object, object],
+        stack: set[object],
+    ) -> object:
         if not isinstance(key, str):
             raise TypeError("'key' must be a string")
 
-        if not isinstance(values, Mapping):
+        if not isinstance(values, _Mapping):
             raise TypeError("'values' must be a mapping")
 
         if not isinstance(cache, dict):
@@ -152,7 +172,7 @@ class MacrosManager(AbstractManager[MacrosManagerConfigurations]):
         if key in cache:
             return cache[key]
 
-        frames: list[tuple[Any, bool]] = [(key, False)]
+        frames: list[tuple[object, bool]] = [(key, False)]
 
         while frames:
             current_key, expanded = frames.pop()
@@ -163,11 +183,13 @@ class MacrosManager(AbstractManager[MacrosManagerConfigurations]):
             if not expanded:
                 if current_key in stack:
                     raise ValueError(
-                        f"key path '{current_key}' is a circular reference"
+                        f"key path '{current_key}' is a circular reference",
                     )
 
                 if current_key not in values:
-                    raise ValueError(f"key path '{current_key}' is an unknown macros")
+                    raise ValueError(
+                        f"key path '{current_key}' is an unknown macros",
+                    )
 
                 value = values[current_key]
 
@@ -185,13 +207,13 @@ class MacrosManager(AbstractManager[MacrosManagerConfigurations]):
                     if dependency not in values:
                         raise KeyError(
                             f"macro '{current_key}' references unknown macro "
-                            f"'{dependency}'"
+                            f"'{dependency}'",
                         )
 
                     if dependency in stack:
                         raise ValueError(
                             f"circular macro reference: "
-                            f"'{current_key}' -> '{dependency}'"
+                            f"'{current_key}' -> '{dependency}'",
                         )
 
                     if dependency not in cache:
@@ -200,66 +222,89 @@ class MacrosManager(AbstractManager[MacrosManagerConfigurations]):
             else:
                 value = values[current_key]
 
-                resolved = self._selected_macros_pattern.sub(
+                cache[current_key] = self._selected_macros_pattern.sub(
                     lambda match: str(cache[match.group(1)]),
                     value,
                 )
 
-                cache[current_key] = resolved
                 stack.remove(current_key)
 
         return cache[key]
 
-    def parse_many(self, values: Any, resolved: Any) -> str:
+    def parse_many(
+        self,
+        values: object,
+        resolved: _Mapping[str, object],
+    ) -> object:
         return self.parse_one(values, resolved)
 
-    def parse_one(self, value: str, resolved: Any) -> str:
+    def parse_one(
+        self,
+        value: object,
+        resolved: _Mapping[str, object],
+    ) -> object:
         if isinstance(value, str):
             return self._selected_macros_pattern.sub(
-                lambda match: resolved.get(match.group(1), match.group(0)),
+                lambda match: resolved.get(
+                    match.group(1),
+                    match.group(0),
+                ),
                 value,
             )
 
         if isinstance(value, dict):
             return {
-                key: self.parse_one(child, resolved) for key, child in value.items()
+                key: self.parse_one(child, resolved)
+                for key, child in value.items()
             }
 
         if isinstance(value, list):
-            return [self.parse_one(child, resolved) for child in value]
+            return [
+                self.parse_one(child, resolved)
+                for child in value
+            ]
 
         if isinstance(value, tuple):
-            return tuple(self.parse_one(child, resolved) for child in value)
+            return tuple(
+                self.parse_one(child, resolved)
+                for child in value
+            )
 
         if isinstance(value, set):
-            return {self.parse_one(child, resolved) for child in value}
+            return {
+                self.parse_one(child, resolved)
+                for child in value
+            }
 
         return value
 
     def parse_filesystem(
         self,
-        filesystem_path: str | Path,
-        workspace_macros: Any
+        filesystem_path: str | _Path,
+        workspace_macros: object,
     ) -> bool:
-        root = Path(filesystem_path)
+        encoding = (
+            _singleton_manager.get_singleton(
+                _text_encoding_manager,
+            ).selected_encoding
+        )
+
+        root = _Path(filesystem_path)
 
         for current_root, directories, files in root.walk(
             top_down=False,
         ):
-            current_root = Path(current_root)
+            current_root = _Path(current_root)
 
             for file_name in files:
                 current_path = current_root / file_name
 
                 try:
                     file_data = current_path.read_text(
-                        encoding=SingletonManager.get_singleton(
-                                TextEncodingManager
-                            ).selected_encoding
+                        encoding=encoding,
                     )
                 except UnicodeDecodeError:
                     pass
-
                 else:
                     parsed_file_data = self.parse_one(
                         file_data,
@@ -269,9 +314,7 @@ class MacrosManager(AbstractManager[MacrosManagerConfigurations]):
                     if parsed_file_data != file_data:
                         current_path.write_text(
                             parsed_file_data,
-                            encoding=SingletonManager.get_singleton(
-                                TextEncodingManager
-                            ).selected_encoding
+                            encoding=encoding,
                         )
 
                 parsed_name = self.parse_one(
@@ -281,7 +324,9 @@ class MacrosManager(AbstractManager[MacrosManagerConfigurations]):
 
                 if parsed_name != current_path.name:
                     current_path = current_path.rename(
-                        current_path.with_name(parsed_name),
+                        current_path.with_name(
+                            parsed_name,
+                        ),
                     )
 
             for directory_name in directories:
@@ -296,8 +341,7 @@ class MacrosManager(AbstractManager[MacrosManagerConfigurations]):
                     current_path.rename(
                         current_path.with_name(
                             parsed_name,
-                        )
+                        ),
                     )
 
         return True
-

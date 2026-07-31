@@ -1,58 +1,68 @@
-from typing import Any
+from __future__ import annotations
 
-from qlogicae_cor.v1.abstract_manager import (
-    AbstractManager,
-)
-from qlogicae_cor.v1.enum_conversion_value import (
-    EnumConversionValue,
-)
-from qlogicae_cor.v1.enum_conversion_value_enum_manager_configurations import (
-    EnumConversionValueEnumManagerConfigurations,
-)
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from qlogicae_cor.v1.enum_conversion_value import (
+        EnumConversionValue,
+    )
+
+_enum_conversion_value: Any = None
 
 
-class EnumConversionValueEnumManager(
-    AbstractManager[EnumConversionValueEnumManagerConfigurations]
-):
+def _handle_dynamic_imports() -> None:
+    global _handle_dynamic_imports
+    global _enum_conversion_value
+
+    import qlogicae_cor.v1.enum_conversion_value
+
+    _enum_conversion_value = (
+        qlogicae_cor.v1.enum_conversion_value.EnumConversionValue
+    )
+
+    _handle_dynamic_imports = lambda: None
+
+
+class EnumConversionValueEnumManager:
     def __init__(self) -> None:
-        super().__init__(EnumConversionValueEnumManagerConfigurations())
+        _handle_dynamic_imports()
 
     def convert_value(
         self,
-        input_type: Any,
-        output_type: EnumConversionValue = (
-            EnumConversionValue.STRING
-        ),
+        input_type: object,
+        output_type: EnumConversionValue | None = None
     ) -> Any:
+        if output_type is None:
+            output_type = EnumConversionValue.STRING
+
         match output_type:
-            case EnumConversionValue.STRING:
+            case _enum_conversion_value.STRING:
                 match input_type:
-                    case EnumConversionValue.STRING:
+                    case _enum_conversion_value.STRING:
                         return "string"
 
-                    case EnumConversionValue.ENUM:
+                    case _enum_conversion_value.ENUM:
                         return "enum"
 
-                    case EnumConversionValue.CUSTOM:
+                    case _enum_conversion_value.CUSTOM:
                         return "custom"
 
                     case _:
                         return "none"
 
-            case EnumConversionValue.ENUM:
-                match input_type.lower():
+            case _enum_conversion_value.ENUM:
+                match str(input_type).lower():
                     case "string":
-                        return EnumConversionValue.STRING
+                        return _enum_conversion_value.STRING
 
                     case "none":
-                        return EnumConversionValue.ENUM
+                        return _enum_conversion_value.ENUM
 
                     case "custom":
-                        return EnumConversionValue.CUSTOM
+                        return _enum_conversion_value.CUSTOM
 
                     case _:
-                        return EnumConversionValue.NONE
+                        return _enum_conversion_value.NONE
 
             case _:
-                return EnumConversionValue.NONE
-
+                return _enum_conversion_value.NONE

@@ -1,21 +1,12 @@
 from typing import Any
 
-from qlogicae_cor.v1.abstract_manager import (
-    AbstractManager,
-)
-from qlogicae_cor.v1.text_manager_configurations import (
-    TextManagerConfigurations,
-)
 
-
-class TextManager(AbstractManager[TextManagerConfigurations]):
+class TextManager:
     __slots__ = (
         "_valid_file_extensions",
     )
 
     def __init__(self) -> None:
-        super().__init__(TextManagerConfigurations())
-
         self._valid_file_extensions: set[str] = {".txt"}
 
     @property

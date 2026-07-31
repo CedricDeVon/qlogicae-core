@@ -1,41 +1,56 @@
-from typing import Any
+from __future__ import annotations
 
-from pyfiglet import Figlet
-from rich.console import Console, RenderableType
-from rich.padding import Padding
-from rich.progress import (
-    BarColumn,
-    Progress,
-    SpinnerColumn,
-    TextColumn,
-    TimeElapsedColumn,
-)
-from rich.rule import Rule
-from rich.table import Table
+from typing import Any, cast
 
-from qlogicae_cor.v1.abstract_manager import (
-    AbstractManager,
-)
-from qlogicae_cor.v1.cli_component_manager_configurations import (
-    CliComponentManagerConfigurations,
-)
+_figlet: Any = None
+_console: Any = None
+_padding: Any = None
+_progress: Any = None
+_rule: Any = None
+_table: Any = None
 
 
-class CliComponentManager(AbstractManager[CliComponentManagerConfigurations]):
-    __slots__ = ("_console")
+def _handle_dynamic_imports() -> None:
+    global _handle_dynamic_imports
+    global _figlet
+    global _console
+    global _padding
+    global _progress
+    global _rule
+    global _table
+
+    import pyfiglet
+    import rich.console
+    import rich.padding
+    import rich.progress
+    import rich.rule
+    import rich.table
+
+    _figlet = pyfiglet.Figlet
+    _console = rich.console.Console
+    _padding = rich.padding.Padding
+    _progress = rich.progress
+    _rule = rich.rule.Rule
+    _table = rich.table.Table
+
+    _handle_dynamic_imports = lambda: None
+
+
+class CliComponentManager:
+    __slots__ = ("_console",)
 
     def __init__(self) -> None:
-        super().__init__(CliComponentManagerConfigurations())
+        _handle_dynamic_imports()
 
-        self._console: Console = Console()
+        self._console: _console = _console()
 
     @property
-    def console(self) -> Console:
+    def console(self) -> Any:
         return self._console
 
     @property
-    def table(self) -> Table:
-        return Table(
+    def table(self) -> Any:
+        return _table(
             show_header=False,
             box=None,
             pad_edge=False,
@@ -43,34 +58,62 @@ class CliComponentManager(AbstractManager[CliComponentManagerConfigurations]):
         )
 
     @property
-    def progress_bar(self) -> Progress:
-        return Progress(
-            SpinnerColumn("dots", style="bold bright_green"),
-            TextColumn("[green]{task.description}"),
-            BarColumn(
+    def progress_bar(self) -> Any:
+        return _progress.Progress(
+            _progress.SpinnerColumn(
+                "dots",
+                style="bold bright_green",
+            ),
+            _progress.TextColumn(
+                "[green]{task.description}",
+            ),
+            _progress.BarColumn(
                 bar_width=80,
                 complete_style="green",
             ),
-            TextColumn("[green]{task.percentage:>6.2f}%"),
-            TimeElapsedColumn(),
+            _progress.TextColumn(
+                "[green]{task.percentage:>6.2f}%",
+            ),
+            _progress.TimeElapsedColumn(),
         )
 
-    def setup_table(self, data: dict[str, Any] | None = None) -> Padding:
+    def setup_table(
+        self,
+        data: dict[str, object] | None = None,
+    ) -> Any:
         if not data:
             return self.setup_padding()
 
         cli_table = self.table
-        cli_table_headers = (data["headers"] if "headers" in data else []) or []
+
+        cli_table_headers = cast(
+            list[dict[str, object]],
+            data.get("headers", []),
+        )
 
         for cli_table_header in cli_table_headers:
-            cli_table_header_name = (
-                cli_table_header["name"] if "name" in cli_table_header else "name"
+            cli_table_header_name = cast(
+                str,
+                cli_table_header.get(
+                    "name",
+                    "name",
+                ),
             )
-            cli_table_header_style = (
-                cli_table_header["style"] if "style" in cli_table_header else "white"
+
+            cli_table_header_style = cast(
+                str,
+                cli_table_header.get(
+                    "style",
+                    "white",
+                ),
             )
-            cli_table_header_no_wrap = (
-                cli_table_header["no_wrap"] if "no_wrap" in cli_table_header else True
+
+            cli_table_header_no_wrap = cast(
+                bool,
+                cli_table_header.get(
+                    "no_wrap",
+                    True,
+                ),
             )
 
             cli_table.add_column(
@@ -79,39 +122,81 @@ class CliComponentManager(AbstractManager[CliComponentManagerConfigurations]):
                 no_wrap=cli_table_header_no_wrap,
             )
 
-        cli_table_rows = (data["rows"] if "rows" in data else []) or []
+        cli_table_rows = cast(
+            list[list[str]],
+            data.get("rows", []),
+        )
+
         for cli_table_row in cli_table_rows:
-            cli_table.add_row(*cli_table_row)
+            cli_table.add_row(
+                *cli_table_row,
+            )
 
-        return self.setup_padding(cli_table)
+        return self.setup_padding(
+            cli_table,
+        )
 
-    def setup_horizontal_rule(self) -> Padding:
-        return Padding(Rule(style="bold green"), (0, 2))
+    def setup_horizontal_rule(
+        self,
+    ) -> Any:
+        result: _padding = _padding(
+            _rule(
+                style="bold green",
+            ),
+            (0, 2),
+        )
+
+        return result
 
     def setup_branding(
         self,
         brand_name: str,
         brand_description: str,
-    ) -> Padding:
-        brand_name = brand_name or "Brand"
-        brand_description = brand_description or "Description"
+    ) -> Any:
+        brand_name = (
+            brand_name
+            or "Brand"
+        )
+
+        brand_description = (
+            brand_description
+            or "Description"
+        )
 
         return self.setup_padding(
-            f"[white]{Figlet(font='slant').renderText(brand_name)}[/]\n[white]{brand_description}[/]"
+            f"[white]{_figlet(font='slant').renderText(brand_name)}[/]\n"
+            f"[white]{brand_description}[/]",
         )
 
-    def setup_duration_text(self, text: str="") -> Padding:
-        return self.setup_padding(f"[dim]{text} seconds[/]")
+    def setup_duration_text(
+        self,
+        text: str = "",
+    ) -> Any:
+        return self.setup_padding(
+            f"[dim]{text} seconds[/]",
+        )
 
-    def setup_end_padding(self) -> Padding:
-        return self.setup_padding("", 0, 4)
+    def setup_end_padding(
+        self,
+    ) -> Any:
+        return self.setup_padding(
+            "",
+            0,
+            4,
+        )
 
-    def setup_padding(self,
-        text: RenderableType = "",
-        vertical: int=1,
-        horizontal: int=4
-    ) -> Padding:
-        return Padding(
+    def setup_padding(
+        self,
+        text: Any = "",
+        vertical: int = 1,
+        horizontal: int = 4,
+    ) -> Any:
+        result: _padding = _padding(
             text,
-            (vertical, horizontal),
+            (
+                vertical,
+                horizontal,
+            ),
         )
+
+        return result

@@ -1,52 +1,78 @@
-from pathlib import Path
+from __future__ import annotations
+
 from typing import Any
 
-from qlogicae_cor.v1.abstract_manager import (
-    AbstractManager,
-)
-from qlogicae_cor.v1.file_io_manager_configurations import (
-    FileIoManagerConfigurations,
-)
-from qlogicae_cor.v1.singleton_manager import (
-    SingletonManager,
-)
-from qlogicae_cor.v1.text_encoding_manager import (
-    TextEncodingManager,
-)
+_Path: Any = None
+_singleton_manager: Any = None
+_text_encoding_manager: Any = None
 
 
-class FileIoManager(AbstractManager[FileIoManagerConfigurations]):
+def _handle_dynamic_imports() -> None:
+    global _handle_dynamic_imports
+    global _Path
+    global _singleton_manager
+    global _text_encoding_manager
+
+    from pathlib import Path
+
+    import qlogicae_cor.v1.singleton_manager
+    import qlogicae_cor.v1.text_encoding_manager
+
+    _Path = Path
+    _singleton_manager = (
+        qlogicae_cor.v1.singleton_manager.SingletonManager
+    )
+    _text_encoding_manager = (
+        qlogicae_cor.v1.text_encoding_manager.TextEncodingManager
+    )
+
+    _handle_dynamic_imports = lambda: None
+
+
+class FileIoManager:
     def __init__(self) -> None:
-        super().__init__(FileIoManagerConfigurations())
+        _handle_dynamic_imports()
 
-    def read_file(self, file_path: str) -> str:
-        path = Path(file_path)
-        output_data = ""
+    def read_file(
+        self,
+        file_path: str,
+    ) -> str:
+        path = _Path(file_path)
+
         with path.open(
             mode="r",
-            encoding=SingletonManager.get_singleton(
-                TextEncodingManager,
-            ).selected_encoding
+            encoding=(
+                _singleton_manager
+                .get_singleton(
+                    _text_encoding_manager,
+                )
+                .selected_encoding
+            ),
         ) as file:
-            output_data = file.read() or ""
+            return file.read() or ""
 
-        return output_data
+    def write_file(
+        self,
+        file_path: str,
+        data: Any,
+    ) -> bool:
+        path = _Path(file_path)
 
-    def write_file(self, file_path: str, data: Any) -> bool:
-        path = Path(file_path)
         path.parent.mkdir(
             parents=True,
             exist_ok=True,
         )
+
         with path.open(
             mode="w",
-            encoding=SingletonManager.get_singleton(
-                TextEncodingManager,
-            ).selected_encoding
+            encoding=(
+                _singleton_manager
+                .get_singleton(
+                    _text_encoding_manager,
+                )
+                .selected_encoding
+            ),
         ) as file:
-            file.write(
-                str(data)
-            )
+            file.write(str(data))
 
         return True
-

@@ -1,163 +1,134 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from qlogicae_cor.v1.abstract_manager import (
-    AbstractManager,
-)
-from qlogicae_cor.v1.enum_conversion_value import (
-    EnumConversionValue,
-)
-from qlogicae_cor.v1.time_unit import (
-    TimeUnit,
-)
-from qlogicae_cor.v1.time_unit_enum_manager_configurations import (
-    TimeUnitEnumManagerConfigurations,
-)
+if TYPE_CHECKING:
+    from qlogicae_cor.v1.enum_conversion_value import (
+        EnumConversionValue,
+    )
+
+_enum_conversion_value: Any = None
+_time_unit: Any = None
 
 
-class TimeUnitEnumManager(AbstractManager[TimeUnitEnumManagerConfigurations]):
+def _handle_dynamic_imports() -> None:
+    global _handle_dynamic_imports
+    global _enum_conversion_value
+    global _time_unit
+
+    import qlogicae_cor.v1.enum_conversion_value
+    import qlogicae_cor.v1.time_unit
+
+    _enum_conversion_value = (
+        qlogicae_cor.v1.enum_conversion_value
+    )
+    _time_unit = (
+        qlogicae_cor.v1.time_unit
+    )
+
+    _handle_dynamic_imports = lambda: None
+
+
+class TimeUnitEnumManager:
     def __init__(self) -> None:
-        super().__init__(TimeUnitEnumManagerConfigurations())
+        _handle_dynamic_imports()
 
     def convert_value(
         self,
-        input_type: Any,
-        output_type: EnumConversionValue = (
-            EnumConversionValue.STRING
-        ),
-    ) -> Any:
+        input_type: object,
+        output_type: EnumConversionValue | None = None,
+    ) -> object:
+        if output_type is None:
+            output_type = _enum_conversion_value.STRING
+
         match output_type:
-            case EnumConversionValue.STRING:
+            case _enum_conversion_value.EnumConversionValue.STRING:
                 match input_type:
-                    case TimeUnit.NANOSECOND:
+                    case _time_unit.TimeUnit.NANOSECOND:
                         return "nanosecond"
 
-                    case TimeUnit.MICROSECOND:
+                    case _time_unit.TimeUnit.MICROSECOND:
                         return "microsecond"
 
-                    case TimeUnit.MILLISECOND:
+                    case _time_unit.TimeUnit.MILLISECOND:
                         return "millisecond"
 
-                    case TimeUnit.SECOND:
+                    case _time_unit.TimeUnit.SECOND:
                         return "second"
 
-                    case TimeUnit.MINUTE:
+                    case _time_unit.TimeUnit.MINUTE:
                         return "minute"
 
-                    case TimeUnit.HOUR:
+                    case _time_unit.TimeUnit.HOUR:
                         return "hour"
 
-                    case TimeUnit.DAY:
+                    case _time_unit.TimeUnit.DAY:
                         return "day"
 
-                    case TimeUnit.WEEK:
+                    case _time_unit.TimeUnit.WEEK:
                         return "week"
 
-                    case TimeUnit.MONTH:
+                    case _time_unit.TimeUnit.MONTH:
                         return "month"
 
-                    case TimeUnit.YEAR:
+                    case _time_unit.TimeUnit.YEAR:
                         return "year"
 
-                    case TimeUnit.DECADE:
+                    case _time_unit.TimeUnit.DECADE:
                         return "decade"
 
-                    case TimeUnit.CENTURY:
+                    case _time_unit.TimeUnit.CENTURY:
                         return "century"
 
-                    case TimeUnit.MILLENNIUM:
+                    case _time_unit.TimeUnit.MILLENNIUM:
                         return "millennium"
 
                     case _:
                         return "none"
 
-            case EnumConversionValue.ENUM:
-                match input_type.lower():
-                    case "nanosecond":
-                        return TimeUnit.NANOSECOND
+            case _enum_conversion_value.EnumConversionValue.ENUM:
+                match str(input_type).lower():
+                    case "nanosecond" | "ns":
+                        return _time_unit.TimeUnit.NANOSECOND
 
-                    case "nanosecond":
-                        return TimeUnit.NANOSECOND
+                    case "microsecond" | "us":
+                        return _time_unit.TimeUnit.MICROSECOND
 
-                    case "microsecond":
-                        return TimeUnit.MICROSECOND
+                    case "millisecond" | "ms":
+                        return _time_unit.TimeUnit.MILLISECOND
 
-                    case "millisecond":
-                        return TimeUnit.MILLISECOND
+                    case "second" | "sec":
+                        return _time_unit.TimeUnit.SECOND
 
-                    case "second":
-                        return TimeUnit.SECOND
+                    case "minute" | "min":
+                        return _time_unit.TimeUnit.MINUTE
 
-                    case "minute":
-                        return TimeUnit.MINUTE
+                    case "hour" | "hr":
+                        return _time_unit.TimeUnit.HOUR
 
-                    case "hour":
-                        return TimeUnit.HOUR
+                    case "day" | "d":
+                        return _time_unit.TimeUnit.DAY
 
-                    case "day":
-                        return TimeUnit.DAY
+                    case "week" | "wk":
+                        return _time_unit.TimeUnit.WEEK
 
-                    case "week":
-                        return TimeUnit.WEEK
+                    case "month" | "mon":
+                        return _time_unit.TimeUnit.MONTH
 
-                    case "month":
-                        return TimeUnit.MONTH
+                    case "year" | "yr":
+                        return _time_unit.TimeUnit.YEAR
 
-                    case "year":
-                        return TimeUnit.YEAR
+                    case "decade" | "deca":
+                        return _time_unit.TimeUnit.DECADE
 
-                    case "decade":
-                        return TimeUnit.DECADE
+                    case "century" | "cen":
+                        return _time_unit.TimeUnit.CENTURY
 
-                    case "century":
-                        return TimeUnit.CENTURY
-
-                    case "millennium":
-                        return TimeUnit.MILLENNIUM
-
-                    case "ns":
-                        return TimeUnit.NANOSECOND
-
-                    case "us":
-                        return TimeUnit.MICROSECOND
-
-                    case "ms":
-                        return TimeUnit.MILLISECOND
-
-                    case "sec":
-                        return TimeUnit.SECOND
-
-                    case "min":
-                        return TimeUnit.MINUTE
-
-                    case "hr":
-                        return TimeUnit.HOUR
-
-                    case "d":
-                        return TimeUnit.DAY
-
-                    case "wk":
-                        return TimeUnit.WEEK
-
-                    case "mon":
-                        return TimeUnit.MONTH
-
-                    case "yr":
-                        return TimeUnit.YEAR
-
-                    case "deca":
-                        return TimeUnit.DECADE
-
-                    case "cen":
-                        return TimeUnit.CENTURY
-
-                    case "mil":
-                        return TimeUnit.MILLENNIUM
+                    case "millennium" | "mil":
+                        return _time_unit.TimeUnit.MILLENNIUM
 
                     case _:
-                        return TimeUnit.NONE
+                        return _time_unit.TimeUnit.NONE
 
             case _:
-                return EnumConversionValue.NONE
-
+                return _enum_conversion_value.EnumConversionValue.NONE

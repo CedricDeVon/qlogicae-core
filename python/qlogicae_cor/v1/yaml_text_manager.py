@@ -1,44 +1,68 @@
+from __future__ import annotations
+
 from typing import Any
 
-import yaml
-
-from qlogicae_cor.v1.abstract_manager import (
-    AbstractManager,
-)
-from qlogicae_cor.v1.singleton_manager import (
-    SingletonManager,
-)
-from qlogicae_cor.v1.yaml_manager import YamlManager
-from qlogicae_cor.v1.yaml_text_manager_configurations import (
-    YamlTextManagerConfigurations,
-)
+_yaml: Any = None
+_singleton_manager: Any = None
+_yaml_manager: Any = None
 
 
-class YamlTextManager(AbstractManager[YamlTextManagerConfigurations]):
+def _handle_dynamic_imports() -> None:
+    global _handle_dynamic_imports
+    global _yaml
+    global _singleton_manager
+    global _yaml_manager
+
+    import yaml
+
+    import qlogicae_cor.v1.singleton_manager
+    import qlogicae_cor.v1.yaml_manager
+
+    _yaml = yaml
+    _singleton_manager = (
+        qlogicae_cor.v1.singleton_manager
+    )
+    _yaml_manager = (
+        qlogicae_cor.v1.yaml_manager
+    )
+
+    _handle_dynamic_imports = lambda: None
+
+
+class YamlTextManager:
     def __init__(self) -> None:
-        super().__init__(YamlTextManagerConfigurations())
+        _handle_dynamic_imports()
 
-    def is_valid(self, value: str) -> bool:
-        yaml.safe_load(value)
+    def is_valid(
+        self,
+        value: str,
+    ) -> bool:
+        _yaml.safe_load(value)
 
         return True
 
-    def convert_to_object(self, value: str) -> Any:
-        return yaml.safe_load(value)
+    def convert_to_object(
+        self,
+        value: str,
+    ) -> Any:
+        return _yaml.safe_load(value)
 
-    def convert_to_string(self, value: Any) -> str:
-        return yaml.safe_dump(
-            value,
-            sort_keys=SingletonManager.get_singleton(
-                YamlManager
-            ).is_key_sorting_enabled,
-            default_flow_style=SingletonManager.get_singleton(
-                YamlManager
-            ).is_default_flow_state_enabled,
-            allow_unicode=SingletonManager.get_singleton(
-                YamlManager
-            ).is_unicode_enabled,
-            indent=SingletonManager.get_singleton(
-                YamlManager
-            ).indent_count,
+    def convert_to_string(
+        self,
+        value: Any,
+    ) -> str:
+        manager = (
+            _singleton_manager.SingletonManager.get_singleton(
+                _yaml_manager.YamlManager,
+            )
         )
+
+        result: str = _yaml.safe_dump(
+            value,
+            sort_keys=manager.is_key_sorting_enabled,
+            default_flow_style=manager.is_default_flow_state_enabled,
+            allow_unicode=manager.is_unicode_enabled,
+            indent=manager.indent_count,
+        )
+
+        return result

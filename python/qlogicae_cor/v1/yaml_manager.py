@@ -1,14 +1,7 @@
 from typing import Any
 
-from qlogicae_cor.v1.abstract_manager import (
-    AbstractManager,
-)
-from qlogicae_cor.v1.yaml_manager_configurations import (
-    YamlManagerConfigurations,
-)
 
-
-class YamlManager(AbstractManager[YamlManagerConfigurations]):
+class YamlManager:
     __slots__ = (
         "_valid_file_extensions",
         "_is_key_sorting_enabled",
@@ -18,8 +11,6 @@ class YamlManager(AbstractManager[YamlManagerConfigurations]):
     )
 
     def __init__(self) -> None:
-        super().__init__(YamlManagerConfigurations())
-
         self._valid_file_extensions: set[str] = {
             ".yaml",
             ".yml",

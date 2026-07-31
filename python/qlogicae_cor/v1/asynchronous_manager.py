@@ -1,42 +1,81 @@
 from __future__ import annotations
 
-import asyncio
-import threading
-from collections.abc import Callable, Coroutine, Iterable
-from concurrent.futures import (
-    ProcessPoolExecutor,
-    ThreadPoolExecutor,
-)
-from functools import partial
-from typing import Any, ParamSpec, TypeVar
+from typing import TYPE_CHECKING, Any
 
-from qlogicae_cor.v1.abstract_manager import (
-    AbstractManager,
-)
-from qlogicae_cor.v1.asynchronous_manager_configurations import (
-    AsynchronousManagerConfigurations,
-)
+if TYPE_CHECKING:
+    import asyncio
+    import threading
+    from collections.abc import (
+        Callable,
+        Coroutine,
+        Iterable,
+    )
+    from concurrent.futures import (
+        ProcessPoolExecutor,
+        ThreadPoolExecutor,
+    )
+    from typing import ParamSpec, TypeVar
 
-P = ParamSpec("P")
-T = TypeVar("T")
+    P = ParamSpec("P")
+    T = TypeVar("T")
+
+_asyncio: Any = None
+_threading: Any = None
+_partial: Any = None
+_process_pool_executor: Any = None
+_thread_pool_executor: Any = None
 
 
-class AsynchronousManager(AbstractManager[AsynchronousManagerConfigurations]):
+def _handle_dynamic_imports() -> None:
+    global _handle_dynamic_imports
+    global _asyncio
+    global _threading
+    global _partial
+    global _process_pool_executor
+    global _thread_pool_executor
+
+    import asyncio
+    import threading
+    from concurrent.futures import (
+        ProcessPoolExecutor,
+        ThreadPoolExecutor,
+    )
+    from functools import partial
+
+    _asyncio = asyncio
+    _threading = threading
+    _partial = partial
+    _process_pool_executor = ProcessPoolExecutor
+    _thread_pool_executor = ThreadPoolExecutor
+
+    _handle_dynamic_imports = lambda: None
+
+
+class AsynchronousManager:
     __slots__ = (
         "_thread_executor",
         "_process_executor",
     )
 
     def __init__(self) -> None:
-        self._thread_executor: ThreadPoolExecutor | None = None
-        self._process_executor: ProcessPoolExecutor | None = None
+        _handle_dynamic_imports()
+
+        self._thread_executor: (
+            ThreadPoolExecutor | None
+        ) = None
+
+        self._process_executor: (
+            ProcessPoolExecutor | None
+        ) = None
 
     @property
     def thread_executor(
         self,
     ) -> ThreadPoolExecutor:
         if self._thread_executor is None:
-            self._thread_executor = ThreadPoolExecutor()
+            self._thread_executor = (
+                _thread_pool_executor()
+            )
 
         return self._thread_executor
 
@@ -45,7 +84,9 @@ class AsynchronousManager(AbstractManager[AsynchronousManagerConfigurations]):
         self,
     ) -> ProcessPoolExecutor:
         if self._process_executor is None:
-            self._process_executor = ProcessPoolExecutor()
+            self._process_executor = (
+                _process_pool_executor()
+            )
 
         return self._process_executor
 
@@ -56,11 +97,13 @@ class AsynchronousManager(AbstractManager[AsynchronousManagerConfigurations]):
         *args: P.args,
         **kwargs: P.kwargs,
     ) -> T:
-        return await asyncio.to_thread(
+        result: T = await _asyncio.to_thread(
             function,
             *args,
             **kwargs,
         )
+
+        return result
 
     async def run_thread_pool(
         self,
@@ -69,16 +112,18 @@ class AsynchronousManager(AbstractManager[AsynchronousManagerConfigurations]):
         *args: P.args,
         **kwargs: P.kwargs,
     ) -> T:
-        loop = asyncio.get_running_loop()
+        loop = _asyncio.get_running_loop()
 
-        return await loop.run_in_executor(
+        result: T = await loop.run_in_executor(
             self.thread_executor,
-            partial(
+            _partial(
                 function,
                 *args,
                 **kwargs,
             ),
         )
+
+        return result
 
     async def run_process_pool(
         self,
@@ -87,26 +132,30 @@ class AsynchronousManager(AbstractManager[AsynchronousManagerConfigurations]):
         *args: P.args,
         **kwargs: P.kwargs,
     ) -> T:
-        loop = asyncio.get_running_loop()
+        loop = _asyncio.get_running_loop()
 
-        return await loop.run_in_executor(
+        result: T = await loop.run_in_executor(
             self.process_executor,
-            partial(
+            _partial(
                 function,
                 *args,
                 **kwargs,
             ),
         )
 
+        return result
+
     async def gather(
         self,
         *coroutines: Coroutine[Any, Any, Any],
         return_exceptions: bool = False,
     ) -> list[Any]:
-        return await asyncio.gather(
+        result: list[Any] = await _asyncio.gather(
             *coroutines,
             return_exceptions=return_exceptions,
         )
+
+        return result
 
     async def wait(
         self,
@@ -116,42 +165,51 @@ class AsynchronousManager(AbstractManager[AsynchronousManagerConfigurations]):
         set[asyncio.Task[Any]],
         set[asyncio.Task[Any]],
     ]:
-        tasks: set[asyncio.Task[Any]] = {
-            asyncio.create_task(coroutine)
+        tasks: set[Any] = {
+            _asyncio.create_task(coroutine)
             for coroutine in coroutines
         }
 
-        return await asyncio.wait(
+        result: tuple[
+            set[asyncio.Task[Any]],
+            set[asyncio.Task[Any]],
+        ] = await _asyncio.wait(
             tasks,
             timeout=timeout,
         )
+
+        return result
 
     def create_task(
         self,
         coroutine: Coroutine[Any, Any, T],
         name: str | None = None,
     ) -> asyncio.Task[T]:
-        return asyncio.create_task(
+        result: asyncio.Task[T] = _asyncio.create_task(
             coroutine,
             name=name,
         )
+
+        return result
 
     async def timeout(
         self,
         coroutine: Coroutine[Any, Any, T],
         seconds: float,
     ) -> T:
-        return await asyncio.wait_for(
+        result: T = await _asyncio.wait_for(
             coroutine,
             timeout=seconds,
         )
+
+        return result
 
     async def map_thread(
         self,
         function: Callable[..., T],
         *iterables: Iterable[Any],
     ) -> list[T]:
-        return await asyncio.gather(
+        result: list[T] = await _asyncio.gather(
             *(
                 self.run_thread(
                     function,
@@ -164,12 +222,14 @@ class AsynchronousManager(AbstractManager[AsynchronousManagerConfigurations]):
             )
         )
 
+        return result
+
     async def map_thread_pool(
         self,
         function: Callable[..., T],
         *iterables: Iterable[Any],
     ) -> list[T]:
-        return await asyncio.gather(
+        result: list[T] = await _asyncio.gather(
             *(
                 self.run_thread_pool(
                     function,
@@ -182,12 +242,14 @@ class AsynchronousManager(AbstractManager[AsynchronousManagerConfigurations]):
             )
         )
 
+        return result
+
     async def map_process_pool(
         self,
         function: Callable[..., T],
         *iterables: Iterable[Any],
     ) -> list[T]:
-        return await asyncio.gather(
+        result: list[T] = await _asyncio.gather(
             *(
                 self.run_process_pool(
                     function,
@@ -200,6 +262,8 @@ class AsynchronousManager(AbstractManager[AsynchronousManagerConfigurations]):
             )
         )
 
+        return result
+
     def create_thread(
         self,
         function: Callable[..., Any],
@@ -209,7 +273,7 @@ class AsynchronousManager(AbstractManager[AsynchronousManagerConfigurations]):
         start: bool = True,
         **kwargs: Any,
     ) -> threading.Thread:
-        thread = threading.Thread(
+        thread: threading.Thread = _threading.Thread(
             target=function,
             args=args,
             kwargs=kwargs,
@@ -230,12 +294,14 @@ class AsynchronousManager(AbstractManager[AsynchronousManagerConfigurations]):
             self._thread_executor.shutdown(
                 wait=wait,
             )
+
             self._thread_executor = None
 
         if self._process_executor is not None:
             self._process_executor.shutdown(
                 wait=wait,
             )
+
             self._process_executor = None
 
     def __enter__(

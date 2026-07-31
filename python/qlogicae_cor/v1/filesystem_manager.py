@@ -1,110 +1,152 @@
-import shutil
-from pathlib import Path
+from __future__ import annotations
 
-from qlogicae_cor.v1.abstract_manager import (
-    AbstractManager,
-)
-from qlogicae_cor.v1.file_entity_filesystem_tree_setup_options import (
-    FileEntityFileSystemTreeSetupOptions,
-)
-from qlogicae_cor.v1.filesystem_manager_configurations import (
-    FilesystemManagerConfigurations,
-)
-from qlogicae_cor.v1.folder_entity_filesystem_tree_setup_options import (
-    FolderEntityFileSystemTreeSetupOptions,
-)
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from qlogicae_cor.v1.folder_entity_filesystem_tree_setup_options import (
+        FolderEntityFileSystemTreeSetupOptions,
+    )
+
+_shutil: Any = None
+_Path: Any = None
+_file_entity_filesystem_tree_setup_options: Any = None
+_folder_entity_filesystem_tree_setup_options: Any = None
 
 
-class FilesystemManager(AbstractManager[FilesystemManagerConfigurations]):
+def _handle_dynamic_imports() -> None:
+    global _handle_dynamic_imports
+    global _shutil
+    global _Path
+    global _file_entity_filesystem_tree_setup_options
+    global _folder_entity_filesystem_tree_setup_options
+
+    import shutil
+    from pathlib import Path
+
+    import qlogicae_cor.v1.file_entity_filesystem_tree_setup_options
+    import qlogicae_cor.v1.folder_entity_filesystem_tree_setup_options
+
+    _shutil = shutil
+    _Path = Path
+    _file_entity_filesystem_tree_setup_options = (
+        qlogicae_cor.v1.file_entity_filesystem_tree_setup_options
+        .FileEntityFileSystemTreeSetupOptions
+    )
+    _folder_entity_filesystem_tree_setup_options = (
+        qlogicae_cor.v1.folder_entity_filesystem_tree_setup_options
+        .FolderEntityFileSystemTreeSetupOptions
+    )
+
+    _handle_dynamic_imports = lambda: None
+
+
+class FilesystemManager:
     def __init__(self) -> None:
-        super().__init__(FilesystemManagerConfigurations())
+        _handle_dynamic_imports()
 
-    def throw_if_filesystem_path_invalid(self,
+    def throw_if_filesystem_path_invalid(
+        self,
         value: str,
-    ) -> None | bool:
-        path = Path(value)
+    ) -> bool:
+        path = _Path(value)
 
         if not path.exists():
-            raise ValueError(f"filesystem path '{path}' is invalid")
+            raise ValueError(
+                f"filesystem path '{path}' is invalid"
+            )
 
         return False
 
-    def throw_if_file_path_invalid(self,
+    def throw_if_file_path_invalid(
+        self,
         value: str,
-    ) -> None | bool:
-        path = Path(value)
+    ) -> bool:
+        path = _Path(value)
 
         if not path.is_file():
-            raise ValueError(f"file path '{path}' is invalid")
+            raise ValueError(
+                f"file path '{path}' is invalid"
+            )
 
         return False
 
-    def throw_if_folder_path_invalid(self,
+    def throw_if_folder_path_invalid(
+        self,
         value: str,
-    ) -> None | bool:
-        path = Path(value)
+    ) -> bool:
+        path = _Path(value)
 
         if not path.is_dir():
-            raise ValueError(f"folder path '{path}' is invalid")
+            raise ValueError(
+                f"folder path '{path}' is invalid"
+            )
 
         return False
 
-    def is_filesystem_path_valid(self,
+    def is_filesystem_path_valid(
+        self,
         value: str,
-    ) -> None | bool:
-        path = Path(value)
+    ) -> bool:
+        result: bool = _Path(value).exists()
+        return result
 
-        return path.exists()
-
-    def is_file_path_valid(self,
+    def is_file_path_valid(
+        self,
         value: str,
-    ) -> None | bool:
-        path = Path(value)
+    ) -> bool:
+        result: bool = _Path(value).is_file()
+        return result
 
-        return path.is_file()
-
-    def is_folder_path_valid(self,
+    def is_folder_path_valid(
+        self,
         value: str,
-    ) -> None | bool:
-        path = Path(value)
+    ) -> bool:
+        result: bool = _Path(value).is_dir()
+        return result
 
-        return path.is_dir()
-
-    def clean_filesystem_path(self, path: str) -> bool:
-        directory = Path(path).resolve()
+    def clean_filesystem_path(
+        self,
+        path: str,
+    ) -> bool:
+        directory = _Path(path).resolve()
 
         protected_paths = {
-            Path("/"),
-            Path.home(),
+            _Path("/"),
+            _Path.home(),
         }
 
         if directory in protected_paths:
-            raise ValueError(f"folder path '{path}' is protected")
+            raise ValueError(
+                f"folder path '{path}' is protected"
+            )
 
         if not directory.exists():
             return True
 
         if not directory.is_dir():
-            raise ValueError(f"file path '{path}' is not a folder")
+            raise ValueError(
+                f"file path '{path}' is not a folder"
+            )
 
         for item in directory.iterdir():
             if item.is_file() or item.is_symlink():
                 item.unlink()
 
             elif item.is_dir():
-                shutil.rmtree(item)
+                _shutil.rmtree(item)
 
         return True
 
-    def copy_filesystem_path(self,
+    def copy_filesystem_path(
+        self,
         first_path: str,
-        second_path: str
+        second_path: str,
     ) -> bool:
-        fs_first_path = Path(first_path)
-        fs_second_path = Path(second_path)
+        fs_first_path = _Path(first_path)
+        fs_second_path = _Path(second_path)
 
         if fs_first_path.is_dir():
-            shutil.copytree(
+            _shutil.copytree(
                 fs_first_path,
                 fs_second_path,
                 dirs_exist_ok=True,
@@ -116,7 +158,7 @@ class FilesystemManager(AbstractManager[FilesystemManagerConfigurations]):
                 exist_ok=True,
             )
 
-            shutil.copy2(
+            _shutil.copy2(
                 fs_first_path,
                 fs_second_path,
             )
@@ -126,19 +168,20 @@ class FilesystemManager(AbstractManager[FilesystemManagerConfigurations]):
 
         return True
 
-    def move_filesystem_path(self,
+    def move_filesystem_path(
+        self,
         first_path: str,
-        second_path: str
+        second_path: str,
     ) -> bool:
-        source = Path(first_path)
-        destination = Path(second_path)
+        source = _Path(first_path)
+        destination = _Path(second_path)
 
         destination.parent.mkdir(
             parents=True,
             exist_ok=True,
         )
 
-        shutil.move(
+        _shutil.move(
             str(source),
             str(destination),
         )
@@ -147,26 +190,41 @@ class FilesystemManager(AbstractManager[FilesystemManagerConfigurations]):
 
     def setup_filesystem_tree(
         self,
-        parent_path: Path,
+        parent_path: str,
         options: FolderEntityFileSystemTreeSetupOptions,
     ) -> None:
-        if not parent_path.exists():
-            raise ValueError(f"filesystem path '{parent_path}' is invalid")
+        path = _Path(parent_path)
 
-        parent_path.mkdir(parents=True, exist_ok=True)
+        if not path.exists():
+            raise ValueError(
+                f"filesystem path '{path}' is invalid"
+            )
+
+        path.mkdir(
+            parents=True,
+            exist_ok=True,
+        )
+
         for entity in options.entities or []:
-            entity_path = parent_path / entity.name
+            entity_path = path / entity.name
 
             if isinstance(
                 entity,
-                FolderEntityFileSystemTreeSetupOptions,
+                _folder_entity_filesystem_tree_setup_options,
             ):
-                entity_path.mkdir(parents=True, exist_ok=True)
-                self.setup_filesystem_tree(entity_path, entity)
+                entity_path.mkdir(
+                    parents=True,
+                    exist_ok=True,
+                )
+
+                self.setup_filesystem_tree(
+                    entity_path,
+                    entity,
+                )
 
             elif isinstance(
                 entity,
-                FileEntityFileSystemTreeSetupOptions,
+                _file_entity_filesystem_tree_setup_options,
             ):
                 if not entity_path.exists():
                     entity_path.write_text(
@@ -179,7 +237,7 @@ class FilesystemManager(AbstractManager[FilesystemManagerConfigurations]):
         source: str,
         destination: str,
     ) -> bool:
-        Path(source).rename(destination)
+        _Path(source).rename(destination)
 
         return True
 
@@ -187,7 +245,7 @@ class FilesystemManager(AbstractManager[FilesystemManagerConfigurations]):
         self,
         directory: str,
     ) -> bool:
-        Path(directory).mkdir(
+        _Path(directory).mkdir(
             parents=True,
             exist_ok=True,
         )

@@ -1,35 +1,79 @@
-import logging
-import queue
-from logging.handlers import (
-    QueueHandler,
-    QueueListener,
-)
-from pathlib import Path
-from typing import Any
+from __future__ import annotations
 
-from qlogicae_logis.v1.file_log_manager_configurations import (
-    FileLogManagerConfigurations,
-)
-from qlogicae_logis.v1.log_format import LogFormat
-from qlogicae_logis.v1.log_options import (
-    LogOptions,
-)
-from qlogicae_logis.v1.log_options_manager import (
-    LogOptionsManager,
-)
+from typing import TYPE_CHECKING, Any
 
-from qlogicae_cor.v1.abstract_manager import (
-    AbstractManager,
-)
-from qlogicae_cor.v1.singleton_manager import (
-    SingletonManager,
-)
-from qlogicae_cor.v1.text_encoding_manager import (
-    TextEncodingManager,
-)
+if TYPE_CHECKING:
+    from qlogicae_logis.v1.log_options import (
+        LogOptions,
+    )
+
+_logging: Any = None
+_queue: Any = None
+_QueueHandler: Any = None
+_QueueListener: Any = None
+_Path: Any = None
+_singleton_manager: Any = None
+_text_encoding_manager: Any = None
+_log_format: Any = None
+_log_options: Any = None
+_log_options_manager: Any = None
 
 
-class FileLogManager(AbstractManager[FileLogManagerConfigurations]):
+def _handle_dynamic_imports() -> None:
+    global _handle_dynamic_imports
+    global _logging
+    global _queue
+    global _QueueHandler
+    global _QueueListener
+    global _Path
+    global _singleton_manager
+    global _text_encoding_manager
+    global _log_format
+    global _log_options
+    global _log_options_manager
+
+    import logging
+    import queue
+    from logging.handlers import (
+        QueueHandler,
+        QueueListener,
+    )
+    from pathlib import Path
+
+    import qlogicae_logis.v1.log_format
+    import qlogicae_logis.v1.log_options
+    import qlogicae_logis.v1.log_options_manager
+
+    import qlogicae_cor.v1.singleton_manager
+    import qlogicae_cor.v1.text_encoding_manager
+
+    _logging = logging
+    _queue = queue
+    _QueueHandler = QueueHandler
+    _QueueListener = QueueListener
+    _Path = Path
+
+    _log_format = (
+        qlogicae_logis.v1.log_format.LogFormat
+    )
+    _log_options = (
+        qlogicae_logis.v1.log_options.LogOptions
+    )
+    _log_options_manager = (
+        qlogicae_logis.v1.log_options_manager.LogOptionsManager
+    )
+
+    _singleton_manager = (
+        qlogicae_cor.v1.singleton_manager.SingletonManager
+    )
+    _text_encoding_manager = (
+        qlogicae_cor.v1.text_encoding_manager.TextEncodingManager
+    )
+
+    _handle_dynamic_imports = lambda: None
+
+
+class FileLogManager:
     __slots__ = (
         "logger",
         "file_handlers",
@@ -40,11 +84,15 @@ class FileLogManager(AbstractManager[FileLogManagerConfigurations]):
     )
 
     def __init__(self) -> None:
-        super().__init__(FileLogManagerConfigurations())
+        _handle_dynamic_imports()
 
-        self.logger = logging.getLogger("file-logger")
+        self.logger = _logging.getLogger(
+            "file-logger",
+        )
 
-        self.logger.setLevel(logging.DEBUG)
+        self.logger.setLevel(
+            _logging.DEBUG,
+        )
 
         self.logger.propagate = False
 
@@ -52,27 +100,41 @@ class FileLogManager(AbstractManager[FileLogManagerConfigurations]):
 
         self.file_handlers: Any = {}
 
-        self.log_queue: queue.Queue[logging.LogRecord] = queue.Queue()
+        self.log_queue = _queue.Queue()
 
-        self.queue_handler = QueueHandler(self.log_queue)
+        self.queue_handler = _QueueHandler(
+            self.log_queue,
+        )
 
-        self.logger.addHandler(self.queue_handler)
+        self.logger.addHandler(
+            self.queue_handler,
+        )
 
-        self.listener = QueueListener(self.log_queue)
+        self.listener = _QueueListener(
+            self.log_queue,
+        )
 
         self.listener.start()
 
-        self._options = LogOptions()
+        self._options = _log_options()
 
     @property
     def options(self) -> LogOptions:
-        return self._options
+        value: LogOptions = self._options
+        return value
 
     @options.setter
-    def options(self, value: LogOptions) -> None:
+    def options(
+        self,
+        value: LogOptions,
+    ) -> None:
         self._options = value
 
-    def log(self, message: Any, options: LogOptions) -> Any:
+    def log(
+        self,
+        message: Any,
+        options: LogOptions,
+    ) -> Any:
         if not options.is_enabled:
             return message
 
@@ -85,14 +147,20 @@ class FileLogManager(AbstractManager[FileLogManagerConfigurations]):
 
         else:
             for current_file_path in self.file_handlers:
-                with Path.open(
+                with _Path.open(
                     current_file_path,
                     "a",
-                    encoding=SingletonManager.get_singleton(
-                        TextEncodingManager
-                    ).selected_encoding,
+                    encoding=(
+                        _singleton_manager
+                        .get_singleton(
+                            _text_encoding_manager,
+                        )
+                        .selected_encoding
+                    ),
                 ) as file:
-                    file.write(f"{str(message).strip()}\n")
+                    file.write(
+                        f"{str(message).strip()}\n"
+                    )
 
         return message
 
@@ -102,11 +170,11 @@ class FileLogManager(AbstractManager[FileLogManagerConfigurations]):
     ) -> Any:
         return self.log(
             message,
-            SingletonManager.get_singleton(
-                LogOptionsManager
+            _singleton_manager.get_singleton(
+                _log_options_manager,
             ).generate_modified_defaults(
                 self._options,
-                log_level=logging.DEBUG,
+                log_level=_logging.DEBUG,
             ),
         )
 
@@ -116,11 +184,11 @@ class FileLogManager(AbstractManager[FileLogManagerConfigurations]):
     ) -> Any:
         return self.log(
             message,
-            SingletonManager.get_singleton(
-                LogOptionsManager
+            _singleton_manager.get_singleton(
+                _log_options_manager,
             ).generate_modified_defaults(
                 self._options,
-                log_level=logging.INFO,
+                log_level=_logging.INFO,
             ),
         )
 
@@ -130,11 +198,11 @@ class FileLogManager(AbstractManager[FileLogManagerConfigurations]):
     ) -> Any:
         return self.log(
             message,
-            SingletonManager.get_singleton(
-                LogOptionsManager
+            _singleton_manager.get_singleton(
+                _log_options_manager,
             ).generate_modified_defaults(
                 self._options,
-                log_level=logging.WARNING,
+                log_level=_logging.WARNING,
             ),
         )
 
@@ -144,11 +212,11 @@ class FileLogManager(AbstractManager[FileLogManagerConfigurations]):
     ) -> Any:
         return self.log(
             message,
-            SingletonManager.get_singleton(
-                LogOptionsManager
+            _singleton_manager.get_singleton(
+                _log_options_manager,
             ).generate_modified_defaults(
                 self._options,
-                log_level=logging.ERROR,
+                log_level=_logging.ERROR,
             ),
         )
 
@@ -158,18 +226,18 @@ class FileLogManager(AbstractManager[FileLogManagerConfigurations]):
     ) -> Any:
         return self.log(
             message,
-            SingletonManager.get_singleton(
-                LogOptionsManager
+            _singleton_manager.get_singleton(
+                _log_options_manager,
             ).generate_modified_defaults(
                 self._options,
-                log_level=logging.CRITICAL,
+                log_level=_logging.CRITICAL,
             ),
         )
 
     def rebuild_listener(self) -> bool:
         self.listener.stop()
 
-        self.listener = QueueListener(
+        self.listener = _QueueListener(
             self.log_queue,
             *self.file_handlers.values(),
         )
@@ -178,22 +246,34 @@ class FileLogManager(AbstractManager[FileLogManagerConfigurations]):
 
         return True
 
-    def add_file_output(self, file_path: str) -> bool:
-        path = Path(file_path).resolve()
+    def add_file_output(
+        self,
+        file_path: str,
+    ) -> bool:
+        path = _Path(file_path).resolve()
 
         if path in self.file_handlers:
             return False
 
-        path.parent.mkdir(parents=True, exist_ok=True)
-
-        handler = logging.FileHandler(
-            path,
-            encoding=SingletonManager.get_singleton(
-                TextEncodingManager
-            ).selected_encoding,
+        path.parent.mkdir(
+            parents=True,
+            exist_ok=True,
         )
 
-        handler.setFormatter(LogFormat())
+        handler = _logging.FileHandler(
+            path,
+            encoding=(
+                _singleton_manager
+                .get_singleton(
+                    _text_encoding_manager,
+                )
+                .selected_encoding
+            ),
+        )
+
+        handler.setFormatter(
+            _log_format(),
+        )
 
         self.file_handlers[path] = handler
 
@@ -201,8 +281,11 @@ class FileLogManager(AbstractManager[FileLogManagerConfigurations]):
 
         return True
 
-    def remove_file_output(self, file_path: str) -> bool:
-        path = Path(file_path).resolve()
+    def remove_file_output(
+        self,
+        file_path: str,
+    ) -> bool:
+        path = _Path(file_path).resolve()
 
         handler = self.file_handlers.get(path)
 
@@ -236,4 +319,3 @@ class FileLogManager(AbstractManager[FileLogManagerConfigurations]):
         self.file_handlers.clear()
 
         return True
-

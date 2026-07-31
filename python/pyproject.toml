@@ -1,6 +1,6 @@
 [project]
 name = "qlogicae-cor"
-version = "1.2.6"
+version = "1.3.0"
 description = "The core library for QLogicae projects"
 readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.12"
@@ -164,6 +164,7 @@ select = [
 ]
 ignore = [    
     "S607",    
+    "E731",
     "S101", # allow assert statements    
     "S603", # allow subprocess usage
     "PLR2004", # allow magic values
@@ -210,6 +211,12 @@ test-unit = """
         --cov-report=xml:\"output/test/unit/coverage.xml\" \
         --cov-report=json:\"output/test/unit/coverage.json\" \
         --junitxml=\"output/test/unit/junit.xml\" \
+"""
+test-benchmark-memory-usage-create = """
+    memray run -o output/test/benchmark/memray-1.bin -m test.qlogicae_cor.v1.benchmark.memory_usage.test_imports ;
+"""
+test-benchmark-memory-usage-view = """
+    memray tree output/test/benchmark/memray-1.bin
 """
 test-pip-deployment = """
     twine check output/build/release/dist/*

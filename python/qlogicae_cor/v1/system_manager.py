@@ -1,37 +1,58 @@
-import os
-import platform
-from pathlib import Path
+from __future__ import annotations
 
-from qlogicae_cor.v1.abstract_manager import (
-    AbstractManager,
-)
-from qlogicae_cor.v1.system_manager_configurations import (
-    SystemManagerConfigurations,
-)
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+_os: Any = None
+_platform: Any = None
+_path: Any = None
 
 
-class SystemManager(AbstractManager[SystemManagerConfigurations]):
+def _handle_dynamic_imports() -> None:
+    global _handle_dynamic_imports
+    global _os
+    global _platform
+    global _path
+
+    import os
+    import pathlib
+    import platform
+
+    _os = os
+    _platform = platform
+    _path = pathlib.Path
+
+    _handle_dynamic_imports = lambda: None
+
+
+class SystemManager:
     def __init__(self) -> None:
-        super().__init__(SystemManagerConfigurations())
+        _handle_dynamic_imports()
 
     @property
     def current_executing_script_filesystem_path(
         self,
     ) -> str:
-        return f"{Path(__file__).resolve()}"
+        return f"{_path(__file__).resolve()}"
 
     @property
     def current_executing_console_filesystem_path(
         self,
     ) -> str:
-        return f"{Path.cwd().resolve()}"
+        return f"{_path.cwd().resolve()}"
 
     @current_executing_console_filesystem_path.setter
     def current_executing_console_filesystem_path(
         self,
         filesystem_path: str,
     ) -> None:
-        path = Path(filesystem_path).expanduser().resolve()
+        path: Path = (
+            _path(filesystem_path)
+            .expanduser()
+            .resolve()
+        )
 
         if not path.exists():
             raise ValueError(
@@ -43,15 +64,18 @@ class SystemManager(AbstractManager[SystemManagerConfigurations]):
                 f"'{path}' is not a directory",
             )
 
-        os.chdir(path)
+        _os.chdir(path)
 
     @property
     def operating_system_name(self) -> str:
-        return platform.system()
+        value: str = _platform.system()
+
+        return value
 
     @property
     def operating_system_architecture(
         self,
     ) -> str:
-        return platform.machine()
+        value: str = _platform.machine()
 
+        return value

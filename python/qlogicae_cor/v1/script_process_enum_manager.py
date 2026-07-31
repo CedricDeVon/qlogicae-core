@@ -1,52 +1,68 @@
-from typing import Any
+from __future__ import annotations
 
-from qlogicae_cor.v1.abstract_manager import (
-    AbstractManager,
-)
-from qlogicae_cor.v1.enum_conversion_value import (
-    EnumConversionValue,
-)
-from qlogicae_cor.v1.script_process import (
-    ScriptProcess,
-)
-from qlogicae_cor.v1.script_process_enum_manager_configurations import (
-    ScriptProcessEnumManagerConfigurations,
-)
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from qlogicae_cor.v1.enum_conversion_value import (
+        EnumConversionValue,
+    )
+
+_enum_conversion_value: Any = None
+_script_process: Any = None
 
 
-class ScriptProcessEnumManager(AbstractManager[ScriptProcessEnumManagerConfigurations]):
+def _handle_dynamic_imports() -> None:
+    global _handle_dynamic_imports
+    global _enum_conversion_value
+    global _script_process
+
+    import qlogicae_cor.v1.enum_conversion_value
+    import qlogicae_cor.v1.script_process
+
+    _enum_conversion_value = (
+        qlogicae_cor.v1.enum_conversion_value.EnumConversionValue
+    )
+    _script_process = (
+        qlogicae_cor.v1.script_process.ScriptProcess
+    )
+
+    _handle_dynamic_imports = lambda: None
+
+
+class ScriptProcessEnumManager:
     def __init__(self) -> None:
-        super().__init__(ScriptProcessEnumManagerConfigurations())
+        _handle_dynamic_imports()
 
     def convert_value(
         self,
-        input_type: Any,
-        output_type: EnumConversionValue = (
-            EnumConversionValue.STRING
-        ),
+        input_type: object,
+        output_type: EnumConversionValue | None = None,
     ) -> Any:
+        if output_type is None:
+            output_type = _enum_conversion_value.STRING
+
         match output_type:
-            case EnumConversionValue.STRING:
+            case _enum_conversion_value.STRING:
                 match input_type:
-                    case ScriptProcess.SHELL:
+                    case _script_process.SHELL:
                         return "shell"
 
-                    case ScriptProcess.SUBPROCESS:
+                    case _script_process.SUBPROCESS:
                         return "subprocess"
 
                     case _:
                         return "none"
 
-            case EnumConversionValue.ENUM:
-                match input_type.lower():
+            case _enum_conversion_value.ENUM:
+                match str(input_type).lower():
                     case "shell":
-                        return ScriptProcess.SHELL
+                        return _script_process.SHELL
 
                     case "subprocess":
-                        return ScriptProcess.SUBPROCESS
+                        return _script_process.SUBPROCESS
 
                     case _:
-                        return ScriptProcess.SUBPROCESS
+                        return _script_process.SUBPROCESS
 
             case _:
-                return EnumConversionValue.NONE
+                return _enum_conversion_value.NONE

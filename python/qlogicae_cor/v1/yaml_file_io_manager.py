@@ -1,89 +1,111 @@
-from pathlib import Path
+from __future__ import annotations
+
 from typing import Any
 
-import yaml
-
-from qlogicae_cor.v1.abstract_manager import (
-    AbstractManager,
-)
-from qlogicae_cor.v1.singleton_manager import (
-    SingletonManager,
-)
-from qlogicae_cor.v1.text_encoding_manager import TextEncodingManager
-from qlogicae_cor.v1.yaml_file_io_manager_configurations import (
-    YamlFileIoManagerConfigurations,
-)
-from qlogicae_cor.v1.yaml_manager import (
-    YamlManager,
-)
+_Path: Any = None
+_yaml: Any = None
+_singleton_manager: Any = None
+_text_encoding_manager: Any = None
+_yaml_manager: Any = None
 
 
-class YamlFileIoManager(AbstractManager[YamlFileIoManagerConfigurations]):
+def _handle_dynamic_imports() -> None:
+    global _handle_dynamic_imports
+    global _Path
+    global _yaml
+    global _singleton_manager
+    global _text_encoding_manager
+    global _yaml_manager
+
+    from pathlib import Path
+
+    import yaml
+
+    import qlogicae_cor.v1.singleton_manager
+    import qlogicae_cor.v1.text_encoding_manager
+    import qlogicae_cor.v1.yaml_manager
+
+    _Path = Path
+    _yaml = yaml
+    _singleton_manager = (
+        qlogicae_cor.v1.singleton_manager
+    )
+    _text_encoding_manager = (
+        qlogicae_cor.v1.text_encoding_manager
+    )
+    _yaml_manager = (
+        qlogicae_cor.v1.yaml_manager
+    )
+
+    _handle_dynamic_imports = lambda: None
+
+
+class YamlFileIoManager:
     def __init__(self) -> None:
-        super().__init__(YamlFileIoManagerConfigurations())
+        _handle_dynamic_imports()
 
-    def read_file(self, file_path: str) -> Any:
-        path = Path(file_path)
+    def read_file(
+        self,
+        file_path: str,
+    ) -> object:
+        path = _Path(file_path)
 
-        output_data: Any = {}
         with path.open(
             mode="r",
-            encoding=SingletonManager.get_singleton(
-                TextEncodingManager
+            encoding=_singleton_manager.SingletonManager.get_singleton(
+                _text_encoding_manager.TextEncodingManager,
             ).selected_encoding,
         ) as file:
-            output_data = yaml.safe_load(file) or {}
+            return _yaml.safe_load(file) or {}
 
-        return output_data
-
-    def write_file(self, file_path: str, data: Any) -> bool:
-        path = Path(file_path)
+    def write_file(
+        self,
+        file_path: str,
+        data: object,
+    ) -> bool:
+        path = _Path(file_path)
 
         path.parent.mkdir(
             parents=True,
             exist_ok=True,
         )
+
+        manager = _singleton_manager.SingletonManager.get_singleton(
+            _yaml_manager.YamlManager,
+        )
+
         with path.open(
             mode="w",
-            encoding=SingletonManager.get_singleton(
-                TextEncodingManager
+            encoding=_singleton_manager.SingletonManager.get_singleton(
+                _text_encoding_manager.TextEncodingManager,
             ).selected_encoding,
         ) as file:
-            yaml.safe_dump(
+            _yaml.safe_dump(
                 data,
                 file,
-                sort_keys=SingletonManager.get_singleton(
-                    YamlManager,
-                ).is_key_sorting_enabled,
-                default_flow_style=SingletonManager.get_singleton(
-                    YamlManager,
-                ).is_default_flow_state_enabled,
-                allow_unicode=SingletonManager.get_singleton(
-                    YamlManager,
-                ).is_unicode_enabled,
-                indent=SingletonManager.get_singleton(
-                    YamlManager,
-                ).indent_count,
+                sort_keys=manager.is_key_sorting_enabled,
+                default_flow_style=manager.is_default_flow_state_enabled,
+                allow_unicode=manager.is_unicode_enabled,
+                indent=manager.indent_count,
             )
 
         return True
 
-    def format_to_string(self, value: str) -> Any:
+    def format_to_string(
+        self,
+        value: str,
+    ) -> object:
+        manager = _singleton_manager.SingletonManager.get_singleton(
+            _yaml_manager.YamlManager,
+        )
+
         return (
-            yaml.dump(
+            _yaml.dump(
                 value,
-                sort_keys=SingletonManager.get_singleton(
-                    YamlManager,
-                ).is_key_sorting_enabled,
-                default_flow_style=SingletonManager.get_singleton(
-                    YamlManager,
-                ).is_default_flow_state_enabled,
-                allow_unicode=SingletonManager.get_singleton(
-                    YamlManager,
-                ).is_unicode_enabled,
-                indent=SingletonManager.get_singleton(
-                    YamlManager,
-                ).indent_count,
+                sort_keys=manager.is_key_sorting_enabled,
+                default_flow_style=manager.is_default_flow_state_enabled,
+                allow_unicode=manager.is_unicode_enabled,
+                indent=manager.indent_count,
             )
             or ""
         )
