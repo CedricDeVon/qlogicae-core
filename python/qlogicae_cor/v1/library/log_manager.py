@@ -33,7 +33,7 @@ def _handle_dynamic_imports() -> None:
     from qlogicae_cor.v1.library.log_options_manager import (
         LogOptionsManager,
     )
-    from qlogicae_cor.v1.singleton_manager import (
+    from qlogicae_cor.v1.library.singleton_manager import (
         SingletonManager,
     )
 

@@ -25,7 +25,7 @@ def _handle_dynamic_imports() -> None:
     import qlogicae_cor.v1.library.log_format
     import qlogicae_cor.v1.library.log_options
     import qlogicae_cor.v1.library.log_options_manager
-    import qlogicae_cor.v1.singleton_manager
+    import qlogicae_cor.v1.library.singleton_manager
 
     _logging = logging
     _log_format = qlogicae_cor.v1.library.log_format.LogFormat
@@ -34,7 +34,7 @@ def _handle_dynamic_imports() -> None:
         qlogicae_cor.v1.library.log_options_manager.LogOptionsManager
     )
     _singleton_manager = (
-        qlogicae_cor.v1.singleton_manager.SingletonManager
+        qlogicae_cor.v1.library.singleton_manager.SingletonManager
     )
 
     _handle_dynamic_imports = lambda: None

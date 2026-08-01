@@ -43,8 +43,8 @@ def _handle_dynamic_imports() -> None:
     import qlogicae_cor.v1.library.log_format
     import qlogicae_cor.v1.library.log_options
     import qlogicae_cor.v1.library.log_options_manager
-    import qlogicae_cor.v1.singleton_manager
-    import qlogicae_cor.v1.text_encoding_manager
+    import qlogicae_cor.v1.library.singleton_manager
+    import qlogicae_cor.v1.library.text_encoding_manager
 
     _logging = logging
     _queue = queue
@@ -63,10 +63,10 @@ def _handle_dynamic_imports() -> None:
     )
 
     _singleton_manager = (
-        qlogicae_cor.v1.singleton_manager.SingletonManager
+        qlogicae_cor.v1.library.singleton_manager.SingletonManager
     )
     _text_encoding_manager = (
-        qlogicae_cor.v1.text_encoding_manager.TextEncodingManager
+        qlogicae_cor.v1.library.text_encoding_manager.TextEncodingManager
     )
 
     _handle_dynamic_imports = lambda: None

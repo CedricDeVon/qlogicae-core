@@ -13,14 +13,14 @@ def _handle_dynamic_imports() -> None:
     global _singleton_manager
     global _timestamp_manager
 
-    import qlogicae_cor.v1.singleton_manager
-    import qlogicae_cor.v1.timestamp_manager
+    import qlogicae_cor.v1.library.singleton_manager
+    import qlogicae_cor.v1.library.timestamp_manager
 
     _singleton_manager = (
-        qlogicae_cor.v1.singleton_manager.SingletonManager
+        qlogicae_cor.v1.library.singleton_manager.SingletonManager
     )
     _timestamp_manager = (
-        qlogicae_cor.v1.timestamp_manager.TimestampManager
+        qlogicae_cor.v1.library.timestamp_manager.TimestampManager
     )
 
     _handle_dynamic_imports = lambda: None
