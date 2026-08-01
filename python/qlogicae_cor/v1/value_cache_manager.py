@@ -44,7 +44,7 @@ class ValueCacheManager:
 
     def is_key_found(
         self,
-        keys: list[str],
+        keys: tuple[str],
     ) -> bool:
         result: bool = _singleton_manager.get_singleton(
             _value_cache_storage_manager,
@@ -54,7 +54,7 @@ class ValueCacheManager:
 
     def get_one_value(
         self,
-        keys: list[str],
+        keys: tuple[str],
         output_type: TargetCacheValue | None = None,
     ) -> object:
         if output_type is None:
@@ -73,7 +73,7 @@ class ValueCacheManager:
 
     def set_one_value(
         self,
-        keys: list[str],
+        keys: tuple[str],
         value: object,
         output_type: TargetCacheValue | None = None,
     ) -> bool:
@@ -96,7 +96,7 @@ class ValueCacheManager:
 
     def remove_one_value(
         self,
-        keys: list[str],
+        keys: tuple[str],
     ) -> bool:
         self.throw_if_key_not_found(keys)
 
@@ -166,7 +166,7 @@ class ValueCacheManager:
 
     def throw_if_key_not_found(
         self,
-        keys: list[str],
+        keys: tuple[str],
     ) -> bool:
         if not _singleton_manager.get_singleton(
             _value_cache_storage_manager,

@@ -4,6 +4,7 @@ from typing import Any
 
 _json: Any = None
 
+
 def _handle_dynamic_imports() -> None:
     global _handle_dynamic_imports
     global _json
@@ -11,6 +12,7 @@ def _handle_dynamic_imports() -> None:
     import json
 
     _json = json
+
     _handle_dynamic_imports = lambda: None
 
 
@@ -28,11 +30,14 @@ class ValueCacheStorageManager:
     def collection(self) -> dict[str, Any]:
         return self._collection
 
-    def is_key_found(self, keys: list[str]) -> bool:
+    def is_key_found(
+        self,
+        keys: tuple[str | int, ...],
+    ) -> bool:
         if not keys:
             return False
 
-        cache = self._collection
+        cache: Any = self._collection
 
         for key in keys:
             if isinstance(cache, dict):
@@ -53,11 +58,14 @@ class ValueCacheStorageManager:
 
         return True
 
-    def get_one_value(self, keys: list[str]) -> Any:
+    def get_one_value(
+        self,
+        keys: tuple[str | int, ...],
+    ) -> Any:
         if not keys:
             return None
 
-        cache = self._collection
+        cache: Any = self._collection
 
         for key in keys:
             if isinstance(cache, dict):
@@ -80,41 +88,55 @@ class ValueCacheStorageManager:
 
     def set_one_value(
         self,
-        keys: list[str],
+        keys: tuple[str | int, ...],
         value: Any,
         create_missing: bool = True,
     ) -> bool:
         if not keys:
             raise ValueError("'keys' cannot be empty")
 
-        cache = self._collection
+        cache: Any = self._collection
 
         for key in keys[:-1]:
             if isinstance(cache, dict):
                 if key not in cache:
                     if not create_missing:
-                        raise KeyError(f"key path '{keys}' not found")
+                        raise KeyError(
+                            f"key path '{keys}' not found"
+                        )
 
                     cache[key] = {}
 
-                elif not isinstance(cache[key], (dict, list)):
+                elif not isinstance(
+                    cache[key],
+                    (dict, list),
+                ):
                     raise TypeError(
-                        f"key path '{keys}' does not reference a dictionary or list"
+                        f"key path '{keys}' does not reference "
+                        "a dictionary or list"
                     )
 
                 cache = cache[key]
 
             elif isinstance(cache, list):
                 if not isinstance(key, int):
-                    raise TypeError(f"expected an index, got '{type(key).__name__}'")
+                    raise TypeError(
+                        f"expected an index, got "
+                        f"'{type(key).__name__}'"
+                    )
 
                 if key < 0 or key >= len(cache):
-                    raise IndexError(f"index '{key}' is out of range")
+                    raise IndexError(
+                        f"index '{key}' is out of range"
+                    )
 
                 cache = cache[key]
 
             else:
-                raise TypeError(f"cannot traverse into '{type(cache).__name__}'")
+                raise TypeError(
+                    f"cannot traverse into "
+                    f"'{type(cache).__name__}'"
+                )
 
         last = keys[-1]
 
@@ -123,38 +145,62 @@ class ValueCacheStorageManager:
 
         elif isinstance(cache, list):
             if not isinstance(last, int):
-                raise TypeError(f"expected an index, got {type(last).__name__}")
+                raise TypeError(
+                    f"expected an index, got "
+                    f"{type(last).__name__}"
+                )
 
             if last < 0 or last >= len(cache):
-                raise IndexError(f"index '{last}' is out of range")
+                raise IndexError(
+                    f"index '{last}' is out of range"
+                )
 
             cache[last] = value
 
         else:
-            raise TypeError("destination is neither a dictionary nor a list")
+            raise TypeError(
+                "destination is neither a "
+                "dictionary nor a list"
+            )
 
         return True
 
-    def remove_one_value(self, keys: list[str]) -> bool:
+    def remove_one_value(
+        self,
+        keys: tuple[str | int, ...],
+    ) -> bool:
         if not keys:
-            raise ValueError("keys cannot be empty")
+            raise ValueError(
+                "keys cannot be empty"
+            )
 
-        cache = self._collection
+        cache: Any = self._collection
 
         for key in keys[:-1]:
             if isinstance(cache, dict):
                 if key not in cache:
-                    raise KeyError(f"key path '{keys}' not found")
+                    raise KeyError(
+                        f"key path '{keys}' not found"
+                    )
 
             elif isinstance(cache, list):
                 if not isinstance(key, int):
-                    raise TypeError(f"expected an index, got {type(key).__name__}")
+                    raise TypeError(
+                        f"expected an index, got "
+                        f"{type(key).__name__}"
+                    )
 
                 if key < 0 or key >= len(cache):
-                    raise IndexError(f"index path '{keys}' is out of range")
+                    raise IndexError(
+                        f"index path '{keys}' "
+                        "is out of range"
+                    )
 
             else:
-                raise TypeError(f"cannot traverse into '{type(cache).__name__}'")
+                raise TypeError(
+                    f"cannot traverse into "
+                    f"'{type(cache).__name__}'"
+                )
 
             cache = cache[key]
 
@@ -164,19 +210,29 @@ class ValueCacheStorageManager:
             try:
                 del cache[last]
             except KeyError:
-                raise KeyError(f"key '{last}' not found") from None
+                raise KeyError(
+                    f"key '{last}' not found"
+                ) from None
 
         elif isinstance(cache, list):
             if not isinstance(last, int):
-                raise TypeError(f"expected an index, got {type(last).__name__}")
+                raise TypeError(
+                    f"expected an index, got "
+                    f"{type(last).__name__}"
+                )
 
             if last < 0 or last >= len(cache):
-                raise IndexError(f"index '{last}' is out of range")
+                raise IndexError(
+                    f"index '{last}' is out of range"
+                )
 
             del cache[last]
 
         else:
-            raise TypeError("destination is neither a dictionary nor a list")
+            raise TypeError(
+                "destination is neither a "
+                "dictionary nor a list"
+            )
 
         return True
 
@@ -185,8 +241,14 @@ class ValueCacheStorageManager:
 
         return True
 
-    def display_one_item(self, key: str) -> bool:
-        print(f"- {key}: {self._collection[key]}")
+    def display_one_item(
+        self,
+        key: str,
+    ) -> bool:
+        print(
+            f"- {key}: "
+            f"{self._collection[key]}"
+        )
 
         return True
 
