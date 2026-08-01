@@ -2,7 +2,7 @@ import re
 
 import pytest
 
-from qlogicae_cor.v1.macros_manager import MacrosManager
+from qlogicae_cor.v1.library.macros_manager import MacrosManager
 
 
 class TestMacrosManager:

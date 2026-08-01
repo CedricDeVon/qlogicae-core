@@ -1,15 +1,15 @@
 import pytest
 
-from qlogicae_cor.v1.abstract_manager import (
+from qlogicae_cor.v1.library.abstract_manager import (
     AbstractManager,
 )
-from qlogicae_cor.v1.abstract_manager_configurations import (
+from qlogicae_cor.v1.library.abstract_manager_configurations import (
     AbstractManagerConfigurations,
 )
-from qlogicae_cor.v1.error_manager import (
+from qlogicae_cor.v1.library.error_manager import (
     ErrorManager,
 )
-from qlogicae_cor.v1.singleton_manager import (
+from qlogicae_cor.v1.library.singleton_manager import (
     SingletonManager,
 )
 

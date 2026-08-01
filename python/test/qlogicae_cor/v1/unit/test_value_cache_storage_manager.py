@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from qlogicae_cor.v1.value_cache_storage_manager import (
+from qlogicae_cor.v1.library.value_cache_storage_manager import (
     ValueCacheStorageManager,
 )
 

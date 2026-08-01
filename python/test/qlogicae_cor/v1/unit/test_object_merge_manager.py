@@ -2,7 +2,7 @@ from copy import deepcopy
 
 import pytest
 
-from qlogicae_cor.v1.object_merge_manager import ObjectMergeManager
+from qlogicae_cor.v1.library.object_merge_manager import ObjectMergeManager
 
 
 class TestObjectMergeManager:

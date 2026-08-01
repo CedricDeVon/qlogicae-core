@@ -1,9 +1,9 @@
 import pytest
 
-from qlogicae_cor.v1.singleton_manager import (
+from qlogicae_cor.v1.library.singleton_manager import (
     SingletonManager,
 )
-from qlogicae_cor.v1.singleton_manager_configurations import (
+from qlogicae_cor.v1.library.singleton_manager_configurations import (
     SingletonManagerConfigurations,
 )
 
