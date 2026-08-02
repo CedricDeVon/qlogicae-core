@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-_Path = None
+_Path: Any = None
 
 def _handle_dynamic_imports() -> None:
     global _handle_dynamic_imports
@@ -33,9 +33,11 @@ class TomlManager:
 
     def is_valid(
         self,
-        file_path: Any,
+        file_path: str,
     ) -> bool:
+        path = _Path(file_path)
+
         return (
-            file_path.suffix.lower()
-            not in self.valid_file_extensions
+            path.suffix.lower()
+            in self.valid_file_extensions
         )

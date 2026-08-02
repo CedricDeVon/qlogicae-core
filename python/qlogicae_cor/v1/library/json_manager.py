@@ -1,10 +1,18 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import Any
 
-if TYPE_CHECKING:
+_Path: Any = None
+
+def _handle_dynamic_imports() -> None:
+    global _handle_dynamic_imports
+    global _Path
+
     from pathlib import Path
 
+    _Path = Path
+
+    _handle_dynamic_imports = lambda: None
 
 class JsonManager:
     __slots__ = (
@@ -15,6 +23,8 @@ class JsonManager:
     )
 
     def __init__(self) -> None:
+        _handle_dynamic_imports()
+
         self._valid_file_extensions: set[str] = {
             ".json",
         }
@@ -28,10 +38,12 @@ class JsonManager:
 
     def is_valid(
         self,
-        file_path: Path,
+        file_path: str,
     ) -> bool:
+        path = _Path(file_path)
+
         return (
-            file_path.suffix.lower()
+            path.suffix.lower()
             in self.valid_file_extensions
         )
 

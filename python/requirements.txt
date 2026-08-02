@@ -66,8 +66,6 @@ pytest-benchmark==5.2.3
 pytest-cov==7.1.0
 python-discovery==1.4.4
 PyYAML==6.0.3
-qlogicae-cor==1.0.12
-qlogicae-logis==1.1.20
 readme_renderer==45.0
 regex==2026.7.19
 requests==2.34.2

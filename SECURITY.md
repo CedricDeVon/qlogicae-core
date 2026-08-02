@@ -13,8 +13,8 @@
 
 | Version | Supported |
 | ------- | ------------------ |
-| = 1.3.5 | :white_check_mark: | 
-| < 1.3.5 | :x: | 
+| = 1.3.6 | :white_check_mark: | 
+| < 1.3.6 | :x: | 
 
 #### Rust
 
