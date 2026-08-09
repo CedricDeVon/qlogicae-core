@@ -4,5 +4,5 @@
 
 | Version | Supported |
 | ------- | ------------------ |
-| = 1.3.7 | :white_check_mark: | 
-| < 1.3.7 | :x: | 
+| = 1.3.8 | :white_check_mark: | 
+| < 1.3.8 | :x: | 

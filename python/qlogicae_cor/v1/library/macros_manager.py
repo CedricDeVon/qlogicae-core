@@ -150,9 +150,9 @@ class MacrosManager:
 
                 def replace(
                     match: _re.Match[str],
-                ) -> str:
+                ) -> Any:
                     dependency = match.group(1)
-                    return str(cache[dependency])
+                    return cache[dependency]
 
                 cache[key] = self._selected_macros_pattern.sub(
                     replace,
@@ -240,7 +240,7 @@ class MacrosManager:
                 value = values[current_key]
 
                 cache[current_key] = self._selected_macros_pattern.sub(
-                    lambda match: str(cache[match.group(1)]),
+                    lambda match: cache[match.group(1)],
                     value,
                 )
 
@@ -270,7 +270,7 @@ class MacrosManager:
                 if callable(resolved_value):
                     resolved_value = resolved_value()
 
-                return str(resolved_value)
+                return resolved_value
 
             return self._selected_macros_pattern.sub(
                 replace,
