@@ -67,6 +67,15 @@ class MacrosManager:
     def selected_macros_pattern(self, value: str) -> None:
         self._selected_macros_pattern = _re.compile(value)
 
+    def _resolve_callable(
+        self,
+        value: object,
+    ) -> object:
+        if callable(value):
+            return value()
+
+        return value
+
     def resolve_many(
         self,
         values: object,
@@ -106,7 +115,7 @@ class MacrosManager:
                 value = values[key]
 
                 if not isinstance(value, str):
-                    cache[key] = value
+                    cache[key] = self._resolve_callable(value)
                     stack.pop()
                     visiting.discard(key)
                     continue
@@ -121,6 +130,12 @@ class MacrosManager:
 
                     if dependency in cache:
                         continue
+
+                    if dependency not in values:
+                        raise ValueError(
+                            f"key path '{key}' references unknown macro "
+                            f"'{dependency}'",
+                        )
 
                     if dependency in visiting:
                         raise ValueError(
@@ -196,7 +211,7 @@ class MacrosManager:
                 value = values[current_key]
 
                 if not isinstance(value, str):
-                    cache[current_key] = value
+                    cache[current_key] = self._resolve_callable(value)
                     continue
 
                 stack.add(current_key)
@@ -246,11 +261,19 @@ class MacrosManager:
         resolved: _Mapping[str, object],
     ) -> object:
         if isinstance(value, str):
+            def replace(match: _re.Match[str]) -> Any:
+                resolved_value = resolved.get(match.group(1))
+
+                if resolved_value is None:
+                    return match.group(0)
+
+                if callable(resolved_value):
+                    resolved_value = resolved_value()
+
+                return str(resolved_value)
+
             return self._selected_macros_pattern.sub(
-                lambda match: resolved.get(
-                    match.group(1),
-                    match.group(0),
-                ),
+                replace,
                 value,
             )
 
@@ -335,6 +358,148 @@ class MacrosManager:
                 current_path = current_root / directory_name
 
                 parsed_name = self.parse_one(
+                    current_path.name,
+                    workspace_macros,
+                )
+
+                if parsed_name != current_path.name:
+                    current_path.rename(
+                        current_path.with_name(
+                            parsed_name,
+                        ),
+                    )
+
+        return True
+
+    def parse_static_values(
+        self,
+        values: object,
+        resolved: _Mapping[str, object],
+    ) -> object:
+        return self.parse_one(values, resolved)
+
+    def parse_static_filesystem(
+        self,
+        filesystem_path: str | _Path,
+        workspace_macros: object,
+    ) -> object:
+        return self.parse_filesystem(
+            filesystem_path,
+            workspace_macros
+        )
+
+    def parse_dynamic_values(
+        self,
+        values: object,
+        resolved: _Mapping[str, object],
+    ) -> object:
+        return self.parse_one_dynamic(values, resolved)
+
+    def parse_dynamic_filesystem(
+        self,
+        filesystem_path: str | _Path,
+        workspace_macros: object,
+    ) -> object:
+        return self.parse_filesystem_dynamic(
+            filesystem_path,
+            workspace_macros
+        )
+
+    def parse_one_dynamic(
+        self,
+        value: object,
+        resolved: _Mapping[str, object],
+    ) -> object:
+        if isinstance(value, str):
+            return self._selected_macros_pattern.sub(
+                lambda match: resolved.get(
+                    match.group(1)(),
+                    match.group(0),
+                ),
+                value,
+            )
+
+        if isinstance(value, dict):
+            return {
+                key: self.parse_one_dynamic(child, resolved)
+                for key, child in value.items()
+            }
+
+        if isinstance(value, list):
+            return [
+                self.parse_one_dynamic(child, resolved)
+                for child in value
+            ]
+
+        if isinstance(value, tuple):
+            return tuple(
+                self.parse_one_dynamic(child, resolved)
+                for child in value
+            )
+
+        if isinstance(value, set):
+            return {
+                self.parse_one_dynamic(child, resolved)
+                for child in value
+            }
+
+        return value
+
+    def parse_filesystem_dynamic(
+        self,
+        filesystem_path: str | _Path,
+        workspace_macros: object,
+    ) -> bool:
+        encoding = (
+            _singleton_manager.get_singleton(
+                _text_encoding_manager,
+            ).selected_encoding
+        )
+
+        root = _Path(filesystem_path)
+
+        for current_root, directories, files in root.walk(
+            top_down=False,
+        ):
+            current_root = _Path(current_root)
+
+            for file_name in files:
+                current_path = current_root / file_name
+
+                try:
+                    file_data = current_path.read_text(
+                        encoding=encoding,
+                    )
+                except UnicodeDecodeError:
+                    pass
+                else:
+                    parsed_file_data = self.parse_one_dynamic(
+                        file_data,
+                        workspace_macros,
+                    )
+
+                    if parsed_file_data != file_data:
+                        current_path.write_text(
+                            parsed_file_data,
+                            encoding=encoding,
+                        )
+
+                parsed_name = self.parse_one_dynamic(
+                    current_path.name,
+                    workspace_macros,
+                )
+
+                if parsed_name != current_path.name:
+                    current_path = current_path.rename(
+                        current_path.with_name(
+                            parsed_name,
+                        ),
+                    )
+
+            for directory_name in directories:
+                current_path = current_root / directory_name
+
+                parsed_name = self.parse_one_dynamic(
                     current_path.name,
                     workspace_macros,
                 )
