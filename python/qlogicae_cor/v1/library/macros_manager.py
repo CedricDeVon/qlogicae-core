@@ -576,7 +576,7 @@ class MacrosManager:
                 if key not in resolved:
                     return str(match.group(0))
 
-                return str(resolved[key])
+                return str(resolved[key]())
 
             return self._selected_macros_pattern.sub(
                 replace,
