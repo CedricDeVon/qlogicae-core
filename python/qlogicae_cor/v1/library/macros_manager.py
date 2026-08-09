@@ -67,7 +67,7 @@ class MacrosManager:
     def selected_macros_pattern(self, value: str) -> None:
         self._selected_macros_pattern = _re.compile(value)
 
-    def _resolve_callable(
+    def _resolve_value(
         self,
         value: object,
     ) -> object:
@@ -75,6 +75,7 @@ class MacrosManager:
             return value()
 
         return value
+
 
     def resolve_many(
         self,
@@ -88,7 +89,9 @@ class MacrosManager:
                 raise TypeError("macro names must be strings")
 
             if not self._selected_identifier_pattern.fullmatch(key):
-                raise ValueError(f"invalid macro name: '{key}'")
+                raise ValueError(
+                    f"invalid macro name: '{key}'",
+                )
 
         cache: dict[str, object] = {}
 
@@ -109,23 +112,24 @@ class MacrosManager:
 
                 if key not in values:
                     raise ValueError(
-                        f"key path '{key}' is an unknown macros",
+                        f"key path '{key}' is an unknown macro",
                     )
 
                 value = values[key]
 
                 if not isinstance(value, str):
-                    cache[key] = self._resolve_callable(value)
+                    cache[key] = self._resolve_value(value)
                     stack.pop()
                     visiting.discard(key)
                     continue
 
-                if key not in visiting:
-                    visiting.add(key)
+                visiting.add(key)
 
-                unresolved: list[str] = []
+                dependencies: list[str] = []
 
-                for match in self._selected_macros_pattern.finditer(value):
+                for match in self._selected_macros_pattern.finditer(
+                    value,
+                ):
                     dependency = match.group(1)
 
                     if dependency in cache:
@@ -139,20 +143,22 @@ class MacrosManager:
 
                     if dependency in visiting:
                         raise ValueError(
-                            f"key path '{dependency}' is a circular reference",
+                            f"circular macro reference: "
+                            f"'{key}' -> '{dependency}'",
                         )
 
-                    unresolved.append(dependency)
+                    if dependency not in dependencies:
+                        dependencies.append(dependency)
 
-                if unresolved:
-                    stack.extend(reversed(unresolved))
+                if dependencies:
+                    stack.extend(reversed(dependencies))
                     continue
 
                 def replace(
                     match: _re.Match[str],
-                ) -> Any:
+                ) -> str:
                     dependency = match.group(1)
-                    return cache[dependency]
+                    return str(cache[dependency])
 
                 cache[key] = self._selected_macros_pattern.sub(
                     replace,
@@ -164,12 +170,13 @@ class MacrosManager:
 
         return cache
 
+
     def resolve_one(
         self,
         key: object,
         values: object,
-        cache: dict[object, object],
-        stack: set[object],
+        cache: dict[str, object],
+        stack: set[str],
     ) -> object:
         if not isinstance(key, str):
             raise TypeError("'key' must be a string")
@@ -189,7 +196,9 @@ class MacrosManager:
         if key in cache:
             return cache[key]
 
-        frames: list[tuple[object, bool]] = [(key, False)]
+        frames: list[tuple[str, bool]] = [
+            (key, False),
+        ]
 
         while frames:
             current_key, expanded = frames.pop()
@@ -205,20 +214,26 @@ class MacrosManager:
 
                 if current_key not in values:
                     raise ValueError(
-                        f"key path '{current_key}' is an unknown macros",
+                        f"key path '{current_key}' is an unknown macro",
                     )
 
                 value = values[current_key]
 
                 if not isinstance(value, str):
-                    cache[current_key] = self._resolve_callable(value)
+                    cache[current_key] = self._resolve_value(value)
                     continue
 
                 stack.add(current_key)
 
-                frames.append((current_key, True))
+                frames.append(
+                    (current_key, True),
+                )
 
-                for match in self._selected_macros_pattern.finditer(value):
+                dependencies: list[str] = []
+
+                for match in self._selected_macros_pattern.finditer(
+                    value,
+                ):
                     dependency = match.group(1)
 
                     if dependency not in values:
@@ -234,43 +249,61 @@ class MacrosManager:
                         )
 
                     if dependency not in cache:
-                        frames.append((dependency, False))
+                        if dependency not in dependencies:
+                            dependencies.append(dependency)
+
+                frames.extend(
+                    (dependency, False)
+                    for dependency in reversed(dependencies)
+                )
 
             else:
                 value = values[current_key]
 
-                cache[current_key] = self._selected_macros_pattern.sub(
-                    lambda match: cache[match.group(1)],
-                    value,
-                )
+                if not isinstance(value, str):
+                    cache[current_key] = self._resolve_value(value)
+                else:
+                    cache[current_key] = (
+                        self._selected_macros_pattern.sub(
+                            lambda match: str(
+                                cache[match.group(1)],
+                            ),
+                            value,
+                        )
+                    )
 
                 stack.remove(current_key)
 
         return cache[key]
+
 
     def parse_many(
         self,
         values: object,
         resolved: _Mapping[str, object],
     ) -> object:
-        return self.parse_one(values, resolved)
+        return self.parse_one(
+            values,
+            resolved,
+        )
+
 
     def parse_one(
         self,
         value: object,
         resolved: _Mapping[str, object],
-    ) -> object:
+    ) -> Any:
         if isinstance(value, str):
-            def replace(match: _re.Match[str]) -> Any:
-                resolved_value = resolved.get(match.group(1))
 
-                if resolved_value is None:
-                    return match.group(0)
+            def replace(
+                match: _re.Match[str],
+            ) -> str:
+                key = match.group(1)
 
-                if callable(resolved_value):
-                    resolved_value = resolved_value()
+                if key not in resolved:
+                    return str(match.group(0))
 
-                return resolved_value
+                return str(resolved[key])
 
             return self._selected_macros_pattern.sub(
                 replace,
@@ -279,34 +312,47 @@ class MacrosManager:
 
         if isinstance(value, dict):
             return {
-                key: self.parse_one(child, resolved)
+                key: self.parse_one(
+                    child,
+                    resolved,
+                )
                 for key, child in value.items()
             }
 
         if isinstance(value, list):
             return [
-                self.parse_one(child, resolved)
+                self.parse_one(
+                    child,
+                    resolved,
+                )
                 for child in value
             ]
 
         if isinstance(value, tuple):
             return tuple(
-                self.parse_one(child, resolved)
+                self.parse_one(
+                    child,
+                    resolved,
+                )
                 for child in value
             )
 
         if isinstance(value, set):
             return {
-                self.parse_one(child, resolved)
+                self.parse_one(
+                    child,
+                    resolved,
+                )
                 for child in value
             }
 
         return value
 
+
     def parse_filesystem(
         self,
         filesystem_path: str | _Path,
-        workspace_macros: object,
+        workspace_macros: _Mapping[str, object],
     ) -> bool:
         encoding = (
             _singleton_manager.get_singleton(
@@ -336,6 +382,11 @@ class MacrosManager:
                         workspace_macros,
                     )
 
+                    if not isinstance(parsed_file_data, str):
+                        raise TypeError(
+                            "parsed file data must be a string",
+                        )
+
                     if parsed_file_data != file_data:
                         current_path.write_text(
                             parsed_file_data,
@@ -347,11 +398,14 @@ class MacrosManager:
                     workspace_macros,
                 )
 
+                if not isinstance(parsed_name, str):
+                    raise TypeError(
+                        "parsed file name must be a string",
+                    )
+
                 if parsed_name != current_path.name:
                     current_path = current_path.rename(
-                        current_path.with_name(
-                            parsed_name,
-                        ),
+                        current_path.with_name(parsed_name),
                     )
 
             for directory_name in directories:
@@ -362,11 +416,14 @@ class MacrosManager:
                     workspace_macros,
                 )
 
+                if not isinstance(parsed_name, str):
+                    raise TypeError(
+                        "parsed directory name must be a string",
+                    )
+
                 if parsed_name != current_path.name:
                     current_path.rename(
-                        current_path.with_name(
-                            parsed_name,
-                        ),
+                        current_path.with_name(parsed_name),
                     )
 
         return True
