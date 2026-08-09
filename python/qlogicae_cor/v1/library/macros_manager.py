@@ -428,84 +428,203 @@ class MacrosManager:
 
         return True
 
-    def parse_static_values(
+
+    def _resolve_callable(
+        self,
+        value: object,
+    ) -> object:
+        if not callable(value):
+            raise TypeError(
+                "macro values must be callable",
+            )
+
+        return value()
+
+
+    def resolve_many_callable(
+        self,
+        values: object,
+    ) -> _Mapping[str, object]:
+        if not isinstance(values, _Mapping):
+            raise TypeError("'values' must be a mapping")
+
+        for key, value in values.items():
+            if not isinstance(key, str):
+                raise TypeError("macro names must be strings")
+
+            if not self._selected_identifier_pattern.fullmatch(key):
+                raise ValueError(
+                    f"invalid macro name: '{key}'",
+                )
+
+            if not callable(value):
+                raise TypeError(
+                    f"macro '{key}' must be callable",
+                )
+
+        cache: dict[str, object] = {}
+
+        for root in values:
+            if root in cache:
+                continue
+
+            stack: list[str] = [root]
+            visiting: set[str] = set()
+
+            while stack:
+                key = stack[-1]
+
+                if key in cache:
+                    stack.pop()
+                    visiting.discard(key)
+                    continue
+
+                if key not in values:
+                    raise ValueError(
+                        f"unknown macro '{key}'",
+                    )
+
+                value = values[key]
+
+                if not callable(value):
+                    raise TypeError(
+                        f"macro '{key}' must be callable",
+                    )
+
+                # Callable macros are evaluated directly.
+                cache[key] = value()
+
+                stack.pop()
+                visiting.discard(key)
+
+        return cache
+
+
+    def resolve_one_callable(
+        self,
+        key: object,
+        values: object,
+        cache: dict[str, object],
+        stack: set[str],
+    ) -> object:
+        if not isinstance(key, str):
+            raise TypeError("'key' must be a string")
+
+        if not isinstance(values, _Mapping):
+            raise TypeError("'values' must be a mapping")
+
+        if not isinstance(cache, dict):
+            raise TypeError("'cache' must be a dictionary")
+
+        if not isinstance(stack, set):
+            raise TypeError("'stack' must be a set")
+
+        if key not in values:
+            raise KeyError(
+                f"unknown macro '{key}'",
+            )
+
+        if key in cache:
+            return cache[key]
+
+        value = values[key]
+
+        if not callable(value):
+            raise TypeError(
+                f"macro '{key}' must be callable",
+            )
+
+        if key in stack:
+            raise ValueError(
+                f"circular macro reference: '{key}'",
+            )
+
+        stack.add(key)
+
+        try:
+            result = value()
+            cache[key] = result
+        finally:
+            stack.remove(key)
+
+        return cache[key]
+
+
+    def parse_many_callable(
         self,
         values: object,
         resolved: _Mapping[str, object],
     ) -> object:
-        return self.parse_one(values, resolved)
-
-    def parse_static_filesystem(
-        self,
-        filesystem_path: str | _Path,
-        workspace_macros: object,
-    ) -> object:
-        return self.parse_filesystem(
-            filesystem_path,
-            workspace_macros
+        return self.parse_one_callable(
+            values,
+            resolved,
         )
 
-    def parse_dynamic_values(
-        self,
-        values: object,
-        resolved: _Mapping[str, object],
-    ) -> object:
-        return self.parse_one_dynamic(values, resolved)
 
-    def parse_dynamic_filesystem(
-        self,
-        filesystem_path: str | _Path,
-        workspace_macros: object,
-    ) -> object:
-        return self.parse_filesystem_dynamic(
-            filesystem_path,
-            workspace_macros
-        )
-
-    def parse_one_dynamic(
+    def parse_one_callable(
         self,
         value: object,
         resolved: _Mapping[str, object],
     ) -> object:
         if isinstance(value, str):
+
+            def replace(
+                match: _re.Match[str],
+            ) -> str:
+                key = str(match.group(1))
+
+                if key not in resolved:
+                    return str(match.group(0))
+
+                return str(resolved[key])
+
             return self._selected_macros_pattern.sub(
-                lambda match: resolved.get(
-                    match.group(1)(),
-                    match.group(0),
-                ),
+                replace,
                 value,
             )
 
         if isinstance(value, dict):
             return {
-                key: self.parse_one_dynamic(child, resolved)
+                key: self.parse_one_callable(
+                    child,
+                    resolved,
+                )
                 for key, child in value.items()
             }
 
         if isinstance(value, list):
             return [
-                self.parse_one_dynamic(child, resolved)
+                self.parse_one_callable(
+                    child,
+                    resolved,
+                )
                 for child in value
             ]
 
         if isinstance(value, tuple):
             return tuple(
-                self.parse_one_dynamic(child, resolved)
+                self.parse_one_callable(
+                    child,
+                    resolved,
+                )
                 for child in value
             )
 
         if isinstance(value, set):
             return {
-                self.parse_one_dynamic(child, resolved)
+                self.parse_one_callable(
+                    child,
+                    resolved,
+                )
                 for child in value
             }
 
         return value
 
-    def parse_filesystem_dynamic(
+    def parse_filesystem_callable(
         self,
         filesystem_path: str | _Path,
-        workspace_macros: object,
+        workspace_macros: _Mapping[str, object],
     ) -> bool:
         encoding = (
             _singleton_manager.get_singleton(
@@ -530,10 +649,15 @@ class MacrosManager:
                 except UnicodeDecodeError:
                     pass
                 else:
-                    parsed_file_data = self.parse_one_dynamic(
+                    parsed_file_data = self.parse_one_callable(
                         file_data,
                         workspace_macros,
                     )
+
+                    if not isinstance(parsed_file_data, str):
+                        raise TypeError(
+                            "parsed file data must be a string",
+                        )
 
                     if parsed_file_data != file_data:
                         current_path.write_text(
@@ -541,31 +665,39 @@ class MacrosManager:
                             encoding=encoding,
                         )
 
-                parsed_name = self.parse_one_dynamic(
+                parsed_name = self.parse_one_callable(
                     current_path.name,
                     workspace_macros,
                 )
 
+                if not isinstance(parsed_name, str):
+                    raise TypeError(
+                        "parsed file name must be a string",
+                    )
+
                 if parsed_name != current_path.name:
                     current_path = current_path.rename(
-                        current_path.with_name(
-                            parsed_name,
-                        ),
+                        current_path.with_name(parsed_name),
                     )
 
             for directory_name in directories:
                 current_path = current_root / directory_name
 
-                parsed_name = self.parse_one_dynamic(
+                parsed_name = self.parse_one_callable(
                     current_path.name,
                     workspace_macros,
                 )
 
+                if not isinstance(parsed_name, str):
+                    raise TypeError(
+                        "parsed directory name must be a string",
+                    )
+
                 if parsed_name != current_path.name:
                     current_path.rename(
-                        current_path.with_name(
-                            parsed_name,
-                        ),
+                        current_path.with_name(parsed_name),
                     )
 
         return True
+
+

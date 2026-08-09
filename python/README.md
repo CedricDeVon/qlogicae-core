@@ -12,7 +12,7 @@
   <p style="font-style: italic;">The core library for QLogicae projects</p>
 <div style="margin: 32px 64px;">
 
-![Version](https://img.shields.io/badge/Version-1.3.9-blue)
+![Version](https://img.shields.io/badge/Version-1.3.10-blue)
 ![License: MIT](https://img.shields.io/badge/License-MIT-red)
 
   </div>
