@@ -303,7 +303,13 @@ class MacrosManager:
                 if key not in resolved:
                     return str(match.group(0))
 
-                return str(resolved[key])
+                return (
+                    str(
+                        self._resolve_value(
+                            resolved[key]
+                        )
+                    )
+                )
 
             return self._selected_macros_pattern.sub(
                 replace,
@@ -427,19 +433,6 @@ class MacrosManager:
                     )
 
         return True
-
-
-    def _resolve_callable(
-        self,
-        value: object,
-    ) -> object:
-        if not callable(value):
-            raise TypeError(
-                "macro values must be callable",
-            )
-
-        return value()
-
 
     def resolve_many_callable(
         self,
