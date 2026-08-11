@@ -22,5 +22,5 @@ def main() -> None:
     _handle_dynamic_imports()
 
     print(
-        _version("qlogicae-cor-v2")
+        _version("qlogicae-cor")
     )

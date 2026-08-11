@@ -36,5 +36,5 @@ def main() -> None:
     _SingletonManager.get_singleton(
         _ConsoleDisplayManager,
     ).render_one_component(
-        _version("qlogicae-cor-v1")
+        _version("qlogicae-cor")
     )
