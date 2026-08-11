@@ -28,7 +28,7 @@ jobs:
         steps:
             - uses: actions/checkout@v4
 
-            - run: sleep 10
+            - run: sleep 20
 
             - name: Setup Python
               uses: actions/setup-python@v5
@@ -68,7 +68,7 @@ jobs:
         steps:
             - uses: actions/checkout@v4
 
-            - run: sleep 10
+            - run: sleep 20
 
             - name: Setup Python
               uses: actions/setup-python@v5
@@ -108,7 +108,7 @@ jobs:
         steps:
             - uses: actions/checkout@v4
 
-            - run: sleep 10
+            - run: sleep 20
 
             - name: Setup Python
               uses: actions/setup-python@v5
@@ -192,7 +192,7 @@ jobs:
         steps:
             - uses: actions/checkout@v4
 
-            - run: sleep 10
+            - run: sleep 20
 
             - name: Setup Python
               uses: actions/setup-python@v5
@@ -232,7 +232,7 @@ jobs:
         steps:
             - uses: actions/checkout@v4
 
-            - run: sleep 10
+            - run: sleep 20
 
             - name: Setup Python
               uses: actions/setup-python@v5
@@ -272,7 +272,7 @@ jobs:
         steps:
             - uses: actions/checkout@v4
 
-            - run: sleep 10
+            - run: sleep 20
 
             - name: Setup Python
               uses: actions/setup-python@v5
@@ -355,7 +355,7 @@ jobs:
       steps:
         - uses: actions/checkout@v4
 
-        - run: sleep 10
+        - run: sleep 20
 
         - if: matrix.runtime == 'bun'
           uses: oven-sh/setup-bun@v2
@@ -389,7 +389,7 @@ jobs:
       steps:
         - uses: actions/checkout@v4
 
-        - run: sleep 10
+        - run: sleep 20
 
         - if: matrix.package_manager == 'bun'
           uses: oven-sh/setup-bun@v2
@@ -424,7 +424,7 @@ jobs:
                     - bun
 
         steps:
-            - run: sleep 10
+            - run: sleep 20
 
             - if: matrix.package_manager == 'npm'
               uses: actions/setup-node@v4
