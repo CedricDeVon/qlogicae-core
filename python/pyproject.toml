@@ -1,6 +1,6 @@
 [project]
 name = "qlogicae-cor"
-version = "2.0.3"
+version = "2.0.4"
 description = "The core library for QLogicae projects"
 readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.12"
@@ -58,8 +58,6 @@ dev = [
 
 [project.scripts]
 qlogicae-cor = "qlogicae_cor.v2.console.app:main"
-qlogicae-cor-v1 = "qlogicae_cor.v1.console.app:main"
-qlogicae-cor-v2 = "qlogicae_cor.v2.console.app:main"
 
 [project.urls]
 Homepage = "https://github.com/CedricDeVon/qlogicae-cor"
