@@ -1,5 +1,9 @@
 from __future__ import annotations
 
+__all__ = (
+    "ObjectMergeManager",
+)
+
 from typing import Any
 
 _deepcopy: Any = None

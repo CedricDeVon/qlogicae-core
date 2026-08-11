@@ -1,5 +1,9 @@
 from __future__ import annotations
 
+__all__ = (
+    "JsonManager",
+)
+
 from typing import Any
 
 _Path: Any = None

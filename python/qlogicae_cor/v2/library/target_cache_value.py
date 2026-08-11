@@ -1,5 +1,8 @@
 from enum import Enum
 
+__all__ = (
+    "TargetCacheValue",
+)
 
 class TargetCacheValue(Enum):
     ANY = 0

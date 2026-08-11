@@ -1,5 +1,8 @@
 from enum import Enum
 
+__all__ = (
+    "EnumConversionValue",
+)
 
 class EnumConversionValue(Enum):
     STRING = 0

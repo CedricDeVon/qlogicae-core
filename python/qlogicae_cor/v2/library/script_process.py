@@ -1,5 +1,8 @@
 from enum import Enum
 
+__all__ = (
+    "ScriptProcess",
+)
 
 class ScriptProcess(Enum):
     SHELL = 0

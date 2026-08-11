@@ -1,6 +1,9 @@
 from dataclasses import dataclass, field
 from typing import Any
 
+__all__ = (
+    "FolderEntityFileSystemTreeSetupOptions",
+)
 
 @dataclass(frozen=True, slots=True)
 class FolderEntityFileSystemTreeSetupOptions:

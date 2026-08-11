@@ -1,5 +1,8 @@
 from typing import Any
 
+__all__ = (
+    "TextManager",
+)
 
 class TextManager:
     __slots__ = (

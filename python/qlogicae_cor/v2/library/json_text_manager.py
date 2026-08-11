@@ -1,5 +1,9 @@
 from __future__ import annotations
 
+__all__ = (
+    "JsonTextManager",
+)
+
 from typing import Any
 
 _json: Any = None

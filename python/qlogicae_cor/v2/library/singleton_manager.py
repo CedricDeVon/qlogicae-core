@@ -1,6 +1,10 @@
 from collections.abc import Callable
 from typing import Any, TypeVar, cast
 
+__all__ = (
+    "SingletonManager",
+)
+
 Type = TypeVar("Type")
 
 

@@ -1,5 +1,9 @@
 from __future__ import annotations
 
+__all__ = (
+    "FilesystemCompressionManager",
+)
+
 from typing import Any
 
 _zipfile: Any = None

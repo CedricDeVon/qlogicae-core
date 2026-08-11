@@ -1,5 +1,9 @@
 from __future__ import annotations
 
+__all__ = (
+    "TimeManager",
+)
+
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:

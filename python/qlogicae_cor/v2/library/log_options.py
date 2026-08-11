@@ -1,6 +1,9 @@
 import logging
 from dataclasses import dataclass
 
+__all__ = (
+    "LogOptions",
+)
 
 @dataclass(frozen=True, slots=True)
 class LogOptions:

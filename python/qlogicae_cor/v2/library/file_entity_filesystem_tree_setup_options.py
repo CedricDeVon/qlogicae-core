@@ -1,5 +1,8 @@
 from dataclasses import dataclass
 
+__all__ = (
+    "FileEntityFileSystemTreeSetupOptions",
+)
 
 @dataclass(frozen=True, slots=True)
 class FileEntityFileSystemTreeSetupOptions:

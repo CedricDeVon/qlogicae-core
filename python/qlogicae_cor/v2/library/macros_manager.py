@@ -1,5 +1,9 @@
 from __future__ import annotations
 
+__all__ = (
+    "MacrosManager",
+)
+
 from typing import Any
 
 _re: Any = None

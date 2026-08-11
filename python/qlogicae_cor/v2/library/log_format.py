@@ -1,5 +1,9 @@
 from __future__ import annotations
 
+__all__ = (
+    "LogFormat",
+)
+
 import logging
 from typing import Any
 

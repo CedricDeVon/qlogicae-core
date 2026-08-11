@@ -1,8 +1,13 @@
 from __future__ import annotations
 
+__all__ = (
+    "FileLogManager",
+)
+
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
+
     from .log_options import (
         LogOptions,
     )
@@ -79,8 +84,8 @@ class FileLogManager:
         "queue_handler",
         "listener",
         "_options",
+        "_cache",
     )
-
     def __init__(self) -> None:
         _handle_dynamic_imports()
 
@@ -115,6 +120,40 @@ class FileLogManager:
         self.listener.start()
 
         self._options = _LogOptions()
+
+        self._cache: list[Any] = []
+
+    def cache_log(
+        self,
+        message: str,
+        log_level: Any = _logging.INFO,
+    ) -> str:
+        self._cache.append(
+            (
+                message,
+                _SingletonManager.get_singleton(
+                    _LogOptionsManager,
+                ).generate_modified_defaults(
+                    self._options,
+                    log_level=log_level,
+                ),
+            )
+        )
+
+        return message
+
+    def log_cached(
+        self
+    ) -> bool:
+        for (message, options) in self._cache:
+            self.log(
+                message,
+                options
+            )
+
+        self._cache.clear()
+
+        return True
 
     @property
     def options(self) -> LogOptions:
@@ -274,7 +313,6 @@ class FileLogManager:
         )
 
         self.file_handlers[path] = handler
-
         self.rebuild_listener()
 
         return True
@@ -306,6 +344,8 @@ class FileLogManager:
 
         self.rebuild_listener()
 
+        self._cache.clear()
+
         return True
 
     def shutdown(self) -> bool:
@@ -315,5 +355,6 @@ class FileLogManager:
             handler.close()
 
         self.file_handlers.clear()
+        self._cache.clear()
 
         return True

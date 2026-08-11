@@ -1,5 +1,8 @@
 from enum import Enum
 
+__all__ = (
+    "TimeUnit",
+)
 
 class TimeUnit(Enum):
     NANOSECOND = 0

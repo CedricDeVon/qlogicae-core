@@ -1,4 +1,7 @@
 
+__all__ = (
+    "TextEncodingManager",
+)
 
 class TextEncodingManager:
     __slots__ = (
