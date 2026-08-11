@@ -9,7 +9,7 @@ defaults:
         shell: bash
 
 jobs:
-    python-unit-test:
+    python-v1-unit-test:
         name: Python | V1 | Unit Test
         runs-on: ubuntu-latest
 
@@ -49,7 +49,7 @@ jobs:
             - name: Run Scripts      
               run: hatch run github-workflow-test-unit
 
-    python-lint-test:
+    python-v1-lint-test:
         name: Python | V1 | Lint
         runs-on: ubuntu-latest
 
@@ -89,7 +89,7 @@ jobs:
             - name: Run Scripts              
               run: hatch run github-workflow-test-unit
 
-    python-type-check-test:
+    python-v1-type-check-test:
         name: Python | V1 | Type Check
         runs-on: ubuntu-latest
 
@@ -129,7 +129,7 @@ jobs:
             - name: Run Scripts        
               run: hatch run github-workflow-test-type-check
 
-    python-e2e-test:
+    python-v1-e2e-test:
       name: Python | V1 | End-To-End Test
       runs-on: ubuntu-latest
 
@@ -173,7 +173,7 @@ jobs:
 
 
 
-    python-unit-test:
+    python-v2-unit-test:
         name: Python | V2 | Unit Test
         runs-on: ubuntu-latest
 
@@ -213,7 +213,7 @@ jobs:
             - name: Run Scripts      
               run: hatch run github-workflow-test-unit
 
-    python-lint-test:
+    python-v2-lint-test:
         name: Python | V2 | Lint
         runs-on: ubuntu-latest
 
@@ -253,7 +253,7 @@ jobs:
             - name: Run Scripts              
               run: hatch run github-workflow-test-unit
 
-    python-type-check-test:
+    python-v2-type-check-test:
         name: Python | V2 | Type Check
         runs-on: ubuntu-latest
 
@@ -293,7 +293,7 @@ jobs:
             - name: Run Scripts        
               run: hatch run github-workflow-test-type-check
 
-    python-e2e-test:
+    python-v2-e2e-test:
       name: Python | V2 | End-To-End Test
       runs-on: ubuntu-latest
 
