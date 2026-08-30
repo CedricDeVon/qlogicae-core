@@ -51,8 +51,24 @@ def _handle_dynamic_imports() -> None:
 
 
 class LogManager:
+    __slots__ = (
+        "_file_log_manager",
+        "_console_log_manager",
+        "_log_options_manager",
+    )
+
     def __init__(self) -> None:
         _handle_dynamic_imports()
+
+        self._file_log_manager = _SingletonManager.get_singleton(
+            _FileLogManager
+        )
+        self._console_log_manager = _SingletonManager.get_singleton(
+            _ConsoleLogManager
+        )
+        self._log_options_manager = _SingletonManager.get_singleton(
+            _LogOptionsManager
+        )
 
     def log(
         self,
@@ -60,16 +76,12 @@ class LogManager:
         console_options: LogOptions,
         file_options: LogOptions,
     ) -> str:
-        _SingletonManager.get_singleton(
-            _ConsoleLogManager,
-        ).log(
+        self._console_log_manager.log(
             message,
             console_options,
         )
 
-        _SingletonManager.get_singleton(
-            _FileLogManager,
-        ).log(
+        self._file_log_manager.log(
             message,
             file_options,
         )
@@ -82,17 +94,13 @@ class LogManager:
     ) -> str:
         return self.log(
             message,
-            _SingletonManager.get_singleton(
-                _LogOptionsManager,
-            ).generate_modified_defaults(
+            self._log_options_manager.generate_modified_defaults(
                 _SingletonManager.get_singleton(
                     _ConsoleLogManager,
                 ).options,
                 log_level=_logging.DEBUG,
             ),
-            _SingletonManager.get_singleton(
-                _LogOptionsManager,
-            ).generate_modified_defaults(
+            self._log_options_manager.generate_modified_defaults(
                 _SingletonManager.get_singleton(
                     _FileLogManager,
                 ).options,
@@ -106,17 +114,13 @@ class LogManager:
     ) -> str:
         return self.log(
             message,
-            _SingletonManager.get_singleton(
-                _LogOptionsManager,
-            ).generate_modified_defaults(
+            self._log_options_manager.generate_modified_defaults(
                 _SingletonManager.get_singleton(
                     _ConsoleLogManager,
                 ).options,
                 log_level=_logging.INFO,
             ),
-            _SingletonManager.get_singleton(
-                _LogOptionsManager,
-            ).generate_modified_defaults(
+            self._log_options_manager.generate_modified_defaults(
                 _SingletonManager.get_singleton(
                     _FileLogManager,
                 ).options,
@@ -130,17 +134,13 @@ class LogManager:
     ) -> str:
         return self.log(
             message,
-            _SingletonManager.get_singleton(
-                _LogOptionsManager,
-            ).generate_modified_defaults(
+            self._log_options_manager.generate_modified_defaults(
                 _SingletonManager.get_singleton(
                     _ConsoleLogManager,
                 ).options,
                 log_level=_logging.WARNING,
             ),
-            _SingletonManager.get_singleton(
-                _LogOptionsManager,
-            ).generate_modified_defaults(
+            self._log_options_manager.generate_modified_defaults(
                 _SingletonManager.get_singleton(
                     _FileLogManager,
                 ).options,
@@ -154,17 +154,13 @@ class LogManager:
     ) -> str:
         return self.log(
             message,
-            _SingletonManager.get_singleton(
-                _LogOptionsManager,
-            ).generate_modified_defaults(
+            self._log_options_manager.generate_modified_defaults(
                 _SingletonManager.get_singleton(
                     _ConsoleLogManager,
                 ).options,
                 log_level=_logging.ERROR,
             ),
-            _SingletonManager.get_singleton(
-                _LogOptionsManager,
-            ).generate_modified_defaults(
+            self._log_options_manager.generate_modified_defaults(
                 _SingletonManager.get_singleton(
                     _FileLogManager,
                 ).options,
@@ -178,17 +174,13 @@ class LogManager:
     ) -> str:
         return self.log(
             message,
-            _SingletonManager.get_singleton(
-                _LogOptionsManager,
-            ).generate_modified_defaults(
+            self._log_options_manager.generate_modified_defaults(
                 _SingletonManager.get_singleton(
                     _ConsoleLogManager,
                 ).options,
                 log_level=_logging.CRITICAL,
             ),
-            _SingletonManager.get_singleton(
-                _LogOptionsManager,
-            ).generate_modified_defaults(
+            self._log_options_manager.generate_modified_defaults(
                 _SingletonManager.get_singleton(
                     _FileLogManager,
                 ).options,
@@ -197,8 +189,6 @@ class LogManager:
         )
 
     def shutdown(self) -> bool:
-        _SingletonManager.get_singleton(
-            _FileLogManager,
-        ).shutdown()
+        self._file_log_manager.shutdown()
 
         return True

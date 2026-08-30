@@ -43,10 +43,17 @@ class MacrosManager:
     __slots__ = (
         "_selected_identifier_pattern",
         "_selected_macros_pattern",
+        "_text_encoding_manager",
     )
 
     def __init__(self) -> None:
         _handle_dynamic_imports()
+
+        self._text_encoding_manager = (
+            _SingletonManager.get_singleton(
+                _TextEncodingManager
+            )
+        )
 
         self._selected_identifier_pattern: _re.Pattern[str] = (
             _re.compile(r"^[A-Za-z0-9._-]+$")
@@ -365,9 +372,8 @@ class MacrosManager:
         workspace_macros: _Mapping[str, object],
     ) -> bool:
         encoding = (
-            _SingletonManager.get_singleton(
-                _TextEncodingManager,
-            ).selected_encoding
+            self._text_encoding_manager
+                .selected_encoding
         )
 
         root = _Path(filesystem_path)

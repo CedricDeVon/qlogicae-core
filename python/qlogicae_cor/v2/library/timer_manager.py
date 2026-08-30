@@ -39,12 +39,19 @@ def _handle_dynamic_imports() -> None:
 
 class TimerManager:
     __slots__ = (
+        "_time_manager",
         "_start_timestamp",
         "_stop_timestamp",
     )
 
     def __init__(self) -> None:
         _handle_dynamic_imports()
+
+        self._time_manager = (
+            _SingletonManager.get_singleton(
+                _TimeManager
+            )
+        )
 
         self._start_timestamp: float = 0
         self._stop_timestamp: float = 0
@@ -59,18 +66,14 @@ class TimerManager:
 
     def start_time(self) -> bool:
         self._start_timestamp = (
-            _SingletonManager.get_singleton(
-                _TimeManager,
-            ).current_nanosecond
+            self._time_manager.current_nanosecond
         )
 
         return True
 
     def stop_time(self) -> bool:
         self._stop_timestamp = (
-            _SingletonManager.get_singleton(
-                _TimeManager,
-            ).current_nanosecond
+            self._time_manager.current_nanosecond
         )
 
         return True
@@ -83,9 +86,7 @@ class TimerManager:
 
     def reset_time(self) -> bool:
         self._start_timestamp = (
-            _SingletonManager.get_singleton(
-                _TimeManager,
-            ).current_nanosecond
+            self._time_manager.current_nanosecond
         )
         self._stop_timestamp = 0
 
@@ -98,12 +99,8 @@ class TimerManager:
         if time_unit is None:
             time_unit = _TimeUnit.SECOND
 
-        manager = _SingletonManager.get_singleton(
-            _TimeManager,
-        )
-
-        value: float = manager.convert_time_unit(
-            manager.current_nanosecond - self._start_timestamp,
+        value: float = self._time_manager.convert_time_unit(
+            self._time_manager.current_nanosecond - self._start_timestamp,
             output_time_unit=time_unit,
         )
 
@@ -116,11 +113,7 @@ class TimerManager:
         if time_unit is None:
             time_unit = _TimeUnit.SECOND
 
-        manager = _SingletonManager.get_singleton(
-            _TimeManager,
-        )
-
-        value: float = manager.convert_time_unit(
+        value: float = self._time_manager.convert_time_unit(
             self._stop_timestamp - self._start_timestamp,
             output_time_unit=time_unit,
         )

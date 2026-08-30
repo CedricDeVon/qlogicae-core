@@ -14,3 +14,7 @@ class TextEncodingManager:
     @property
     def selected_encoding(self) -> str:
         return self._selected_encoding
+
+    @selected_encoding.setter
+    def selected_encoding(self, value: str) -> None:
+        self._selected_encoding = value

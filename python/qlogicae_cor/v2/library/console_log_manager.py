@@ -48,10 +48,15 @@ class ConsoleLogManager:
     __slots__ = (
         "_logger",
         "_options",
+        "_log_options_manager",
     )
 
     def __init__(self) -> None:
         _handle_dynamic_imports()
+
+        self._log_options_manager = _SingletonManager.get_singleton(
+            _LogOptionsManager
+        )
 
         self._logger = _logging.getLogger(
             "console-logger",
@@ -115,9 +120,7 @@ class ConsoleLogManager:
     ) -> str:
         return self.log(
             message,
-            _SingletonManager.get_singleton(
-                _LogOptionsManager,
-            ).generate_modified_defaults(
+            self._log_options_manager.generate_modified_defaults(
                 self._options,
                 log_level=_logging.DEBUG,
             ),
@@ -129,9 +132,7 @@ class ConsoleLogManager:
     ) -> str:
         return self.log(
             message,
-            _SingletonManager.get_singleton(
-                _LogOptionsManager,
-            ).generate_modified_defaults(
+            self._log_options_manager.generate_modified_defaults(
                 self._options,
                 log_level=_logging.INFO,
             ),
@@ -143,9 +144,7 @@ class ConsoleLogManager:
     ) -> str:
         return self.log(
             message,
-            _SingletonManager.get_singleton(
-                _LogOptionsManager,
-            ).generate_modified_defaults(
+            self._log_options_manager.generate_modified_defaults(
                 self._options,
                 log_level=_logging.WARNING,
             ),
@@ -157,9 +156,7 @@ class ConsoleLogManager:
     ) -> str:
         return self.log(
             message,
-            _SingletonManager.get_singleton(
-                _LogOptionsManager,
-            ).generate_modified_defaults(
+            self._log_options_manager.generate_modified_defaults(
                 self._options,
                 log_level=_logging.ERROR,
             ),
@@ -171,9 +168,7 @@ class ConsoleLogManager:
     ) -> str:
         return self.log(
             message,
-            _SingletonManager.get_singleton(
-                _LogOptionsManager,
-            ).generate_modified_defaults(
+            self._log_options_manager.generate_modified_defaults(
                 self._options,
                 log_level=_logging.CRITICAL,
             ),

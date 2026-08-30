@@ -42,7 +42,7 @@ class FilesystemMetadataManager:
 
         return cast(
             _FilesystemMetadata,
-                _FilesystemMetadata(
+            _FilesystemMetadata(
                 mode=stat.st_mode,
                 inode=stat.st_ino,
                 device=stat.st_dev,

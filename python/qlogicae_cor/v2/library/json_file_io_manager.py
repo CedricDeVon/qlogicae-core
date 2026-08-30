@@ -47,6 +47,13 @@ class JsonFileIoManager:
     def __init__(self) -> None:
         _handle_dynamic_imports()
 
+        self._json_manager = _SingletonManager.get_singleton(
+            _JsonManager
+        )
+        self._text_encoding_manager = _SingletonManager.get_singleton(
+            _TextEncodingManager
+        )
+
     def read_file(
         self,
         file_path: str,
@@ -58,11 +65,7 @@ class JsonFileIoManager:
         with path.open(
             mode="r",
             encoding=(
-                _SingletonManager
-                .get_singleton(
-                    _TextEncodingManager,
-                )
-                .selected_encoding
+                self._text_encoding_manager.selected_encoding
             ),
         ) as file:
             output_data = _json.load(file) or {}
@@ -81,32 +84,21 @@ class JsonFileIoManager:
             exist_ok=True,
         )
 
-        manager: _JsonManager = (
-            _SingletonManager
-            .get_singleton(
-                _JsonManager,
-            )
-        )
-
         with path.open(
             mode="w",
             encoding=(
-                _SingletonManager
-                .get_singleton(
-                    _TextEncodingManager,
-                )
-                .selected_encoding
+                self._text_encoding_manager.selected_encoding
             ),
         ) as file:
             _json.dump(
                 data,
                 file,
-                indent=manager.indent_count,
+                indent=self._json_manager.indent_count,
                 ensure_ascii=(
-                    manager.is_ascii_format_enabled
+                    self._json_manager.is_ascii_format_enabled
                 ),
                 sort_keys=(
-                    manager.is_key_sortable
+                    self._json_manager.is_key_sortable
                 ),
             )
 

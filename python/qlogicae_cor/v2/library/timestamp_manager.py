@@ -57,8 +57,18 @@ def _handle_dynamic_imports() -> None:
 
 
 class TimestampManager:
+    __slots__ = (
+        "_time_zone_manager",
+    )
+
     def __init__(self) -> None:
         _handle_dynamic_imports()
+
+        self._time_zone_manager = (
+            _SingletonManager.get_singleton(
+                _TimeZoneManager
+            )
+        )
 
     def generate_current_timestamp(
         self,
@@ -75,9 +85,7 @@ class TimestampManager:
 
         current = _datetime.fromtimestamp(
             timestamp_nanoseconds / 1_000_000_000,
-            _SingletonManager.get_singleton(
-                _TimeZoneManager,
-            ).selected_time_zone,
+            self._time_zone_manager.selected_time_zone,
         )
 
         match time_unit:

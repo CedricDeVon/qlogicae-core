@@ -4,6 +4,7 @@ __all__ = (
     "FileLogManager",
 )
 
+import logging
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
@@ -85,9 +86,19 @@ class FileLogManager:
         "listener",
         "_options",
         "_cache",
+        "_log_options_manager",
+        "_text_encoding_manager",
     )
+
     def __init__(self) -> None:
         _handle_dynamic_imports()
+
+        self._log_options_manager = _SingletonManager.get_singleton(
+            _LogOptionsManager
+        )
+        self._text_encoding_manager = _SingletonManager.get_singleton(
+            _TextEncodingManager
+        )
 
         self.logger = _logging.getLogger(
             "file-logger",
@@ -126,14 +137,12 @@ class FileLogManager:
     def cache_log(
         self,
         message: str,
-        log_level: Any = _logging.INFO,
+        log_level: Any = logging.INFO,
     ) -> str:
         self._cache.append(
             (
                 message,
-                _SingletonManager.get_singleton(
-                    _LogOptionsManager,
-                ).generate_modified_defaults(
+                self._log_options_manager.generate_modified_defaults(
                     self._options,
                     log_level=log_level,
                 ),
@@ -188,11 +197,7 @@ class FileLogManager:
                     current_file_path,
                     "a",
                     encoding=(
-                        _SingletonManager
-                        .get_singleton(
-                            _TextEncodingManager,
-                        )
-                        .selected_encoding
+                        self._text_encoding_manager.selected_encoding
                     ),
                 ) as file:
                     file.write(
@@ -207,9 +212,7 @@ class FileLogManager:
     ) -> Any:
         return self.log(
             message,
-            _SingletonManager.get_singleton(
-                _LogOptionsManager,
-            ).generate_modified_defaults(
+            self._log_options_manager.generate_modified_defaults(
                 self._options,
                 log_level=_logging.DEBUG,
             ),
@@ -221,9 +224,7 @@ class FileLogManager:
     ) -> Any:
         return self.log(
             message,
-            _SingletonManager.get_singleton(
-                _LogOptionsManager,
-            ).generate_modified_defaults(
+            self._log_options_manager.generate_modified_defaults(
                 self._options,
                 log_level=_logging.INFO,
             ),
@@ -235,9 +236,7 @@ class FileLogManager:
     ) -> Any:
         return self.log(
             message,
-            _SingletonManager.get_singleton(
-                _LogOptionsManager,
-            ).generate_modified_defaults(
+            self._log_options_manager.generate_modified_defaults(
                 self._options,
                 log_level=_logging.WARNING,
             ),
@@ -249,9 +248,7 @@ class FileLogManager:
     ) -> Any:
         return self.log(
             message,
-            _SingletonManager.get_singleton(
-                _LogOptionsManager,
-            ).generate_modified_defaults(
+            self._log_options_manager.generate_modified_defaults(
                 self._options,
                 log_level=_logging.ERROR,
             ),
@@ -263,9 +260,7 @@ class FileLogManager:
     ) -> Any:
         return self.log(
             message,
-            _SingletonManager.get_singleton(
-                _LogOptionsManager,
-            ).generate_modified_defaults(
+            self._log_options_manager.generate_modified_defaults(
                 self._options,
                 log_level=_logging.CRITICAL,
             ),
@@ -300,11 +295,7 @@ class FileLogManager:
         handler = _logging.FileHandler(
             path,
             encoding=(
-                _SingletonManager
-                .get_singleton(
-                    _TextEncodingManager,
-                )
-                .selected_encoding
+                self._text_encoding_manager.selected_encoding
             ),
         )
 
@@ -349,12 +340,13 @@ class FileLogManager:
         return True
 
     def shutdown(self) -> bool:
+        self.log_cached()
+
         self.listener.stop()
 
         for handler in self.file_handlers.values():
             handler.close()
 
         self.file_handlers.clear()
-        self._cache.clear()
 
         return True

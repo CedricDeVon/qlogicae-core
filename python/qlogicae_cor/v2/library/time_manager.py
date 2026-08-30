@@ -48,6 +48,7 @@ def _handle_dynamic_imports() -> None:
 class TimeManager:
     __slots__ = (
         "_TIME_UNIT_TO_NANOSECONDS",
+        "_time_zone_manager",
     )
 
     def __init__(self) -> None:
@@ -71,6 +72,12 @@ class TimeManager:
             _TimeUnit.CENTURY: 3155695200e9,
             _TimeUnit.MILLENNIUM: 31556952000e9,
         }
+
+        self._time_zone_manager = (
+            _SingletonManager.get_singleton(
+                _TimeZoneManager
+            )
+        )
 
     @property
     def current_iso8601_date(self) -> str:
@@ -97,9 +104,8 @@ class TimeManager:
     @property
     def current_second(self) -> int:
         value: int = _datetime.now(
-            _SingletonManager.get_singleton(
-                _TimeZoneManager,
-            ).selected_time_zone,
+            self._time_zone_manager
+                .selected_time_zone,
         ).second
 
         return value
@@ -107,9 +113,8 @@ class TimeManager:
     @property
     def current_minute(self) -> int:
         value: int = _datetime.now(
-            _SingletonManager.get_singleton(
-                _TimeZoneManager,
-            ).selected_time_zone,
+            self._time_zone_manager
+                .selected_time_zone,
         ).minute
 
         return value
@@ -117,9 +122,8 @@ class TimeManager:
     @property
     def current_hour(self) -> int:
         value: int = _datetime.now(
-            _SingletonManager.get_singleton(
-                _TimeZoneManager,
-            ).selected_time_zone,
+            self._time_zone_manager
+                .selected_time_zone,
         ).hour
 
         return value
@@ -127,9 +131,8 @@ class TimeManager:
     @property
     def current_day(self) -> int:
         value: int = _datetime.now(
-            _SingletonManager.get_singleton(
-                _TimeZoneManager,
-            ).selected_time_zone,
+            self._time_zone_manager
+                .selected_time_zone,
         ).day
 
         return value
@@ -143,9 +146,8 @@ class TimeManager:
     @property
     def current_month(self) -> int:
         value: int = _datetime.now(
-            _SingletonManager.get_singleton(
-                _TimeZoneManager,
-            ).selected_time_zone,
+            self._time_zone_manager
+                .selected_time_zone,
         ).month
 
         return value
@@ -153,9 +155,8 @@ class TimeManager:
     @property
     def current_year(self) -> int:
         value: int = _datetime.now(
-            _SingletonManager.get_singleton(
-                _TimeZoneManager,
-            ).selected_time_zone,
+            self._time_zone_manager
+                .selected_time_zone,
         ).year
 
         return value

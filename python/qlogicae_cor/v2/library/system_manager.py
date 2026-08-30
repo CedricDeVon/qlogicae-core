@@ -32,8 +32,22 @@ def _handle_dynamic_imports() -> None:
 
 
 class SystemManager:
+    __slots__ = (
+        "_original_executing_console_filesystem_path",
+    )
+
     def __init__(self) -> None:
         _handle_dynamic_imports()
+
+        self._original_executing_console_filesystem_path = (
+            f"{_path.cwd().resolve()}"
+        )
+
+    @property
+    def original_executing_console_filesystem_path(
+        self,
+    ) -> str:
+        return self._original_executing_console_filesystem_path
 
     @property
     def current_executing_script_filesystem_path(

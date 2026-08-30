@@ -117,6 +117,7 @@ class FilesystemManager:
         directory = _Path(path).resolve()
 
         protected_paths = {
+            _Path(""),
             _Path("/"),
             _Path.home(),
         }

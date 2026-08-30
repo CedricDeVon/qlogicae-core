@@ -34,8 +34,16 @@ def _handle_dynamic_imports() -> None:
 
 
 class JsonTextManager:
+    __slots__ = (
+        "_json_manager",
+    )
+
     def __init__(self) -> None:
         _handle_dynamic_imports()
+
+        self._json_manager = _SingletonManager.get_singleton(
+            _JsonManager
+        )
 
     def is_valid(
         self,
@@ -55,16 +63,10 @@ class JsonTextManager:
         self,
         value: Any,
     ) -> str:
-        manager: _JsonManager = (
-            _SingletonManager.get_singleton(
-                _JsonManager,
-            )
-        )
-
         result: str = _json.dumps(
             value,
-            indent=manager.indent_count,
-            ensure_ascii=manager.is_ascii_format_enabled,
+            indent=self._json_manager.indent_count,
+            ensure_ascii=self._json_manager.is_ascii_format_enabled,
         )
 
         return result

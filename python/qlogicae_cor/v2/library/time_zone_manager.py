@@ -41,10 +41,17 @@ class TimeZoneManager:
     __slots__ = (
         "_selected_time_zone_type",
         "_valid_time_zone_types",
+        "_time_zone_enum_manager",
     )
 
     def __init__(self) -> None:
         _handle_dynamic_imports()
+
+        self._time_zone_enum_manager = (
+            _SingletonManager.get_singleton(
+                _TimeZoneEnumManager
+            )
+        )
 
         self._selected_time_zone_type: str = "local"
         self._valid_time_zone_types: set[str] = {
@@ -72,9 +79,7 @@ class TimeZoneManager:
     @property
     def selected_time_zone(self) -> tzinfo:
         value: tzinfo = (
-            _SingletonManager.get_singleton(
-                _TimeZoneEnumManager,
-            ).convert_value(
+            self._time_zone_enum_manager.convert_value(
                 self._selected_time_zone_type,
                 _EnumConversionValue.CUSTOM,
             )

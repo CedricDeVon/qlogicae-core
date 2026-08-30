@@ -37,8 +37,18 @@ def _handle_dynamic_imports() -> None:
 
 
 class TextFileIoManager:
+    __slots__ = (
+        "_text_encoding_manager",
+    )
+
     def __init__(self) -> None:
         _handle_dynamic_imports()
+
+        self._text_encoding_manager = (
+            _SingletonManager.get_singleton(
+                _TextEncodingManager
+            )
+        )
 
     def read_file(
         self,
@@ -51,11 +61,8 @@ class TextFileIoManager:
         with path.open(
             mode="r",
             encoding=(
-                _SingletonManager
-                .get_singleton(
-                    _TextEncodingManager,
-                )
-                .selected_encoding
+                self._text_encoding_manager
+                    .selected_encoding
             ),
         ) as file:
             output_data = file.read() or ""
@@ -77,11 +84,8 @@ class TextFileIoManager:
         with path.open(
             mode="w",
             encoding=(
-                _SingletonManager
-                .get_singleton(
-                    _TextEncodingManager,
-                )
-                .selected_encoding
+                self._text_encoding_manager
+                    .selected_encoding
             ),
         ) as file:
             file.write(
